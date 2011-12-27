@@ -1,3 +1,10 @@
 MESSAGE
 ZWR
-^XMB(3.9,0)="MESSAGE^3.9s^^0"
+^XMB(3.9,0)="MESSAGE^3.9s^1^1"
+^XMB(3.9,1,0)="R1AC Region 1 Appointment Card Version 3.0 Installed"
+^XMB(3.9,1,.6)="3111223"
+^XMB(3.9,1,2,0)="^^2^2^3111223"
+^XMB(3.9,1,2,1,0)="R1AC Region 1 Appointment Card version 3.0 installed DEC 23,2011"
+^XMB(3.9,1,2,2,0)="By TESTMASTER,USER at station 1"
+^XMB(3.9,"B","R1AC Region 1 Appointment Card",1)=""
+^XMB(3.9,"C",3111223,1)=""
