@@ -7,6 +7,7 @@ DISP ;From: XQORM
  S M=5 I $D(XQORM("M")),+XQORM("M"),XQORM("M")'>T S M=XQORM("M")
  N X S L=0 F I=0:0 S I=$O(^XUTL("XQORM",XQORM,I)) Q:I'>0  I $D(^(I,0)) S X=^(0),J=($P(I,".",2)-1)*T D:$P(I,".")>L RD Q:N  D
  . D:$D(XQORM("S")) SCRN
+ . D:$D(XQORM("R")) HIDE(.XQORM,.X)
  . W ?(J),$P(X,"^",4),?(J+M)
  . I '$D(XQORM("W")) W $P(X,"^",3)
  . E  X XQORM("W")
@@ -16,6 +17,18 @@ SCRN Q:$D(XQORM("S"))[0  Q:'$L(XQORM("S"))  Q:'+X  D SCRN1
  Q:$T  S $P(X,"^",3)="("_$P(X,"^",3)_")"
  Q
 SCRN1 N DA S DA=+X,DA(1)=+XQORM N I,J,L,M,T,X,Y X XQORM("S") Q
+ ;
+HIDE(XQORM,X)  ;
+ N DA
+ S DA=+X,DA(1)=+XQORM
+ Q:$D(XQORM("R"))[0  Q:'$L(XQORM("R"))  Q:'+X
+ I 0 
+ X XQORM("R")
+ I $T D
+ . S $P(X,"^",3)=""
+ . S $P(X,"^",4)=""
+ Q
+ ;
 PRMT ;From: XQORM
  S ORUPRMT=$S($D(XQORM("A"))[0:"Select Item(s): ",1:XQORM("A"))
  F ORU=0:0 D PRMT1 I Y D:(X'=" ")&(X?.ANP) EAT S:X="^^" DIROUT=1 D:X'?.ANP CC^XQORM4 D:$L(X)>80 LL^XQORM4 Q:($E(X)'="?")&(X?.ANP)&($L(X)'>80)  D:$E(X)="?" HELP^XQORM4 I $D(DIROUT) S X="^^" Q

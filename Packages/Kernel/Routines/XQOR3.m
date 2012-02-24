@@ -21,4 +21,5 @@ MENU1 ;Get Protocol file specific XQORM fields
  I '$D(XQORM("A")),$D(^ORD(101,+^TMP("XQORS",$J,XQORS,"VPT"),28))'[0,$L(^(28)) S XQORM("A")=^(28)
  I '$D(XQORM("B")),$D(^ORD(101,+^TMP("XQORS",$J,XQORS,"VPT"),29))'[0,$L(^(29)) S XQORM("B")=^(29)
  I '$D(XQORM("M")),$D(^ORD(101,+^TMP("XQORS",$J,XQORS,"VPT"),4))'[0,+$P(^(4),"^",2) S XQORM("M")=$P(^(4),"^",2)
+ I '$D(XQORM("R")),$D(^ORD(101,+^TMP("XQORS",$J,XQORS,"VPT"),54))'[0,$L(^(54)) S XQORM("R")=^(54)
  Q
