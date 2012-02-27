@@ -1,16 +1,19 @@
 GMPLRPTS ; SLC/MKB -- Problem List Mgt Reports ;1/26/95  10:00
  ;;2.0;Problem List;**2**;Aug 25, 1994
+FMTPAT(LINE) ; Does formatting for PAT tag
+ N CNTA,CNTI
+ S CNTA=$P(LINE,"^",1)
+ S CNTI=$P(LINE,"^",2) 
+ S LINE="  "_CNTA_$E("       ",1,7-$L(CNTA))_+CNTI
+ Q 
+ ;
 PAT ; List patients having data in Problem file #9000011
- N DFN,IFN,CNT,ST S GMPRT=0
  D WAIT^DICD
- F DFN=0:0 S DFN=$O(^AUPNPROB("AC",DFN)) Q:DFN'>0  D
- . S (CNT("A"),CNT("I"),IFN)=0
- . F  S IFN=$O(^AUPNPROB("AC",DFN,IFN)) Q:IFN'>0  I $P($G(^AUPNPROB(IFN,1)),U,2)'="H" S ST=$P(^(0),U,12),CNT(ST)=CNT(ST)+1
- . I (CNT("A")>0)!(CNT("I")>0) S GMPRT=GMPRT+1,^TMP("GMPRT",$J,$P(^DPT(DFN,0),U))="  "_+CNT("A")_$E("       ",1,7-$L(CNT("A")))_+CNT("I") W "."
+ S GMPRT=$$PPROBCNT^GMPLAPI7("^TMP(""GMPRT"","_$J_")","W ""."" I 1")
  I GMPRT'>0 W $C(7),!!,"No patient data available.",! G PATQ
  S GMPLHDR="PROBLEM LIST PATIENT LISTING",GMPLCNT=1
  D DEVICE G:$D(GMPQUIT) PATQ
- D PRT
+ D PRTFMT("D FMTPAT(.LINE)")
 PATQ D KILL
  Q
  ;
@@ -50,10 +53,17 @@ DQ K IO("Q"),POP,%ZIS,ZTRTN,ZTDESC,ZTSAVE,ZTSK
  Q
  ;
 PRT ; Print patient listing from ^TMP("GMPRT",$J,)
- U IO N NAME,PAGE S NAME="",PAGE=0 D HDR
+ D PRTFMT("")
+ Q
+ ;
+PRTFMT(FMT) ; FMT formats ^TMP("GMPRT",$J,NAME) 
+ U IO N NAME,PAGE,LINE 
+ S NAME="",PAGE=0 D HDR
  F  S NAME=$O(^TMP("GMPRT",$J,NAME)) Q:NAME=""  D  Q:$D(GMPQUIT)
  . I $Y>(IOSL-4) D RETURN Q:$D(GMPQUIT)  D HDR
- . W !,NAME,?60,^TMP("GMPRT",$J,NAME)
+ . S LINE=^TMP("GMPRT",$J,NAME)
+ . I FMT]"" X FMT
+ . W !,NAME,?60,LINE
  W:'$D(GMPQUIT) !!?10,"Total of "_GMPRT_" patients found."
  W:IOST?1"P".E @IOF I IOST'?1"P".E,'$D(GMPQUIT) D RETURN
  I $D(ZTQUEUED) S ZTREQ="@" D KILL
