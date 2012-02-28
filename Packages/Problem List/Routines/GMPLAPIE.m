@@ -27,4 +27,10 @@ ERRTABLE
  ;;PROVNOTFOUND^Provider not found
  ;;FACNOTFOUND^Facility not found
  ;;PRBVERIFIED^Problem Already Verified
+ ;;LISTEXIST^List already exists
+ ;;LISTNOTFOUND^Problem selection list not found
+ ;;INACTIVEICD9^This Selection List contains problems with inactive ICD9 codes associated with them.
+ ;;LISTUSED^List could not be deleted, 
+ ;;LOCNOTFOUND^Clinic not found
+ ;;CATEGEXIST^Category already exists
  
