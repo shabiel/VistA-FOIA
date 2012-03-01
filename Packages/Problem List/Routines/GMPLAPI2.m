@@ -153,4 +153,3 @@ VERIFY(GMPIFN,ERT) ; -- verify a transcribed problem
  D UNLOCK^GMPLDAL(GMPIFN,0)
  Q 1
  ;
- 

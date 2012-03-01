@@ -33,4 +33,3 @@ ERRTABLE
  ;;LISTUSED^List could not be deleted, 
  ;;LOCNOTFOUND^Clinic not found
  ;;CATEGEXIST^Category already exists
- 
