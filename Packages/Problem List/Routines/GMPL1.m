@@ -3,7 +3,8 @@ GMPL1 ; SLC/MKB/AJB -- Problem List actions ; 04/22/03
  ; 10 MAR 2000 - MA - Added to the routine another user prompt
  ; to backup and refine Lexicon search if ICD code 799.9
 ADD ;add new entry to list - Requires GMPDFN
- N GMPROB,GMPTERM,GMPICD,Y,DUP W !
+ N GMPROB,GMPTERM,GMPICD,Y,DUP
+ W !
  S GMPROB=$$TEXT^GMPLEDT4("") I GMPROB="^" S GMPQUIT=1 Q
  I 'GMPARAM("CLU")!('$D(GMPLUSER)&('$D(^XUSEC("GMPL ICD CODE",DUZ)))) S GMPTERM="",GMPICD="799.9" G ADD1
  F  D  Q:$D(GMPQUIT)!(+$G(Y))
@@ -19,7 +20,8 @@ ADD1 ; set up default values
  ; -- May enter here with GMPROB=text,GMPICD=code,GMPTERM=#^term
  ; added for Code Set Versioning (CSV)
  I '+$$STATCHK^ICDAPIU(GMPICD,DT) W !,GMPROB,!,"has an inactive code.  Please edit before adding." H 3 Q
- N OK,GMPI,GMPFLD K GMPLJUMP
+ N OK,GMPI,GMPFLD
+ K GMPLJUMP
  S GMPFLD(1.01)=GMPTERM,GMPFLD(.05)=U_GMPROB
  S GMPFLD(.01)=$O(^ICD9("AB",GMPICD_" ",0))_U_GMPICD
  S:'GMPFLD(.01) GMPFLD(.01)=$$NOS^GMPLX ; cannot resolve code
@@ -51,52 +53,51 @@ ADD3 ; Ok to save?
  ; *********************************************************************
  ; *  GMPIFN expected for the following calls:
  ;
-STATUS ; -- inactivate problem
- N DIE,DA,DR,X,Y,CHNGE,GMPFLD,PROMPT,DEFAULT
- S GMPFLD(.13)=$P($G(^AUPNPROB(GMPIFN,0)),U,13) ; Onset
- W !!,$$PROBTEXT^GMPLX(GMPIFN) D RESOLVED^GMPLEDT4 Q:$D(GMPQUIT)
- S PROMPT="COMMENT (<60 char): ",DEFAULT="" D EDNOTE^GMPLEDT4 Q:$D(GMPQUIT)
- W ! I Y'="" S GMPFLD(10,"NEW",1)=Y D NEWNOTE^GMPLSAVE W "."
- S DIE="^AUPNPROB(",DR=".12///I;1.07////"_$P($G(GMPFLD(1.07)),U)
- S DA=GMPIFN D ^DIE W "."
- S CHNGE=GMPIFN_"^.12^"_$$HTFM^XLFDT($H)_U_DUZ_"^A^I^^"_+$G(GMPROV)
- D AUDIT^GMPLX(CHNGE,"") W "." ; audit trail
- D DTMOD^GMPLX(GMPIFN) W "." ; update Dt Last Mod
+STATUS(GMPIFN,GMPROV,GMPVAMC,GMPSAVED,ERT) ; -- inactivate problem
+ N PROBTEXT,GMPFLD,PROMPT,DEFAULT
+ S PROBTEXT=$$PROBTEXT^GMPLX(GMPIFN)
+ I $$STATUS^GMPLAPI2(GMPIFN)="I" D ERR^GMPLAPIE(ERT,"PRBINACTIVE"," ("_PROBTEXT_")") Q 0
+ I $$COND^GMPLAPI2(GMPIFN)="H" D ERR^GMPLAPIE(ERT,"PRBDELETED"," ("_PROBTEXT_")") Q 0
+ S GMPFLD(.13)=$$ONSET^GMPLAPI2(GMPIFN)
+ W !!,PROBTEXT
+ D RESOLVED^GMPLEDT4 Q:$D(GMPQUIT) 0
+ S PROMPT="COMMENT (<60 char): ",DEFAULT="" D EDNOTE^GMPLEDT4 Q:$D(GMPQUIT) 0
+ W !
+ D INACTV^GMPLAPI2(GMPIFN,$G(GMPROV),GMPVAMC,Y,$G(GMPFLD(1.07)),ERT)
  W "... inactivated!",!
- H 1 S GMPSAVED=1
- Q
- ;
-NEWNOTE ; -- add a new comment
- N GMPFLD
- W !!,$$PROBTEXT^GMPLX(GMPIFN)
- I '$$CODESTS^GMPLX(GMPIFN,DT) W !,"is inactive.  Edit the problem before adding comments.",! H 2 Q
- D NOTE^GMPLEDT1 Q:$D(GMPQUIT)!($D(GMPFLD(10,"NEW"))'>9)
- D NEWNOTE^GMPLSAVE,DTMOD^GMPLX(GMPIFN)
+ H 1
  S GMPSAVED=1
- Q
+ Q 1
  ;
-DELETE ; -- delete a problem
- N PROMPT,DEFAULT,X,Y,CHNGE,GMPFLD
+NEWNOTE(GMPIFN,GMPROV,GMPVAMC,ERT) ; -- add a new comment
+ N GMPFLD,NOTES,GMPQUIT
  W !!,$$PROBTEXT^GMPLX(GMPIFN)
+ I '$$CODESTS^GMPLAPI2(GMPIFN,DT) W !,"is inactive.  Edit the problem before adding comments.",! H 2 Q 0
+ D NOTE^GMPLEDT1
+ Q:$D(GMPQUIT)!($D(GMPFLD(10,"NEW"))'>9) 0
+ M NOTES=GMPFLD(10,"NEW")
+ Q $$NEWNOTE^GMPLAPI3(GMPIFN,GMPROV,GMPVAMC,.NOTES,ERT)
+ ;
+DELETE(GMPIFN,GMPROV,GMPVAMC,GMPSAVED,ERT) ; -- delete a problem
+ N PROMPT,DEFAULT,X,Y,SAVED
+ W !!,$$PROBTEXT^GMPLX(GMPIFN)
+ I $$COND^GMPLAPI2(GMPIFN)="H" D ERR^GMPLAPIE(ERT,"PRBDELETED") H 2 Q 0
  S PROMPT="REASON FOR REMOVAL: ",DEFAULT=""
- D EDNOTE^GMPLEDT4 Q:$D(GMPQUIT)  W !
- I Y'="" S GMPFLD(10,"NEW",1)=Y D NEWNOTE^GMPLSAVE W "."
- S CHNGE=GMPIFN_"^1.02^"_$$HTFM^XLFDT($H)_U_DUZ_"^P^H^Deleted^"_+$G(GMPROV)
- S $P(^AUPNPROB(GMPIFN,1),U,2)="H",GMPSAVED=1 W "."
- D AUDIT^GMPLX(CHNGE,""),DTMOD^GMPLX(GMPIFN) W "."
- W "... removed!",! H 1
- Q
+ D EDNOTE^GMPLEDT4 Q:$D(GMPQUIT) 0 W !
+ S SAVED=$$DELETE^GMPLAPI2(GMPIFN,GMPROV,GMPVAMC,Y)
+ W:SAVED "...... removed!"
+ W ! H 1
+ S:SAVED GMPSAVED=1
+ Q SAVED
  ;
 VERIFY ; -- verify a transcribed problem, if parameter on
- N NOW,CHNGE S NOW=$$HTFM^XLFDT($H)
+ N GMPERR
  W !!,$$PROBTEXT^GMPLX(GMPIFN),!
  I '$$CODESTS^GMPLX(GMPIFN,DT) W "has an inactive ICD9 code. Edit the problem before verification.",! H 2 Q
- I $P($G(^AUPNPROB(GMPIFN,1)),U,2)'="T" W "does not require verification.",! H 2 Q
- L +^AUPNPROB(GMPIFN,0):1 I '$T W $C(7),$$LOCKED^GMPLX,! H 2 Q
- S $P(^AUPNPROB(GMPIFN,1),U,2)="P",GMPSAVED=1 W "."
- S CHNGE=GMPIFN_"^1.02^"_NOW_U_DUZ_"^T^P^Verified^"_DUZ W "."
- D AUDIT^GMPLX(CHNGE,""),DTMOD^GMPLX(GMPIFN) W "."
- L -^AUPNPROB(GMPIFN,0) W " verified.",!
+ I $$COND^GMPLAPI2(GMPIFN)'="T" W "does not require verification.",! H 2 Q
+ S GMPSAVED=$$VERIFY^GMPLAPI2(GMPIFN,"GMPERR")
+ W:GMPSAVED " verified.",!
+ W:'GMPSAVED $$FIRSTERR^GMPLAPIE("GMPERR")
  Q
 ICDMSG ; If Lexicon returns ICD code 799.9
  N DIR,DTOUT,DUOUT
