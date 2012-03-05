@@ -8,7 +8,7 @@ CREATE(GMPFLD,ERT) ; Create new problem
  D UPDATE^DIE("","GMPUPD","GMPIEN","ERT")
  Q +$G(GMPIEN(1))
  ;
-GDETAIL(GMPIFN,GMPFLD,ERT) ; Return problem details
+DETAIL(GMPIFN,GMPFLD,ERT) ; Return problem details
  ;                
  ; Input   GMPIFN  Pointer to Problem file #9000011
  ;                
@@ -16,11 +16,11 @@ GDETAIL(GMPIFN,GMPFLD,ERT) ; Return problem details
  ;
  N GMPBUF,FILE,I
  S PROBLEM=9000011
- D GETS^DIQ(PROBLEM,GMPIFN,".01:.03;.08;.12;.13;1.03:1.05;1.08:1.18","I","GMPBUF","ERT")
+ D GETS^DIQ(PROBLEM,GMPIFN,".01:.03;.05;.08;.12;.13;1.02:1.18","IE","GMPBUF","ERT")
  Q:'$D(GMPBUF(PROBLEM,GMPIFN_",")) 0
  S I=""
  F  S I=$O(GMPBUF(PROBLEM,GMPIFN_",",I)) Q:I=""  D
- . S GMPFLD(I)=GMPBUF(PROBLEM,GMPIFN_",",I,"I")
+ . S GMPFLD(I)=GMPBUF(PROBLEM,GMPIFN_",",I,"I")_U_GMPBUF(PROBLEM,GMPIFN_",",I,"E")
  Q 1
  ;
 VERIFIED(GMPIFN) ; True if problem already verified
