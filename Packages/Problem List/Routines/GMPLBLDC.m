@@ -16,20 +16,16 @@ HDR ; -- header code
  ;
 INIT ; -- init variables and list array
  S GMPLGRP=$$GROUP^GMPLBLD2("L") I GMPLGRP="^" S VALMQUIT=1 Q
- L +^GMPL(125.11,+GMPLGRP,0):1 I '$T D  G INIT
+ I '$$LOCKCAT^GMPLAPI1(GMPLGRP) D  G INIT
  . W $C(7),!!,"This category is currently being edited by another user!",!
  S GMPLMODE="E",VALMSG=$$MSG^GMPLX
+ W !,"Searching for the problems ..."
  D GETLIST,BUILD("^TMP(""GMPLIST"",$J)",GMPLMODE)
  Q
  ;
 GETLIST ; Build ^TMP("GMPLIST",$J,#) of problems
- N SEQ,IFN,ITEM,PROB,CNT K ^TMP("GMPLIST",$J) S CNT=0
- W !,"Searching for the problems ..."
- F IFN=0:0 S IFN=$O(^GMPL(125.12,"B",+GMPLGRP,IFN)) Q:IFN'>0  D
- . S ITEM=$G(^GMPL(125.12,IFN,0)),SEQ=$P(ITEM,U,2),PROB=$P(ITEM,U,3)
- . S ^TMP("GMPLIST",$J,IFN)=$P(ITEM,U,2,5),CNT=CNT+1 ; seq ^ prob ^ text ^ code
- . S (^TMP("GMPLIST",$J,"PROB",PROB),^TMP("GMPLIST",$J,"SEQ",SEQ))=IFN ; Xrefs
- S ^TMP("GMPLIST",$J,0)=CNT
+ K ^TMP("GMPLIST",$J)
+ D GETCAT^GMPLAPI1(GMPLGRP,"^TMP(""GMPLIST"",$J)",.ERR)
  Q
  ;
 BUILD(LIST,MODE) ; Build ^TMP("GMPLST",$J,) of current items in LIST for display
@@ -38,12 +34,13 @@ BUILD(LIST,MODE) ; Build ^TMP("GMPLST",$J,) of current items in LIST for display
  S (LCNT,NUM,SEQ)=0
  F  S SEQ=$O(^TMP("GMPLIST",$J,"SEQ",SEQ)) Q:SEQ'>0  D
  . S IFN=^TMP("GMPLIST",$J,"SEQ",SEQ),LCNT=LCNT+1,NUM=NUM+1
- . S PROB=$P(^TMP("GMPLIST",$J,IFN),U,2),TEXT=$P(^TMP("GMPLIST",$J,IFN),U,3),CODE=$P(^TMP("GMPLIST",$J,IFN),U,4)
+ . S PROB=$P(^TMP("GMPLIST",$J,IFN),U,2),TEXT=$P(^TMP("GMPLIST",$J,IFN),U,3),CODE=^TMP("GMPLIST",$J,IFN,"CODE")
  . S ^TMP("GMPLST",$J,LCNT,0)=$S(MODE="I":$J("<"_SEQ_">",8),1:"        ")_$J(NUM,4)_" "_TEXT
  . I $L(CODE) D
- .. S ^TMP("GMPLST",$J,LCNT,0)=^TMP("GMPLST",$J,LCNT,0)_" ("_CODE_")"
- .. I $$STATCHK^ICDAPIU(CODE,DT) Q  ; OK - code is active
- .. S ^TMP("GMPLST",$J,LCNT,0)=^TMP("GMPLST",$J,LCNT,0)_"     <INACTIVE CODE>"
+ .. S ^TMP("GMPLST",$J,LCNT,0)=^TMP("GMPLST",$J,LCNT,0)_" ("_$P(CODE,U,1)_")"
+ .. S FLAG=$P(CODE,U,2)
+ .. Q:$G(FLAG)="0"  ; code is active
+ .. S ^TMP("GMPLST",$J,LCNT,0)=^TMP("GMPLST",$J,LCNT,0)_"    <INACTIVE CODE>"
  . D CNTRL^VALM10(LCNT,9,5,IOINHI,IOINORM)
  . S ^TMP("GMPLST",$J,"B",NUM)=IFN
  S ^TMP("GMPLST",$J,0)=NUM_U_LCNT,VALMCNT=LCNT
@@ -65,8 +62,7 @@ HELP ; -- help code
 EXIT ; -- exit code
  I $D(GMPLSAVE),$$CKSAVE^GMPLBLD2 D
  . D SAVE^GMPLBLD2
- . S ^GMPL(125.11,+GMPLGRP,0)=$P(GMPLGRP,U,2)_U_DT
- L -^GMPL(125.11,+GMPLGRP,0)
+ D UNLKCAT^GMPLAPI1(+GMPLGRP)
  K GMPLIST,GMPLST,GMPLMODE,GMPLGRP,GMPLSAVE,GMPREBLD,GMPQUIT,RT1,TMPITEM
  K VALMBCK,VALMCNT,VALMSG,VALMHDR
  K ^TMP("GMPLIST",$J),^TMP("GMPLST",$J)
@@ -84,6 +80,7 @@ ADD ; Add new problem(s)
  . S SEQ=$$SEQ^GMPLBLD1(SEQ) I SEQ="^" S GMPQUIT=1 Q
  . S IFN=$$TMPIFN^GMPLBLD1,^TMP("GMPLIST",$J,0)=^TMP("GMPLIST",$J,0)+1
  . S ^TMP("GMPLIST",$J,IFN)=SEQ_U_+Y_U_X_U_CODE ; seq ^ # ^ text ^ code
+ . S ^TMP("GMPLIST",$J,IFN,"CODE")=CODE_U_"0" ; code ^ active flag
  . S (^TMP("GMPLIST",$J,"PROB",+Y),^TMP("GMPLIST",$J,"SEQ",SEQ))=IFN,GMPREBLD=1
  I $D(GMPREBLD) S VALMBCK="R",GMPLSAVE=1 D BUILD("^TMP(""GMPLIST"",$J)",GMPLMODE),HDR
  S:'VALMCC VALMBCK="R" S VALMSG=$$MSG^GMPLX

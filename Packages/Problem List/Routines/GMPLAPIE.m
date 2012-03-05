@@ -39,3 +39,5 @@ ERRTABLE ; Error table
  ;;CATEGEXIST^Category already exists
  ;;PRBINACTIVE^Problem is already inactive!
  ;;ICDINACT^Inactive ICD9 code. Edit the problem before adding comments.
+ ;;CATNOTFOUND^Category not found
+ ;;CATUSED^Category in use. Could not delete.
