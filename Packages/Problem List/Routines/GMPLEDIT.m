@@ -14,11 +14,14 @@ GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ; 04/15/2002
 EN ; Init Variables, list array
  ;   Expects GMPIFN   IEN of file 900011 (required)
  ;           GMPLNUM  Sequence # of Problem Edit (optional)
+ N I
  W !!,"Retrieving current data for problem "
  W $S($G(GMPLNUM):"#"_GMPLNUM_" ",1:"")_"...",! K GMPFLD,GMPORIG
  ;   Set GMPFLD() and GMPORIG() Arrays
- D GETFLDS^GMPLEDT3(GMPIFN)
- I '$D(GMPFLD) W !!,"ERROR -- Cannot continue.",! S VALMBCK="Q" G KILL
+ ;D GETFLDS^GMPLEDT3(GMPIFN)
+ D DETAIL^GMPLAPI2(GMPIFN,.GMPORIG,$G(GMPLMGR),GMPVAMC,GMPROV)
+ I '$D(GMPORIG) W !!,"ERROR -- Cannot continue.",! S VALMBCK="Q" G KILL
+ M GMPFLD=GMPORIG
 INIT ;   Build list from GMPFLD()
  N LCNT,TEXT,I,SP,LINE,STR,NUM,NOTE,ICD
  S LCNT=1,ICD=$S($D(^XUSEC("GMPL ICD CODE",DUZ)):1,1:0)
@@ -111,7 +114,7 @@ EX1 ;   Ask to Save Changes on Exit
  S %=1 D YN^DICN G:(%<0)!(%=2) KILL I %=0 D  G EX1
  . W !!?5,"Enter YES or <return> to save the current values listed above"
  . W !?5,"describing this problem; enter NO to exit without saving.",!
- W !!,"Saving ..." D EN^GMPLSAVE W " done."
+ W !!,"Saving ..." D UPDATE^GMPLAPI2(GMPIFN,.GMPORIG,.GMPFLD,GMPLUSER,GMPVAMC,GMPROV) W " done."
 KILL ;   Clean-up
  S CNT=+$G(^TMP("GMPLEDIT",$J,0))
  F I=1:1:CNT K XQORM("KEY",I)
