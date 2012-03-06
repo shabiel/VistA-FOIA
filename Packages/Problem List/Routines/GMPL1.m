@@ -3,7 +3,7 @@ GMPL1 ; SLC/MKB/AJB -- Problem List actions ; 04/22/03
  ; 10 MAR 2000 - MA - Added to the routine another user prompt
  ; to backup and refine Lexicon search if ICD code 799.9
 ADD ;add new entry to list - Requires GMPDFN
- N GMPROB,GMPTERM,GMPICD,Y,DUP,GMPIFN,GMPFLD,GMPSAVED
+ N GMPROB,GMPTERM,GMPICD,Y,DUP,GMPIFN,GMPFLD
  W !
  S GMPROB=$$TEXT^GMPLEDT4("") I GMPROB="^" S GMPQUIT=1 Q
  I 'GMPARAM("CLU")!('$D(GMPLUSER)&('$D(^XUSEC("GMPL ICD CODE",DUZ)))) S GMPTERM="",GMPICD="799.9" G ADD1
@@ -42,10 +42,12 @@ ADD3 ; Ok to save?
  I OK="^" W !!?10,"< Nothing Saved !! >",! S GMPQUIT=1 H 1 Q
  I OK D  Q  ; ck DA for error?
  . N I W !!,"Saving ..." S GMPIFN=$$NEW^GMPLAPI2(GMPDFN,GMPROV,GMPVAMC,.GMPFLD,"GMPERR")
+ . I GMPIFN'>0 W $$FIRSTERR^GMPLAPIE("GMPERR") G ADD4
  . S I=$S(GMPLIST(0)'>0:1,GMPARAM("REV"):$O(GMPLIST(0))-.01,1:GMPLIST(0)+1)
  . S GMPLIST(I)=GMPIFN,GMPLIST("B",GMPIFN)=I,GMPLIST(0)=$G(GMPLIST(0))+1
  . S GMPSAVED=1
  . W " done."
+ADD4
  ; Not ok -- edit values, ask again
  F GMPI=1:1:GMPFLD("FLD",0) D @(GMPFLD("FLD",GMPI)_"^GMPLEDT1") Q:$D(GMPQUIT)!($D(GMPSAVED))  I $G(GMPLJUMP) S GMPI=GMPLJUMP-1 S GMPLJUMP=0 ; reset GMPI to desired fld
  Q:$D(DTOUT)  K GMPQUIT,DUOUT G ADD3
