@@ -19,7 +19,7 @@ EN ; Init Variables, list array
  W $S($G(GMPLNUM):"#"_GMPLNUM_" ",1:"")_"...",! K GMPFLD,GMPORIG
  ;   Set GMPFLD() and GMPORIG() Arrays
  ;D GETFLDS^GMPLEDT3(GMPIFN)
- D DETAIL^GMPLAPI2(GMPIFN,.GMPORIG,$G(GMPLMGR),GMPVAMC,GMPROV)
+ D DETAIL^GMPLAPI2(.GMPORIG,GMPIFN,$G(GMPLMGR),GMPVAMC,GMPROV)
  I '$D(GMPORIG) W !!,"ERROR -- Cannot continue.",! S VALMBCK="Q" G KILL
  M GMPFLD=GMPORIG
 INIT ;   Build list from GMPFLD()
@@ -114,7 +114,11 @@ EX1 ;   Ask to Save Changes on Exit
  S %=1 D YN^DICN G:(%<0)!(%=2) KILL I %=0 D  G EX1
  . W !!?5,"Enter YES or <return> to save the current values listed above"
  . W !?5,"describing this problem; enter NO to exit without saving.",!
- W !!,"Saving ..." D UPDATE^GMPLAPI2(GMPIFN,.GMPORIG,.GMPFLD,GMPLUSER,GMPVAMC,GMPROV) W " done."
+ W !!,"Saving ..."
+ N RETURN
+ I '$$UPDATE^GMPLAPI2(.RETURN,GMPIFN,.GMPORIG,.GMPFLD,GMPLUSER,GMPVAMC,GMPROV) D  G EX1
+ . W !,$$ERRTXT^GMPLAPIE(.RETURN)
+ W " done."
 KILL ;   Clean-up
  S CNT=+$G(^TMP("GMPLEDIT",$J,0))
  F I=1:1:CNT K XQORM("KEY",I)

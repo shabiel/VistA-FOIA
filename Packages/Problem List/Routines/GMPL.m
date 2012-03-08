@@ -65,13 +65,14 @@ NTQ ; cleanup
  Q
  ;
 EDIT ; -- edit allowable fields of a problem
- N GMPIFN,GMPLNUM,GMPSAVED
+ N GMPIFN,GMPLNUM,GMPSAVED,DELETED
  S VALMBCK="" G:+$G(GMPCOUNT)'>0 EDQ
  S GMPLNUM=$$SEL1^GMPLX("edit") G:GMPLNUM="^" EDQ
  S GMPIFN=$P($G(^TMP("GMPLIDX",$J,+GMPLNUM)),U,2) G:GMPIFN'>0 EDQ
  ; Code Set Versioning (CSV)
  ; I '$$CODESTS^GMPLX(GMPIFN,DT) W !!,$$PROBTEXT^GMPLX(GMPIFN),!,"has an inactive ICD code.",! H 3 G EDQ
- I $$COND^GMPLAPI2(GMPIFN)="H" W !!,$$PROBTEXT^GMPLX(GMPIFN),!,"has been removed from this patient's problem list!",! H 2 G EDQ
+ D DELETED^GMPLAPI2(.DELETED,GMPIFN)
+ I DELETED W !!,$$PROBTEXT^GMPLX(GMPIFN),!,"has been removed from this patient's problem list!",! H 2 G EDQ
  ;L +^AUPNPROB(GMPIFN,0):1 I '$T W $C(7),!!,$$LOCKED^GMPLX,! H 2 G EDQ
  D EN^VALM("GMPL EDIT PROBLEM")
  I $D(GMPSAVED) D BUILD^GMPLMGR(.GMPLIST),HDR^GMPLMGR S GMPRINT=1
