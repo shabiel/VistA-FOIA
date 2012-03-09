@@ -9,7 +9,7 @@ FMTPAT(LINE) ; Does formatting for PAT tag
  ;
 PAT ; List patients having data in Problem file #9000011
  D WAIT^DICD
- S GMPRT=$$PPROBCNT^GMPLAPI7("^TMP(""GMPRT"","_$J_")","W ""."" I 1")
+ S GMPRT=$$PPROBCNT^GMPLAPI7("^TMP(""GMPRT"","_$J_")")
  I GMPRT'>0 W $C(7),!!,"No patient data available.",! G PATQ
  S GMPLHDR="PROBLEM LIST PATIENT LISTING",GMPLCNT=1
  D DEVICE G:$D(GMPQUIT) PATQ

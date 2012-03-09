@@ -20,14 +20,13 @@ GETPROB(IFN,PROBLEM) ;
  S PROBLEM("DELETED")=($P(NODE1,"^",2)="H")
  Q
  ;
+ ;
  ; Finds patients with active and inactive problems.
  ;   TARGET: Root of the target local or global.
- ;   SCREEN: Executed before each patient node is put into TARGET.
  ; Results stored as TARGET(PATIENT_NAME)=<# Active Problems>_"^"_<# Inactive Problems>
  ; Returns number of patients.
-PPROBCNT(TARGET,SCREEN)
+PPROBCNT(TARGET)
  N DFN,IFN,CNT,PATCNT,ST,PATIENT,PROBLEM
- S:'$D(SCREEN) SCREEN=""
  S PATCNT=0
  F DFN=0:0 S DFN=$O(^AUPNPROB("AC",DFN)) Q:DFN'>0  D
  . S (CNT("A"),CNT("I"),IFN)=0
@@ -37,7 +36,6 @@ PPROBCNT(TARGET,SCREEN)
  . . S ST=PROBLEM("ACTFLAG")
  . . S CNT(ST)=CNT(ST)+1
  . I (CNT("A")>0)!(CNT("I")>0) D
- . . X:SCREEN]"" SCREEN Q:'$T
  . . S PATCNT=PATCNT+1
  . . K PATIENT D GETPAT(DFN,.PATIENT)
  . . S @TARGET@(PATIENT("NAME"))=CNT("A")_"^"_CNT("I")
