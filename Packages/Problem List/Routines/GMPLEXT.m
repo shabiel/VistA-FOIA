@@ -6,6 +6,9 @@ PROVNAME(GMPROV) ; Returns provider name
 CLINNAME(GMCLIN) ; Returns Clinic name
  Q $P($G(^SC(+GMCLIN,0)),U)
  ;
+LOCTYPE(GMPLOC) ; Returns location type
+ Q $P($G(^SC(GMPLOC,0)),"^",3)
+ ;
 PATNAME(GMPDFN) ; Returns patient name
  Q $P($G(^DPT(+GMPDFN,0)),U)
  ;
@@ -38,4 +41,20 @@ USERLST(GMPCLIN) ; Returns user list or clinic's
  S GMPLSLST=$P($G(^VA(200,DUZ,125)),U,2)
  I 'GMPLSLST,$G(GMPCLIN),$D(^GMPL(125,"C",+GMPCLIN)) S GMPLSLST=$O(^(+GMPCLIN,0)) ; if user has no list but clinic does, use clinic list
  Q GMPLSLST
+ ;
+ICD9KEY(GMPICD) ; Returns KEY IN icd9 File
+ Q $O(^ICD9("AB",GMPICD_" ",0))
+ ;
+SERVICE(USER) ; Returns User's service/section from file #49
+ N X S X=+$P($G(^VA(200,USER,5)),U)
+ I $P($G(^DIC(49,X,0)),U,9)'="C" S X=0
+ S:X>0 X=X_U_$$SVCNAME(X) S:X'>0 X=""
+ Q X
+ ;
+SVCNAME(SVC) ; Return service name
+ Q $P($G(^DIC(49,SVC,0)),U)
+ ;
+USERVIEW(USER) ; Returns user's preferred view
+ N X S X=$P($G(^VA(200,USER,125)),U)
+ Q X
  ;
