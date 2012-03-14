@@ -4,10 +4,10 @@ GMPLBLD2 ; SLC/MKB,JFR -- Bld PL Selection Lists cont ; 3/14/03 11:20
  ; This routine invokes IA #3991
  ;
 NEWGRP ; Change problem groups
- N NEWGRP D FULL^VALM1
+ N NEWGRP,RETURN D FULL^VALM1
  I $D(GMPLSAVE),$$CKSAVE D SAVE
 NG1 S NEWGRP=$$GROUP("L") G:+NEWGRP'>0 NGQ G:+NEWGRP=+GMPLGRP NGQ
- I '$$LOCKCAT^GMPLAPI1(NEWGRP) D  G NG1
+ I '$$LOCKCAT^GMPLAPI1(.RETURN,NEWGRP) D  G NG1
  . W $C(7),!!,"This category is currently being edited by another user!",!
  D UNLKCAT^GMPLAPI1(+GMPLGRP) S GMPLGRP=NEWGRP
  D GETLIST^GMPLBLDC,BUILD^GMPLBLDC("^TMP(""GMPLIST"",$J)",GMPLMODE),HDR^GMPLBLDC
@@ -22,10 +22,10 @@ GROUP(L) ; Lookup into Problem Selection Group file #125.11
  Q Y
  ;
 NEWLST ; Change selection lists
- N NEWLST D FULL^VALM1
+ N NEWLST,RETURN D FULL^VALM1
  I $D(GMPLSAVE),$$CKSAVE D SAVE
 NL1 S NEWLST=$$LIST("L") G:+NEWLST'>0 NLQ G:+NEWLST=+GMPLSLST NLQ
- I '$$LOCKLST^GMPLAPI1(NEWLST) D  G NL1
+ I '$$LOCKLST^GMPLAPI1(.RETURN,NEWLST) D  G NL1
  . W $C(7),!!,"This list is currently being edited by another user!",!
  D UNLKLST^GMPLAPI1(+GMPLSLST) S GMPLSLST=NEWLST
  D GETLIST^GMPLBLD,BUILD^GMPLBLD("^TMP(""GMPLIST"",$J)",GMPLMODE),HDR^GMPLBLD
@@ -84,23 +84,25 @@ SAVE ; Save changes to group/list
  . S VALMBCK="R",GMPLQT=1
  . Q
  W !!,"Saving ..."
- N SOURCE,ERR S SOURCE="^TMP(""GMPLIST"",$J)"
- S LABEL=$S($D(GMPLGRP):"SAVGRP^GMPLAPI1(GMPLGRP,SOURCE,DT,.ERR)",1:"SAVLST^GMPLAPI1(GMPLSLST,SOURCE,DT,.ERR)")
+ N SOURCE,RETURN S SOURCE="^TMP(""GMPLIST"",$J)"
+ S LABEL=$S($D(GMPLGRP):"SAVGRP^GMPLAPI1(.RETURN,GMPLGRP,SOURCE)",1:"SAVLST^GMPLAPI1(.RETURN,GMPLSLST,SOURCE)")
  D @LABEL
  K GMPLSAVE S:$D(GMPLGRP) GMPSAVED=1
  S VALMBCK="Q" W " done." H 1
  Q
  ;
 DELETE ; Delete problem group
- N DIR,X,Y,DA,DIK,IFN S VALMBCK=$S(VALMCC:"",1:"R")
- I $$CATUSED^GMPLAPI1(+GMPLGRP,.ERT) W $C(7),!!,">>>  This category belongs to at least one problem selection list!",!,"     CANNOT DELETE" H 2 Q
+ N DIR,X,Y,DA,DIK,IFN,CNT,RETURN S VALMBCK=$S(VALMCC:"",1:"R")
+ D CATUSED^GMPLAPI1(.RETURN,+GMPLGRP)
+ I RETURN W $C(7),!!,">>>  This category belongs to at least one problem selection list!",!,"     CANNOT DELETE" H 2 Q
  S DIR(0)="YA",DIR("B")="NO",DIR("A")="Are you sure you want to delete the entire '"_$P(GMPLGRP,U,2)_"' category? "
  S DIR("?")="Enter YES to completely remove this category and all its items."
  D ^DIR Q:'Y
 DEL1 ; Ok, go for it ...
  W !!,"Deleting category items ..."
- D DELCAT^GMPLAPI1(+GMPLGRP,"W "".""",.ERT)
- D UNLKCAT^GMPLAPI1(+GMPLGRP) S GMPLGRP=0 K GMPLSAVE W " <done>"
+ K RETURN
+ D DELCAT^GMPLAPI1(.RETURN,+GMPLGRP)
+ D UNLKCAT^GMPLAPI1(+GMPLGRP) S GMPLGRP=0 K GMPLSAVE W ". <done>"
  D NEWGRP S:+GMPLGRP'>0 VALMBCK="Q"
  Q
  ;

@@ -15,8 +15,9 @@ HDR ; -- header code
  Q
  ;
 INIT ; -- init variables and list array
+ N RETURN
  S GMPLGRP=$$GROUP^GMPLBLD2("L") I GMPLGRP="^" S VALMQUIT=1 Q
- I '$$LOCKCAT^GMPLAPI1(GMPLGRP) D  G INIT
+ I '$$LOCKCAT^GMPLAPI1(.RETURN,GMPLGRP) D  G INIT
  . W $C(7),!!,"This category is currently being edited by another user!",!
  S GMPLMODE="E",VALMSG=$$MSG^GMPLX
  W !,"Searching for the problems ..."
@@ -25,7 +26,8 @@ INIT ; -- init variables and list array
  ;
 GETLIST ; Build ^TMP("GMPLIST",$J,#) of problems
  K ^TMP("GMPLIST",$J)
- D GETCAT^GMPLAPI1(GMPLGRP,"^TMP(""GMPLIST"",$J)",.ERR)
+ N RETURN S RETURN="^TMP(""GMPLIST"",$J)"
+ D GETCAT^GMPLAPI1(.RETURN,GMPLGRP)
  Q
  ;
 BUILD(LIST,MODE) ; Build ^TMP("GMPLST",$J,) of current items in LIST for display

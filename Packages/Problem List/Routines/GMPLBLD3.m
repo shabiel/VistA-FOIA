@@ -22,7 +22,7 @@ ASQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
 USERS(ADD) ; -- select user(s) to de-/assign list
- N DIR,DIC,DIE,DR,DA,X,Y,GMPLUSER,GMPLI
+ N DIR,DIC,DIE,DR,DA,X,Y,GMPLUSER,GMPLI,RETURN
  Q:+$G(GMPLSLST)'>0  S GMPLUSER=""
  S DIC="^VA(200,",DIC(0)="EQM",DIC("A")="Select USER: "
  F  D READ Q:+Y'>0  S GMPLUSER=GMPLUSER_U_+Y,DIC("A")="ANOTHER ONE: "
@@ -32,7 +32,7 @@ USERS(ADD) ; -- select user(s) to de-/assign list
  S DIR("?")=($L(GMPLUSER,U)-1)_" user(s) selected; enter NO to exit."
  D ^DIR Q:'Y
 USR W !,$S(ADD:"Assigning ",1:"Removing ")_$P(GMPLSLST,U,2)_" list ..."
- S TARGET=$S(ADD:"ASSGNUSR^GMPLAPI1(GMPLSLST,DA,.ERR)",1:"REMUSR^GMPLAPI1(GMPLSLST,DA,.ERR)")
+ S TARGET=$S(ADD:"ASSUSR^GMPLAPI1(.RETURN,GMPLSLST,DA)",1:"REMUSR^GMPLAPI1(.RETURN,GMPLSLST,DA)")
  F GMPLI=1:1:$L(GMPLUSER,U) S DA=$P(GMPLUSER,U,GMPLI) I DA D
  . D @TARGET
  . W !?4,$$PROVNAME^GMPLEXT(DA)
@@ -49,10 +49,11 @@ READ ; prompt for username, respond
  Q
  ;
 DELETE ; Delete Selection List
- N DIR,DIK,DA,X,Y,VIEW,USER,GMPCOUNT,GMPQUIT,GMPLSLST
+ N DIR,DIK,DA,X,Y,VIEW,USER,GMPCOUNT,GMPQUIT,GMPLSLST,RETURN
  S GMPCOUNT=0,GMPLSLST=$$LIST^GMPLBLD2("") Q:GMPLSLST="^"
  W !!,"Checking the New Person file for use of this list ..."
- S GMPCOUNT=$$LSTUSED^GMPLAPI1(GMPLSLST,"W "".""",.ERR)
+ D LSTUSED^GMPLAPI1(.RETURN,GMPLSLST)
+ S GMPCOUNT=RETURN
  I GMPCOUNT W $C(7),!!,GMPCOUNT_" user(s) are currently assigned this list!",!,"CANNOT DELETE",! Q
  W !,"0 users found."
 DEL1 S DIR(0)="Y",DIR("B")="NO"
@@ -60,7 +61,8 @@ DEL1 S DIR(0)="Y",DIR("B")="NO"
  S DIR("?",1)="Enter YES if you wish to completely remove this list; press <return>",DIR("?")="to leave this list unchanged and exit this option."
  W $C(7),! D ^DIR Q:'Y
  W !!,"Deleting "_$P(GMPLSLST,U,2)_" selection list ..."
- D DELSLST^GMPLAPI1(+GMPLSLST,"W "".""",.ERR)
+ K RETURN
+ D DELLST^GMPLAPI1(.RETURN,+GMPLSLST)
  W "." ; list
  W !,"DONE.",!
  Q

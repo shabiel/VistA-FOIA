@@ -16,8 +16,9 @@ HDR ; -- header code
  Q
  ;
 INIT ; -- init variables and list array
+ N RETURN
  S GMPLSLST=$$LIST^GMPLBLD2("L") I GMPLSLST="^" S VALMQUIT=1 Q
- I '$$LOCKLST^GMPLAPI1(GMPLSLST) D  G INIT
+ I '$$LOCKLST^GMPLAPI1(.RETURN,GMPLSLST) D  G INIT
  . W $C(7),!!,"This list is currently being edited by another user!",!
  S GMPLMODE="E",VALMSG=$$MSG^GMPLX
  W !,"Searching for the list ..."
@@ -25,8 +26,9 @@ INIT ; -- init variables and list array
  Q
  ;
 GETLIST ; Build ^TMP("GMPLIST",$J,#)
- N ERR K ^TMP("GMPLIST",$J)
- D GETLIST^GMPLAPI1(GMPLSLST,"^TMP(""GMPLIST"",$J)",50,.ERR)
+ N ERR,RETURN K ^TMP("GMPLIST",$J)
+ S RETURN="^TMP(""GMPLIST"",$J)"
+ D GETLIST^GMPLAPI1(.RETURN,GMPLSLST,50)
  Q
  ;
 BUILD(LIST,MODE) ; Build ^TMP("GMPLST",$J,)
@@ -78,7 +80,7 @@ EXIT ; -- exit code
  Q
  ;
 ADD ; Add group(s)
- N SEQ,GROUP,HDR,IFN,GMPQUIT,GMPREBLD,ERR D FULL^VALM1
+ N SEQ,GROUP,HDR,IFN,GMPQUIT,GMPREBLD,ERR,RETURN D FULL^VALM1
  F  D  Q:$D(GMPQUIT)  W !
  . S GROUP=$$GROUP^GMPLBLD2("") I GROUP="^" S GMPQUIT=1 Q
  . I $D(^TMP("GMPLIST",$J,"GRP",+GROUP)) W !?4,">>>  This category is already part of this list!" Q
@@ -94,7 +96,8 @@ ADD ; Add group(s)
  . S SEQ=$$SEQ^GMPLBLD1(SEQ) I SEQ="^" S GMPQUIT=1 Q
  . S IFN=$$TMPIFN^GMPLBLD1,^TMP("GMPLIST",$J,IFN)=SEQ_U_+GROUP_U_HDR_"^1"
  . S (^TMP("GMPLIST",$J,"GRP",+GROUP),^TMP("GMPLIST",$J,"SEQ",SEQ))=IFN,^TMP("GMPLIST",$J,0)=^TMP("GMPLIST",$J,0)+1,GMPREBLD=1
- . D GETCATD^GMPLAPI1(+GROUP,"^TMP(""GMPLIST"",$J)",50,.ERR)
+ . S RETURN="^TMP(""GMPLIST"",$J)"
+ . D GETCATD^GMPLAPI5(.RETURN,+GROUP,50)
  I $D(GMPREBLD) S VALMBCK="R",GMPLSAVE=1 D BUILD("^TMP(""GMPLIST"",$J)",GMPLMODE),HDR
  S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
