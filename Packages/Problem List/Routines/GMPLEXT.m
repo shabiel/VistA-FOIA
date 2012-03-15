@@ -58,3 +58,14 @@ USERVIEW(USER) ; Returns user's preferred view
  N X S X=$P($G(^VA(200,USER,125)),U)
  Q X
  ;
+HASKEY(KEY) ; Returns true if user has KEY assigned
+ Q $D(^XUSEC(KEY,DUZ))
+ ;
+CLINUSER() ;is this a clinical user?
+ N GMPLUSER
+ S GMPLUSER=0
+ I $$HASKEY("PROVIDER") S GMPLUSER=1
+ I $$HASKEY("ORES") S GMPLUSER=1
+ I $$HASKEY("ORELSE") S GMPLUSER=1
+ Q GMPLUSER
+ ;
