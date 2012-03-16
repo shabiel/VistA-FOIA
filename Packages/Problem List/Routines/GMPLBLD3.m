@@ -16,16 +16,49 @@ ASSIGN ; Assign list to clinic, users: Expects GMPLSLST
  ;
  W !!,"You may assign this list to a clinic as its default selection list,"
  W !,"as well as to individual users as a preferred selection list.",!
- S DA=+GMPLSLST,DR=.03,DIE="^GMPL(125," D ^DIE Q:$D(DTOUT)!($D(DUOUT))
+ D ASGCLIN(+GMPLSLST)
  D USERS("1") ; assign
 ASQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
+ASGCLIN(GMPLSLST) ;
+ N CLIN,RETURN
+ S CLIN=$$CLINIC
+ I $G(CLIN)>0 D ADDLOC^GMPLAPI5(.RETURN,GMPLSLST,CLIN)
+ Q
+ ;
+CLINIC(L) ;
+CL ;
+ N PRMPT,LNAME,X,LSTS,Y,RETURN,LSTS
+ S Y=-1,PRMPT="CLINIC: "
+ W !,PRMPT R X:$S($D(DTIME):DTIME,1:300) I "^"[X!($G(X)="") S Y=-1 Q "^"
+ I X="?" D CH1 D GETCLIN^GMPLAPI5(.LSTS) D PRINTALL^GMPLBLD2(.LSTS)
+ I X?1"??".E D
+ . I X="??" D CH2 D GETCLIN^GMPLAPI5(.LSTS) D PRINTALL^GMPLBLD2(.LSTS)
+ E  D:X'="?"
+ . D GETCLIN^GMPLAPI5(.LSTS,X)
+ . S Y=$$SELLST^GMPLBLD2(.LSTS,X)
+ G:Y<0 CL
+ Q Y
+ ;
+CH1 ;
+ W !,$C(9)_"Enter the clinic to be associated with this list."
+ W !,$C(9)_"Only hospital locations that are clinics are allowed."
+ W !,$C(9)_"Answer with HOSPITAL LOCATION NAME, or ABBREVIATION, or TEAM"
+ Q
+ ;
+CH2 ;
+ W !,$C(9)_"This is the clinic to be associated with this list.  This should be the"
+ W !,$C(9)_"primary clinic in which this list will be used to populate patient"
+ W !,$C(9)_"problem lists; when adding new problems for a patient from this clinic,"
+ W !,$C(9)_"this list will automatically be presented to select problems from."
+ Q
+ ;
 USERS(ADD) ; -- select user(s) to de-/assign list
- N DIR,DIC,DIE,DR,DA,X,Y,GMPLUSER,GMPLI,RETURN
+ N DIR,DIC,DIE,DR,DA,X,Y,GMPLUSER,GMPLI,RETURN,PRMT
  Q:+$G(GMPLSLST)'>0  S GMPLUSER=""
- S DIC="^VA(200,",DIC(0)="EQM",DIC("A")="Select USER: "
- F  D READ Q:+Y'>0  S GMPLUSER=GMPLUSER_U_+Y,DIC("A")="ANOTHER ONE: "
+ S PRMT="Select USER: "
+ F  D READUS(PRMT) Q:+Y'>0  S GMPLUSER=GMPLUSER_U_+Y,PRMT="ANOTHER ONE: "
  I '$L(GMPLUSER) W !!,"No users selected.",! Q
  S DIR(0)="YA",DIR("A")="Are you ready? ",DIR("B")="NO"
  S DIR("?",1)="Enter YES to "_$S(ADD:"assign",1:"remove")_" the "_$P(GMPLSLST,U,2)_" list "_$S(ADD:"to the",1:"from the")
@@ -39,18 +72,25 @@ USR W !,$S(ADD:"Assigning ",1:"Removing ")_$P(GMPLSLST,U,2)_" list ..."
  W !!,"DONE."
  Q
  ;
-READ ; prompt for username, respond
- W !,DIC("A") R X:DTIME I '$T!("^"[X) S Y=-1 Q
+READUS(PRMT) ; prompt for username, respond
+READ ;
+ N LSTS
+ W !,PRMT R X:DTIME I '$T!("^"[X) S Y=-1 Q
  I X="?" W !!,"Enter the name of the user you wish this list to be "_$S(ADD:"assigned to;",1:"removed from;"),!,"enter '??' to see users currently assigned this list, or '???' to see",!,"all users on this system.",! G READ
  I X?1"??".E D  G READ
- . I X="??" S DIC("S")="I $P($G(^(125)),U,2)="_+GMPLSLST W !!,"Users currently assigned "_$P(GMPLSLST,U,2)_" list:"
- . S D="B",DZ="??" D DQ^DICQ K D,DZ,DIC("S")
- D ^DIC G:Y'>0 READ
+ . I X="??" D
+ . . D GETASUSR^GMPLAPI5(.LSTS,+GMPLSLST)
+ . . W !!,"Users currently assigned "_$P(GMPLSLST,U,2)_" list:"
+ . E  D
+ . . D GETUSRS^GMPLAPI5(.LSTS)
+ . D PRINTALL^GMPLBLD2(.LSTS)
+ D GETUSRS^GMPLAPI5(.LSTS,X)
+ S Y=$$SELLST^GMPLBLD2(.LSTS,X) G:Y'>0 READ
  Q
  ;
 DELETE ; Delete Selection List
  N DIR,DIK,DA,X,Y,VIEW,USER,GMPCOUNT,GMPQUIT,GMPLSLST,RETURN
- S GMPCOUNT=0,GMPLSLST=$$LIST^GMPLBLD2("") Q:GMPLSLST="^"
+ S GMPCOUNT=0,GMPLSLST=$$LIST^GMPLBLD2 Q:GMPLSLST=0
  W !!,"Checking the New Person file for use of this list ..."
  D LSTUSED^GMPLAPI1(.RETURN,GMPLSLST)
  S GMPCOUNT=RETURN

@@ -9,9 +9,9 @@ EN ; -- main entry point for GMPL SELECTION GROUP BUILD
  ;
 HDR ; -- header code
  N NAME,NUM,DATE S NUM=+^TMP("GMPLST",$J,0)_" problem"_$S(+^TMP("GMPLST",$J,0)'=1:"s",1:"")
- S DATE="Last Modified: "_$S(+$P(GMPLGRP,U,3):$$FMTE^XLFDT($P(GMPLGRP,U,3)),1:"<new category>")
+ S DATE="Last Modified: "_^TMP("GMPLIST",$J,"CAT","MODIFIED")
  S VALMHDR(1)=DATE_$J(NUM,79-$L(DATE))
- S NAME=$P(GMPLGRP,U,2),VALMHDR(2)=$J(NAME,$L(NAME)\2+41)
+ S NAME=^TMP("GMPLIST",$J,"CAT","NAME"),VALMHDR(2)=$J(NAME,$L(NAME)\2+41)
  Q
  ;
 INIT ; -- init variables and list array

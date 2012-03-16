@@ -14,11 +14,22 @@ NG1 S NEWGRP=$$GROUP("L") G:+NEWGRP'>0 NGQ G:+NEWGRP=+GMPLGRP NGQ
 NGQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
-GROUP(L) ; Lookup into Problem Selection Group file #125.11
- N DIC,X,Y,DLAYGO ; L = "" or "L", if LAYGO is [not] allowed
- S DIC="^GMPL(125.11,",DIC(0)="AEQMZ"_L,DIC("A")="Select CATEGORY NAME: "
- S:DIC(0)["L" DLAYGO=125.11
- D ^DIC S:Y'>0 Y="^" S:Y'="^" Y=+Y_U_Y(0)
+GROUP(L) ;
+GR ;
+ N PRMPT,LNAME,X,LSTS,Y,RETURN,LSTS,FILE,FIELDS
+ S Y=-1,PRMPT="Select CATEGORY NAME: "
+ S FILE="PROBLEM SELECTION CATEGORY",FIELDS="NAME"
+ W !,PRMPT R X:$S($D(DTIME):DTIME,1:300) I "^"[X!($G(X)="") S Y=-1 Q "^"
+ I X="?" D GETCATS^GMPLAPI5(.LSTS) I $$LSTSH1(.LSTS,FILE,FIELDS) D PRINTALL(.LSTS)
+ I X?1"??".E D
+ . I X="??" D GETCATS^GMPLAPI5(.LSTS) D PRINTALL(.LSTS)
+ E  D:X'="?"
+ . D GETCATS^GMPLAPI5(.LSTS,X)
+ . S Y=$$SELLST(.LSTS,X)
+ G:Y<0 GR
+ I Y=0 D
+ . S ADD=$$ASKADD(X,"PROBLEM SELECTION CATEGORY") G:ADD=0 GR
+ . D NEWCAT^GMPLAPI1(.RETURN,X) S Y=RETURN G:RETURN=0 GR
  Q Y
  ;
 NEWLST ; Change selection lists
@@ -32,12 +43,80 @@ NL1 S NEWLST=$$LIST("L") G:+NEWLST'>0 NLQ G:+NEWLST=+GMPLSLST NLQ
 NLQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
-LIST(L) ; Lookup into Problem Selection List file #125
- N DIC,X,Y,DLAYGO ; L="" or "L" if LAYGO [not] allowed
- S DIC="^GMPL(125,",DIC(0)="AEQMZ"_L,DIC("A")="Select LIST NAME: "
- S:DIC(0)["L" DLAYGO=125
- D ^DIC S:Y'>0 Y="^" S:Y'="^" Y=+Y_U_Y(0)
+LIST(L) ;
+LS ;
+ N PRMPT,LNAME,X,LSTS,Y,RETURN,LSTS,ADD,CLINIC,FILE,FIELDS
+ S Y=-1,PRMPT="Select LIST NAME: "
+ S FILE="PROBLEM SELECTION LIST",FIELDS="NAME, or CLINIC"
+ W !,PRMPT R X:$S($D(DTIME):DTIME,1:300) I "^"[X!($G(X)="") S Y=-1 Q "^"
+ I X="?" D GETLSTS^GMPLAPI5(.LSTS) I $$LSTSH1(.LSTS,FILE,FIELDS) D PRINTALL(.LSTS)
+ I X?1"??".E D
+ . I X="??" D GETLSTS^GMPLAPI5(.LSTS) D PRINTALL(.LSTS)
+ E  D:X'="?"
+ . D GETLSTS^GMPLAPI5(.LSTS,X)
+ . S Y=$$SELLST(.LSTS,X)
+ G:Y<0 LS
+ I Y=0 D
+ . S ADD=$$ASKADD(X,"PROBLEM SELECTION LIST") G:ADD=0 LS
+ . S CLINIC=$$CLINIC^GMPLBLD3
+ . D NEWLST^GMPLAPI1(.RETURN,X,CLINIC) S Y=RETURN G:RETURN=0 LS
  Q Y
+ ;
+SELLST(LSTS,X) ;
+ N CNT,Y,MAXP,CLINE,SEL,OUT,RE
+ I $D(LSTS)=0 Q -1
+ S CNT=$P(LSTS(0),U,1)
+ I CNT=0 W " ??" Q 0
+ I CNT=1 W $E(LSTS(1,"NAME"),$L(X)+1,$L(LSTS(1,"NAME"))) Q LSTS(1,"ID")
+ S MAXP=5,CLINE=1,SEL=0,OUT=0,RE=0
+ F IND=1:1:CNT  D  Q:OUT
+ . S CLINE=CLINE+1
+ . W !,$C(9)_IND_$C(9)_LSTS(IND,"NAME")
+ . I CLINE>MAXP D
+ . . W !,"Press <RETURN> to see more, '^' to exit this list, OR"
+ . I CLINE>MAXP!(IND=CNT) D
+ . . S RE=1
+ . . W !,"CHOOSE 1-"_IND_": " R SEL:$S($D(DTIME):DTIME,1:300) S:'$T OUT=1 Q
+ . I RE D  Q
+ . . S RE=0
+ . . I SEL="^" S OUT=1 Q
+ . . I $G(SEL)="" S CLINE=1 Q
+ . . I $G(SEL)>IND S SEL=0,OUT=1 Q
+ . . E  S OUT=1 Q
+ Q:SEL>0 LSTS(SEL,"ID") Q -1
+ ;
+PRINTALL(LSTS) ;
+ N IND,CNT,GMPQUIT,LINE
+ S GMPQUIT=0,LINE=1
+ I $D(LSTS)=0 Q
+ S CNT=$P(LSTS(0),U,1) Q:CNT=0
+ W !!,$C(9)_"Choose from:"
+ F IND=1:1:CNT D
+ . S LINE=LINE+1
+ . W !,$C(9)_LSTS(IND,"NAME")
+ . I LINE>(IOSL-4) S LINE=1 S:'$$CONTINUE GMPQUIT=1 Q:$D(GMPQUIT)  Q
+ Q
+ ;
+CONTINUE() ; -- end of page prompt
+ N DIR,X,Y
+ S DIR(0)="E",DIR("A")=$C(9)_"'^' TO STOP"
+ D ^DIR
+ Q +Y
+ ;
+LSTSH1(LSTS,FILE,FIELDS) ; All items ??
+ N DIR,X,Y,CNT
+ W !," Answer with "_FILE_" "_FIELDS
+ S CNT=$P(LSTS(0),U,1)
+ S DIR("A")=" Do you want the entire "_CNT_"-Entry "_FILE_" List"
+ S DIR(0)="YO"
+ D ^DIR Q Y
+ ;
+ASKADD(NEWEL,FILE) ; Ask
+ N DIR,X,Y,CNT
+ S CNT=$P(LSTS(0),U,1)
+ S DIR("A")=" Are you adding '"_NEWEL_"' as a new "_FILE
+ S DIR(0)="YO",DIR("B")="No"
+ D ^DIR Q Y
  ;
 LAST(ROOT) ; Returns last subscript
  N I,J S (I,J)=""
@@ -87,7 +166,7 @@ SAVE ; Save changes to group/list
  N SOURCE,RETURN S SOURCE="^TMP(""GMPLIST"",$J)"
  S LABEL=$S($D(GMPLGRP):"SAVGRP^GMPLAPI1(.RETURN,GMPLGRP,SOURCE)",1:"SAVLST^GMPLAPI1(.RETURN,GMPLSLST,SOURCE)")
  D @LABEL
- K GMPLSAVE S:$D(GMPLGRP) GMPSAVED=1
+ K GMPLSAVE,SOURCE S:$D(GMPLGRP) GMPSAVED=1
  S VALMBCK="Q" W " done." H 1
  Q
  ;
@@ -148,10 +227,8 @@ VALLIST(LIST) ;check all categories in list for probs w/ inactive codes
 ASSIGN ; allow lookup of PROB SEL LIST and assign to users
  ;
  N DIC,X,Y,DUOUT,DTOUT,GMPLSLST
- S DIC="^GMPL(125,",DIC(0)="AEQMZ",DIC("A")="Select LIST NAME: "
- D ^DIC
- Q:$D(DTOUT)!($D(DUOUT))
- Q:Y<0
+ S Y=$$LIST
+ Q:Y'>0
  I '$$VALLIST(+Y) D  G ASSIGN
  . W !!,$C(7),"This Selection List contains problems with inactive ICD9 codes associated with"
  . W !,"them. The codes must be edited and corrected before the list can be assigned to",!,"users.",!!
