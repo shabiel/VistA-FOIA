@@ -92,3 +92,167 @@ GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
  S @RETURN=1
  Q 1
  ;
+GETLSTS(RETURN,SEARCH,START,NUMBER) ; Array of problem selection lists
+ ; RETURN - Passed by reference, array of problem selection lists
+ ;  RETURN(0) = Number of lists
+ ;  RETURN(I,"ID") = list IFN
+ ;  RETURN(I,"NAME") = list name
+ ; SEARCH - string to search
+ ; START - start of search
+ ; NUMBER - max number of records
+ N RET,DL
+ S:'$D(START) START="" S:'$D(SEARCH) SEARCH=""
+ S:'$G(NUMBER) NUMBER=""
+ S RETURN=0
+ D GETLIST(.RET,SEARCH,START,NUMBER)
+ S RETURN(0)=RET("DILIST",0)
+ S DL="DILIST"
+ F IN=1:1:$P(RETURN(0),U,1) D
+ . I $D(RET(DL,1,IN))>0 D
+ . . S RETURN(IN,"ID")=RET(DL,2,IN)
+ . . S RETURN(IN,"NAME")=RET(DL,1,IN)
+ . E  D
+ . . S RETURN(IN,"ID")=RET(DL,2,IN)
+ . . S RETURN(IN,"NAME")=RET(DL,"ID",IN,".01")
+ . . S:$D(RET(DL,"ID",IN,".03")) RETURN(IN,"CLINIC")=RET(DL,"ID",IN,".03")
+ S RETURN=1
+ Q 1
+ ;
+GETLIST(RETURN,SEARCH,START,NUMBER) ;
+ N FILE,FIELDS
+ S FILE="125",FIELDS="@;.01"
+ S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ D LIST^DIC(FILE,"",FIELDS,"",NUMBER,START,SEARCH,"B","","","RETURN")
+ I $P(RETURN("DILIST",0),U,1)'>0 D
+ . S FIELDS="@;.01;.03"
+ . D LIST^DIC(FILE,"",FIELDS,"",NUMBER,START,SEARCH,"C","","","RETURN")
+ Q
+ ;
+GETCATG(RETURN,SEARCH,START,NUMBER) ;
+ S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ D LIST^DIC("125.11","","","",NUMBER,START,SEARCH,"","","","RETURN")
+ Q
+ ;
+GETCATS(RETURN,SEARCH,START,NUMBER) ; Array of problem category
+ ; RETURN - Passed by reference, array of problem category
+ ;  RETURN(0) = Number of categories
+ ;  RETURN(I,"ID") = category IFN
+ ;  RETURN(I,"NAME") = category name
+ ; SEARCH - string to search
+ ; START - start of search
+ ; NUMBER - max number of records
+ N RET,DL
+ S:'$D(START) START="" S:'$D(SEARCH) SEARCH=""
+ S:'$G(NUMBER) NUMBER=""
+ S RETURN=0
+ D GETCATG(.RET,SEARCH,START,NUMBER)
+ S RETURN(0)=RET("DILIST",0)
+ S DL="DILIST"
+ F IN=1:1:$P(RETURN(0),U,1) D
+ . Q:$D(RET(DL,1,IN))'>0
+ . S RETURN(IN,"ID")=RET(DL,2,IN)
+ . S RETURN(IN,"NAME")=RET(DL,1,IN)
+ S RETURN=1
+ Q 1
+ ;
+GETUSRS(RETURN,SEARCH,START,NUMBER) ; Array of users
+ ; RETURN - Passed by reference, array of users
+ ;  RETURN(0) = Number of users
+ ;  RETURN(I,"ID") = user IFN
+ ;  RETURN(I,"NAME") = user name
+ ;  RETURN(I,"INITIAL") = user initial name
+ ;  RETURN(I,"EMAIL") = email
+ ;  RETURN(I,"WRITE") = type of user
+ ; SEARCH - string to search
+ ; START - start of search
+ ; NUMBER - max number of records
+ S:'$D(START) START="" S:'$D(SEARCH) SEARCH=""
+ S:'$G(NUMBER) NUMBER=""
+ D GETUSRSD(.RET,SEARCH,START,NUMBER)
+ D BUILDUSR(.RETURN,.RET)
+ Q 1
+ ;
+BUILDUSR(RETURN,RET) ;
+ N DL
+ S DL="DILIST"
+ S RETURN(0)=RET(DL,0)
+ F IN=1:1:$P(RETURN(0),U,1) D
+ . Q:$D(RET(DL,1,IN))'>0
+ . S RETURN(IN,"ID")=RET(DL,2,IN)
+ . S RETURN(IN,"NAME")=RET(DL,1,IN)
+ . S:$D(RET(DL,"ID",IN,1)) RETURN(IN,"INITIAL")=RET(DL,"ID",IN,1)
+ . S:$D(RET(DL,"ID",IN,28)) RETURN(IN,"EMAIL")=RET(DL,"ID",IN,28)
+ . S:$D(RET(DL,"ID","WRITE",IN,1)) RETURN(IN,"WRITE")=RET(DL,"ID","WRITE",IN,1)
+ Q
+ ;
+GETUSRSD(RETURN,SEARCH,START,NUMBER) ;
+ S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ S:'$G(NUMBER) NUMBER=""
+ D LIST^DIC("200","",,"",NUMBER,START,SEARCH,"","","","RETURN")
+ Q
+ ;
+GETASUSR(RETURN,GMPLST) ;
+ N RET
+ D GETASUSD(.RET,GMPLST)
+ D BUILDUSR(.RETURN,.RET)
+ Q 1
+ ;
+GETASUSD(RETURN,GMPLST) ; Array of users assigned to specified list
+ ; RETURN - Passed by reference, array of users
+ ;  RETURN(0) = Number of users
+ ;  RETURN(I,"ID") = user IFN
+ ;  RETURN(I,"NAME") = user name
+ ; GMPLST - problem list IFN
+ N IND,RET,DL,LIST,LIN,CNT S IND="",DL="DILIST"
+ D LIST^DIC("200","","@;.01","",,,,,,,"RET")
+ S RETURN(DL,0)="0^*^0^"
+ S CNT=$P(RET(DL,0),"^",1),LIN=0
+ F IND=1:1:CNT D
+ . S ID=RET(DL,2,IND),LIST=""
+ . S:$D(^VA(200,ID,125))>0 LIST=$P(^VA(200,ID,125),"^",2) Q:'$G(LIST)
+ . I LIST=+GMPLST D
+ . . S LIN=LIN+1
+ . . S RETURN(DL,2,LIN)=ID
+ . . S RETURN(DL,1,LIN)=RET(DL,"ID",IND,".01")
+ S RETURN(DL,0)=LIN_"^*^0^"
+ Q
+ ;
+GETCLIND(RETURN,SEARCH,START,NUMBER) ;
+ N RET S DL="DILIST"
+ S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ S:'$G(NUMBER) NUMBER="" ;,START="C",SEARCH="C"
+ D LIST^DIC("44","",,,NUMBER,START,SEARCH,,"","","RET")
+ S RETURN(DL,0)="0^*^0^"
+ S CNT=$P(RET(DL,0),"^",1),LIN=0
+ F IND=1:1:CNT D
+ . S ID=RET(DL,2,IND)
+ . S TYPE=$P(^SC(ID,0),U,3)
+ . I TYPE="C" D
+ . . S LIN=LIN+1
+ . . S RETURN(DL,2,LIN)=ID
+ . . S RETURN(DL,1,LIN)=$P(^SC(ID,0),U,1)
+ S RETURN(DL,0)=LIN_"^*^0^"
+ Q
+ ;
+GETCLIN(RETURN,SEARCH,START,NUMBER) ; Array of clinical locations
+ ; RETURN - Passed by reference, array of locations
+ ;  RETURN(0) = Number of locations
+ ;  RETURN(I,"ID") = location IFN
+ ;  RETURN(I,"NAME") = location name
+ ; SEARCH - string to search
+ ; START - start of search
+ ; NUMBER - max number of records
+ S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ S:'$G(NUMBER) NUMBER=""
+ N RET,DL
+ S RETURN=0
+ D GETCLIND(.RET,SEARCH,START,NUMBER)
+ S RETURN(0)=RET("DILIST",0)
+ S DL="DILIST"
+ F IN=1:1:$P(RETURN(0),U,1) D
+ . Q:$D(RET(DL,1,IN))'>0
+ . S RETURN(IN,"ID")=RET(DL,2,IN)
+ . S RETURN(IN,"NAME")=RET(DL,1,IN)
+ S RETURN=1
+ Q 1
+ ;
