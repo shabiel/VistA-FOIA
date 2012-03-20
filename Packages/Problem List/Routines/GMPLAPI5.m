@@ -88,7 +88,7 @@ GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
  . I $L($P(ITEM,U,5)) D
  .. I $$STATCHK^ICDAPIU($P(ITEM,U,5),DT) S FLAG=0  ; code is active
  .. E  S FLAG=1
- .. S @RETURN@("GRP",GROUP,LINE)=@RETURN@("GRP",GROUP,LINE)_"^"_$P(ITEM,U,5)_"^"_FLAG
+ .. S @RETURN@("GRP",GROUP,LINE)=@RETURN@("GRP",GROUP,LINE)_"^"_$P(ITEM,U,5)_"^"_FLAG_"^"_$P(ITEM,U,3)
  S @RETURN=1
  Q 1
  ;
