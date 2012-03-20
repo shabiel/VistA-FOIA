@@ -46,6 +46,7 @@ ICD9KEY(GMPICD) ; Returns KEY IN icd9 File
  Q $O(^ICD9("AB",GMPICD_" ",0))
  ;
 SERVICE(USER) ; Returns User's service/section from file #49
+ S:$G(USER)="" USER=DUZ
  N X S X=+$P($G(^VA(200,USER,5)),U)
  I $P($G(^DIC(49,X,0)),U,9)'="C" S X=0
  S:X>0 X=X_U_$$SVCNAME(X) S:X'>0 X=""
@@ -54,8 +55,8 @@ SERVICE(USER) ; Returns User's service/section from file #49
 SVCNAME(SVC) ; Return service name
  Q $P($G(^DIC(49,SVC,0)),U)
  ;
-USERVIEW(USER) ; Returns user's preferred view
- N X S X=$P($G(^VA(200,USER,125)),U)
+USERVIEW() ; Returns user's preferred view
+ N X S X=$P($G(^VA(200,DUZ,125)),U)
  Q X
  ;
 HASKEY(KEY) ; Returns true if user has KEY assigned

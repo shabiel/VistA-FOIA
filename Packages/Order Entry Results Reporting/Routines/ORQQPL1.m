@@ -67,12 +67,12 @@ CPTREC(COD) ;
  ;
 EDLOAD(RETURN,DA,GMPROV,GMPVAMC) ; LOAD  EDIT ARRAYS
  ; DA=problem IFN
- N I,GMPFLD,GMPORIG,GMPL
- D GETFLDS^GMPLEDT3(DA)
+ N I,GMPL
+ D DETAIL^GMPLAPI2(.GMPL,DA)
  S I=0
- D LOADFLDS(.RETURN,"GMPFLD","NEW",.I)
- D LOADFLDS(.RETURN,"GMPORIG","ORG",.I)
- K GMPFLD,GMPORIG,GMPL  ; should not have to do this
+ D LOADFLDS(.RETURN,"GMPL","NEW",.I)
+ D LOADFLDS(.RETURN,"GMPL","ORG",.I)
+ K GMPL  ; should not have to do this
  Q
  ;
 LOADFLDS(RETURN,NAM,TYP,I) ; LOAD FIELDS FOR TYPE OF ARRAY
@@ -95,23 +95,13 @@ EDSAVE(RETURN,GMPIFN,GMPROV,GMPVAMC,UT,EDARRAY) ; SAVE EDITED RES
  ; RETURN - boolean, 1 success, 0 failure
  ; EDARRAY - array used for indirect sets of GMPORIG() and GMPFLDS()
  ;
- N GMPFLD,GMPORIG,S,GMPLUSER
- S RETURN=1 ; initialize for success
- I UT S GMPLUSER=1
- ;
- ;S GMPLUSER=1
+ N ERR,GMPLUSER,S
+ S GMPLUSER=$S(UT:1,1:0)
  S S=""
  F  S S=$O(EDARRAY(S)) Q:S=""  D
  . S @EDARRAY(S)
- I $D(GMPFLD(10,"NEW"))>9 D  I 'RETURN Q  ; Bail Out if no lock
- . L +^AUPNPROB(GMPIFN,11):10  ; given bogus nature of this lock, should be able to get
- . I '$T S RETURN=0
- ;
- D EN^GMPLSAVE  ; save the data
+ S RETURN=$$UPDATE^GMPLAPI2(.ERR,GMPIFN,GMPORIG,GMPFLD,GMPLUSER,GMPROV) 
  K GMPFLD,GMPORIG
- ;
- L -^AUPNPROB(GMPIFN,11)  ; free this instance of lock (in case it was set)
- S RETURN=1
  Q
  ;
 UPDATE(ORRETURN,UPDARRAY) ; UPDATE A PROBLEM RECORD
@@ -135,21 +125,11 @@ ADDSAVE(RETURN,GMPDFN,GMPROV,GMPVAMC,ADDARRAY) ; SAVE NEW RECORD
  ; RETURN - Problem IFN if success, 0 otherwise
  ; ADDARRAY - array used for indirect sets of  GMPFLDS()
  ;
- N DA,GMPFLD,GMPORIG,S
- S RETURN=0 ;
- L +^AUPNPROB(0):10
- Q:'$T  ; bail out if no lock
- ;
+ N S,GMPFLD,GMPORIG
  S S=""
  F  S S=$O(ADDARRAY(S)) Q:S=""  D
  . S @ADDARRAY(S)
- ;
- D NEW^GMPLSAVE
- ;
- S RETURN=DA
- ;
- L -^AUPNPROB(0)
- S RETURN=1
+ D NEW^GMPLAPI2(.RETURN,GMPDFN,GMPROV,.GMPFLD)
  Q
  ;
 INITUSER(RETURN,ORDUZ) ; INITIALIZE FOR NEW USER
@@ -161,7 +141,7 @@ INITUSER(RETURN,ORDUZ) ; INITIALIZE FOR NEW USER
  S CTXT=$$GET^XPAR("ALL","ORCH CONTEXT PROBLEMS",1)
  S X=$G(^GMPL(125.99,1,0)) ; IN1+6^GMPLMGR
  S RETURN(0)=GMPLUSER ;  problem list user, or other user
- S RETURN(1)=$$VIEW^GMPLX1(DUZ) ; GMPLVIEW("VIEW") - users default view
+ S RETURN(1)=$$USERVIEW^GMPLEXT ; GMPLVIEW("VIEW") - users default view
  S RETURN(2)=+$P(X,U,2) ; verify transcribed problems
  S RETURN(3)=+$P(X,U,3) ; prompt for chart copy
  S RETURN(4)=+$P(X,U,4) ; use lexicon
@@ -171,7 +151,7 @@ INITUSER(RETURN,ORDUZ) ; INITIALIZE FOR NEW USER
  I +GMPLPROV>0,$D(^VA(200,GMPLPROV)) D
  . S RETURN(7)=GMPLPROV_U_$P(^VA(200,GMPLPROV,0),U)
  E  S RETURN(7)="0^All"
- S RETURN(8)=$$SERVICE^GMPLX1(DUZ) ; user's service/section
+ S RETURN(8)=$$SERVICE^GMPLEXT ; user's service/section
  ; Guessing from what I see in the data that $$VIEW^GMPLX1 actually returns a composite
  ; of default view (in/out patient)/(c1/c2... if out patient i.e. GMPLVIEW("CLIN")) or
  ;                                 /(s1/s2... if in patient i.e. GMPLVIEW("SERV"))
@@ -248,7 +228,9 @@ SRVCSRCH(Y,FROM,DIR,ALL) ; GET LIST OF SERVICES
  Q
  ;
 DUP(Y,DFN,TERM,TEXT) ;Check for duplicate problem
- S Y=$$DUPL^GMPLX(DFN,TERM,TEXT) Q:+Y=0
- I $P(^AUPNPROB(Y,1),U,2)="H" S Y=0 Q
- S Y=Y_U_$P(^AUPNPROB(Y,0),U,12)
+ N ACTIVE
+ D DUPL^GMPLAPI2(.Y,DFN,TERM,TEXT)
+ Q:Y=0 
+ D ACTIVE^GMPLAPI2(.ACTIVE,Y)
+ S Y=Y_U_$S(ACTIVE:"A",1:"I")
  Q
