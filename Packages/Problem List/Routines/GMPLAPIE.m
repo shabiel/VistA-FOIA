@@ -44,3 +44,4 @@ PRBINACT ;;Problem is already inactive!
 ICDINACT ;;Inactive ICD9 code. Edit the problem before adding comments.
 CTGNFND ;;Category not found
 CATUSED ;;Category in use. Could not delete.
+INVREC ;;Invalid record

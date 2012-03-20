@@ -42,33 +42,12 @@ STRIP(VAL) ; STRIP LEADING SPACES FROM VALUES
  ; ------------------- DELETE A PROBLEM FROM LIST ---------------------
  ;
 DELETE(RESULT,GMPIFN,GMPROV,GMPVAMC,REASON) ; DELETE A PROBLEM
- ; From GMPL1 - silent version
- N CHNGE
- I REASON'="" D
- . S GMPFLD(10,"NEW",1)=REASON
- . D NEWNOTE^GMPLSAVE
- S CHNGE=GMPIFN_"^1.02^"_$$HTFM^XLFDT($H)
- S CHNGE=CHNGE_U_DUZ_"^P^H^Deleted^"_+$G(GMPROV)
- S $P(^AUPNPROB(GMPIFN,1),U,2)="H"
- S RESULT=1
- D AUDIT^GMPLX(CHNGE,"")
- D DTMOD^GMPLX(GMPIFN)
- K GMPFLD
+ D DELETE^GMPLAPI2(.RESULT,GMPIFN,GMPROV,REASON)
  Q
  ; ------------------ REPLACE REMOVED PROBLEM ----------------------
  ;
 REPLACE(RETURN,DA) ; -- replace problem on patient's list
- ; taken from REPLACE^GMPLRPTR
- N CHNGE,DIE,DR
- I $P($G(^AUPNPROB(DA,1)),U,2)'="H" D  Q  ; BAIL OUT - INVALID RECORD
- . S RETURN=0
- S DR="1.02////P"
- S DIE="^AUPNPROB("
- D ^DIE
- S CHNGE=DA_"^1.02^"_$$HTFM^XLFDT($H)_U_DUZ_"^H^P^Replaced^"_DUZ
- D AUDIT^GMPLX(CHNGE,"")
- D DTMOD^GMPLX(DA)
- S RETURN=1
+ D REPLACE^GMPLAPI4(.RETURN,DA)
  Q
  ;
  ; -------------------  VERIFY A PROBLEM ------------------------
@@ -79,22 +58,9 @@ VERIFY(RETURN,GMPIFN) ; -- verify a transcribed problem
  ;     RETURN>0, RETURN(0)=""
  ;   FAILURE:
  ;      RETURN<0, RETURN(0)=verbose error message
- N NOW,CHNGE
- S NOW=$$HTFM^XLFDT($H)
- I $P(^AUPNPROB(GMPIFN,1),U,2)'="T" D  Q  ; BAIL OUT - ALREADY VERIFIED
- . S RETURN=-1
- . S RETURN(0)="Problem Already Verified"
- L +^AUPNPROB(GMPIFN,0):10
- I '$T D  Q  ; BAIL OUT - NO LOCK
- . S RETURN=-1
- . S RETURN(0)="Record in use. Try again in a few moments"
- S $P(^AUPNPROB(GMPIFN,1),U,2)="P"
- S CHNGE=GMPIFN_"^1.02^"_NOW_U_DUZ_"^T^P^Verified^"_DUZ
- D AUDIT^GMPLX(CHNGE,"")
- D DTMOD^GMPLX(GMPIFN)
- L -^AUPNPROB(GMPIFN,0)
- S RETURN=1
- S RETURN(0)=""
+ D VERIFY^GMPLAPI2(.RETURN,GMPIFN)
+ I RETURN=1 S RETURN(0)=""
+ E  S RETURN=-1,RETURN(0)=$P(RETURN(0),"^",2)
  Q
 INACT(RETURN,GMPIFN) ; -- inactivate a problem
  ; RETURN:  ;(consistent with UPDATE function)
@@ -102,22 +68,9 @@ INACT(RETURN,GMPIFN) ; -- inactivate a problem
  ;     RETURN>0, RETURN(0)=""
  ;   FAILURE:
  ;      RETURN<0, RETURN(0)=verbose error message
- N NOW,CHNGE
- S NOW=$$HTFM^XLFDT($H)
- I $P(^AUPNPROB(GMPIFN,0),U,12)'="A" D  Q  ; BAIL OUT - ALREADY INACTIVE
- . S RETURN=-1
- . S RETURN(0)="Problem Already Inactive"
- L +^AUPNPROB(GMPIFN,0):10
- I '$T D  Q  ; BAIL OUT - NO LOCK
- . S RETURN=-1
- . S RETURN(0)="Record in use. Try again in a few moments"
- S $P(^AUPNPROB(GMPIFN,0),U,12)="I"
- S CHNGE=GMPIFN_"^.12^"_NOW_U_DUZ_"^A^I^Inactivated^"_DUZ
- D AUDIT^GMPLX(CHNGE,"")
- D DTMOD^GMPLX(GMPIFN)
- L -^AUPNPROB(GMPIFN,0)
- S RETURN=1
- S RETURN(0)=""
+ D INACTV^GMPLAPI2(.RETURN,GMPIFN,DUZ,"","")
+ I RETURN=1 S RETURN(0)=""
+ E  S RETURN=-1,RETURN(0)=$P(RETURN(0),"^",2)
  Q
 OLDCOMM(ORY,PIFN) ; Return comments for a problem - SINGLE DIVISION!
  ;N FAC,NIFN,NOTE,NOTECNT
@@ -129,14 +82,7 @@ OLDCOMM(ORY,PIFN) ; Return comments for a problem - SINGLE DIVISION!
  ;. S NOTECNT=NOTECNT+1,ORY(NOTECNT)=NOTE
  Q
 GETCOMM(ORY,PIFN)       ; Return comments for a problem - MULTI-DIVISIONAL
- N FAC,NIFN,NOTE,NOTECNT
- S NOTECNT=0,FAC=0
- F  S FAC=$O(^AUPNPROB(PIFN,11,FAC)) Q:+FAC'>0  D
- . S NIFN=0
- . F  S NIFN=$O(^AUPNPROB(PIFN,11,FAC,11,NIFN)) Q:NIFN'>0  D
- . . Q:$P($G(^AUPNPROB(PIFN,11,FAC,11,NIFN,0)),U,4)'="A"
- . . S NOTE=$P($G(^AUPNPROB(PIFN,11,FAC,11,NIFN,0)),U,3)
- . . S NOTECNT=NOTECNT+1,ORY(NOTECNT)=NOTE
+ D NOTES^GMPLAPI3(.ORY,PIFN)
  Q
 SAVEVIEW(Y,GMPLVIEW) ; -- save new view in File #200/Field #125
  N TMP
