@@ -155,10 +155,25 @@ VOCAB() ; Select search vocabulary
  Q X
  ;
 PARAMS ; Edit pkg parameters in file #125.99
- N DIE,DA,DR
+ N DIE,DA,DR,OLDVERFY,VERFY,BLANK S BLANK="       "
+ S OLDVERFY=+$P($G(^GMPL(125.99,1,0)),U,2)
  S DIE="^GMPL(125.99,",DA=1,DR="1:6" D ^DIE
+ Q:+$P($G(^GMPL(125.99,1,0)),U,2)=OLDVERFY
+ S DA(1)=$O(^ORD(101,"B","GMPL PROBLEM LIST",0)) Q:'DA(1)
+ S VERFY=$O(^ORD(101,"B","GMPL VERIFY",0)) W "."
+ S DA=$O(^ORD(101,DA(1),10,"B",VERFY,0)) Q:'DA
+ S DR=$S(OLDVERFY:"2///@;6///^S X=BLANK",1:"2////$;6///@") W "."
+ S DIE="^ORD(101,"_DA(1)_",10,"
+ D ^DIE W "."
  Q
 RS(X) ; Remove Slashes
  S X=$G(X) F  Q:$E(X,1)'="/"  S X=$E(X,2,$L(X))
  F  Q:$E(X,$L(X))'="/"  S X=$E(X,1,($L(X)-1))
  Q X
+ ;
+FMTNAME(NAME) ; Formats name into "Lastname,F"
+ N LAST,FIRST
+ Q:$G(NAME)="" ""
+ S LAST=$P(NAME,","),FIRST=$P(NAME,",",2)
+ S:$E(FIRST)=" " FIRST=$E(FIRST,2,99)
+ Q $E(LAST,1,15)_","_$E(FIRST)
