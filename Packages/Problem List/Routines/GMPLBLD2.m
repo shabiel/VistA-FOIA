@@ -149,10 +149,10 @@ SAVE ; Save changes to group/list
  . Q
  ;
  I '$D(GMPLGRP),$D(GMPLSLST) D  I GMPLQT Q
- . N GRP
+ . N GRP,RET
  . S GRP=0
  . F  S GRP=$O(^TMP("GMPLIST",$J,"GRP",GRP)) Q:'GRP!(GMPLQT)  D
- .. I $$VALGRP(GRP) Q  ;no inactive codes in the GROUP
+ .. I $$VALGRP^GMPLAPI6(.RET,GRP) Q  ;no inactive codes in the GROUP
  .. S GMPLQT=1
  . I 'GMPLQT Q  ; all groups and problems OK
  . D FULL^VALM1
@@ -185,51 +185,12 @@ DEL1 ; Ok, go for it ...
  D NEWGRP S:+GMPLGRP'>0 VALMBCK="Q"
  Q
  ;
-VALGRP(GMPLCAT) ; check all problems in the category for inactive codes
- ; Input:
- ;    GMPLCAT  = ien from file 125.11
- ;
- ; Output:
- ;    1     = category has no problems with inactive codes
- ;    0     = category has one or more problems with inactive codes
- ;    O^ERR = category is invalid^error message
- ;
- I '$G(GMPLCAT) Q "0^No category selected"
- N PROB,GMPLVALC
- S GMPLVALC=1,PROB=0
- F  S PROB=$O(^GMPL(125.12,"B",GMPLCAT,PROB)) Q:'PROB!('GMPLVALC)  D
- . N GMPLCOD
- . S GMPLCOD=$P(^GMPL(125.12,PROB,0),U,5)
- . Q:'$L(GMPLCOD)  ; no code there
- . I '$$STATCHK^ICDAPIU(GMPLCOD,DT) S GMPLVALC=0
- . Q
- Q GMPLVALC
- ;
-VALLIST(LIST) ;check all categories in list for probs w/ inactive codes
- ; Input:
- ;   LIST = ien from file 125
- ;
- ; Output:
- ;    1     = list has no problems with inactive codes
- ;    0     = list has one or more problems with inactive codes
- ;    O^ERR = list is invalid^error message 
- ;
- N GMPLIEN,GMPLVAL
- I '$G(LIST) Q 0
- S GMPLIEN=0,GMPLVAL=1
- F  S GMPLIEN=$O(^GMPL(125.1,"B",LIST,GMPLIEN)) Q:'GMPLIEN!('GMPLVAL)  D
- . N GMPLCAT
- . S GMPLCAT=$P(^GMPL(125.1,GMPLIEN,0),U,3) I 'GMPLCAT Q
- . I '$$VALGRP(GMPLCAT) S GMPLVAL=0
- . Q
- Q GMPLVAL
- ;
 ASSIGN ; allow lookup of PROB SEL LIST and assign to users
  ;
- N DIC,X,Y,DUOUT,DTOUT,GMPLSLST
+ N DIC,X,Y,DUOUT,DTOUT,GMPLSLST,RET
  S Y=$$LIST
  Q:Y'>0
- I '$$VALLIST(+Y) D  G ASSIGN
+ I '$$VALLIST^GMPLAPI6(.RET,+Y) D  G ASSIGN
  . W !!,$C(7),"This Selection List contains problems with inactive ICD9 codes associated with"
  . W !,"them. The codes must be edited and corrected before the list can be assigned to",!,"users.",!!
  ;

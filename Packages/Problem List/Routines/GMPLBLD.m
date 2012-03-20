@@ -80,11 +80,11 @@ EXIT ; -- exit code
  Q
  ;
 ADD ; Add group(s)
- N SEQ,GROUP,HDR,IFN,GMPQUIT,GMPREBLD,ERR,RETURN D FULL^VALM1
+ N SEQ,GROUP,HDR,IFN,GMPQUIT,GMPREBLD,ERR,RETURN,RET D FULL^VALM1
  F  D  Q:$D(GMPQUIT)  W !
  . S GROUP=$$GROUP^GMPLBLD2("") I GROUP="^" S GMPQUIT=1 Q
  . I $D(^TMP("GMPLIST",$J,"GRP",+GROUP)) W !?4,">>>  This category is already part of this list!" Q
- . I '$$VALGRP^GMPLBLD2(+GROUP) D  Q
+ . I '$$VALGRP^GMPLAPI6(.RET,+GROUP) D  Q
  .. D FULL^VALM1
  .. W !!,$C(7),"This category contains one or more problems with inactive ICD-9 codes. "
  .. W !,"These codes must be updated before adding the category to a selection list."

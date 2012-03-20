@@ -4,8 +4,8 @@ GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ;3/12/03 13:40
  ; This routine invokes IA #3991
  ;
 ASSIGN ; Assign list to clinic, users: Expects GMPLSLST
- N DIE,DA,DR D FULL^VALM1 G:+$G(GMPLSLST)'>0 ASQ
- I '$$VALLIST^GMPLBLD2(+GMPLSLST) D  G ASQ
+ N DIE,DA,DR,RET D FULL^VALM1 G:+$G(GMPLSLST)'>0 ASQ
+ I '$$VALLIST^GMPLAPI6(.RET,+GMPLSLST) D  G ASQ
  . W !!,$C(7),"This Selection List contains problems with inactive ICD9 codes associated with"
  . W !,"them. The codes must be edited and corrected before the list can be assigned",!,"to users or clinics."
  . W !!,"If you have edited the list during this session to correct inactive codes, "

@@ -139,10 +139,11 @@ CKLISTS ; loop lists and see if any inactive problems
  ; returns ^TMP("GMPLSL",$J,"I"
  ;
  K ^TMP("GMPLSL",$J,"I")
- N LST
+ N LST,RETURN,RET
  S LST=0
- F  S LST=$O(^GMPL(125,LST)) Q:'LST  I '$$VALLIST^GMPLBLD2(LST) D
- . S ^TMP("GMPLSL",$J,"I",LST)=$P(^GMPL(125,LST,0),U)
+ D GETLSTS^GMPLAPI5(.RETURN)
+ F  S LST=$O(RETURN(LST)) Q:'LST  I '$$VALLIST^GMPLAPI6(.RET,RETURN(LST,"ID")) D
+ . S ^TMP("GMPLSL",$J,"I",RETURN(LST,"ID"))=RETURN(LST,"NAME")
  . Q
  Q
  ;
@@ -152,31 +153,9 @@ CKCODES ; check probs on lists for future inactivation dates
  ;   ^TMP("GMPLSL",$J,"F",category,problem)
  ;   ^TMP("GMPLSL",$J,"F",category,"L",list)
  ;
- K ^TMP("GMPLSL",$J,"F")
- N PROB,CAT,LIST
- S PROB=0
- F  S PROB=$O(^GMPL(125.12,PROB)) Q:'PROB  I $L($P(^(PROB,0),U,5)) D
- . N PROB0,PROBTX,APIDATA,PROBCAT,ACTDT
- . S PROB0=^GMPL(125.12,PROB,0)
- . I '$$STATCHK^ICDAPIU($P(PROB0,U,5),DT) Q  ;already inactive
- . S APIDATA=$$HIST^ICDAPIU($P(PROB0,U,5),.APIDATA)
- . S ACTDT=+$O(APIDATA(DT))
- . Q:'ACTDT  ; no future activity
- . I $G(APIDATA(ACTDT)) Q  ; no future inactivation = OK
- . S PROBTX=$$GET1^DIQ(125.12,PROB,2)
- . S PROBCAT=$P(PROB0,U)
- . S ^TMP("GMPLSL",$J,"F",PROBCAT,PROB)=PROBTX_U_$P(PROB0,U,4)_U_$P(PROB0,U,5)_U_$$FMTE^XLFDT(ACTDT)
- . Q
- ;
- ; find lists that contain the categories
- S CAT=0
- F  S CAT=$O(^TMP("GMPLSL",$J,"F",CAT)) Q:'CAT  D
- . I '$D(^GMPL(125.1,"G",CAT)) Q  ; category not part of any lists
- . N LIST S LIST=0
- . F  S LIST=$O(^GMPL(125.1,"G",CAT,LIST)) Q:'LIST  D
- .. S ^TMP("GMPLSL",$J,"F",CAT,"L",LIST)=$$GET1^DIQ(125.1,LIST,.01)
- .. Q
- . Q
+ N RETURN
+ S RETURN="^TMP(""GMPLSL"",$J,""F"")"
+ D GETFINC^GMPLAPI6(.RETURN)
  Q
  ;
 PAGE(NUM) ;print header and raise page number
