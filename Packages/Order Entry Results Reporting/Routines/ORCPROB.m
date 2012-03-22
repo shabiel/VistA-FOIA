@@ -69,7 +69,7 @@ REMOVE ; -- remove problem
  . S:$D(TEXT) DIR("B")=TEXT
  . S DIR("?")="Enter up to 60 characters of additional text to be appended to this problem"
  . W ! D ^DIR I $D(DTOUT)!($D(DUOUT)) S QUIT=1 Q
- . S TEXT=Y D REMOVE^GMPLUTL2(IFN,ORPROV,TEXT,.ORY)
+ . S TEXT=Y D REMOVE^GMPLAPI2(.ORY,IFN,ORPROV,TEXT)
  . I ORY'>0 W !?5,"ERROR - "_ORY(0) H 1 Q
  . W !?5,"... removed" H 1 S OREBUILD=1
  Q
@@ -77,14 +77,16 @@ REMOVE ; -- remove problem
 VERIFY ; -- verify problem
  I '$P($$PARAM^GMPLUTL2,U,2) W !,"This action is not in use.",! H 1 Q
  I '$D(^XUSEC("ORES",DUZ)),'$D(^XUSEC("ORELSE",DUZ)) W !,"You must have either the ORES or ORELSE key to verify these problems!",! H 1 Q
- N NUM,PIECE,GMPIFN,OROLD S VALMBCK=""
+ N NUM,PIECE,GMPIFN,OROLD,GMPSAVED
+ S GMPSAVED=0
+ S VALMBCK=""
  I '$G(ORNMBR) S ORNMBR=$$ORDERS^ORCHART("verify") Q:'ORNMBR
  S VALMBCK="",NUM=$L(ORNMBR,",")-1 Q:'$$OK("verify",NUM)
  F PIECE=1:1:$L(ORNMBR,",") S NUM=$P(ORNMBR,",",PIECE) I NUM D
  . S GMPIFN=+$G(^TMP("OR",$J,"CURRENT","IDX",NUM))
  . I 'GMPIFN W !,"Problem #"_NUM_" has already been removed!",! H 1 Q
- . S OROLD=$G(^AUPNPROB(GMPIFN,1)) D VERIFY^GMPL1
- . S:OROLD'=$G(^AUPNPROB(GMPIFN,1)) OREBUILD=1
+ . D VERIFY^GMPL1
+ . S:GMPSAVED OREBUILD=1
  Q
  ;
 OK(ACTION,NUM) ; -- Are you sure?
