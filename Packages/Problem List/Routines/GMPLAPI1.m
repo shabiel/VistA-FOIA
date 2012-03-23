@@ -23,23 +23,6 @@ NEWLST(RETURN,GMPLLST,GMPLLOC) ; Add new Problem Selection List
  S RETURN=NEWLST
  Q 1
  ;
-ASSUSR(RETURN,GMPLLST,GMPLUSER) ; Assign Problem Selection List to users
- ; Input
- ;  GMPLLST   List IEN
- ;  GMPLUSER  List of users (^UserIEN^...)
- N DR
- S DR="125.1////"_+GMPLLST,RETURN=0
- S RETURN=$$USERLST^GMPLAPI5(.RETURN,GMPLLST,GMPLUSER,DR)
- Q RETURN
- ;
-REMUSR(RETURN,GMPLLST,GMPLUSER) ; Remove Problem Selection List from users
- ; Input
- ;  GMPLLST   List IEN
- ;  GMPLUSER  List of users (^UserIEN^...)
- S RETURN=0
- S RETURN=$$USERLST^GMPLAPI5(.RETURN,GMPLLST,GMPLUSER,"125.1///@")
- Q RETURN
- ;
 DELLST(RETURN,GMPLLST) ; Delete Problem Selection List
  ; Input
  ;  GMPLLST  Problem Selection List IEN
@@ -133,7 +116,7 @@ UNLKCAT(GMPLGRP) ; Unlock specified category
  D UNLOCK^GMPLAPI5("^GMPL(125.11,"_+GMPLGRP_",0)")
  Q
  ;
-GETLIST(RETURN,GMPLLST,CODLEN) ; Return Problem Selection list details
+GETLIST(RETURN,GMPLLST,CODLEN,MINIM) ; Return Problem Selection list details
  ; Input
  ;  GMPLLST: Problem Selection list IEN
  ;  RETURN: Root of the target local or global.
@@ -141,6 +124,7 @@ GETLIST(RETURN,GMPLLST,CODLEN) ; Return Problem Selection list details
  ; Result:
  ;  RETURN("LST","NAME") - Selection List name
  ;  RETURN("LST","MODIFIED") - Date last modified
+ ;  RETURN("LST","CLINIC") - Assigned Clinic
  ;  RETURN(0) - Number of categories
  ;  RETURN(List_Content_IEN)= seq ^ group ^ subhdr ^ probs
  ;  RETURN("GRP",Category_IEN)=List_Content_IEN
@@ -156,6 +140,8 @@ GETLIST(RETURN,GMPLLST,CODLEN) ; Return Problem Selection list details
  S CNT=0,LIST=^GMPL(125,LISTIFN,0)
  S @RETURN@("LST","NAME")=$P(LIST,"^",1)
  S @RETURN@("LST","MODIFIED")=$S(+$P(LIST,U,2):$$FMTE^XLFDT($P(LIST,U,2)),1:"<new list>")
+ S @RETURN@("LST","CLINIC")=$$CLINAME^GMPLAPI5($P(LIST,U,3))
+ Q:$G(MINIM)>0 1
  F IFN=0:0 S IFN=$O(^GMPL(125.1,"B",LISTIFN,IFN)) Q:IFN'>0  D
  . S ITEM=$G(^GMPL(125.1,IFN,0)),SEQ=$P(ITEM,U,2),GRP=$P(ITEM,U,3)
  . S @RETURN@(IFN)=$P(ITEM,U,2,5),CNT=CNT+1 ; seq ^ group ^ subhdr ^ probs
@@ -234,6 +220,7 @@ SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
  ;to do check SOURCE
  S DT=$P($$HTFM^XLFDT($H),".")
  S DIE="^GMPL(125.11,",DA=+GMPLGRP,DR="1////"_DT D ^DIE ; set modified date
+ S DA=0
  F  S DA=$O(@SOURCE@(DA)) Q:+DA'>0  D
  .S DIK="^GMPL(125.12,"
  .I +DA'=DA D  Q

@@ -16,11 +16,13 @@ EN1 ; Create list to copy problems into
  S DIR("?")="text, as it will be used as a title when presenting this list."
  W !!,">>>  Please create a new selection list in which to store these problems:"
 EN2 D ^DIR G:$D(DUOUT)!($D(DTOUT)) EXIT
- N ERR K @RETURN
+ N ERR,CLINIC K @RETURN
  S ERR=$$NEWLST^GMPLAPI1(.RETURN,Y)
  I ERR=0,$P(RETURN(0),U,1)="LISTXST" W $C(7),!,"There is already a list by this name!",! G EN2
  I RETURN'>0 W !!,"ERROR -- Cannot create new list!",$C(7) G EXIT
  S GMPLSLST=RETURN
+ S CLINIC=$$CLINIC^GMPLBLD3
+ I CLINIC D ADDLOC^GMPLAPI5(.RETURN,GMPLSLST,CLINIC)
 EN3 ; Here we go ...
  W !!,"Copying problems from "_$P(GMPLFORM,U,2)_" form into "
  W:(42+$L($P(GMPLFORM,U,2))+$L($P(GMPLSLST,U,2))>80) !

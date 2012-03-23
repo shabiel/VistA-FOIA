@@ -15,22 +15,35 @@ NGQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
 GROUP(L) ;
-GR ;
  N PRMPT,LNAME,X,LSTS,Y,RETURN,LSTS,FILE,FIELDS
+GR ;
  S Y=-1,PRMPT="Select CATEGORY NAME: "
  S FILE="PROBLEM SELECTION CATEGORY",FIELDS="NAME"
  W !,PRMPT R X:$S($D(DTIME):DTIME,1:300) I "^"[X!($G(X)="") S Y=-1 Q "^"
- I X="?" D GETCATS^GMPLAPI5(.LSTS) I $$LSTSH1(.LSTS,FILE,FIELDS) D PRINTALL(.LSTS)
+ I X="?" D GETCATS^GMPLAPI5(.LSTS) I $$LSTSH1(.LSTS,FILE,FIELDS) D PRINTALL(.LSTS) D:$L(L)>0 CH1
  I X?1"??".E D
- . I X="??" D GETCATS^GMPLAPI5(.LSTS) D PRINTALL(.LSTS)
+ . I X="??" D GETCATS^GMPLAPI5(.LSTS) D PRINTALL(.LSTS) D:$L(L)>0 CH2
  E  D:X'="?"
  . D GETCATS^GMPLAPI5(.LSTS,X)
  . S Y=$$SELLST(.LSTS,X)
- G:Y<0 GR
+ G:Y<0 GR I Y=0,$L(L)'>0 W " ??",! G GR
  I Y=0 D
+ . I $L(X)>30!(X?.N)!($L(X)<3)!'(X'?1P.E) W " ??" G GR
  . S ADD=$$ASKADD(X,"PROBLEM SELECTION CATEGORY") G:ADD=0 GR
  . D NEWCAT^GMPLAPI1(.RETURN,X) S Y=RETURN G:RETURN=0 GR
+ S:Y<0 Y="^"
  Q Y
+ ;
+CH1 ;
+ W !,$C(9)_"You may enter a new PROBLEM SELECTION CATEGORY, if you wish"
+ W !,$C(9)_"NAME MUST BE 3-30 CHARACTERS, NOT NUMERIC OR STARTING WITH"
+ W !,$C(9)_"PUNCTUATION",!
+ Q
+ ;
+CH2 ;
+ W !,$C(9)_"You may enter a new PROBLEM SELECTION CATEGORY, if you wish"
+ W !,$C(9)_"This is the name given to this problem group to identify and describe it.",!
+ Q
  ;
 NEWLST ; Change selection lists
  N NEWLST,RETURN D FULL^VALM1
@@ -44,29 +57,44 @@ NLQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
 LIST(L) ;
-LS ;
  N PRMPT,LNAME,X,LSTS,Y,RETURN,LSTS,ADD,CLINIC,FILE,FIELDS
+LS ;
  S Y=-1,PRMPT="Select LIST NAME: "
  S FILE="PROBLEM SELECTION LIST",FIELDS="NAME, or CLINIC"
  W !,PRMPT R X:$S($D(DTIME):DTIME,1:300) I "^"[X!($G(X)="") S Y=-1 Q "^"
- I X="?" D GETLSTS^GMPLAPI5(.LSTS) I $$LSTSH1(.LSTS,FILE,FIELDS) D PRINTALL(.LSTS)
+ I X="?" D GETLSTS^GMPLAPI5(.LSTS) I $$LSTSH1(.LSTS,FILE,FIELDS) D PRINTALL(.LSTS,1) D:$L(L)>0 LH1
  I X?1"??".E D
- . I X="??" D GETLSTS^GMPLAPI5(.LSTS) D PRINTALL(.LSTS)
+ . I X="??" D GETLSTS^GMPLAPI5(.LSTS) D PRINTALL(.LSTS,1) D:$L(L)>0 LH2
  E  D:X'="?"
  . D GETLSTS^GMPLAPI5(.LSTS,X)
  . S Y=$$SELLST(.LSTS,X)
- G:Y<0 LS
+ G:Y<0 LS I Y=0,$L(L)'>0 W " ??",! G LS
  I Y=0 D
- . S ADD=$$ASKADD(X,"PROBLEM SELECTION LIST") G:ADD=0 LS
- . S CLINIC=$$CLINIC^GMPLBLD3
+ . I $L(X)>30!(X?.N)!($L(X)<3)!'(X'?1P.E) W " ??",! G LS
+ . S ADD=$$ASKADD(X,FILE) G:ADD=0 LS
+ . S CLINIC=$$CLINIC^GMPLBLD3("   "_FILE_" ") S:CLINIC="^" CLINIC=""
  . D NEWLST^GMPLAPI1(.RETURN,X,CLINIC) S Y=RETURN G:RETURN=0 LS
+ S:Y<0 Y="^"
  Q Y
+ ;
+LH1 ;
+ W !,$C(9)_"You may enter a new PROBLEM SELECTION LIST, if you wish"
+ W !,$C(9)_"NAME MUST BE 3-30 CHARACTERS, NOT NUMERIC OR STARTING WITH"
+ W !,$C(9)_"PUNCTUATION",!
+ Q
+ ;
+LH2 ;
+ W !,$C(9)_"You may enter a new PROBLEM SELECTION LIST, if you wish"
+ W !,$C(9)_"This is a free text name for the list; it should contain the name of"
+ W !,$C(9)_"the clinic or user who will be the primary user(s) of this list, as this"
+ W !,$C(9)_"name will be used as an ID and a title.",!
+ Q
  ;
 SELLST(LSTS,X) ;
  N CNT,Y,MAXP,CLINE,SEL,OUT,RE
  I $D(LSTS)=0 Q -1
  S CNT=$P(LSTS(0),U,1)
- I CNT=0 W " ??" Q 0
+ Q:CNT=0 0
  I CNT=1 W $E(LSTS(1,"NAME"),$L(X)+1,$L(LSTS(1,"NAME"))) Q LSTS(1,"ID")_U_LSTS(1,"NAME")
  S MAXP=5,CLINE=1,SEL=0,OUT=0,RE=0
  F IND=1:1:CNT  D  Q:OUT
@@ -85,16 +113,17 @@ SELLST(LSTS,X) ;
  . . E  S OUT=1 Q
  Q:SEL>0 LSTS(SEL,"ID")_U_LSTS(SEL,"NAME") Q -1
  ;
-PRINTALL(LSTS) ;
+PRINTALL(LSTS,CHOOSE) ;
  N IND,CNT,GMPQUIT,LINE
  S GMPQUIT=0,LINE=1
  I $D(LSTS)=0 Q
  S CNT=$P(LSTS(0),U,1) Q:CNT=0
- W !!,$C(9)_"Choose from:"
+ W:$G(CHOOSE) !,"   Choose from:"
  F IND=1:1:CNT D
  . S LINE=LINE+1
- . W !,$C(9)_LSTS(IND,"NAME")
+ . W !,"   "_LSTS(IND,"NAME")
  . I LINE>(IOSL-4) S LINE=1 S:'$$CONTINUE GMPQUIT=1 Q:$D(GMPQUIT)  Q
+ W !
  Q
  ;
 CONTINUE() ; -- end of page prompt
@@ -105,9 +134,10 @@ CONTINUE() ; -- end of page prompt
  ;
 LSTSH1(LSTS,FILE,FIELDS) ; All items ??
  N DIR,X,Y,CNT
+ S CNT=$P(LSTS(0),U,1) Q:CNT=0 1
  W !," Answer with "_FILE_" "_FIELDS
- S CNT=$P(LSTS(0),U,1)
- S DIR("A")=" Do you want the entire "_CNT_"-Entry "_FILE_" List"
+ Q:CNT<(IOSL-4) 1
+ S:CNT>(IOSL-4) DIR("A")=" Do you want the entire "_CNT_"-Entry "_FILE_" List"
  S DIR(0)="YO"
  D ^DIR Q Y
  ;
@@ -188,7 +218,7 @@ DEL1 ; Ok, go for it ...
 ASSIGN ; allow lookup of PROB SEL LIST and assign to users
  ;
  N DIC,X,Y,DUOUT,DTOUT,GMPLSLST,RET
- S Y=$$LIST
+ S Y=$$LIST("")
  Q:Y'>0
  I '$$VALLIST^GMPLAPI6(.RET,+Y) D  G ASSIGN
  . W !!,$C(7),"This Selection List contains problems with inactive ICD9 codes associated with"
