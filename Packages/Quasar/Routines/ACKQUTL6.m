@@ -271,11 +271,13 @@ PLIST(ACKPAT,ACKDC) ; Determines if an entry exists in the Problem file
  ; returns Status as first piece, Problem List IEN as second piece
  ; (Status^IEN)
  ; Status values -  1=Inactive, 2=Active
- N ACKIFN,ACKPLQT
+ N ACKIFN,ACKPLQT,PLIST,PRB,I
  S (ACKIFN,ACKPLQT)=0
- I $D(^AUPNPROB("AC",ACKPAT)) D
- . F  S ACKIFN=$O(^AUPNPROB("AC",ACKPAT,ACKIFN)) Q:(ACKIFN="")  D  Q:ACKPLQT
- . .I $D(^AUPNPROB("B",ACKDC,ACKIFN)) S ACKPLQT=ACKIFN
- I ACKPLQT Q $S($P($G(^AUPNPROB(ACKPLQT,0)),U,12)="A":2,1:1)_U_ACKPLQT
- Q 0
- ;
+ D GETPLIST^GMPLAPI4(.PLIST,ACKPAT,"AIR")
+ Q:PLIST=0 0
+ F I=1:1:PLIST(0) D  Q:ACKPLQT
+ . K PRB
+ . S ACKIFN=PLIST(I)
+ . D DETAIL^GMPLAPI2(.PRB,ACKIFN,0)
+ . I $P(PRB(.01),U,1)=ACKDC S ACKPLQT=$S($P(PRB(.12),U,1)="A":2,1:1)_U_ACKIFN
+ Q ACKPLQT
