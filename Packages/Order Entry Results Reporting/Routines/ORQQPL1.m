@@ -136,16 +136,16 @@ INITUSER(RETURN,ORDUZ) ; INITIALIZE FOR NEW USER
  ; taken from INIT^GMPLMGR
  ; leave GMPLUSER on symbol table - is evaluated in EDITSAVE
  ;
- N X,PV,CTXT,GMPLPROV
+ N GMPARAM,PV,CTXT,GMPLPROV
  S GMPLUSER=$$CLINUSER(DUZ)
  S CTXT=$$GET^XPAR("ALL","ORCH CONTEXT PROBLEMS",1)
- S X=$G(^GMPL(125.99,1,0)) ; IN1+6^GMPLMGR
+ D GET^GMPLSITE(.GMPARAM)
  S RETURN(0)=GMPLUSER ;  problem list user, or other user
  S RETURN(1)=$$USERVIEW^GMPLEXT ; GMPLVIEW("VIEW") - users default view
- S RETURN(2)=+$P(X,U,2) ; verify transcribed problems
- S RETURN(3)=+$P(X,U,3) ; prompt for chart copy
- S RETURN(4)=+$P(X,U,4) ; use lexicon
- S RETURN(5)=$S($P(X,U,5)="R":1,1:0) ; chron or reverse chron listing
+ S RETURN(2)=GMPARAM("VER") ; verify transcribed problems
+ S RETURN(3)=GMPARAM("PRT") ; prompt for chart copy
+ S RETURN(4)=GMPARAM("CLU") ; use lexicon
+ S RETURN(5)=GMPARAM("REV") ; chron or reverse chron listing
  S RETURN(6)=$S($P($G(CTXT),";",3)'="":$P($G(CTXT),";",3),1:"A")
  S GMPLPROV=$P($G(CTXT),";",5)
  I +GMPLPROV>0,$D(^VA(200,GMPLPROV)) D
@@ -165,7 +165,7 @@ INITUSER(RETURN,ORDUZ) ; INITIALIZE FOR NEW USER
  S RETURN(10)=$G(GMPLVIEW("CLIN")) ; ??? Where from - see tech doc
  S RETURN(11)=""
  S RETURN(12)=+$P($G(CTXT),";",4)    ; should comments display?
- K GMPLVIEW
+ K GMPLVIEW,GMPARAM
  Q
  ;
 CLINUSER(ORDUZ) ;is this a clinical user?

@@ -36,8 +36,9 @@ LEXICON ; Clinical Lexicon Pointer
  S GMPQUIT=1,PLY(0)="Invalid Lexicon term"
  Q
 DUPLICAT ; Problem Already on the List 
- N DUPL
- Q:$P($G(^GMPL(125.99,1,0)),U,6)'=1
+ N DUPL,GMPARAM
+ D GET^GMPLSITE(.GMPARAM)
+ Q:GMPARAM("SDP")'=1
  S:'$L($G(PL("DIAGNOSIS"))) PL("DIAGNOSIS")=$$NOS^GMPLX
  I '$D(^AUPNPROB("B",+PL("DIAGNOSIS")))!('$D(^AUPNPROB("AC",GMPDFN))) Q
  F IFN=0:0 S IFN=$O(^AUPNPROB("AC",GMPDFN,IFN)) Q:IFN'>0  D  Q:$D(GMPQUIT)

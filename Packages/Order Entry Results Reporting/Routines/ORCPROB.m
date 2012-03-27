@@ -75,7 +75,9 @@ REMOVE ; -- remove problem
  Q
  ;
 VERIFY ; -- verify problem
- I '$P($$PARAM^GMPLUTL2,U,2) W !,"This action is not in use.",! H 1 Q
+ N GMPARAM
+ D PARAM^GMPLUTL2(.GMPARAM)
+ I 'GMPARAM("VER") W !,"This action is not in use.",! H 1 Q
  I '$D(^XUSEC("ORES",DUZ)),'$D(^XUSEC("ORELSE",DUZ)) W !,"You must have either the ORES or ORELSE key to verify these problems!",! H 1 Q
  N NUM,PIECE,GMPIFN,OROLD,GMPSAVED
  S GMPSAVED=0

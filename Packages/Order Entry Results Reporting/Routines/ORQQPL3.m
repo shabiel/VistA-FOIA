@@ -28,10 +28,10 @@ LIST(GMPL,GMPDFN,GMPSTAT)       ; -- Returns list of problems for patient GMPDFN
  ; This is virtually same as LIST^GMPLUTL2 except that it appends the
  ; condition - T)ranscribed or P)ermanent,location,loc type,provider, service.
  ;
- N GMPREV
+ N GMPREV,GMPARAM
  Q:$G(GMPDFN)'>0
- S GMPREV=$P($G(^GMPL(125.99,1,0)),U,5)="R"
- D LIST^GMPLAPI4(.GMPL,GMPDFN,GMPSTAT,"","",GMPREV,0)
+ D GET^GMPLSITE(.GMPARAM)
+ D LIST^GMPLAPI4(.GMPL,GMPDFN,GMPSTAT,"","",GMPARAM("REV"),0)
  Q
  ;
  ;

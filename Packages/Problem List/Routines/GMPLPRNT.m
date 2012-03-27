@@ -127,7 +127,8 @@ PROB(DA,NUM) ; Get Problem Text Line
  . S GMPQUIT=1
 PR1 ; Write Problem Text Line
  W !!,$E("   ",1,3-$L(NUM))_NUM_". "_$J($$EXTDT^GMPLX(DATE),8)
- I $P(GMPL1,U,2)="T",$P($G(^GMPL(125.99,1,0)),U,2) W ?14,"$" S GMPLFLAG=1
+ D GET^GMPLSITE(.GMPARAM)
+ I $P(GMPL1,U,2)="T",GMPARAM("VER") W ?14,"$" S GMPLFLAG=1
  W ?15,TEXT(1),?62,$J($$EXTDT^GMPLX(ONSET),8)
  I $P(GMPL0,U,12)="I" W ?71,$S(RESOLVED:$J($$EXTDT^GMPLX(RESOLVED),8),1:"unknown")
  I TEXT>1 F J=2:1:TEXT W !?15,TEXT(J)
