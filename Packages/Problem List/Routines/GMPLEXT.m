@@ -70,3 +70,6 @@ CLINUSER() ;is this a clinical user?
  I $$HASKEY("ORELSE") S GMPLUSER=1
  Q GMPLUSER
  ;
+NARR(PRB) ; Returns problem narrative
+ Q:'+$G(PRB) ""
+ Q $P($G(^AUTNPOV(+PRB,0)),U)

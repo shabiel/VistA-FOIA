@@ -131,3 +131,28 @@ DIAG(RETURN,GMPIFN) ; Returns ICD diagnosis: pointer_to_icd_file^icd
  S ICD=$P($G(^AUPNPROB(GMPIFN,0)),U)
  S RETURN=ICD_U_$$ICD9NAME^GMPLEXT(ICD)
  Q 1
+ ;
+PROBNARR(RETURN,GMPIFN) ; Returns Provider Narrative
+ N PRB
+ S RETURN=""
+ Q:'+$G(GMPIFN) 0
+ S PRB=$P($G(^AUPNPROB(+GMPIFN,0)),U,5)
+ S RETURN=PRB_U_$$NARR^GMPLEXT(PRB)
+ Q 1
+ ;
+PRBCNT(RETURN) ;Return number of entries in PROBLEM LIST.
+ S RETURN=$P(^AUPNPROB(0),U,4)
+ Q 1
+ ;
+VALID(RETURN,GMPIFN) ;RETURN=1 if problem IFN is valid
+ S RETURN=($D(^AUPNPROB(+$G(GMPIFN)))>0)
+ Q 1
+ ;
+PATIENT(RETURN,GMPIFN) ; Returns patient IFN given problem IFN
+ N VALID
+ S RETURN=0
+ Q:'+$G(GMPIFN) 0
+ D VALID(.VALID,GMPIFN)
+ Q:'VALID 1
+ S RETURN=+$P(^AUPNPROB(GMPIFN,0),"^",2)
+ Q 1
