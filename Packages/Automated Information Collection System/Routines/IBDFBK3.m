@@ -123,8 +123,12 @@ VTYPE(X) ;
  Q $S(X="BP":"Blood Pressure",X="HT":"Height",X="WT":"Weight",X="TMP":"Temperature",X="PU":"Pulse",1:"Other Vital")
  ;
 PROBNAR(IEN) ; -- display problem narrative
- ;
- Q $P($G(^AUTNPOV(+$P($G(^AUPNPROB(+$G(IEN),0)),"^",5),0)),"^")
+ N PROB,PRBFOUND
+ S PRBFOUND=$$DETAIL^GMPLAPI2(.PROB,+$G(IEN))
+ Q:'PRBFOUND ""
+ Q $P($G(^AUTNPOV(+$P($G(PROB(.05)),"^"),0)),"^")
  ;
 PROBDIA(IEN) ; -- return problem diagnosis code pointer
- Q +$P($G(^AUPNPROB(+$G(IEN),0)),"^")
+ N ICD
+ D DIAG^GMPLAPI4(.ICD,IEN)
+ Q +ICD

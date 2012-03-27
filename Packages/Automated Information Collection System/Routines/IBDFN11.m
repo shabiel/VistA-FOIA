@@ -13,7 +13,7 @@ REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
  ;         or @ARY(1) = classification question
  ;
  Q:'IBPFID!('LIST)
- N FID,ITEM,IBDIEN,NODE,COUNT
+ N FID,ITEM,IBDIEN,NODE,COUNT,ICD
  ; -- initialize counter
  S COUNT=0
  ; -- clean out storage area
@@ -28,6 +28,7 @@ REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
  ..S IBDIEN=0 F  S IBDIEN=$O(^IBD(357.96,IBPFID,XREF,FID,ITEM,IBDIEN)) Q:'IBDIEN  S NODE=$S(XREF="AD":$G(^IBD(357.96,IBPFID,2,IBDIEN,0)),1:$G(^IBD(357.96,IBPFID,1,IBDIEN,0))) I NODE]"" D
  ...; -- set output array with dynamic data previously printed
  ...S COUNT=COUNT+1
- ...S @ARY@(COUNT)=$P(NODE,"^",4)_"^"_$P(NODE,"^",8)_"^"_$S(ARY["GMP SELECT PATIENT ACTIVE PROBLEMS":$P($G(^ICD9(+$G(^AUPNPROB(+$P(NODE,"^",4),0)),0)),"^"),1:"")
+ ...D DIAG^GMPLAPI4(.ICD,+$P(NODE,"^",4))
+ ...S @ARY@(COUNT)=$P(NODE,"^",4)_"^"_$P(NODE,"^",8)_"^"_$S(ARY["GMP SELECT PATIENT ACTIVE PROBLEMS":$P(ICD,"^",2),1:"")
  S @ARY@(0)=COUNT
  Q

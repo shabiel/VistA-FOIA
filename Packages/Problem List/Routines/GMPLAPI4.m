@@ -124,3 +124,10 @@ REPLACE(RETURN,GMPIFN) ; -- replace problem on patient's list
  S RETURN=1
  Q
  ;
+DIAG(RETURN,GMPIFN) ; Returns ICD diagnosis: pointer_to_icd_file^icd
+ N ICD
+ S RETURN=""
+ Q:'+$G(GMPIFN) 0
+ S ICD=$P($G(^AUPNPROB(GMPIFN,0)),U)
+ S RETURN=ICD_U_$$ICD9NAME^GMPLEXT(ICD)
+ Q 1
