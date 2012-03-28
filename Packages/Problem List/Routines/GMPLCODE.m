@@ -43,10 +43,10 @@ EDQ D KILL^GMPLX S VALMSG=$$MSG^GMPLX
  Q
  ;
 ICD(NUM,IFN) ; -- search ICD Diagnosis file #80
- N X,Y,DIC,DIR,OLD,NEW,DA,DR,DIE,LCNT,CHNGE
+ N X,Y,DIC,DIR,OLD,NEW,LCNT,RET
  W !,IFN,!
  D FULL^VALM1 S VALMBCK="R" W !!
- S OLD=+$G(^AUPNPROB(IFN,0)),OLD=OLD_U_$P($G(^ICD9(OLD,0)),U)
+ D DIAG^GMPLAPI4(.OLD,IFN)
  S DIR(0)="PAO^ICD9(:QEM",DIR("A")="Enter ICD CODE or DESCRIPTION: "
  S DIR("A",1)="Problem #"_NUM_": "_$$PROBTEXT^GMPLX(IFN)
  S DIR("?")="Enter a new code number or a brief free text description on which to search",DIR("B")=$P(OLD,U,2)
@@ -55,9 +55,8 @@ ICD(NUM,IFN) ; -- search ICD Diagnosis file #80
  D ^DIR I $D(DTOUT)!($D(DUOUT)) S GMPQUIT=1 Q
  I X="@" Q:'$D(DIR("B"))  S:$$SURE^GMPLX Y=$$NOS^GMPLX
  I +Y>0,Y'=OLD D  S GMPSAVED=1
- . S NEW=Y,DIE="^AUPNPROB(",DA=IFN,DR=".01////"_+NEW D ^DIE
- . S CHNGE=IFN_"^.01^"_$$HTFM^XLFDT($H)_U_DUZ_U_+OLD_U_+NEW
- . D AUDIT^GMPLX(CHNGE,"")
+ . S NEW=Y
+ . D REPLACE^GMPLAPI4(.RET,IFN,NEW)
  . S LCNT=+$G(^TMP("GMPLIDX",$J,NUM))
  . D FLDTEXT^VALM10(LCNT,"ICD",$P(NEW,U,2))
  D BUILD^GMPLMGR(.GMPLIST) S VALMBCK="R"

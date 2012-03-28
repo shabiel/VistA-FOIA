@@ -12,7 +12,7 @@ LOCTYPE(GMPLOC) ; Returns location type
 PATNAME(GMPDFN) ; Returns patient name
  Q $P($G(^DPT(+GMPDFN,0)),U)
  ;
-ICD9NAME(GMPICD) ;
+ICDCODE(GMPICD) ;
  Q $P($G(^ICD9(+GMPICD,0)),U)
  ;
 NOS ; Return PTR ^ 799.9 ICD code
