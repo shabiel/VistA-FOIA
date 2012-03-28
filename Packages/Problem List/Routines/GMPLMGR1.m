@@ -23,10 +23,12 @@ OEPAT() ; Calls OE/RR to return new patient, or -1
  Q Y
  ;
 INACTIVE ; Incl inactive problems
+ N ACTIVE
  S VALMBCK=$S(VALMCC:"",1:"R")
  I GMPLVIEW("ACT")="" D  Q
  . W !!,"Listing already includes inactive problems!" H 1
- I '$D(^AUPNPROB("ACTIVE",+GMPDFN,"I")) D  Q
+ D HASPRBS^GMPLAPI4(.ACTIVE,+GMPDFN,"I")
+ I 'ACTIVE D  Q
  . W !!,"Patient has no inactive problems to include.",! H 1
  S GMPLVIEW("ACT")="",VALMBCK="R",VALMSG=$$MSG^GMPLX
  D GETPLIST(.GMPLIST,.GMPTOTAL,.GMPLVIEW),BUILD^GMPLMGR(.GMPLIST),HDR^GMPLMGR
@@ -100,18 +102,6 @@ KEY S XQORM("KEY","=")=$O(^ORD(101,"B","VALM NEXT SCREEN",0))_"^1"
 GETPLIST(PLIST,TOTAL,VIEW) ; Build PLIST(#)=IFN for view
  N STBEG,STEND,ST,CNT,IFN,RECORD,DATE,LIST K PLIST
  W:'$G(GMPARAM("QUIET")) !,"Searching for the patient's problem list ..."
- S STBEG=$S(VIEW("ACT")="I":"A",1:""),STEND=$S(VIEW("ACT")="A":"I",1:""),ST=STBEG,TOTAL=0
- F  S ST=$O(^AUPNPROB("ACTIVE",+GMPDFN,ST)) Q:(ST="")!(ST=STEND)  D
- . F IFN=0:0 S IFN=$O(^AUPNPROB("ACTIVE",+GMPDFN,ST,IFN)) Q:IFN'>0  D
- . . S RECORD=$G(^AUPNPROB(IFN,1)) Q:'$L(RECORD)
- . . Q:$P(RECORD,U,2)="H"  S TOTAL=TOTAL+1
- . . I $L(VIEW("VIEW"))>2,VIEW("VIEW")'[("/"_$P(RECORD,U,$S($E(VIEW("VIEW"))="S":6,1:8))_"/") Q
- . . I VIEW("PROV"),$P(RECORD,U,5)'=+VIEW("PROV") Q
- . . S DATE=$P(RECORD,U,9) S:'DATE DATE=$P($G(^AUPNPROB(IFN,0)),U,8)
- . . S:GMPARAM("REV") DATE=9999999-DATE
- . . S LIST(ST,DATE,IFN)=""
- S ST="",CNT=0 F  S ST=$O(LIST(ST)) Q:ST=""  D
- . S DATE="" F  S DATE=$O(LIST(ST,DATE)) Q:DATE=""  D
- . . S IFN="" F  S IFN=$O(LIST(ST,DATE,IFN)) Q:IFN=""  S CNT=CNT+1,PLIST(CNT)=IFN,PLIST("B",IFN)=CNT
- S PLIST(0)=CNT
+ D GETPLIST^GMPLAPI4(.PLIST,GMPDFN,VIEW("ACT"),GMPARAM("REV"),VIEW("PROV"),VIEW("VIEW"),1)
+ S TOTAL=PLIST
  Q
