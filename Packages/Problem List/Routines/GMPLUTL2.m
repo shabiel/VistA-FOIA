@@ -116,17 +116,13 @@ DETAIL(IFN,GMPL) ; Returns Detailed Data for Problem
  ;
 AUDIT ; 14 Sep 99 - MA - Add audit trail to OE Problem List.
  ; Called from DETAIL, requires IFN and sets GMPL("AUDIT")
- N IDT,AIFN,X0,X1,FLD,CNT
- S CNT=0,GMPL("AUDIT")=CNT
- F IDT=0:0 S IDT=$O(^GMPL(125.8,"AD",IFN,IDT)) Q:IDT'>0  D
- . F AIFN=0:0 S AIFN=$O(^GMPL(125.8,"AD",IFN,IDT,AIFN)) Q:AIFN'>0  D
- .. S X0=$G(^GMPL(125.8,AIFN,0)),X1=$G(^(1)) Q:'$L(X0)
- .. S FLD=$$FLDNAME(+$P(X0,U,2))
- .. S CNT=CNT+1
- .. S GMPL("AUDIT",CNT,0)=$P(X0,U,2)_U_FLD_U_$P(X0,U,3,8)
- .. ; = pointer#^fld name^date mod^who mod^old^new^reason^prov
- .. S:$L(X1) GMPL("AUDIT",CNT,1)=X1
- S GMPL("AUDIT")=CNT
+ N IDT,RETURN
+ S GMPL("AUDIT")=0
+ D GETAUDIT^GMPLHIST(.RETURN,IFN)
+ F IDT=0:0 S IDT=$O(RETURN(IDT)) Q:IDT'>0  D
+ . S GMPL("AUDIT",IDT,0)=RETURN(IDT,0)
+ . S:$D(RETURN(IDT,1)) GMPL("AUDIT",IDT,1)=RETURN(IDT,1)
+ S GMPL("AUDIT")=RETURN
  Q
  ;
 FLDNAME(NUM)    ; Returns field name for display

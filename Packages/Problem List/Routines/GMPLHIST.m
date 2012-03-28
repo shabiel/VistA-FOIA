@@ -32,6 +32,24 @@ DT ; Add historical data (audit trail) to DT list
  . S LCNT=LCNT+1,GMPDT(LCNT,0)=$J("to ",17)_$S(NEW:$P(@(U_ROOT_NEW_",0)"),U),1:"UNSPECIFIED")
  Q
  ;            
+GETHIST(GMPDT,GMPIFN) ;
+ ; GMPDT - By reference, problem history details
+ ;  GMPDT(I,0) - history line in format:
+ ;   date of changes: what was changed by who
+ ;        from "old value"
+ ;          to "new value"
+ ; GMIFN - Problem IFN
+ N IDT,AIFN,LCNT
+ S LCNT=0
+ I '$D(^GMPL(125.8,"B",GMPIFN)) Q  ;BAIL OUT - NO CHANGES
+ ;       get change history
+ S IDT=""
+ F  S IDT=$O(^GMPL(125.8,"AD",GMPIFN,IDT)) Q:IDT'>0  D
+ . S AIFN=""
+ . F  S AIFN=$O(^GMPL(125.8,"AD",GMPIFN,IDT,AIFN)) Q:AIFN'>0  D
+ .. D DT^GMPLHIST
+ Q
+ ;
 FLDNAME(NUM) ; Returns Field Name for Display
  N NAME,NM1,NM2,I,J S J=0,NAME="" D NUM(.NM1),ALP(.NM2) S:+($G(NM1(+NUM)))=+NUM J=+NUM
  S:$L($G(NM2(+J))) NAME=$G(NM2(+J))
@@ -49,3 +67,61 @@ NUM(X) ; Numeric Field Designations
  F FN=1.01:.01:1.18 S X(+FN)=+FN
  S X(1101)=1101
  Q
+GETAUDIT(RETURN,GMPIFN,FIELD,VALUE) ; Returns all problem audit data 
+ ; (optional problem history can be filtered by modified field and his current value)
+ ; RETURN - passed by reference
+ ;  RETURN(I,0) - audit trail
+ ; GMPIFN - Problem IFN
+ ; Optional:
+ ; FIELD - If is specified, will returns changes only made at this field
+ ; VALUE - If both FIELD and VALUE is specified, will returns changes made at FIELD
+ ;   and having current value equals with VALUE
+ N IDT,AIFN,X0,X1,FLD,CNT
+ S CNT=0,RETURN=CNT
+ F IDT=0:0 S IDT=$O(^GMPL(125.8,"AD",GMPIFN,IDT)) Q:IDT'>0  D
+ . F AIFN=0:0 S AIFN=$O(^GMPL(125.8,"AD",GMPIFN,IDT,AIFN)) Q:AIFN'>0  D
+ .. S X0=$G(^GMPL(125.8,AIFN,0)),X1=$G(^(1)) Q:'$L(X0)
+ .. I $G(FIELD),$P(X0,U,2)'=FIELD Q
+ .. I $G(FIELD),$G(VALUE),$P(X0,U,6)'=VALUE Q
+ .. S FLD=$$FLDNAME(+$P(X0,U,2))
+ .. S CNT=CNT+1
+ .. S RETURN(CNT,0)=$P(X0,U,2)_U_FLD_U_$P(X0,U,3,8)
+ .. S:$L(X1) RETURN(CNT,1)=X1
+ S RETURN=CNT
+ Q
+ ;
+AUDITX(RETURN,GMPIFN,FIELD,VALUE) ; Returns problem audit data 
+ ; RETURN - passed by reference
+ ;  RETURN(I,"FIELD") - Modified field (Field no^Field name)
+ ;  RETURN(I,"MODIFIED") - Date modified
+ ;  RETURN(I,"MODIFIEDBY") - Who modified the problem (Provider name)
+ ;  RETURN(I,"OLD") - Old value of the field
+ ;  RETURN(I,"NEW") - New value of the field
+ ;  RETURN(I,"REASON") - Reason for change
+ ;  RETURN(I,"REQUESTINGBY") - Who requested the change
+ ;  RETURN(I,"OLDPROBLEM") - Note details, if a note was changed
+ ; GMPIFN - Problem IFN
+ ; Optional:
+ ; FIELD - If is specified, will returns changes only made at this field
+ ; VALUE - If both FIELD and VALUE is specified, will returns changes made at FIELD
+ ;   and having current value equals with VALUE
+ N IDT,AIFN,X0,X1,FLD,CNT
+ S CNT=0,RETURN=CNT
+ F IDT=0:0 S IDT=$O(^GMPL(125.8,"AD",GMPIFN,IDT)) Q:IDT'>0  D
+ . F AIFN=0:0 S AIFN=$O(^GMPL(125.8,"AD",GMPIFN,IDT,AIFN)) Q:AIFN'>0  D
+ .. S X0=$G(^GMPL(125.8,AIFN,0)),X1=$G(^(1)) Q:'$L(X0)
+ .. I $G(FIELD),$P(X0,U,2)'=FIELD Q
+ .. I $G(FIELD),$G(VALUE),$P(X0,U,6)'=VALUE Q
+ .. S FLD=$$FLDNAME(+$P(X0,U,2))
+ .. S CNT=CNT+1
+ .. S RETURN(CNT,"FIELD")=$P(X0,U,2)_U_FLD
+ .. S RETURN(CNT,"MODIFIED")=$$EXTDT^GMPLX($P(X0,U,3))
+ .. S RETURN(CNT,"MODIFIEDBY")=$$PROVNAME^GMPLEXT($P(X0,U,4))
+ .. S RETURN(CNT,"OLD")=$P(X0,U,5)
+ .. S RETURN(CNT,"NEW")=$P(X0,U,6)
+ .. S RETURN(CNT,"REASON")=$P(X0,U,7)
+ .. S RETURN(CNT,"REQUESTINGBY")=$$PROVNAME^GMPLEXT($P(X0,U,8))
+ .. S:$L(X1) RETURN(CNT,"OLDPROBLEM")=X1,RETURN(CNT,"OLD")=$P(X1,U,3)
+ S RETURN=CNT
+ Q
+ ;
