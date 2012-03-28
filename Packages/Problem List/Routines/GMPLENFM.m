@@ -26,25 +26,9 @@ ACTIVE ; List of Active Problems for DFN
  ;                                 - None
  ;         7:  Special Exposure  Full text of piece 6
  ;                    
- N IFN,PROB,CNT,GMPL0,GMPL1,SC,NUM,GMPLIST,GMPARAM,GMPLVIEW,GMPTOTAL
- N GMPDFN
- Q:$G(DFN)'>0  S GMPDFN=DFN,CNT=0
- D GET^GMPLSITE(.GMPARAM) S GMPARAM("QUIET")=1
- S GMPLVIEW("ACT")="A",GMPLVIEW("PROV")=0,GMPLVIEW("VIEW")=""
- D GETPLIST^GMPLMGR1(.GMPLIST,.GMPTOTAL,.GMPLVIEW)
- F NUM=0:0 S NUM=$O(GMPLIST(NUM)) Q:NUM'>0  D
- . S IFN=GMPLIST(NUM) Q:IFN'>0
- . S GMPL0=$G(^AUPNPROB(IFN,0)),GMPL1=$G(^(1))
- . S PROB=$$PROBTEXT^GMPLX(IFN),CNT=CNT+1
- . I GMPARAM("VER"),$P(GMPL1,U,2)="T" S PROB="$"_PROB
- . S PROB=PROB_U_$P($G(^ICD9(+$P(GMPL0,U),0)),U)
- . S PROB=PROB_U_$$EXTDT^GMPLX($P(GMPL0,U,13)),SC=$P(GMPL1,U,10)
- . S PROB=PROB_U_$S(+SC:"SC^Y",SC=0:"NSC^N",1:"^")
- . S PROB=PROB_U_$$GMPL1
- . ;S PROB=PROB_U_$S($P(GMPL1,U,11):"A^Agent Orange",$P(GMPL1,U,12):"I^Ionizing Radiation",$P(GMPL1,U,13):"E^Env. Contaminants"
- . ;,$P(GMPL1,U,13):"H^Head/Neck Cancer",$P(GMPL1,U,16):"M^Mil Sexual Trauma",$P(GMPL1,U,17):"C^Combat Vet",$P(GMPL1,U,18):"S^SHAD",1:"^")
- . S ^TMP("IB",$J,"INTERFACES",+$G(DFN),"GMP PATIENT ACTIVE PROBLEMS",CNT)=PROB
- S ^TMP("IB",$J,"INTERFACES",+$G(DFN),"GMP PATIENT ACTIVE PROBLEMS",0)=CNT
+ N GMPL
+ Q:'$$FILL(.GMPL,0)
+ M ^TMP("IB",$J,"INTERFACES",+$G(DFN),"GMP PATIENT ACTIVE PROBLEMS")=GMPL
  Q
  ;
 SELECT ; Select Common Problems
@@ -82,30 +66,39 @@ DSELECT ; List of Active Problems for DFN
  ;                               S - SHAD
  ;                                 - None
  ;         8:  Special Exposure  Full text of piece 6
- ;                
- N IFN,PROB,CNT,GMPL0,GMPL1,SC,NUM,GMPLIST,GMPARAM,GMPLVIEW,GMPTOTAL,GMPDFN
- Q:$G(DFN)'>0  S GMPDFN=DFN,CNT=0
+ ;               
+ N GMPL 
+ Q:'$$FILL(.GMPL,1)
+ M ^TMP("IB",$J,"INTERFACES","GMP SELECT PATIENT ACTIVE PROBLEMS")=GMPL
+ Q
+ ;
+FILL(GMPL,ADDIFN)
+ N IFN,SC,NUM,GMPLIST,GMPARAM,GMPLVIEW,GMPTOTAL,GMPDFN,SCCOND,ONSET,PROB
+ Q:$G(DFN)'>0 0
+ S GMPDFN=DFN,CNT=0
  D GET^GMPLSITE(.GMPARAM) S GMPARAM("QUIET")=1
  S GMPLVIEW("ACT")="A",GMPLVIEW("PROV")=0,GMPLVIEW("VIEW")=""
  D GETPLIST^GMPLMGR1(.GMPLIST,.GMPTOTAL,.GMPLVIEW)
- F NUM=0:0 S NUM=$O(GMPLIST(NUM)) Q:NUM'>0  D
- . S IFN=GMPLIST(NUM) Q:IFN'>0
- . S GMPL0=$G(^AUPNPROB(IFN,0)),GMPL1=$G(^(1))
- . S PROB=$$PROBTEXT^GMPLX(IFN),CNT=CNT+1
- . I GMPARAM("VER"),$P(GMPL1,U,2)="T" S PROB="$"_PROB
- . S PROB=IFN_U_PROB
- . S PROB=PROB_U_$P($G(^ICD9(+$P(GMPL0,U),0)),U)
- . S PROB=PROB_U_$$EXTDT^GMPLX($P(GMPL0,U,13)),SC=$P(GMPL1,U,10)
- . S PROB=PROB_U_$S(+SC:"SC^Y",SC=0:"NSC^N",1:"^")
- . S PROB=PROB_U_$$GMPL1
- . ;S PROB=PROB_U_$S($P(GMPL1,U,11):"A^Agent Orange",$P(GMPL1,U,12):"I^Radiation",$P(GMPL1,U,13):"E^Contaminants",$P(GMPL1,U,13):"H^Head/Neck Cancer"
- . ;,$P(GMPL1,U,16):"M^Mil Sexual Trauma",$P(GMPL1,U,17):"C^Combat Vet",$P(GMPL1,U,18):"S^SHAD",1:"^")
- . S ^TMP("IB",$J,"INTERFACES","GMP SELECT PATIENT ACTIVE PROBLEMS",CNT)=PROB
- S ^TMP("IB",$J,"INTERFACES","GMP SELECT PATIENT ACTIVE PROBLEMS",0)=CNT
- Q
+ D BUILDLST^GMPLAPI4(.GMPL,.GMPLIST)
+ F NUM=1:1:GMPLIST(0) D
+ . S SCCOND=$P(GMPL(NUM),U,17)
+ . S SC=$P(SCCOND,"/")
+ . S SC=SC_"^"_$S(SC="SC":"Y",SC="NSC":"N",1:"")
+ . S ONSET=$$EXTDT^GMPLX($P(GMPL(NUM),U,5))
+ . S PROB=$P(GMPL(NUM),U,3)
+ . I GMPARAM("VER"),$P(GMPL(NUM),U,9)="T" S PROB="$"_PROB
+ . S:ADDIFN PROB=$P(GMPL(NUM),U)_U_PROB
+ . S GMPL(NUM)=PROB_U_$P(GMPL(NUM),U,4)_U_ONSET_U_SC_U_$$GMPL1(SCCOND)
+ Q 1
  ;
-GMPL1() ;Determine Treatment Factor, if any
- N NXTTF,TXFACTOR
- S TXFACTOR="^"
- F NXTTF=11,12,13,15,16,17,18 I $P(GMPL1,U,NXTTF) S TXFACTOR=$P("A^Agent Orange;I^Ionizing Radiation;E^Env. Contaminants;;H^Head/Neck Cancer;M^Mil Sexual Trauma;C^Combat Vet;S^SHAD",";",NXTTF-10) Q
- Q TXFACTOR
+GMPL1(SCCOND) ;Determine Treatment Factor, if any
+ N SP
+ S SP=$P(SCCOND,"/",2)
+ Q:SP="AO" "A^Agent Orange"
+ Q:SP="IR" "I^Ionizing Radiation"
+ Q:SP="EC" "E^Env. Contaminants"
+ Q:SP="HNC" "H^Head/Neck Cancer"
+ Q:SP="MST" "M^Mil Sexual Trauma"
+ Q:SP="CV" "C^Combat Vet"
+ Q:SP="SHD" "S^SHAD"
+ Q "^"
