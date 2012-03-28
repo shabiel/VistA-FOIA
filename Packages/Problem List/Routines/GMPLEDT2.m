@@ -28,11 +28,14 @@ SUREDEL(NUM) ; -- sure you want to delete problems?
  Q +Y
  ;
 DELETE ; Remove current problem from patient's list
- N CHNGE S VALMBCK=$S(VALMCC:"",1:"R") Q:'$$SUREDEL(1)
- S CHNGE=GMPIFN_"^1.02^"_$$HTFM^XLFDT($H)_U_DUZ_"^P^H^Deleted^"_+$G(GMPROV) W "."
- S $P(^AUPNPROB(GMPIFN,1),U,2)="H",GMPSAVED=1,VALMBCK="Q" W "."
- D AUDIT^GMPLX(CHNGE,""),DTMOD^GMPLX(GMPIFN) W "."
- W "... removed!",!!,"Returning to Problem List.",! H 1
+ N DELETED
+ S VALMBCK=$S(VALMCC:"",1:"R")
+ Q:'$$SUREDEL(1)
+ D DELETE^GMPLAPI2(.DELETED,GMPIFN,+$G(GMPROV))
+ I 'DELETED W $$ERRTXT^GMPLAPIE(DELETED) H 2 Q
+ S GMPSAVED=1
+ S VALMBCK="Q"
+ W "...... removed!",!!,"Returning to Problem List.",! H 1
  Q
  ;
 VERIFY ; Mark current problem as verified
