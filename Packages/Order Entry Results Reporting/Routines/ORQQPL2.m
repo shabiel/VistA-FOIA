@@ -47,7 +47,7 @@ DELETE(RESULT,GMPIFN,GMPROV,GMPVAMC,REASON) ; DELETE A PROBLEM
  ; ------------------ REPLACE REMOVED PROBLEM ----------------------
  ;
 REPLACE(RETURN,DA) ; -- replace problem on patient's list
- D REPLACE^GMPLAPI4(.RETURN,DA)
+ D UNDELETE^GMPLAPI4(.RETURN,DA)
  Q
  ;
  ; -------------------  VERIFY A PROBLEM ------------------------
