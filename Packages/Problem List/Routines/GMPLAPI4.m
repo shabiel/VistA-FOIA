@@ -177,3 +177,6 @@ HASPRBS(RETURN,GMPDFN,GMPSTAT) ; Returns 1 if patient DFN has problems with stat
  I GMPSTAT["A",$D(^AUPNPROB("ACTIVE",GMPDFN,"A")) S RETURN=1
  I GMPSTAT["I",$D(^AUPNPROB("ACTIVE",GMPDFN,"I")) S RETURN=1
  Q 1
+MODIFIED(RETURN,GMPDFN) ; Return the Date the Patients Problem List was Last Modified
+ S RETURN=+$O(^AUPNPROB("MODIFIED",GMPDFN,0))
+ Q 1
