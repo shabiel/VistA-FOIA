@@ -58,12 +58,11 @@ CAT(TMP,ORDUZ,CLIN) ; Get user category list
  S GMPLSLST=$$GETUSLST(DUZ,CLIN)  ; get approp list for user
  ; Build multiple of category\problems
  ; Iterate categories
- S RETURN="^TMP(""GMPLIST"",$J)" K @RETURN
  D GETLIST^GMPLAPI1(.RETURN,+GMPLSLST)
- F  S GSEQ=$O(@RETURN@("SEQ",GSEQ)) Q:GSEQ'>0  D
- . S IFN=@RETURN@("SEQ",GSEQ)
+ F  S GSEQ=$O(RETURN("SEQ",GSEQ)) Q:GSEQ'>0  D
+ . S IFN=RETURN("SEQ",GSEQ)
  . S GCNT=GCNT+1
- . S @TG@(GCNT)=$P(@RETURN@(IFN),U,2,4) ; put category into temp global
+ . S @TG@(GCNT)=$P(RETURN(IFN),U,2,4) ; put category into temp global
  Q
  ;
 GETUSLST(ORDUZ,CLIN) ; GET AN APPROPRIATE CATEGORY LIST FOR THE USER
@@ -83,23 +82,22 @@ PROB(TMP,GROUP) ; Get user problem list for given group
  S ORICD186=$$PATCH^XPDUTL("ICD*18.0*6")
  ;
  ; iterate through problems in category
- S RETURN="^TMP(""GMPGRP"",$J)" K @RETURN
  D GETCAT^GMPLAPI1(.RETURN,+GROUP)
  S (PSEQ,PCNT)=0
- F  S PSEQ=$O(@RETURN@("SEQ",PSEQ)) Q:PSEQ'>0  D
- . S IFN=@RETURN@("SEQ",PSEQ)
+ F  S PSEQ=$O(RETURN("SEQ",PSEQ)) Q:PSEQ'>0  D
+ . S IFN=RETURN("SEQ",PSEQ)
  . ; SEE DD for GMPL(125.12,4 :
  . ; "...code which is to be displayed... generally assumed to be ICD"
- . I +ORICD186,$D(@RETURN@(IFN,"CODE"))'>0 Q
- . S CODE=@RETURN@(IFN,"CODE")
+ . I +ORICD186,$D(RETURN(IFN,"CODE"))'>0 Q
+ . S CODE=RETURN(IFN,"CODE")
  . I $P(CODE,U,2)=1 Q
  . S PCNT=PCNT+1
  . ; RETURN:
  . ; PROBLEM^DISPLAY TEXT^CODE^CODE IFN
  . I +ORICD186 D
- . . S @TG@(PCNT)=$P(@RETURN@(IFN),U,2,4)_U_$$CODEN^ICDCODE($P(CODE,U,1),80)
+ . . S @TG@(PCNT)=$P(RETURN(IFN),U,2,4)_U_$$CODEN^ICDCODE($P(CODE,U,1),80)
  . E  D
- . . S @TG@(PCNT)=$P(@RETURN@(IFN),U,2,4)_U_$$ICDCODE($P(CODE,U,1))
+ . . S @TG@(PCNT)=$P(RETURN(IFN),U,2,4)_U_$$ICDCODE($P(CODE,U,1))
  Q
  ;
 ICDCODE(COD)    ; RETURN INTERNAL ICD FOR EXTERNAL CODE  (obsolete after CSV patches released - RV)

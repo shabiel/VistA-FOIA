@@ -1,73 +1,15 @@
 GMPLAPI5 ;; Build Problem Selection Lists ; 03/13/12 10:23
  ;;;Problem List;;02/21/12
-FIND(FILENO,EL) ; Lookup
- ; Input
- ;  EL      IEN or name of the record
- ;  FILENO  File number
- ; Output:
- ;  0   - if no exact matches are found
- ;  IEN - if a single match is found
- N PRE,TEXT S TEXT=EL,PRE=""
- I +EL>0 S TEXT=+EL,PRE="`"
- Q $$FIND1^DIC(FILENO,"","MX",PRE_TEXT,"","","ERR")
- ;
-FINDM(FILENO,TEXT) ; Lookup
- ; Input
- ;  EL      IEN or name of the record
- ;  FILENO  File number
- ; Output:
- ;  0   - if no exact matches are found
- ;  IEN - if a single match is found
- ;N LST 
- D FIND^DIC(FILENO,,,"MX",TEXT,,,,,"LST")
- Q +LST("DILIST",0)
- ;
-CREATE(GMPLNAME,GMPLFILE,GMPLFN,DUPLIC) ; Create simple record
- ; Input
- ;  GMPLNAME  Name of the new record
- ;  GMPLFILE  File name
- ;  GMPLFN    File number
- ; Output
- ;  IEN  New record IEN
- ;  -1   On error
- N DIC,X,Y,DLAYGO
- I $G(DUPLIC) D
- . S DIC=GMPLFILE,DIC(0)="L",DLAYGO=GMPLFILE,X=GMPLNAME
- . D FILE^DICN
- E  D
- . S DIC=GMPLFILE,DIC(0)="OMZLX",DLAYGO=GMPLFN,X=GMPLNAME
- . D ^DIC
- . S:Y>0 Y=+Y_U_Y(0)
- Q Y
- ;
 ADDLOC(RETURN,GMPLLST,GMPLLOC) ; Add location to list
  S RETURN=0
  I '$G(GMPLLST) D ERRX^GMPLAPIE(.RETURN,"INVPARAM","GMPLLST") Q 0
  I '$G(GMPLLOC) D ERRX^GMPLAPIE(.RETURN,"INVPARAM","GMPLLOC") Q 0
- N DIE,DA,DR
+ I $$FINDLST^GMPLDAL1(+GMPLLST)'>0 D ERRX^GMPLAPIE(.RETURN,"LISTNFND") Q 0
+ I $$CLINNAME^GMPLEXT(GMPLLOC)="" D ERRX^GMPLAPIE(.RETURN,"LOCNFND") Q 0
  Q:'$$LOCKLST^GMPLAPI1(.RETURN,GMPLLST) 0
- S DIE="^GMPL(125,",DA=+GMPLLST,DR=".03////"_+GMPLLOC D ^DIE
+ D ADDLOC^GMPLDAL1(.RETURN,GMPLLST,GMPLLOC)
  D UNLKLST^GMPLAPI1(GMPLLST)
- S RETURN=1
  Q 1
- ;
-LOCK(RETURN,TARGET) ; Lock the TARGET
- L +@TARGET:1
- I '$T D ERRX^GMPLAPIE(.RETURN,"FILELOCKED") Q 0
- Q 1
- ;
-UNLOCK(TARGET) ; Unlock the TARGET
- L -@TARGET
- Q
- ;
-NEW(DIK,LIST,ITEM) ; Create new entry in Contents file #125.1 or #125.12
- N I,HDR,LAST,TOTAL,DA
- S HDR=$G(@(DIK_"0)")),LAST=$P(HDR,U,3),TOTAL=$P(HDR,U,4)
- F I=(LAST+1):1 Q:'$D(@(DIK_"I,0)"))
- S DA=I,@(DIK_"DA,0)")=LIST_U_ITEM
- S $P(@(DIK_"0)"),U,3,4)=DA_U_(TOTAL+1)
- D IX1^DIK ; set Xrefs
- Q
  ;
 GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
  ; Input
@@ -76,22 +18,19 @@ GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
  ;  CODLEN: MaxLength of the problem name
  ; Result:
  ;  RETURN("GRP",Category_IEN,# Sequence)=Problem name^Problem code^Inactive flag
- S @RETURN=0
+ S RETURN=0
  I '$G(GMPLGRP) D ERRX^GMPLAPIE(.RETURN,"INVPARAM","GMPLGRP") Q 0
- I $$FIND("125.11",GMPLGRP)'>0 D ERRX^GMPLAPIE(.RETURN,"CTGNFND") Q 0
- N PSEQ,IFN,ITEM,LINE,GROUP,FLAG
- S LINE=0,GROUP=+GMPLGRP
- F PSEQ=0:0 S PSEQ=$O(^GMPL(125.12,"C",+GROUP,PSEQ)) Q:PSEQ'>0  D
- . S IFN=$O(^GMPL(125.12,"C",+GROUP,PSEQ,0))
- . S ITEM=$G(^GMPL(125.12,IFN,0)),LINE=LINE+1
- . S DIAG=$P(ITEM,U,4)
- . I $G(CODLEN) S DIAG=$E(DIAG,1,CODLEN)
- . S @RETURN@("GRP",GROUP,LINE)=DIAG
- . I $L($P(ITEM,U,5)) D
- .. I $$STATCHK^ICDAPIU($P(ITEM,U,5),DT) S FLAG=0  ; code is active
+ I $$FINDCAT^GMPLDAL1(GMPLGRP)'>0 D ERRX^GMPLAPIE(.RETURN,"CTGNFND") Q 0
+ N PSEQ,ITEM,GROUP,FLAG
+ S PSEQ=0,GROUP=+GMPLGRP
+ D GETCATD^GMPLDAL1(.RETURN,GMPLGRP,$G(CODLEN))
+ F  S PSEQ=$O(RETURN("GRP",+GROUP,PSEQ)) Q:PSEQ'>0  D
+ . S ITEM=$G(RETURN("GRP",+GROUP,PSEQ))
+ . I $L($P(ITEM,U,2)) D
+ .. I $$STATCHK^ICDAPIU($P(ITEM,U,2),DT) S FLAG=0  ; code is active
  .. E  S FLAG=1
- .. S @RETURN@("GRP",GROUP,LINE)=@RETURN@("GRP",GROUP,LINE)_"^"_$P(ITEM,U,5)_"^"_FLAG_"^"_$P(ITEM,U,3)
- S @RETURN=1
+ .. S RETURN("GRP",GROUP,PSEQ)=$P(ITEM,U,1,2)_"^"_FLAG_"^"_$P(ITEM,U,3)
+ S RETURN=1
  Q 1
  ;
 GETLSTS(RETURN,SEARCH,START,NUMBER) ; Array of problem selection lists
@@ -102,11 +41,11 @@ GETLSTS(RETURN,SEARCH,START,NUMBER) ; Array of problem selection lists
  ; SEARCH - string to search
  ; START - start of search
  ; NUMBER - max number of records
- N RET,DL
+ N RET,DL,IN
  S:'$D(START) START="" S:'$D(SEARCH) SEARCH=""
  S:'$G(NUMBER) NUMBER=""
  S RETURN=0
- D GETLIST(.RET,SEARCH,START,NUMBER)
+ D GETLSTS^GMPLDAL1(.RET,SEARCH,.START,NUMBER)
  S RETURN(0)=RET("DILIST",0)
  S DL="DILIST"
  F IN=1:1:$P(RETURN(0),U,1) D
@@ -122,25 +61,6 @@ GETLSTS(RETURN,SEARCH,START,NUMBER) ; Array of problem selection lists
  S RETURN=1
  Q 1
  ;
-GETLIST(RETURN,SEARCH,START,NUMBER) ;
- N FILE,FIELDS
- S FILE="125",FIELDS="@;.01"
- S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
- D LIST^DIC(FILE,"",FIELDS,"",NUMBER,START,SEARCH,"B","","","RETURN")
- I $L(SEARCH)>0,$P(RETURN("DILIST",0),U,1)'>0 D
- . D LIST^DIC(FILE,"",FIELDS,"",NUMBER,START,$$UP^XLFSTR(SEARCH),"B","","","RETURN")
- I $P(RETURN("DILIST",0),U,1)'>0 D
- . S FIELDS="@;.01;.03"
- . D LIST^DIC(FILE,"",FIELDS,"",NUMBER,START,SEARCH,"C","","","RETURN")
- Q
- ;
-GETCATG(RETURN,SEARCH,START,NUMBER) ;
- S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
- D LIST^DIC("125.11","","","",NUMBER,START,SEARCH,"","","","RETURN")
- I $L(SEARCH)>0,$P(RETURN("DILIST",0),U,1)'>0 D
- . D LIST^DIC("125.11","","","",NUMBER,START,$$UP^XLFSTR(SEARCH),"","","","RETURN")
- Q
- ;
 GETCATS(RETURN,SEARCH,START,NUMBER) ; Array of problem category
  ; RETURN - Passed by reference, array of problem category
  ;  RETURN(0) = Number of categories
@@ -149,11 +69,11 @@ GETCATS(RETURN,SEARCH,START,NUMBER) ; Array of problem category
  ; SEARCH - string to search
  ; START - start of search
  ; NUMBER - max number of records
- N RET,DL
+ N RET,DL,IN
  S:'$D(START) START="" S:'$D(SEARCH) SEARCH=""
  S:'$G(NUMBER) NUMBER=""
  S RETURN=0
- D GETCATG(.RET,SEARCH,START,NUMBER)
+ D GETCATS^GMPLDAL1(.RET,SEARCH,START,NUMBER)
  S RETURN(0)=RET("DILIST",0)
  S DL="DILIST"
  F IN=1:1:$P(RETURN(0),U,1) D
@@ -177,78 +97,38 @@ GETUSRS(RETURN,SEARCH,START,NUMBER) ; Array of users
  ; NUMBER - max number of records
  S:'$D(START) START="" S:'$D(SEARCH) SEARCH=""
  S:'$G(NUMBER) NUMBER=""
- D GETUSRSD(.RET,SEARCH,START,NUMBER)
+ D GETUSRS^GMPLEXT1(.RET,SEARCH,START,NUMBER)
  D BUILDUSR(.RETURN,.RET)
  Q 1
  ;
 BUILDUSR(RETURN,RET) ;
- N DL
+ N DL,IN
  S DL="DILIST"
+ Q:'$D(RET(DL,0))
  S RETURN(0)=RET(DL,0)
  F IN=1:1:$P(RETURN(0),U,1) D
- . Q:$D(RET(DL,1,IN))'>0
  . S RETURN(IN)=""
  . S RETURN(IN,"ID")=RET(DL,2,IN)
- . S RETURN(IN,"NAME")=RET(DL,1,IN)
- . S:$D(RET(DL,"ID",IN,1)) RETURN(IN,"INITIAL")=RET(DL,"ID",IN,1)
- . S:$D(RET(DL,"ID",IN,28)) RETURN(IN,"EMAIL")=RET(DL,"ID",IN,28)
- . S:$D(RET(DL,"ID","WRITE",IN,1)) RETURN(IN,"WRITE")=RET(DL,"ID","WRITE",IN,1)
+ . S RETURN(IN,"NAME")=RET(DL,"ID",IN,".01")
+ . S:$D(RET(DL,"ID",IN,"1")) RETURN(IN,"INITIAL")=RET(DL,"ID",IN,"1")
+ . S:$D(RET(DL,"ID",IN,".151")) RETURN(IN,"EMAIL")=RET(DL,"ID",IN,".151")
+ . S:$D(RET(DL,"ID","WRITE",IN,"8")) RETURN(IN,"WRITE")=RET(DL,"ID","WRITE",IN,"8")
  Q
  ;
-GETUSRSD(RETURN,SEARCH,START,NUMBER) ;
- S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
- S:'$G(NUMBER) NUMBER=""
- D LIST^DIC("200","",,"",NUMBER,START,SEARCH,"","","","RETURN")
- Q
- ;
-GETASUSR(RETURN,GMPLST) ;
- N RET
- D GETASUSD(.RET,GMPLST)
- D BUILDUSR(.RETURN,.RET)
- Q 1
- ;
-GETASUSD(RETURN,GMPLST) ; Array of users assigned to specified list
+GETASUSR(RETURN,GMPLST)  ; Array of users assigned to specified list
  ; RETURN - Passed by reference, array of users
  ;  RETURN(0) = Number of users
  ;  RETURN(I,"ID") = user IFN
  ;  RETURN(I,"NAME") = user name
  ; GMPLST - problem list IFN
- N IND,RET,DL,LIST,LIN,CNT S IND="",DL="DILIST"
- D LIST^DIC("200","","@;.01","",,,,,,,"RET")
- S RETURN(DL,0)="0^*^0^"
- S CNT=$P(RET(DL,0),"^",1),LIN=0
- F IND=1:1:CNT D
- . S ID=RET(DL,2,IND),LIST=""
- . S:$D(^VA(200,ID,125))>0 LIST=$P(^VA(200,ID,125),"^",2) Q:'$G(LIST)
- . I LIST=+GMPLST D
- . . S LIN=LIN+1
- . . S RETURN(DL,2,LIN)=ID
- . . S RETURN(DL,1,LIN)=RET(DL,"ID",IND,".01")
- S RETURN(DL,0)=LIN_"^*^0^"
- Q
- ;
-GETCLIND(RETURN,SEARCH,START,NUMBER) ;
- N RET S DL="DILIST"
- S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
- S:'$G(NUMBER) NUMBER="" ;,START="C",SEARCH="C"
- D LIST^DIC("44","",,,NUMBER,START,SEARCH,,"","","RET")
- S RETURN(DL,0)="0^*^0^"
- S CNT=$P(RET(DL,0),"^",1),LIN=0
- F IND=1:1:CNT D
- . S ID=RET(DL,2,IND)
- . S TYPE=$P(^SC(ID,0),U,3)
- . I TYPE="C" D
- . . S LIN=LIN+1
- . . S RETURN(DL,2,LIN)=ID
- . . S RETURN(DL,1,LIN)=$P(^SC(ID,0),U,1)
- S RETURN(DL,0)=LIN_"^*^0^"
- Q
- ;
-CLINAME(GMPCLIN) ;
- N NAME
- Q:$G(GMPCLIN)'>0 "" Q:$D(^SC(GMPCLIN,0))'>0 ""
- S NAME=$P(^SC(GMPCLIN,0),U,1)
- Q NAME
+ N RET
+ S RETURN=0
+ I '$G(GMPLST) D ERRX^GMPLAPIE(.RETURN,"INVPARAM","GMPLST") Q 0
+ I $$FINDLST^GMPLDAL1(GMPLST)'>0 D ERRX^GMPLAPIE(.RETURN,"LISTNFND") Q 0
+ D GETASSUS^GMPLEXT1(.RET,GMPLST)
+ D BUILDUSR(.RETURN,.RET)
+ S RETURN=1
+ Q 1
  ;
 GETCLIN(RETURN,SEARCH,START,NUMBER) ; Array of clinical locations
  ; RETURN - Passed by reference, array of locations
@@ -260,9 +140,9 @@ GETCLIN(RETURN,SEARCH,START,NUMBER) ; Array of clinical locations
  ; NUMBER - max number of records
  S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
  S:'$G(NUMBER) NUMBER=""
- N RET,DL
+ N RET,DL,IN
  S RETURN=0
- D GETCLIND(.RET,SEARCH,START,NUMBER)
+ D GETCLIN^GMPLEXT1(.RET,SEARCH,START,NUMBER)
  S RETURN(0)=RET("DILIST",0)
  S DL="DILIST"
  F IN=1:1:$P(RETURN(0),U,1) D
