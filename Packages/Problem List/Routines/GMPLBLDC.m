@@ -26,8 +26,9 @@ INIT ; -- init variables and list array
  ;
 GETLIST ; Build ^TMP("GMPLIST",$J,#) of problems
  K ^TMP("GMPLIST",$J)
- N RETURN S RETURN="^TMP(""GMPLIST"",$J)"
+ N RETURN 
  D GETCAT^GMPLAPI1(.RETURN,GMPLGRP)
+ M ^TMP("GMPLIST",$J)=RETURN
  Q
  ;
 BUILD(LIST,MODE) ; Build ^TMP("GMPLST",$J,) of current items in LIST for display

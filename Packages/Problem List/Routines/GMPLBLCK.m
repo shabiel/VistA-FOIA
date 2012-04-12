@@ -154,8 +154,9 @@ CKCODES ; check probs on lists for future inactivation dates
  ;   ^TMP("GMPLSL",$J,"F",category,"L",list)
  ;
  N RETURN
- S RETURN="^TMP(""GMPLSL"",$J,""F"")"
+ K ^TMP("GMPLSL",$J,"F")
  D GETFINC^GMPLAPI6(.RETURN)
+ M ^TMP("GMPLSL",$J,"F")=RETURN
  Q
  ;
 PAGE(NUM) ;print header and raise page number
