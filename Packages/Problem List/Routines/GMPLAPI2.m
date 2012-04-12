@@ -19,7 +19,7 @@ NEW(RETURN,GMPDFN,GMPROV,GMPFLD) ; Save Collected Values in new Problem Entry
  S:'$G(GMPFLD(1.01)) GMPFLD(1.01)="1^Unresolved"
  S:'$G(GMPFLD(.05)) GMPFLD(.05)=$$PROVNARR^GMPLEXT($P($G(GMPFLD(.05)),U,2),+GMPFLD(1.01))
  S GMPFLD(.08)=DT_U_$$EXTDT^GMPLX(DT)
- S GMPFLD(.12)="A^ACTIVE"
+ S:$G(GMPFLD(.12))="" GMPFLD(.12)="A^ACTIVE"
  S GMPFLD(1.02)=$S('$$VERIFY^GMPLSITE:"P",$$CLINUSER^GMPLEXT:"P",1:"T")
  S GMPFLD(1.03)=DUZ
  S GMPFLD(1.09)=DT_U_$$EXTDT^GMPLX(DT)
@@ -92,7 +92,6 @@ DETAIL(RETURN,GMPIFN,GMPLMGR,GMPROV) ;
  . I $G(GMPLMGR)'="",$P($G(^AUPNPROB(GMPIFN,11,FAC,11,NIFN,0)),U,6)'=+GMPROV Q
  . S CNT=CNT+1,RETURN(10,CNT)=$G(^AUPNPROB(GMPIFN,11,FAC,11,NIFN,0))
  . S $P(RETURN(10,CNT),U,2)=FAC
- . ;S GMPFLD(10,CNT)=GMPORIG(10,CNT)
  S RETURN(10,0)=CNT
  Q 1
  ;
@@ -100,7 +99,6 @@ DETAILX(RETURN,GMPIFN,GMPLMGR,GMPROV,GMPMULTI) ; Returns Formatted Detailed Data
  ;                
  ; Input   GMPIFN  Pointer to Problem file #9000011
  ;         GMPMULTI Multi divisional
- 
  ; Output  RETURN Array, passed by reference
  ;         RETURN("DATA NAME") = External Format of Value
  ;
