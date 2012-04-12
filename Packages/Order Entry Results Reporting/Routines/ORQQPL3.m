@@ -39,10 +39,12 @@ LIST(GMPL,GMPDFN,GMPSTAT)       ; -- Returns list of problems for patient GMPDFN
  ;
 DELLIST(RETURN,GMPDFN) ; GET LIST OF DELETED PROBLEMS
  ; see GETPLIST^GMPLMGR1 and LIST^GMPUTL2
+ K RETURN
  D LIST^GMPLAPI4(.GMPL,GMPDFN,"R","","",0,0)
  F I=1:1:GMPL D
  . S $P(GMPL(I),"^",10)=$P($P(GMPL(I),"^",10),";")
  . S $P(GMPL(I),"^",12)=$P($P(GMPL(I),"^",12),";")
+ M RETURN=GMPL
  Q
  ;
  ;
