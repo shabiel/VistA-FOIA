@@ -9,14 +9,15 @@ EN0 S GMPLFORM=$$GETFORM^IBDF18 G:'GMPLFORM EXIT
  I 'X W !!,"No problems found.  Please select another form.",! G EN0
 EN1 ; Create list to copy problems into
  S DIR(0)="FA^3:30",DIR("A")="LIST NAME: "
- N RETURN S RETURN="^TMP(""GMPLLIST"",$J)"
+ N RETURN
  D GETLIST^GMPLAPI1(.RETURN,$P(GMPLFORM,U,2))
- S:'@RETURN DIR("B")=$P(GMPLFORM,U,2)
+ M ^TMP("GMPLLIST",$J)=RETURN
+ S:'RETURN DIR("B")=$P(GMPLFORM,U,2)
  S DIR("?",1)="Enter the name you wish to give this list; use meaningful"
  S DIR("?")="text, as it will be used as a title when presenting this list."
  W !!,">>>  Please create a new selection list in which to store these problems:"
 EN2 D ^DIR G:$D(DUOUT)!($D(DTOUT)) EXIT
- N ERR,CLINIC K @RETURN
+ N ERR,CLINIC K ^TMP("GMPLLIST",$J)
  S ERR=$$NEWLST^GMPLAPI1(.RETURN,Y)
  I ERR=0,$P(RETURN(0),U,1)="LISTXST" W $C(7),!,"There is already a list by this name!",! G EN2
  I RETURN'>0 W !!,"ERROR -- Cannot create new list!",$C(7) G EXIT
