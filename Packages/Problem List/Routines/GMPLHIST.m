@@ -5,6 +5,8 @@ GMPLHIST ; SLC/MKB/KER -- Problem List Historical data ; 04/15/2002
  ;   DBIA 10060  ^VA(200
  ;            
 AUDET(RETURN,AIFN) ; Returns the audit entry details
+ ; RETURN
+ ; AIFN - Audit entry IFN
  N NODE,DATE,FLD,PROV,OLD,NEW,ROOT,CHNGE,REASON,LCNT,AUDIT
  D GETADATA^GMPLDAL2(.AUDIT,AIFN)
  Q:$D(AUDIT(0))'>0 0
@@ -47,6 +49,10 @@ GETHIST(RETURN,GMPIFN) ; Returns all audit entries of the problem
  ; RETURN - By reference, problem history
  ;  RETURN(I)=Audit IFN
  ; GMIFN - Problem IFN
+ N VALID
+ S RETURN=0
+ D VALID^GMPLAPI4(.VALID,GMPIFN)
+ I 'VALID D ERRX^GMPLAPIE(.RETURN,"PRBNFND") Q 0
  D GETHIST^GMPLDAL2(.RETURN,GMPIFN)
  Q 1
  ;
@@ -59,7 +65,10 @@ GETAUDIT(RETURN,GMPIFN,FIELD,VALUE) ; Returns all audit data of the problem
  ; FIELD - If is specified, will returns changes only made at this field
  ; VALUE - If both FIELD and VALUE is specified, will returns changes made at FIELD
  ;   and having current value equals with VALUE
- N IDT,PROB,RET
+ N IDT,PROB,RET,VALID
+ S RETURN=0
+ D VALID^GMPLAPI4(.VALID,GMPIFN)
+ I 'VALID D ERRX^GMPLAPIE(.RETURN,"PRBNFND") Q 0
  D GETAUDIT^GMPLDAL2(.RET,GMPIFN,$G(FIELD),$G(VALUE))
  S IDT=0
  F  S IDT=$O(RET(IDT)) Q:IDT'>0  D
@@ -87,6 +96,9 @@ AUDITX(RETURN,GMPIFN,FIELD,VALUE) ; Returns all audit data of the problem
  ;   and having current value equals with VALUE
  N IDT,FLD,CNT,RET
  S CNT=0,RETURN=CNT,IDT=0
+ N VALID
+ D VALID^GMPLAPI4(.VALID,GMPIFN)
+ I 'VALID D ERRX^GMPLAPIE(.RETURN,"PRBNFND") Q 0
  D AUDITX^GMPLDAL2(.RET,GMPIFN,$G(FIELD),$G(VALUE))
  F  S IDT=$O(RET(IDT)) Q:IDT'>0  D
  . S FLD=$$FLDNAME(RET(IDT,1))
@@ -100,7 +112,7 @@ AUDITX(RETURN,GMPIFN,FIELD,VALUE) ; Returns all audit data of the problem
  . S RETURN(CNT,"REQUESTINGBY")=$$PROVNAME^GMPLEXT(RET(IDT,7))
  . S:$D(RET(IDT,1101)) RETURN(CNT,"OLDPROBLEM")=RET(IDT,1101)
  S RETURN=CNT
- Q
+ Q 1
  ;
 FLDNAME(NUM) ; Returns Field Name for Display
  N NAME,NM1,NM2,I,J S J=0,NAME="" D NUM(.NM1),ALP(.NM2) S:+($G(NM1(+NUM)))=+NUM J=+NUM
