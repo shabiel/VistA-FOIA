@@ -190,12 +190,3 @@ SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
  S RETURN=1
  Q 1
  ;
-
-
- .. S DR="",DIE=DIK
- .. F I=1:1:4 D
- ... S:$P(@SOURCE@(DA),U,I)'=$P(ITEM,U,I) DR=DR_";"_I_"////"_$S($P(@SOURCE@(DA),U,I)="":"@",1:$P(@SOURCE@(DA),U,I))
- .. S:$E(DR)=";" DR=$E(DR,2,999) D ^DIE
- S RETURN=1
- Q 1
- ;
