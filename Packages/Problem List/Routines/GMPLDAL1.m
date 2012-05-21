@@ -214,6 +214,7 @@ GETCLST(GMPCLIN) ; Get first list assigned to the clinic
  ; GMPCLIN - Location IFN
  N LST
  S:$D(^GMPL(125,"C",+GMPCLIN)) LST=$O(^GMPL(125,"C",+GMPCLIN,0))
+ Q:'$G(LST) 0
  S $P(LST,U,2)=$P($G(^GMPL(125,+LST,0)),U)
  Q LST
  ;
