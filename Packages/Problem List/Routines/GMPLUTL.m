@@ -150,7 +150,7 @@ UPDATE(PL,PLY) ; Update a Problem/Create if Not Found
  N VALID
  S GMPVAMC=+$G(DUZ(2)),GMPVA=$S($G(DUZ("AG"))="V":1,1:0),PLY=-1,PLY(0)=""
  S GMPIFN=$G(PL("PROBLEM")) I GMPIFN="" D CREATE(.PL,.PLY) Q
- D VALID^GMPLAPI4(GMPIFN)
+ D VALID^GMPLAPI4(.VALID,GMPIFN)
  I 'VALID S PLY(0)="Invalid problem" Q
  I $$PROVNAME^GMPLEXT(+$G(PL("PROVIDER")))="" S PLY(0)="Invalid provider" Q
  S GMPROV=+$G(PL("PROVIDER"))
