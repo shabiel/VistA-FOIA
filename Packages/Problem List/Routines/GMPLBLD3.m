@@ -1,5 +1,5 @@
-GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ;3/12/03 13:40
- ;;2.0;Problem List;**28**;Aug 25, 1994
+GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ; 04/12/12
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3991
  ;
@@ -24,11 +24,11 @@ ASQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
 ASGCLIN(GMPLSLST) ;
  N CLIN,RETURN,LST,SUF
  S SUF=""
- D GETLIST^GMPLAPI1(.LST,GMPLSLST,0,1)
+ S %=$$GETLIST^GMPLAPI1(.LST,GMPLSLST,0,1)
  S:$D(LST("LST","CLINIC")) SUF=$G(LST("LST","CLINIC"))
  S:$L(SUF)>0 SUF=SUF_"// "
  S CLIN=$$CLINIC(,SUF)
- I $G(CLIN)>0 D ADDLOC^GMPLAPI5(.RETURN,GMPLSLST,CLIN)
+ I $G(CLIN)>0 S %=$$ADDLOC^GMPLAPI5(.RETURN,GMPLSLST,CLIN)
  Q
  ;
 CLINIC(PREFIX,SUFIX) ;
@@ -37,11 +37,11 @@ CL ;
  S PREF=$G(PREFIX),SUF=$G(SUFIX)
  S Y=-1,PRMPT=PREF_"CLINIC: "_SUF
  W !,PRMPT R X:$S($D(DTIME):DTIME,1:300) I "^"[X!($G(X)="") S Y=-1 Q "^"
- I X="?" D CH1 D GETCLIN^GMPLAPI5(.LSTS) D PRINTALL^GMPLBLD2(.LSTS,1)
+ I X="?" D CH1 S %=$$GETCLIN^GMPLAPI5(.LSTS) D PRINTALL^GMPLBLD2(.LSTS,1)
  I X?1"??".E D
- . I X="??" D CH2 D GETCLIN^GMPLAPI5(.LSTS) D PRINTALL^GMPLBLD2(.LSTS,1)
+ . I X="??" D CH2 S %=$$GETCLIN^GMPLAPI5(.LSTS) D PRINTALL^GMPLBLD2(.LSTS,1)
  E  D:X'="?"
- . D GETCLIN^GMPLAPI5(.LSTS,X)
+ . S %=$$GETCLIN^GMPLAPI5(.LSTS,X)
  . S Y=$$SELLST^GMPLBLD2(.LSTS,X)
  G:Y<0 CL
  Q Y
@@ -70,9 +70,8 @@ USERS(ADD) ; -- select user(s) to de-/assign list
  S DIR("?")=($L(GMPLUSER,U)-1)_" user(s) selected; enter NO to exit."
  D ^DIR Q:'Y
 USR W !,$S(ADD:"Assigning ",1:"Removing ")_$P(GMPLSLST,U,2)_" list ..."
- S TARGET=$S(ADD:"ASSUSR^GMPLAPI6(.RETURN,GMPLSLST,DA)",1:"REMUSR^GMPLAPI6(.RETURN,GMPLSLST,DA)")
  F GMPLI=1:1:$L(GMPLUSER,U) S DA=$P(GMPLUSER,U,GMPLI) I DA D
- . D @TARGET
+ . S %=$S(ADD:$$ASSUSR^GMPLAPI6(.RETURN,GMPLSLST,DA),1:$$REMUSR^GMPLAPI6(.RETURN,GMPLSLST,DA))
  . W !?4,$$PROVNAME^GMPLEXT(DA)
  W !!,"DONE."
  Q
@@ -84,12 +83,12 @@ READ ;
  I X="?" W !!,"Enter the name of the user you wish this list to be "_$S(ADD:"assigned to;",1:"removed from;"),!,"enter '??' to see users currently assigned this list, or '???' to see",!,"all users on this system.",! G READ
  I X?1"??".E D  G READ
  . I X="??" D
- . . D GETASUSR^GMPLAPI5(.LSTS,+GMPLSLST)
+ . . S %=$$GETASUSR^GMPLAPI5(.LSTS,+GMPLSLST)
  . . W !!,"Users currently assigned "_$P(GMPLSLST,U,2)_" list:",!!
  . E  D
- . . D GETUSRS^GMPLAPI5(.LSTS)
+ . . S %=$$GETUSRS^GMPLAPI5(.LSTS)
  . D PRINTALL^GMPLBLD2(.LSTS,1)
- D GETUSRS^GMPLAPI5(.LSTS,X)
+ S %=$$GETUSRS^GMPLAPI5(.LSTS,X)
  S Y=$$SELLST^GMPLBLD2(.LSTS,X) G:Y'>0 READ
  Q
  ;
@@ -97,7 +96,7 @@ DELETE ; Delete Selection List
  N DIR,DIK,DA,X,Y,VIEW,USER,GMPCOUNT,GMPQUIT,GMPLSLST,RETURN
  S GMPCOUNT=0,GMPLSLST=$$LIST^GMPLBLD2("") Q:GMPLSLST=0
  W !!,"Checking the New Person file for use of this list ..."
- D LSTUSED^GMPLAPI1(.RETURN,GMPLSLST)
+ S %=$$LSTUSED^GMPLAPI1(.RETURN,GMPLSLST)
  S GMPCOUNT=RETURN
  I GMPCOUNT W $C(7),!!,GMPCOUNT_" user(s) are currently assigned this list!",!,"CANNOT DELETE",! Q
  W !,"0 users found."
@@ -107,7 +106,7 @@ DEL1 S DIR(0)="Y",DIR("B")="NO"
  W $C(7),! D ^DIR Q:'Y
  W !!,"Deleting "_$P(GMPLSLST,U,2)_" selection list ..."
  K RETURN
- D DELLST^GMPLAPI1(.RETURN,+GMPLSLST)
+ S %=$$DELLST^GMPLAPI1(.RETURN,+GMPLSLST)
  W "." ; list
  W !,"DONE.",!
  Q
@@ -116,7 +115,7 @@ MENU ; -- init variables and list array for GMPL LIST MENU list template
  ;    Expects GMPLSLST=selection list
  N RETURN,GRP,IND,IND1
  S IND=0,IND1=0
- D GETLIST^GMPLAPI1(.RETURN,GMPLSLST,"")
+ S %=$$GETLIST^GMPLAPI1(.RETURN,GMPLSLST,"")
  M ^TMP("GMPLMENU1",$J)=RETURN
  F  S IND=$O(^TMP("GMPLMENU1",$J,"GRP",IND)) Q:'IND  D
  . S GRP=^TMP("GMPLMENU1",$J,"GRP",IND)

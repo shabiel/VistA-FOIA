@@ -1,5 +1,5 @@
-GMPLEDT2 ; SLC/MKB/KER -- Problem List edit actions ; 04/15/2002
- ;;2.0;Problem List;**26,35**;Aug 25, 1994;Build 26
+GMPLEDT2 ; SLC/MKB/KER -- Problem List edit actions ; 03/28/12
+ ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA 10060  ^VA(200
@@ -31,7 +31,7 @@ DELETE ; Remove current problem from patient's list
  N DELETED
  S VALMBCK=$S(VALMCC:"",1:"R")
  Q:'$$SUREDEL(1)
- D DELETE^GMPLAPI2(.DELETED,GMPIFN,+$G(GMPROV))
+ S %=$$DELETE^GMPLAPI2(.DELETED,GMPIFN,+$G(GMPROV))
  I 'DELETED W $$ERRTXT^GMPLAPIE(DELETED) H 2 Q
  S GMPSAVED=1
  S VALMBCK="Q"

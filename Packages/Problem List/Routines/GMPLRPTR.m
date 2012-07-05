@@ -1,5 +1,5 @@
-GMPLRPTR ; SLC/MKB/AJB -- Problem List Report of Removed Problems ;4/10/03
- ;;2.0;Problem List;**28**;Aug 25, 1994
+GMPLRPTR ; SLC/MKB/AJB -- Problem List Report of Removed Problems ; 03/29/12
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994
 EN ; -- main entry point
  S GMPDFN=$$PAT^GMPLX1 Q:+GMPDFN'>0
  D WAIT^DICD,GETLIST

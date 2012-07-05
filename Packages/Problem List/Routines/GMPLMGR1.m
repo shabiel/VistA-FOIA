@@ -1,5 +1,5 @@
-GMPLMGR1 ; SLC/MKB -- Problem List VALM Utilities cont ;5/10/94  16:42
- ;;2.0;Problem List;**10**;Aug 25, 1994
+GMPLMGR1 ; SLC/MKB -- Problem List VALM Utilities cont ; 03/28/12
+ ;;2.0;Problem List;**10,260002**;Aug 25, 1994
 NEWPAT ; select new patient
  N NEWPT S VALMBCK="R"
  I GMPARAM("PRT"),$D(GMPRINT) D AUTO^GMPLMGR2 I $D(DTOUT) S VALMBCK="Q" Q
@@ -27,7 +27,7 @@ INACTIVE ; Incl inactive problems
  S VALMBCK=$S(VALMCC:"",1:"R")
  I GMPLVIEW("ACT")="" D  Q
  . W !!,"Listing already includes inactive problems!" H 1
- D HASPRBS^GMPLAPI4(.ACTIVE,+GMPDFN,"I")
+ S %=$$HASPRBS^GMPLAPI4(.ACTIVE,+GMPDFN,"I")
  I 'ACTIVE D  Q
  . W !!,"Patient has no inactive problems to include.",! H 1
  S GMPLVIEW("ACT")="",VALMBCK="R",VALMSG=$$MSG^GMPLX
@@ -102,6 +102,6 @@ KEY S XQORM("KEY","=")=$O(^ORD(101,"B","VALM NEXT SCREEN",0))_"^1"
 GETPLIST(PLIST,TOTAL,VIEW) ; Build PLIST(#)=IFN for view
  N STBEG,STEND,ST,CNT,IFN,RECORD,DATE,LIST K PLIST
  W:'$G(GMPARAM("QUIET")) !,"Searching for the patient's problem list ..."
- D GETPLIST^GMPLAPI4(.PLIST,GMPDFN,VIEW("ACT"),GMPARAM("REV"),VIEW("PROV"),VIEW("VIEW"),1)
+ S %=$$GETPLIST^GMPLAPI4(.PLIST,GMPDFN,VIEW("ACT"),GMPARAM("REV"),VIEW("PROV"),VIEW("VIEW"),1)
  S TOTAL=PLIST
  Q

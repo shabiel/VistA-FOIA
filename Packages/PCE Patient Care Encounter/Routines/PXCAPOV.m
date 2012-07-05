@@ -1,5 +1,5 @@
-PXCAPOV ;ISL/dee & LEA/Chylton - Validates data from the PCE Device Interface into PCE's PXK format for POV ;3/20/97
- ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,33,121,130,124,168**;Aug 12, 1996;Build 14
+PXCAPOV ;ISL/dee & LEA/Chylton - Validates data from the PCE Device Interface into PCE's PXK format for POV ;03/27/12
+ ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,33,121,130,124,168,260002**;Aug 12, 1996;Build 14
  Q
  ; Variables
  ;   PXCADIAG  Copy of a Diagnosis node of the PXCA array
@@ -68,8 +68,8 @@ DIAG(PXCA,PXCABULD,PXCAERRS) ;Validation routine for POV
  .. I '(PXCAITEM=1!(PXCAITEM=0)!(PXCAITEM="")) S PXCA("ERROR","DIAGNOSIS",PXCAPRV,PXCAINDX,15)="PROJ 112/SHAD flag bad^"_PXCAITEM
  .. S PXCAITEM=$P(PXCADIAG,"^",7)
  .. I PXCAITEM]"" D
- ... D VALID^GMPLAPI4(.VALID,PXCAITEM)
- ... D PATIENT^GMPLAPI4(.PAT,PXCAITEM)
+ ... S %=$$VALID^GMPLAPI4(.VALID,PXCAITEM)
+ ... S %=$$PATIENT^GMPLAPI4(.PAT,PXCAITEM)
  ... I 'VALID S PXCA("ERROR","DIAGNOSIS",PXCAPRV,PXCAINDX,7)="Problem not in file 9000011^"_PXCAITEM
  ... E  I PXCAPAT'=PAT S PXCA("ERROR","DIAGNOSIS",PXCAPRV,PXCAINDX,7)="Problem in file 9000011 is for a different Patient^"_PXCAITEM
  .. ;

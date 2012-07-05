@@ -1,5 +1,5 @@
-GMPLHS ; SLC/MKB/KER - Extract Prob List Health Summary ; 04/15/2002
- ;;2.0;Problem List;**22,26,35**;Aug 25, 1994;Build 26
+GMPLHS ; SLC/MKB/KER - Extract Prob List Health Summary ; 03/27/12
+ ;;2.0;Problem List;**22,26,35,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA  3106  ^DIC(49

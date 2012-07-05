@@ -1,5 +1,5 @@
-XQORM1 ; SLC/KCM - Display selections & prompt ;12/22/93  14:43
- ;;8.0;KERNEL;;Jul 10, 1995
+XQORM1 ; SLC/KCM - Display selections & prompt ;2/27/12
+ ;;8.0;KERNEL;**260002**;Jul 10, 1995
 DISP ;From: XQORM
  N L,M,N,T
  I $E(X)="?" W ! S (DX,DY)=0 X ^%ZOSF("XY")
@@ -22,7 +22,7 @@ HIDE(XQORM,X)  ;
  N DA
  S DA=+X,DA(1)=+XQORM
  Q:$D(XQORM("R"))[0  Q:'$L(XQORM("R"))  Q:'+X
- I 0 
+ I 0
  X XQORM("R")
  I $T D
  . S $P(X,"^",3)=""

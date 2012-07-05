@@ -1,5 +1,5 @@
-PXRMPROB ; SLC/PKR - Code for Problem List. ;06/09/2006
- ;;2.0;CLINICAL REMINDERS;**4**;Feb 04, 2005;Build 21
+PXRMPROB ; SLC/PKR - Code for Problem List. ;03/27/12
+ ;;2.0;CLINICAL REMINDERS;**4,260002**;Feb 04, 2005;Build 21
  ;
  ;===================================================
 FPDAT(DFN,TAXARR,NGET,SDIR,BDT,EDT,STATUSA,FLIST) ;Find data for a
@@ -175,7 +175,7 @@ OUTPUT(INDENT,OCCLIST,IFIEVAL,NLINES,TEXT) ;Produce the clinical
  . S STATUS=$S(STATUS'="":$$EXTERNAL^DILFD(9000011,.12,"",STATUS,.EM),1:"UNDEFINED")
  . S TEMP=TEMP_" Status: "_STATUS
  . S TEXTIN(1)=TEMP_"\\",NIN=1
- . D PROBNARR^GMPLAPI4(.PRB,IFIEVAL(IND,"DAS"))
+ . S %=$$PROBNARR^GMPLAPI4(.PRB,IFIEVAL(IND,"DAS"))
  . S PN=$P(PRB,U,2)
  . I PN="" S PN="MISSING"
  . I PN'=DIAG S TEXTIN(2)="Prov. Narr. - "_PN,NIN=2

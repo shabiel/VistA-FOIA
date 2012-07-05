@@ -1,5 +1,5 @@
-GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ; 04/15/2002
- ;;2.0;Problem List;**26,35**;Aug 25, 1994;Build 26
+GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ; 03/19/12
+ ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA 10060  ^VA(200
@@ -19,7 +19,7 @@ EN ; Init Variables, list array
  W $S($G(GMPLNUM):"#"_GMPLNUM_" ",1:"")_"...",! K GMPFLD,GMPORIG
  ;   Set GMPFLD() and GMPORIG() Arrays
  ;D GETFLDS^GMPLEDT3(GMPIFN)
- D DETAIL^GMPLAPI2(.GMPORIG,GMPIFN,$G(GMPLMGR),GMPROV)
+ S %=$$DETAIL^GMPLAPI2(.GMPORIG,GMPIFN,$G(GMPLMGR),GMPROV)
  I '$D(GMPORIG) W !!,"ERROR -- Cannot continue.",! S VALMBCK="Q" G KILL
  M GMPFLD=GMPORIG
 INIT ;   Build list from GMPFLD()
@@ -88,7 +88,7 @@ HI(LINE,COL) ; Hi-lite #
  ;          
 HDR ; Header code
  N LASTMOD,PAT S PAT=$P(GMPDFN,U,2)_"  ("_$P(GMPDFN,U,3)_")"
- D LASTMOD^GMPLAPI4(.LASTMOD,GMPIFN)
+ S %=$$LASTMOD^GMPLAPI4(.LASTMOD,GMPIFN)
  S LASTMOD="Last Updated: "_$$FMTE^XLFDT(LASTMOD)
  S VALMHDR(1)=PAT_$$REPEAT^XLFSTR(" ",(79-$L(PAT)-$L(LASTMOD)))_LASTMOD
  Q

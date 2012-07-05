@@ -1,5 +1,5 @@
-GMTSPLSZ ;SLC/SBW - Updated Problem List 2.0 extract routine. in HS namespace ;18/Apr/95
- ;;2.7;Health Summary;;Oct 20, 1995
+GMTSPLSZ ;SLC/SBW - Updated Problem List 2.0 extract routine. in HS namespace ; 03/27/12
+ ;;2.7;Health Summary;**260002**;Oct 20, 1995
 GMPLHS ;SLC/MKB,DJP,SBW - Extract for Prob List-Health Summary 2.7 ;15/APR/95
  ;;2.0;Problem List;;Aug 25, 1994
 GETLIST(GMPDFN,STATUS) ; Define list 
@@ -8,8 +8,8 @@ GETLIST(GMPDFN,STATUS) ; Define list
  Q:+GMPDFN'>0
  S GMPCNT=0
  D GET^GMPLSITE(.GMPARAM) S GMPARAM("QUIET")=1
- D GETPLIST^GMPLAPI4(.GMPLIST,GMPDFN,STATUS,GMPARAM("REV"),"","",0)
-BUILD
+ S %=$$GETPLIST^GMPLAPI4(.GMPLIST,GMPDFN,STATUS,GMPARAM("REV"),"","",0)
+BUILD ;
  N NUM
  I GMPLIST(0)'>0 K ^TMP("GMPLHS",$J) Q
  S ^TMP("GMPLHS",$J,STATUS,0)=GMPLIST(0)_U_GMPLIST ; # entries extracted ^ # entries that exist
@@ -19,7 +19,7 @@ GETPROB(IFN,GMPCNT) ; Get problem data and set it to ^TMP array
  ; Returns ^TMP("GMPLHS",$J,CNT,0)
  ; Returns ^TMP("GMPLHS",$J,CNT,IFN,"N")
  N GMPL,NOTES,LOC,NUM,NODE
- D DETAIL^GMPLAPI2(.GMPL,IFN)
+ S %=$$DETAIL^GMPLAPI2(.GMPL,IFN)
  S DIAG=$P(GMPL(.01),U)
  S LASTMDT=$P(GMPL(.03),U)
  S NARR=$P(GMPL(.05),U,2)
@@ -36,7 +36,7 @@ GETPROB(IFN,GMPCNT) ; Get problem data and set it to ^TMP array
  S GMPCNT=GMPCNT+1 ; # of problems included in the extract
  S ^TMP("GMPLHS",$J,GMPCNT,0)=DIAG_U_LASTMDT_U_SITE_U_ENTDT_U_STAT_U_ONSETDT_U_RPROV_U_SERV_U_SERVABB_U_RESDT_U_CLIN_U_RECDT
  S ^TMP("GMPLHS",$J,GMPCNT,"N")=NARR
- D FULLNTE^GMPLAPI3(.NOTES,IFN) ; Add active comments
+ S %=$$FULLNTE^GMPLAPI3(.NOTES,IFN) ; Add active comments
  Q:NOTES'>0
  S LOC=0
  F  S LOC=$O(NOTES(LOC)) Q:LOC=""  D

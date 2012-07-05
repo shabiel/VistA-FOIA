@@ -1,5 +1,5 @@
-ACKQUTL6 ;HCIOFO/BH-A&SP Utilities routine ; 12/28/07 11:04am
- ;;3.0;QUASAR;**1,7,17**;Feb 11, 2000;Build 28
+ACKQUTL6 ;HCIOFO/BH-A&SP Utilities routine ; 03/27/12
+ ;;3.0;QUASAR;**1,7,17,260002**;Feb 11, 2000;Build 28
  ;Per VHA Directive 10-93-142, this routine SHOULD NOT be modified.
  ;
 DATACHEK(X,ACKVIEN) ;  Checks that the input (X) is a valid time also checks that 
@@ -273,11 +273,11 @@ PLIST(ACKPAT,ACKDC) ; Determines if an entry exists in the Problem file
  ; Status values -  1=Inactive, 2=Active
  N ACKIFN,ACKPLQT,PLIST,PRB,I
  S (ACKIFN,ACKPLQT)=0
- D GETPLIST^GMPLAPI4(.PLIST,ACKPAT,"AIR")
+ S %=$$GETPLIST^GMPLAPI4(.PLIST,ACKPAT,"AIR")
  Q:PLIST=0 0
  F I=1:1:PLIST(0) D  Q:ACKPLQT
  . K PRB
  . S ACKIFN=PLIST(I)
- . D DETAIL^GMPLAPI2(.PRB,ACKIFN,0)
+ . S %=$$DETAIL^GMPLAPI2(.PRB,ACKIFN,0)
  . I $P(PRB(.01),U,1)=ACKDC S ACKPLQT=$S($P(PRB(.12),U,1)="A":2,1:1)_U_ACKIFN
  Q ACKPLQT

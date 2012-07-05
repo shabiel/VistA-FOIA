@@ -1,5 +1,5 @@
-GMPLEXT ; / External functions mockup (to be deleted when the interfaces are fixed);02/27/2012
- ;;TBD;Problem List;;02/27/2012
+GMPLEXT ; RGI -- External functions mockup (to be deleted when the interfaces are fixed); 03/28/12
+ ;;2.0;Problem List;**260002**;Aug 25, 1994
 PROVNAME(GMPROV) ; Returns provider name
  Q $P($G(^VA(200,+GMPROV,0)),U)
  ;

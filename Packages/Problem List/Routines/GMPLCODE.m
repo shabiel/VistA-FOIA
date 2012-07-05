@@ -1,5 +1,5 @@
-GMPLCODE ; SLC/MKB/AJB -- Problem List ICD Code Utilities ;5/27/94  08:23
- ;;2.0;Problem List;**28**;Aug 25, 1994
+GMPLCODE ; SLC/MKB/AJB -- Problem List ICD Code Utilities ; 03/28/12
+ ;;2.0;Problem List;**260002**;Aug 25, 1994
 EN ; -- main entry point for GMPL CODE LIST
  K GMPLUSER
  D EN^VALM("GMPL CODE LIST")
@@ -46,7 +46,7 @@ ICD(NUM,IFN) ; -- search ICD Diagnosis file #80
  N X,Y,DIC,DIR,OLD,NEW,LCNT,RET
  W !,IFN,!
  D FULL^VALM1 S VALMBCK="R" W !!
- D DIAG^GMPLAPI4(.OLD,IFN)
+ S %=$$DIAG^GMPLAPI4(.OLD,IFN)
  S DIR(0)="PAO^ICD9(:QEM",DIR("A")="Enter ICD CODE or DESCRIPTION: "
  S DIR("A",1)="Problem #"_NUM_": "_$$PROBTEXT^GMPLX(IFN)
  S DIR("?")="Enter a new code number or a brief free text description on which to search",DIR("B")=$P(OLD,U,2)
@@ -56,7 +56,7 @@ ICD(NUM,IFN) ; -- search ICD Diagnosis file #80
  I X="@" Q:'$D(DIR("B"))  S:$$SURE^GMPLX Y=$$NOS^GMPLX
  I +Y>0,Y'=OLD D  S GMPSAVED=1
  . S NEW=Y
- . D REPLACE^GMPLAPI4(.RET,IFN,NEW)
+ . S %=$$REPLACE^GMPLAPI4(.RET,IFN,NEW)
  . S LCNT=+$G(^TMP("GMPLIDX",$J,NUM))
  . D FLDTEXT^VALM10(LCNT,"ICD",$P(NEW,U,2))
  D BUILD^GMPLMGR(.GMPLIST) S VALMBCK="R"

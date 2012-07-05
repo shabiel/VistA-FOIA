@@ -1,5 +1,5 @@
-GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ; 04/15/2002
- ;;2.0;Problem List;**3,26,35**;Aug 25, 1994;Build 26
+GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ; 04/06/12
+ ;;2.0;Problem List;**3,26,35,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA   348  ^DPT(
@@ -170,7 +170,7 @@ PARMS() ;
  N DIRTY,VERIFYC
  S CHOICES=",VER,PRT,CLU,REV,SDP,"
  S IND="",QUIT=0,DIRTY=0,VERIFYC=0
- D GETPAR^GMPLSITE(.OLDPAR)
+ S %=$$GETPAR^GMPLSITE(.OLDPAR)
  F IND=1:1:5 Q:QUIT>0  D
  . S PARAM=$P(CHOICES,",",IND+1)
  . S SELVAL=$$SELPAR^GMPLEDT5(PARAM,OLDPAR(PARAM))

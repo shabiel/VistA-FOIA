@@ -1,5 +1,5 @@
-GMPLEDT5    ;Edit Site parameters ;3-29-12 16:00
-  ;;3.0;Problem List;**
+GMPLEDT5 ; RGI -- Edit Site parameters ; 04/06/12
+ ;;2.0;Problem List;**260002**;Aug 25, 1994
  Q  ;
  ;
 CHOOSE(VALUE,PARAMS) ;

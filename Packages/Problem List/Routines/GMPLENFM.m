@@ -1,5 +1,5 @@
-GMPLENFM ; SLC/MKB/KER -- Problem List Enc Form utilities ; 04/15/2002
- ;;2.0;Problem List;**3,4,7,26,35**;Aug 25, 1994;Build 26
+GMPLENFM ; SLC/MKB/KER -- Problem List Enc Form utilities ; 03/28/12
+ ;;2.0;Problem List;**3,4,7,26,35,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA 10082  ^ICD9(
@@ -67,12 +67,12 @@ DSELECT ; List of Active Problems for DFN
  ;                                 - None
  ;         8:  Special Exposure  Full text of piece 6
  ;               
- N GMPL 
+ N GMPL
  Q:'$$FILL(.GMPL,1)
  M ^TMP("IB",$J,"INTERFACES","GMP SELECT PATIENT ACTIVE PROBLEMS")=GMPL
  Q
  ;
-FILL(GMPL,ADDIFN)
+FILL(GMPL,ADDIFN) ;
  N IFN,SC,NUM,GMPLIST,GMPARAM,GMPLVIEW,GMPTOTAL,GMPDFN,SCCOND,ONSET,PROB
  Q:$G(DFN)'>0 0
  S GMPDFN=DFN,CNT=0

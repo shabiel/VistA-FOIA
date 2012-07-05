@@ -1,5 +1,5 @@
-GMPLEDT3 ; SLC/MKB/KER -- Problem List edit utilities ; 04/15/2002
- ;;2.0;Problem List;**26,35**;Aug 25, 1994;Build 26
+GMPLEDT3 ; SLC/MKB/KER -- Problem List edit utilities ; 03/28/12
+ ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA   872  ^ORD(101

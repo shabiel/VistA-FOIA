@@ -1,5 +1,5 @@
-GMPLUTL1 ; SLC/MKB/KER -- PL Utilities (cont)               ; 04/15/2002
- ;;2.0;Problem List;**3,8,7,9,26,35,39**;Aug 25, 1994;Build 7
+GMPLUTL1 ; SLC/MKB/KER -- PL Utilities (cont)               ; 03/29/12
+ ;;2.0;Problem List;**3,8,7,9,26,35,39,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA   446  ^AUTNPOV(
@@ -40,7 +40,7 @@ DUPLICAT ; Problem Already on the List
  D GET^GMPLSITE(.GMPARAM)
  Q:GMPARAM("SDP")'=1
  S:'$L($G(PL("DIAGNOSIS"))) PL("DIAGNOSIS")=$$NOS^GMPLX
- D DUPL^GMPLAPI2(.DUPL,GMPDFN,+PL("DIAGNOSIS"),PL("NARRATIVE"),1)
+ S %=$$DUPL^GMPLAPI2(.DUPL,GMPDFN,+PL("DIAGNOSIS"),PL("NARRATIVE"),1)
  I DUPL S GMPQUIT=1,PLY(0)="Duplicate problem"
  Q
  ;

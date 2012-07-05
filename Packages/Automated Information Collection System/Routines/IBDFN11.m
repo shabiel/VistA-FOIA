@@ -1,5 +1,5 @@
-IBDFN11 ;ALB/CMR - ENCOUNTER FORM - (entry points for reprint of dynamic data) ;5/21/93
- ;;3.0;AUTOMATED INFO COLLECTION SYS;;APR 24, 1997
+IBDFN11 ;ALB/CMR - ENCOUNTER FORM - (entry points for reprint of dynamic data) ; 03/27/12
+ ;;3.0;AUTOMATED INFO COLLECTION SYS;**260002**;APR 24, 1997
  ;
 REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
  ; -- input    IBPFID = ien of forms tracking file
@@ -28,7 +28,7 @@ REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
  ..S IBDIEN=0 F  S IBDIEN=$O(^IBD(357.96,IBPFID,XREF,FID,ITEM,IBDIEN)) Q:'IBDIEN  S NODE=$S(XREF="AD":$G(^IBD(357.96,IBPFID,2,IBDIEN,0)),1:$G(^IBD(357.96,IBPFID,1,IBDIEN,0))) I NODE]"" D
  ...; -- set output array with dynamic data previously printed
  ...S COUNT=COUNT+1
- ...D DIAG^GMPLAPI4(.ICD,+$P(NODE,"^",4))
+ ...S %=$$DIAG^GMPLAPI4(.ICD,+$P(NODE,"^",4))
  ...S @ARY@(COUNT)=$P(NODE,"^",4)_"^"_$P(NODE,"^",8)_"^"_$S(ARY["GMP SELECT PATIENT ACTIVE PROBLEMS":$P(ICD,"^",2),1:"")
  S @ARY@(0)=COUNT
  Q

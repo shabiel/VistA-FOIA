@@ -1,5 +1,5 @@
-GMPLUTL ; SLC/MKB/KER -- PL Utilities                      ; 4/15/2002
- ;;2.0;Problem List;**3,6,8,10,16,26,35,39**;Aug 25, 1994;Build 7
+GMPLUTL ; SLC/MKB/KER -- PL Utilities                      ; 05/21/12
+ ;;2.0;Problem List;**3,6,8,10,16,26,35,39,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA    348  ^DPT(
@@ -41,10 +41,10 @@ ACTIVE(GMPDFN,GMPL) ; Returns list of Active Problems for a Patient
  Q:$G(GMPDFN)'>0
  S SP=""
  D GET^GMPLSITE(.GMPARAM)
- D GETPLIST^GMPLAPI4(.GMPLIST,GMPDFN,"A",GMPARAM("REV"),0,"",0)
+ S %=$$GETPLIST^GMPLAPI4(.GMPLIST,GMPDFN,"A",GMPARAM("REV"),0,"",0)
  F NUM=1:1:GMPLIST(0)  D
  . S IFN=+GMPLIST(NUM) Q:IFN'>0
- . D DETAIL^GMPLAPI2(.GMPL0,IFN)
+ . S %=$$DETAIL^GMPLAPI2(.GMPL0,IFN)
  . S GMPL(NUM,0)=IFN
  . S GMPL(NUM,1)=+GMPL0(1.01)_U_$$PROBTEXT^GMPLX(IFN)
  . S GMPL(NUM,2)=GMPL0(.01)
@@ -150,11 +150,11 @@ UPDATE(PL,PLY) ; Update a Problem/Create if Not Found
  N VALID
  S GMPVAMC=+$G(DUZ(2)),GMPVA=$S($G(DUZ("AG"))="V":1,1:0),PLY=-1,PLY(0)=""
  S GMPIFN=$G(PL("PROBLEM")) I GMPIFN="" D CREATE(.PL,.PLY) Q
- D VALID^GMPLAPI4(.VALID,GMPIFN)
+ S %=$$VALID^GMPLAPI4(.VALID,GMPIFN)
  I 'VALID S PLY(0)="Invalid problem" Q
  I $$PROVNAME^GMPLEXT(+$G(PL("PROVIDER")))="" S PLY(0)="Invalid provider" Q
  S GMPROV=+$G(PL("PROVIDER"))
- D PATIENT^GMPLAPI4(.GMPDFN,GMPIFN)
+ S %=$$PATIENT^GMPLAPI4(.GMPDFN,GMPIFN)
  D GETFLDS^GMPLEDT3(GMPIFN) I '$D(GMPFLD) S PLY(0)="Invalid problem" Q
  I +$G(PL("PATIENT")),+PL("PATIENT")'=GMPDFN S PLY(0)="Patient does not match for this problem" Q
  I $L($G(PL("RECORDED"))) S PLY(0)="Date Recorded is not editable" Q

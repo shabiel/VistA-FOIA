@@ -1,5 +1,5 @@
-PXRMISE ; SLC/PKR - Index size estimating routines. ;11/02/2009
- ;;2.0;CLINICAL REMINDERS;**6,12,17**;Feb 04, 2005;Build 102
+PXRMISE ; SLC/PKR - Index size estimating routines. ;03/27/12
+ ;;2.0;CLINICAL REMINDERS;**6,12,17,260002**;Feb 04, 2005;Build 102
  ;
  ;========================================================
 EST ;Driver for making index counts.
@@ -63,7 +63,7 @@ NEOR() ;Return number of entries in OR.
 NEPROB() ;Return number of entries in PROBLEM LIST.
  ;DBIA #3837
  N CNT
- D PRBCNT^GMPLAPI4(.CNT)
+ S %=$$PRBCNT^GMPLAPI4(.CNT)
  Q CNT
  ;
  ;===============================================================

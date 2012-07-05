@@ -1,5 +1,5 @@
-GMPLBLDC ; SLC/MKB -- Build Problem Selection Categories ;3/12/03 9:22
- ;;2.0;Problem List;**3,7,28**;Aug 25, 1994
+GMPLBLDC ; SLC/MKB -- Build Problem Selection Categories ; 04/12/12
+ ;;2.0;Problem List;**3,7,28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3991
  ;
@@ -26,8 +26,8 @@ INIT ; -- init variables and list array
  ;
 GETLIST ; Build ^TMP("GMPLIST",$J,#) of problems
  K ^TMP("GMPLIST",$J)
- N RETURN 
- D GETCAT^GMPLAPI1(.RETURN,GMPLGRP)
+ N RETURN
+ S %=$$GETCAT^GMPLAPI1(.RETURN,GMPLGRP)
  M ^TMP("GMPLIST",$J)=RETURN
  Q
  ;

@@ -1,5 +1,5 @@
-GMPLSITE    ;RGI GMPL Site parameters ;02/22/12  18:19
- ;;3.0;Problem List;**
+GMPLSITE ;RGI -- GMPL Site parameters ; 04/06/12
+ ;;2.0;Problem List;**260002**;Aug 25, 1994
  Q  ;
  ;
 GET(RETURN) ;
@@ -10,7 +10,7 @@ GET(RETURN) ;
  S RETURN("CLU")=+$P(X,"^",4)
  S RETURN("REV")=$S($P(X,"^",5)="R":1,1:0)
  S RETURN("SDP")=+$P(X,"^",6)
- Q 1
+ Q
  ;
 VERIFY()    ;
  N PARAMS
@@ -43,6 +43,6 @@ SET(RETURN,PARAMS) ;
  S:$D(PARAMS("CLU")) FDAROOT(125.99,"1,",3)=PARAMS("CLU")
  S:$D(PARAMS("REV")) FDAROOT(125.99,"1,",4)=PARAMS("REV")
  S:$D(PARAMS("SDP")) FDAROOT(125.99,"1,",6)=PARAMS("SDP")
- D FILE^DIE("EKT","FDAROOT")
+ D FILE^DIE("K","FDAROOT")
  Q 1
  ;

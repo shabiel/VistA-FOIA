@@ -1,5 +1,5 @@
-ORCPROB ; SLC/MKB/REV - Problem List interface ;03/11/03  14:03
- ;;3.0;ORDER ENTRY/RESULTS REPORTING;**27,48,181**;Dec 17, 1997
+ORCPROB ; SLC/MKB/REV - Problem List interface ; 03/27/12
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**27,48,181,260002**;Dec 17, 1997
 ADD ; -- add new problem
  N GMPLIST,ORPROV
  D FULL^VALM1 S VALMBCK="R",ORPROV=$$PROVIDER Q:ORPROV="^"
@@ -69,7 +69,7 @@ REMOVE ; -- remove problem
  . S:$D(TEXT) DIR("B")=TEXT
  . S DIR("?")="Enter up to 60 characters of additional text to be appended to this problem"
  . W ! D ^DIR I $D(DTOUT)!($D(DUOUT)) S QUIT=1 Q
- . S TEXT=Y D REMOVE^GMPLAPI2(.ORY,IFN,ORPROV,TEXT)
+ . S TEXT=Y S %=$$DELETE^GMPLAPI2(.ORY,IFN,ORPROV,TEXT)
  . I ORY'>0 W !?5,"ERROR - "_ORY(0) H 1 Q
  . W !?5,"... removed" H 1 S OREBUILD=1
  Q

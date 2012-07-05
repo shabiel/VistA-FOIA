@@ -1,5 +1,5 @@
-GMPLBLCK ;SLC/JFR - check selection list ICD9 codes; 3/20/03 09:05
- ;;2.0;Problem List;**28**;Aug 25, 1994
+GMPLBLCK ;SLC/JFR - check selection list ICD9 codes; 04/12/12
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3990
  Q
@@ -141,7 +141,7 @@ CKLISTS ; loop lists and see if any inactive problems
  K ^TMP("GMPLSL",$J,"I")
  N LST,RETURN,RET
  S LST=0
- D GETLSTS^GMPLAPI5(.RETURN)
+ S %=$$GETLSTS^GMPLAPI5(.RETURN)
  F  S LST=$O(RETURN(LST)) Q:'LST  I '$$VALLIST^GMPLAPI6(.RET,RETURN(LST,"ID")) D
  . S ^TMP("GMPLSL",$J,"I",RETURN(LST,"ID"))=RETURN(LST,"NAME")
  . Q

@@ -1,5 +1,5 @@
-IBDFBK3 ;ALB/AAS - AICS broker Utilities ;23-May-95
- ;;3.0;AUTOMATED INFO COLLECTION SYS;**12,38,36**;APR 24, 1997
+IBDFBK3 ;ALB/AAS - AICS broker Utilities ; 03/27/12
+ ;;3.0;AUTOMATED INFO COLLECTION SYS;**12,38,36,260002**;APR 24, 1997
  ;
 LSTDATA(RESULT,PXCA,LCNT) ;
  ; -- expand the PXCA array data into human readable terms for
@@ -124,10 +124,10 @@ VTYPE(X) ;
  ;
 PROBNAR(IEN) ; -- display problem narrative
  N NARR
- D PROBNARR^GMPLAPI4(.NARR,IEN)
+ S %=$$PROBNARR^GMPLAPI4(.NARR,IEN)
  Q $P(NARR,"^",2)
  ;
 PROBDIA(IEN) ; -- return problem diagnosis code pointer
  N ICD
- D DIAG^GMPLAPI4(.ICD,IEN)
+ S %=$$DIAG^GMPLAPI4(.ICD,IEN)
  Q +ICD

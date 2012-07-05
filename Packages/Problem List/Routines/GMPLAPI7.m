@@ -1,10 +1,10 @@
-GMPLAPI7 ; RGI -- Problem List Group Data ;1/26/95  10:00
- ;;3.0;Problem List;**2**;Aug 25, 1994
+GMPLAPI7 ; RGI -- Problem List Group Data ; 03/12/12
+ ;;2.0;Problem List;**260002**;Aug 25, 1994
  Q
  ;
  ; Temporary.  To be merged with others.
 GETPAT(DFN,PATIENT) ;
- N NODE0 
+ N NODE0
  S NODE0=^DPT(DFN,0)
  S PATIENT("NAME")=$P(NODE0,"^",1)
  Q
@@ -13,7 +13,7 @@ GETPAT(DFN,PATIENT) ;
 GETPROB(IFN,PROBLEM) ;
  N NODE0,NODE1
  S NODE0=^AUPNPROB(IFN,0)
- S NODE1=$G(^AUPNPROB(IFN,1)) 
+ S NODE1=$G(^AUPNPROB(IFN,1))
  S PROBLEM("ACTFLAG")=$P(NODE0,"^",12)
  S PROBLEM("DFN")=$P(NODE0,"^",2)
  S PROBLEM("TEXT")=$P(NODE0,"^",5)
@@ -25,7 +25,7 @@ GETPROB(IFN,PROBLEM) ;
  ;   TARGET: Root of the target local or global.
  ; Results stored as TARGET(PATIENT_NAME)=<# Active Problems>_"^"_<# Inactive Problems>
  ; Returns number of patients.
-PPROBCNT(TARGET)
+PPROBCNT(TARGET) ;
  N DFN,IFN,CNT,PATCNT,ST,PATIENT,PROBLEM
  S PATCNT=0
  F DFN=0:0 S DFN=$O(^AUPNPROB("AC",DFN)) Q:DFN'>0  D

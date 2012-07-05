@@ -1,5 +1,5 @@
-GMPLAPIE ; / Problem List Error provider;02/27/2012
- ;;TBD;Problem List;;02/27/2012
+GMPLAPIE ; RGI -- Problem List Error provider; 03/20/12
+ ;;2.0;Problem List;**260002**;Aug 25, 1994
 ERR(ERT,ERRNO,TEXT) ; Adds error to array
  Q:$G(ERRNO)=""
  N I

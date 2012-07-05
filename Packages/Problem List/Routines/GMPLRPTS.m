@@ -1,9 +1,9 @@
-GMPLRPTS ; SLC/MKB -- Problem List Mgt Reports ;1/26/95  10:00
- ;;2.0;Problem List;**2**;Aug 25, 1994
+GMPLRPTS ; SLC/MKB -- Problem List Mgt Reports ; 03/12/12
+ ;;2.0;Problem List;**2,260002**;Aug 25, 1994
 FMTPAT(LINE) ; Does formatting for PAT tag
  N CNTA,CNTI
  S CNTA=$P(LINE,"^",1)
- S CNTI=$P(LINE,"^",2) 
+ S CNTI=$P(LINE,"^",2)
  S LINE="  "_CNTA_$E("       ",1,7-$L(CNTA))_+CNTI
  Q 
  ;
@@ -22,7 +22,7 @@ PROB ; Search for/List patients with selected problem
 PROB1 D SEARCH^GMPLX(.X,.Y) G:Y'>0 PROBQ
  S GMPTERM=Y,GMPTEXT=$$UP^XLFSTR(X) S:+GMPTERM'>1 GMPTERM="1^"_GMPTEXT
  S STATUS=$$STATUS G:STATUS="^" PROBQ
- D WAIT^DICD 
+ D WAIT^DICD
  S GMPRT=$$PPRBSPEC^GMPLAPI7("^TMP(""GMPRT"","_$J_")",GMPTERM,GMPTEXT,STATUS)
  I GMPRT'>0 W $C(7),!!,"No patient data available.",! D KILL G PROB1
  S GMPLHDR="PATIENTS WITH '"_$$UP^XLFSTR($P(GMPTERM,U,2))_"'",GMPLCNT=0
@@ -49,7 +49,7 @@ PRT ; Print patient listing from ^TMP("GMPRT",$J,)
  Q
  ;
 PRTFMT(FMT) ; FMT formats ^TMP("GMPRT",$J,NAME) 
- U IO N NAME,PAGE,LINE 
+ U IO N NAME,PAGE,LINE
  S NAME="",PAGE=0 D HDR
  F  S NAME=$O(^TMP("GMPRT",$J,NAME)) Q:NAME=""  D  Q:$D(GMPQUIT)
  . I $Y>(IOSL-4) D RETURN Q:$D(GMPQUIT)  D HDR

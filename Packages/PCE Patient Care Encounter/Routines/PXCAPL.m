@@ -1,5 +1,5 @@
-PXCAPL ;ISL/dee & LEA/Chylton,SCK - Validates data from the PCE Device Interface into a call to update Problem List ;6/6/05
- ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,115,130,168,194**;Aug 12, 1996;Build 2
+PXCAPL ;ISL/dee & LEA/Chylton,SCK - Validates data from the PCE Device Interface into a call to update Problem List ;03/27/12
+ ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,115,130,168,194,260002**;Aug 12, 1996;Build 2
  Q
  ;   PXCAPROB  Copy of a Problem node of the PXCA array
  ;   PXCAPRV   Pointer to the provider (200)
@@ -64,8 +64,8 @@ PROBLEM(PXCA,PXCABULD,PXCAERRS) ;
  ... ;E  I $G(PXCADIQ1(80,DA,102,"I")),PXCADIQ1(80,DA,102,"I")'>+PXCADT S PXCA("ERROR","PROBLEM",PXCAPRV,PXCAINDX,9)="ICD9 Code is INACTIVE^"_PXCAITEM
  .. S PXCAITEM=$P(PXCAPROB,U,10)
  .. I PXCAITEM]"" D
- ... D VALID^GMPLAPI4(.VALID,PXCAITEM)
- ... D PATIENT^GMPLAPI4(.PAT,PXCAITEM)
+ ... S %=$$VALID^GMPLAPI4(.VALID,PXCAITEM)
+ ... S %=$$PATIENT^GMPLAPI4(.PAT,PXCAITEM)
  ... I 'VALID S PXCA("ERROR","PROBLEM",PXCAPRV,PXCAINDX,10)="Problem not in file 9000011^"_PXCAITEM
  ... E  I PXCAPAT'=PAT S PXCA("ERROR","PROBLEM",PXCAPRV,PXCAINDX,10)="Problem in file 9000011 is for a different Patient^"_PXCAITEM
  .. E  S PXCAITEM=$P(PXCAPROB,U,1) I PXCAITEM']"" S PXCA("ERROR","PROBLEM",PXCAPRV,PXCAINDX,1)="Problem Name required for a new Problem List entry^"_PXCAITEM

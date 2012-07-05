@@ -1,5 +1,5 @@
-GMPLSAVE ; SLC/MKB/KER -- Save Problem List data ; 11/13/2008
- ;;2.0;Problem List;**26,31,35,37,38**;Aug 25, 1994;Build 3
+GMPLSAVE ; SLC/MKB/KER -- Save Problem List data ; 03/19/12
+ ;;2.0;Problem List;**26,31,35,37,38,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA 10018  ^DIE

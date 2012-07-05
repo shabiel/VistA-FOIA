@@ -1,5 +1,5 @@
-GMPLPRNT ; SLC/MKB,KER -- Problem List prints/displays; 04/15/2002
- ;;2.0;Problem List;**1,13,26,41**;Aug 25, 1994;Build 1
+GMPLPRNT ; SLC/MKB,KER -- Problem List prints/displays; 03/29/12
+ ;;2.0;Problem List;**1,13,26,41,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA 10090  ^DIC(4
@@ -39,7 +39,7 @@ VAF ; Build Chart Copy
  K GMPLCURR
  S (TOTAL,GMPRT)=0
  S (TOTAL,GMPRT)=0
- D HASPRBS^GMPLAPI4(.HASPRB,+GMPDFN)
+ S %=$$HASPRBS^GMPLAPI4(.HASPRB,+GMPDFN)
  S (VIEW("ACT"),VIEW("VIEW"))="",VIEW("PROV")=0
  D GETPLIST^GMPLMGR1(.GMPRT,.TOTAL,.VIEW)
  S GMPRT=TOTAL
