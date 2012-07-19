@@ -4,7 +4,6 @@ GETPATS(RETURN,SEARCH,START,NUMBER) ; Get patients
  N FILE,FIELDS,RET,SCR,INDX
  S FILE="2",FIELDS="@;.01;.03;.09;391;1901",INDX="B"
  S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
- S SEARCH=$TR(SEARCH,"abcdefghijklmnopqrstuvxz","ABCDEFGHIJKLMNOPQRSTUVXZ")
  I $D(SEARCH),SEARCH?4N S INDX="BS"
  I $L(SEARCH)>1,SEARCH?.N S INDX="SSN"
  I $L(SEARCH)>0,SEARCH?1A4N S INDX="BS5"
@@ -67,13 +66,14 @@ GETAPPS(RETURN,DFN,SD) ; Get day appointment
  . S RETURN(SD)=+^(S,0)
  Q
  ;
-MAKE(DFN,SD,SC,TYPE) ; Make patient appointment
+MAKE(DFN,SD,SC,TYPE,STAT,RSN) ; Make patient appointment
+ N ERR,FDA,IENS
  I $D(^DPT(DFN,"S",SD,0)),$P(^(0),U,2)["C" D
  . S IENS=SD_","_DFN_","
  . S FDA(2.98,IENS,".01")=SC
  . S FDA(2.98,IENS,"3")="@"
- . S FDA(2.98,IENS,"9")=TYPE
- . S FDA(2.98,IENS,"9.5")=9
+ . S FDA(2.98,IENS,"9")=$G(RSN)
+ . S FDA(2.98,IENS,"9.5")=TYPE
  . S FDA(2.98,IENS,"17")="@"
  . S FDA(2.98,IENS,"20")=$P($$NOW^XLFDT,".")
  . D FILE^DIE("","FDA","ERR")
@@ -81,8 +81,9 @@ MAKE(DFN,SD,SC,TYPE) ; Make patient appointment
  . S IENS="?+2,"_DFN_","
  . S IENS(2)=SD
  . S FDA(2.98,IENS,.01)=SC
- . S FDA(2.98,IENS,"9")=TYPE
- . S FDA(2.98,IENS,"9.5")=9
+ . S FDA(2.98,IENS,"3")=STAT
+ . S FDA(2.98,IENS,"9")=$G(RSN)
+ . S FDA(2.98,IENS,"9.5")=TYPE
  . S FDA(2.98,IENS,"20")=$P($$NOW^XLFDT,".")
  . D UPDATE^DIE("","FDA","IENS","ERR")
  Q
@@ -98,5 +99,10 @@ CANCEL(RETURN,DFN,SD,TYP,RSN,RMK,CDT,USR,OUSR,ODT) ; Cancel appointment.
  S FDA(2.98,IENS,20)=ODT
  S:$G(RMK)]"" FDA(2.98,IENS,17)=$E(RMK,1,160)
  D FILE^DIE("","FDA","RETURN")
+ Q
+ ;
+GETXUS(RETURN,USR) ; Get user access
+ S:$D(^XUSEC("SDOB",USR)) RETURN("SDOB")=^XUSEC("SDOB",USR)
+ S:$D(^XUSEC("SDMOB",USR)) RETURN("SDMOB")=^XUSEC("SDMOB",USR)
  Q
  ;

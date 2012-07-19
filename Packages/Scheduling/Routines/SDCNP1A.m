@@ -16,15 +16,14 @@ SDIN I $D(^SC(SC,"I")) S SDIN=+^("I") Q
 SDNP S SDCL(SDAP)=SC_"^"_GDATE_"^"_NDATE S:NDATE SDCNT1=SDCNT1+1 Q
 NRBK W !,"NO REBOOKING ALLOWED FOR ",$P(^SC(SC,0),"^") Q
 DT S X1=$P(DT,"."),X2=10 D C^%DTC S Y=X D D^DIQ S D=Y_"//" Q
-PROT S SDPRT=0 I $D(^SC(+I,"SDPROT")),$P(^("SDPROT"),U)="Y",'$D(^SC(+I,"SDPRIV",DUZ)) W !,*7,"Appt. in ",$P(^SC(+I,0),"^")," NOT CANCELLED ",!,"Access to this clinic is restricted to only privileged users!",*7 S SDPRT=1 Q
- Q
  ;SD/517 added new IF statement, changed For loop & added 2 new linetags
-FLEN S (ZPL,SDSP)=""  ;SD/517
- S COV=$S($P(^DPT(DFN,"S",NDT,0),"^",11)=1:" (COLLATERAL) ",1:"") I $D(^SC(SC,"S",NDT)) S ZL=0 F  S ZL=$O(^SC(SC,"S",NDT,1,ZL)) Q:'ZL  D
- .I '$D(^SC(SC,"S",NDT,1,ZL,0)) D FLEN1 Q
- .I +^SC(SC,"S",NDT,1,ZL,0)=DFN S APL=$P(^(0),U,2),SDSP=$P($G(^SC(SC,"S",NDT,1,ZL,"CONS")),U)
- .Q
- ;S COV=$S($P(^DPT(DFN,"S",NDT,0),"^",11)=1:" (COLLATERAL) ",1:"") I $D(^SC(SC,"S",NDT)) F ZL=0:0 S ZL=$O(^SC(SC,"S",NDT,1,ZL)) Q:ZL'>0  I +^(ZL,0)=DFN S APL=$P(^(0),"^",2),SDSP=$P($G(^SC(SC,"S",NDT,1,ZL,"CONS")),U) Q  ;SD/478
+FLEN(APTS)
+ S COV=$S($P($G(APTS("APP",NDT,"COLLATERAL VISIT")),U)=1:" (COLLATERAL) ",1:"")
+ N APT
+ S %=$$GETSCAP^SDMAPI1(.APT,SC,DFN,NDT)
+ I $D(APT)  D
+ . S APL=APT("LENGTH")
+ . S SDSP=APT("CONSULT")
  Q
  ;
  ;SD/517 added new linetag to kill any lingering "C" nodes

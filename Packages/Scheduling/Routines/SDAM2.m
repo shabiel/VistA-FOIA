@@ -24,36 +24,17 @@ ONE(DFN,SDCL,SDT,SDDA,SDASK,SDAMCIDT) ; -- check in one appt
  ;       SDASK := ask d/t of ci always [1|yes or 0|no]
  ;    SDAMCIDT := ci date/time [optional]
  ;
+ N APT
  I $D(XRTL) D T0^%ZOSV
- S:'SDDA SDDA=$$FIND(DFN,SDT,SDCL)
- I 'SDDA W !!,*7,"You cannot check in this appointment." D PAUSE^VALM1 G ONEQ
- N SDATA,SDCIHDL,X S SDATA=SDDA_U_DFN_U_SDT_U_SDCL,SDCIHDL=$$HANDLE^SDAMEVT(1)
- D BEFORE^SDAMEVT(.SDATA,DFN,SDT,SDCL,SDDA,SDCIHDL)
- I '$D(^SD(409.63,"ACI",1,+SDATA("BEFORE","STATUS"))) W !!,*7,"You cannot check in this appointment." D PAUSE^VALM1 G ONEQ
- ; *** mt blocking removed
- ;S X="EASMTCHK" X ^%ZOSF("TEST") I $T,$G(EASACT)'="W",$$MT^EASMTCHK(DFN,"","C",SDT) D PAUSE^VALM1 G ONEQ
- I $P(SDT,".")>DT W !!,*7,"It is too soon to check in this appointment." D PAUSE^VALM1 G ONEQ
- S:'$D(^SC(SDCL,"S",0)) ^(0)="^44.001DA^^"
- S DR="",X=$G(^SC(SDCL,"S",SDT,1,SDDA,"C"))
- I +X S DR=309
- ; -- already co'ed
- I DR="",$P(X,U,3) D
- .S DR="309//"
- .I $P(^SC(SDCL,0),U,24)!(SDASK) S DR=DR_$$FTIME^VALM1($P(X,U,3)) Q
- .S DR=DR_"//^S X="_$P(X,U,3)
- ;
- I DR="",$P(^SC(SDCL,0),U,24)!(SDASK) S DR="309//"_$S(SDAMCIDT:$$FTIME^VALM1(SDAMCIDT),1:"NOW")
- I DR="" S DR="309///"_$S(SDAMCIDT:"/"_SDAMCIDT,1:"NOW")
- S DA(2)=SDCL,DA(1)=SDT,DA=SDDA,DIE="^SC("_DA(2)_",""S"","_DA(1)_",1," D ^DIE
- D AFTER^SDAMEVT(.SDATA,DFN,SDT,SDCL,SDDA,SDCIHDL)
- I '$P(SDATA("AFTER","STATUS"),U,4),'$P(SDATA("BEFORE","STATUS"),U,4) W !?8,*7,"...appointment has not been checked in" D PAUSE^VALM1
- I SDATA("BEFORE","STATUS")'=SDATA("AFTER","STATUS") D
- .I $P(SDATA("AFTER","STATUS"),U,4),'$P(SDATA("BEFORE","STATUS"),U,4) W !?8,"...checked in ",$$FTIME^VALM1($P(SDATA("AFTER","STATUS"),U,4))
+ S %=$$CHECKIN^SDMAPI2(.APT,DFN,SDT,SDCL)
+ I '% W !!,*7,$P(APT(0),U,2) D PAUSE^VALM1 G ONEQ
+ I '$P(APT("AFTER","STATUS"),U,4),'$P(APT("BEFORE","STATUS"),U,4) W !?8,*7,"...appointment has not been checked in" D PAUSE^VALM1
+ I APT("BEFORE","STATUS")'=APT("AFTER","STATUS") D
+ .I $P(APT("AFTER","STATUS"),U,4),'$P(APT("BEFORE","STATUS"),U,4) W !?8,"...checked in ",$$FTIME^VALM1($P(APT("AFTER","STATUS"),U,4))
  .I $D(SDCIACT) D
- ..S Y=SDATA("AFTER","STATUS"),Y1=$P(Y,U,4),Y=$P(Y,U,3)
- ..I $P(SDATA("BEFORE","STATUS"),U,3)'=Y D UPD($$LOWER^VALM1(Y),"STAT",+SDAT,1),UPD("","TIME",+SDAT,1)
- ..I $P(SDATA("AFTER","STATUS"),U,3)["CHECKED IN" D UPD($S($P(Y1,".")=DT:$$TIME^SDAM1($P(Y1,".",2)),1:"     "),"TIME",+SDAT,1)
- .D EVT^SDAMEVT(.SDATA,4,0,SDCIHDL) ; 4 := ci evt , 0 := interactive mode
+ ..S Y=APT("AFTER","STATUS"),Y1=$P(Y,U,4),Y=$P(Y,U,3)
+ ..I $P(APT("BEFORE","STATUS"),U,3)'=Y D UPD($$LOWER^VALM1(Y),"STAT",+SDAT,1),UPD("","TIME",+SDAT,1)
+ ..I $P(APT("AFTER","STATUS"),U,3)["CHECKED IN" D UPD($S($P(Y1,".")=DT:$$TIME^SDAM1($P(Y1,".",2)),1:"     "),"TIME",+SDAT,1)
  I $D(XRT0) S XRTN="SDAM2" D T1^%ZOSV
 ONEQ K DA,DIE,DR,DQ,DE,Y,Y1 Q
  ;

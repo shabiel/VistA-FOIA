@@ -1,14 +1,15 @@
 SDM1 ;SF/GFT - MAKE APPOINTMENT ; 3/29/05 12:35pm [5/5/05 9:41am]  ; Compiled March 8, 2007 14:55:24  ; Compiled May 9, 2007 13:19:18  ; Compiled August 28, 2007 12:19:08
  ;;5.3;Scheduling;**32,167,168,80,223,263,273,408,327,478,490,446,547**;Aug 13, 1993;Build 17
 1 L  Q:$D(SDXXX)  S CCXN=0 K MXOK,COV,SDPROT Q:DFN<0  S SC=+SC
- S X1=DT,SDEDT=365 S:$D(^SC(SC,"SDP")) SDEDT=$P(^SC(SC,"SDP"),"^",2)
+ S X1=DT S SDEDT=CLN("MAX # DAYS FOR FUTURE BOOKING")
+ S:$L(SDEDT)'>0 SDEDT=365
  S X2=SDEDT D C^%DTC S SDEDT=X D WRT
  I $D(^SC(SC,"SI")),$O(^("SI",0))>0 W !,*7,?8,"**** SPECIAL INSTRUCTIONS ****",! S %I=0 F %=0:1 S %I=$O(^SC(SC,"SI",%I)) Q:%I'>0  W ^(%I,0) W:% ! I '%,$O(^SC(SC,"SI",%I))>0 S POP=0 D SPIN Q:POP
  I $D(SDINA),SDINA>DT D IN W !,?8,@SDMSG K SDMSG
  G:SDMM RDTY^SDMM
  ;
 ADT S:'$D(SDW) SDW=""
- S SDSOH=$S('$D(^SC(SC,"SL")):0,$P(^("SL"),"^",8)']"":0,1:1),CCX=""
+ S SDSOH=$S('$D(CLN("SCHEDULE ON HOLIDAYS?")):0,CLN("SCHEDULE ON HOLIDAYS?")']"":0,1:1),CCX=""
  S SDONCE=$G(SDONCE)+1  ;Prevent repetitive iteration
  ; Section introduced in 446.
  N SDDATE1,SDQT,Y  ; Do not allow progress if there is no availability > 120 days after the desired date.
@@ -18,7 +19,7 @@ ADT S:'$D(SDW) SDW=""
  ..S Y=$$WLCLASK^SDM2A() Q:Y="^"  ; Y=0: New date, Y=1: place on EWL, Y="^": quit
  ..I Y=0 D  Q
  ...N SDMAX,SDDMAX
- ...S SDMAX(1)=$P($G(^SC(+SC,"SDP")),U,2) S:'SDMAX(1) SDMAX(1)=365
+ ...S SDMAX(1)=CLN("MAX # DAYS FOR FUTURE BOOKING") S:SDMAX(1)']"" SDMAX(1)=365
  ...S (SDMAX,SDDMAX)=$$FMADD^XLFDT(DT,SDMAX(1))
  ...S Y=$$DDATE^SDM0(.SDDATE,"0^0",.SDMAX) Q:'Y  ; Y=0: "^" entered, Y=1: date entered
  ...D D^SDM0
@@ -42,6 +43,20 @@ ADT S:'$D(SDW) SDW=""
  I X=" ",$D(SD),SD S Y=SD D AT^SDUTL W Y S Y=SD G OVR
  I $E($P(X,"@",2),1,4)?1.4"0" K %DT S X=$P(X,"@"),X=$S($L(X):X,1:"T"),%DT="XF" D ^%DT G ADT:Y'>0 S X1=Y,X2=-1 D C^%DTC S X=X_.24
  K %DT S %DT="TXEF" D ^%DT
+ I $P(Y,".",2)=24 S X1=$P(Y,"."),X2=1 D C^%DTC S Y=X_".000001"
+ D MAKE(DFN,SC,Y,SDAPTYP,SL)
+ Q
+MAKE(DFN,SC,SD,TYP,SL,LVL) ; Make appointmemnt
+ S %=$$MAKE^SDMAPI2(.ERR,DFN,SC,SD,TYP,SL,.LVL)
+ I ERR=0 D
+ . I $P(ERR(0),U,3)=1 W !!,$P(ERR(0),U,2),! G 1
+ . I $P(ERR(0),U,3)>1 D
+ . . S TXT1="...OK"
+ . . S:$P(ERR(0),U)="APTPAHA" TXT1="DO YOU WANT TO CANCEL IT"
+ . . S OV=$$OVB($P(ERR(0),U,2),TXT1) I OV=2 G 1
+ . . I OV=1 D MAKE(DFN,SC,SD,TYP,SL,$P(ERR(0),U,3)-1)
+ Q
+ ;
  ;SD*5.3*408  verify that day hasn't been canceled via "SET UP A CLINIC"
  I $G(^SC(+SC,"ST",$P(Y,"."),1))'="",^SC(+SC,"ST",$P(Y,"."),1)'["[" D  G ADT
  .W !,"There is no availability for this date/time.",!
@@ -69,14 +84,14 @@ S S POP=0 D AVCHK G:POP 1
  K POP
  I '$D(^SC(SC,"ST",$P(SD,"."),1)) S SS=+$O(^SC(+SC,"T"_Y,SD)) G XW:SS'>0,XW:^(SS,1)="" S ^SC(+SC,"ST",$P(SD,"."),1)=$E($P($T(DAY),U,Y+2),1,2)_" "_$E(SD,6,7)_$J("",SI+SI-6)_^(1),^(0)=$P(SD,".")
  ;
-LEN I $P(SL,U,2)]"" W !,"LENGTH OF APPOINTMENT (IN MINUTES): ",+SL,"// " R S:DTIME I S]"" G:$L(S)>3 LEN Q:U[S  S POP=0 D L G LEN:POP,S:S\5*5'=S,S:S>360,S:S<5 S SL=S_U_$P(SL,U,2,99)
+LEN S SL=$P(CLN("LENGTH OF APP'T"),U) I $P(CLN("LENGTH OF APP'T"),U)]"" W !,"LENGTH OF APPOINTMENT (IN MINUTES): ",$P(CLN("LENGTH OF APP'T"),U),"// " R S:DTIME I S]"" G:$L(S)>3 LEN Q:U[S  S POP=0 D L G LEN:POP,S:S\5*5'=S,S:S>360,S:S<5 S SL=S
  ;
 SC S SDLOCK=$S('$D(SDLOCK):1,1:SDLOCK+1) G:SDLOCK>9 LOCK
  L +^SC(SC,"ST",$P(SD,"."),1):$S($G(DILOCKTM)>0:DILOCKTM,1:5) G:'$T SC  ;SD*53.*547 new required lock functionality
  S SDLOCK=0,S=^SC(SC,"ST",$P(SD,"."),1)
  S I=SD#1-SB*100,ST=I#1*SI\.6+($P(I,".")*SI),SS=SL*HSI/60*SDDIF+ST+ST
  G X:(I<1!'$F(S,"["))&(S'["CAN")
- I SM<7 S %=$F(S,"[",SS-1) S:'%!($P(SL,"^",6)<3) %=999 I $F(S,"]",SS)'<%!(SDDIF=2&$E(S,ST+ST+1,SS-1)["[") S SM=7
+ I SM<7 S %=$F(S,"[",SS-1) S:'%!($P(CLN("DISPLAY INCREMENTS PER HOUR"),U)<3) %=999 I $F(S,"]",SS)'<%!(SDDIF=2&$E(S,ST+ST+1,SS-1)["[") S SM=7
  ;
 SP I ST+ST>$L(S),$L(S)<80 S S=S_" " G SP
  S SDNOT=1   ;SD*5.3*490 naked Do added below
@@ -87,10 +102,11 @@ SP I ST+ST>$L(S),$L(S)<80 S S=S_" " G SP
  .Q
  Q:SDMM  G OK^SDM1A:SM#9=0,^SDM3:$P(SL,U,7)]""&('$D(MXOK))
  ;
-E G:'$D(^XUSEC("SDOB",DUZ)) NOOB
- S %=2 W *7,!,$E($T(@SM),5,99),"...OK" D YN^DICN
- I '% W !,"RESPOND YES OR NO" G E
- S SM=9 G SC:'(%-1) K SDSDATE G 1
+OVB(TXT,TXT1) ;
+OVB1
+ S %=2 W *7,!,TXT,TXT1 D YN^DICN
+ I '% W !,"RESPOND YES OR NO" G OVB1
+ Q %
  ;
 LOCK Q:SDMM  W !,*7,"ANOTHER USER HAS LOCKED THIS DATE - TRY AGAIN LATER" Q
  ;
@@ -124,10 +140,10 @@ AVCHK1 ;added SD*5.3*490
  ;
 NOOB W !,"NO OPEN SLOTS THEN",*7 K SDSDATE G 1
  ;
-WRT W !,+SL," MINUTE APPOINTMENTS "
- W $S($P(SL,U,2)["V":"(VARIABLE LENGTH)",1:"") Q
+WRT W !,$P(CLN("LENGTH OF APP'T"),U)," MINUTE APPOINTMENTS "
+ W $S($P(CLN("VARIABLE APP'NTMENT LENGTH"),U)["V":"(VARIABLE LENGTH)",1:"") Q
  ;
-L S SDSL=$S($P(SL,"^",6)]"":60/$P(SL,"^",6),1:"") Q:'SDSL
+L S SDSL=$S($G(CLN("DISPLAY INCREMENTS PER HOUR"))]"":60/$G(CLN("DISPLAY INCREMENTS PER HOUR")),1:"") Q:'SDSL
  I S\(SDSL)*(SDSL)'=S W *7,!,"Appt. length must = or be a multiple of the increment minutes per hour (",SDSL,")",! S POP=1
  Q
  ;

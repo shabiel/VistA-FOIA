@@ -102,9 +102,13 @@ OV Q:$D(SDZM)  K SDQ1,SDEC,SDCOL I +SDEMP S $P(^SC(SC,"S",SD,1,SDY,0),"^",10)=+S
  S SDMADE=1 D EVT Q
 HXR W !,"  Enter YES to have previous XRAY results sent to the clinic" G XR
  Q
-CS S SDCS=+$P(^SC(+SC,0),"^",7) I $S('$D(^DIC(40.7,SDCS,0)):1,'$P(^(0),"^",3):0,1:$P(^(0),"^",3)'>DT) W !!,*7,"** WARNING - CLINIC HAS AN INVALID OR INACTIVE STOP CODE!!!",!!
- S SDCS=+$P(^SC(+SC,0),"^",18) I $S('SDCS:0,'$D(^DIC(40.7,SDCS,0)):1,'$P(^(0),"^",3):0,1:$P(^(0),"^",3)'>DT) W !!,*7,"** WARNING - CLINIC HAS AN INVALID OR INACTIVE CREDIT STOP CODE!!!",!!
- K SDCS Q
+CS ;
+ N ERR
+ S %=$$CLNVSC^SDMAPI1(.ERR,CLN("STOP CODE NUMBER"))
+ W:ERR=0 !!,*7,"** WARNING - CLINIC HAS AN INVALID OR INACTIVE STOP CODE!!!",!!
+ K ERR S %=$$CLNVSC^SDMAPI1(.ERR,CLN("CREDIT STOP CODE"))
+ W:ERR=0 !!,*7,"** WARNING - CLINIC HAS AN INVALID OR INACTIVE CREDIT STOP CODE!!!",!!
+ Q
 STATUS(SDCL,SDINP,SDT) ; -- determine status for NEW appts
  Q $S(SDINP]"":SDINP,$$CHK(.SDCL,.SDT):"NT",1:"")
 CHK(SDCL,SDT) ; -- should appt be NT'ed

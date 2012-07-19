@@ -24,8 +24,13 @@ ENQ Q
  ;
 CAN(DFN,SDT,CNT,L,SDWH,SDCP,SDSCR,SDREM) ;
  N A1,NDT S NDT=SDT
- I $P($G(^DPT(DFN,"S",NDT,0)),U,2)["C" W !!,"Appointment already cancelled" H 2 G CANQ
- I $D(^DPT(DFN,"S",NDT,0)) S SD0=^(0) I $P(SD0,"^",2)'["C" S SC=+SD0,L=L\1+1,APL="" D FLEN^SDCNP1A S ^UTILITY($J,"SDCNP",L)=NDT_"^"_SC_"^"_COV_"^"_APL_"^^"_APL_"^^^^^^"_SDSP D CHKSO^SDCNP0 ;SD/478
+ S %=$$GETAPTS^SDMAPI2(.APTS,DFN,.SDT)
+ I APTS("APT",SDT,"STATUS")["C" W !!,"Appointment already cancelled" H 2 G CANQ
+ I $D(APTS),APTS("APT",SDT,"STATUS")'["C"  D
+ . S SC=+APTS("APT",SDT,"CLINIC"),L=L\1+1,APL=""
+ . D FLEN^SDCNP1A(.APTS)
+ . S ^UTILITY($J,"SDCNP",L)=NDT_"^"_SC_"^"_COV_"^"_APL_"^^"_APL_"^^^^^^"_SDSP
+ . D CHKSO^SDCNP0(.APTS)
  ;SD*5.3*414 next line added to set hold variable SCLHOLD for clinic ptr
  S APP=1,A1=L\1 S SCLHOLD=$P(^UTILITY($J,"SDCNP",A1),U,2) D BEGD^SDCNP0
  D MES,NOPE W ! S (CNT,L)=0 K ^UTILITY($J,"SDCNP")
@@ -51,9 +56,11 @@ WHO() ;
  Q $S(Y=""!(Y="^"):-1,1:Y)
  ;
 RSN(SDWH) ;
-RSN1 W ! S DIC="^SD(409.2,",DIC(0)="AEMQ",DIC("S")="I '$P(^(0),U,4),"""_$E(SDWH)_"B""[$P(^(0),U,2)" D ^DIC K DIC
- I X["^" G RSNQ
- I Y<0 W *7 G RSN1
+RSN1 ;
+ W !
+ S Y=$$GETRSN^SDCNP($S(SDWH["P":"P",1:"C"))
+ I X["^" S Y=-1 G RSNQ
+ I Y="^" W *7 G RSN1
 RSNQ Q +Y
  ;
 REM() ;
@@ -70,7 +77,7 @@ NOPE ;
  ;
 CHK ; -- check if status of appt permits cancelling
  N SDI S SDI=0
- F  S SDI=$O(VALMY(SDI)) Q:'SDI  I $D(^TMP("SDAMIDX",$J,SDI)) K SDAT S SDAT=^(SDI) I '$D(^SD(409.63,"ACAN",1,+$$STATUS^SDAM1($P(SDAT,U,2),$P(SDAT,U,3),+$G(^DPT(+$P(SDAT,U,2),"S",+$P(SDAT,U,3),0)),$G(^(0))))) D
+ F  S SDI=$O(VALMY(SDI)) Q:'SDI  I $D(^TMP("SDAMIDX",$J,SDI)) K SDAT S SDAT=^(SDI) I '$$CHKSPC^SDMAPI2(,$P(SDAT,U,2),$P(SDAT,U,3)) D
  .W !,^TMP("SDAM",$J,+SDAT,0),!!,*7,"You cannot cancel this appointment."
  .K VALMY(SDI) D PAUSE^VALM1
  Q

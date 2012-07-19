@@ -53,20 +53,22 @@ GETHOL(RETURN,SDATE) ; Get holiday.
 GETPATT(RETURN,SC,SD) ; Get date pattern
  S RETURN=0
  S:$D(^SC(SC,"ST",$P(SD,"."),1)) RETURN(0)=^SC(SC,"ST",$P(SD,"."),1)
+ S:$D(^SC(SC,"ST",$P(SD,"."),"CAN")) RETURN(1)=^SC(SC,"ST",$P(SD,"."),"CAN")
  S RETURN=1
  Q
  ;
 GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
- N ZL
+ N ZL,NOD0
  I $D(^SC(SC,"S",SD))  D
  . S ZL=0
  . F  S ZL=$O(^SC(SC,"S",SD,1,ZL)) Q:'ZL  D
  . . I '$D(^SC(SC,"S",SD,1,ZL,0)) D FLEN1 Q
  . . I +^SC(SC,"S",SD,1,ZL,0)=DFN  D
+ . . . S NOD0=^(0)
  . . . S RETURN("IFN")=ZL
- . . . S RETURN("USER")=$P(^(0),U,6)
- . . . S RETURN("DATE")=$P(^(0),U,7)
- . . . S RETURN("LENGTH")=$P(^(0),U,2)
+ . . . S RETURN("USER")=$P(NOD0,U,6)
+ . . . S RETURN("DATE")=$P(NOD0,U,7)
+ . . . S RETURN("LENGTH")=$P(NOD0,U,2)
  . . . S RETURN("CONSULT")=$P($G(^SC(SC,"S",SD,1,ZL,"CONS")),U)
  . Q
  Q
@@ -81,7 +83,7 @@ LOCKST(SC,SD) ; Lock availability node
  ;
 UNLCKST(SC,SD) ; Lock availability node
  L -^SC(SC,"ST",$P(SD,"."),1)
- Q 1
+ Q
  ;
 LOCKS(SC,SD) ; Lock clinic date node
  L +^SC(SC,"S",$P(SD,"."),1):$S($G(DILOCKTM)>0:DILOCKTM,1:5) Q:'$T 0
@@ -89,25 +91,26 @@ LOCKS(SC,SD) ; Lock clinic date node
  ;
 UNLCKS(SC,SD) ; Unlock clinic date node
  L -^SC(SC,"S",$P(SD,"."),1)
- Q 1
+ Q
  ;
 SETST(SC,SD,S) ; Set availability
  S ^SC(SC,"ST",$P(SD,".",1),1)=S
  Q
  ;
 MAKE(SC,SD,DFN,LEN,SM,USR) ; Make clinic appointment
+ N ERR,FDA,IENS
  S ^SC(SC,"S",SD,0)=SD
  S:'$D(^SC(SC,"S",0)) ^(0)="^44.001DA^^"
- F SDY=1:1 I '$D(^SC(SC,"S",SD,1,SDY))  D  Q
- . S:'$D(^(0)) ^(0)="^44.003PA^^"
- . S IENS="?+1,"_SD_","_SC_","
- . S FDA(44.003,IENS,.01)=DFN
- . S FDA(44.003,IENS,1)=LEN
- . S FDA(44.003,IENS,7)=USR
- . S FDA(44.003,IENS,8)=$P($$NOW^XLFDT,".")
- . S:SM FDA(44.003,IENS,9)="O"
- . D UPDATE^DIE("","FDA","","ERR") Q
- Q SDY
+ S:'$D(^(0)) ^(0)="^44.003PA^^"
+ S IENS="?+1,"_SD_","_SC_","
+ S FDA(44.003,IENS,.01)=DFN
+ S FDA(44.003,IENS,1)=LEN
+ S FDA(44.003,IENS,7)=USR
+ S FDA(44.003,IENS,8)=$P($$NOW^XLFDT,".")
+ S:SM FDA(44.003,IENS,9)="O"
+ D UPDATE^DIE("","FDA","","ERR") Q
+ ZW ERR
+ Q
  ;
 CANCEL(SC,SD,DFN,IFN) ; Kill clinic appointment
  ;S SDNODE=^SC(SC,"S",SD,1,CIFN,0)
@@ -143,4 +146,13 @@ GETFSTA(SC) ; Get first available day.
  N I
  S I=0
  Q $N(^SC(SC,"T",I))
+ ;
+GETDAYA(RETURN,SC,SD) ; Get all day appointments
+ N IND,I,D
+ S I=$P(SD,".",1)
+ F D=I-.01:0 S D=$N(^SC(SC,"S",D)) Q:$P(D,".",1)-I  D
+ . F %=0:0 S %=$N(^SC(SC,"S",D,1,%)) Q:%'>0  D
+ . . S RETURN(%,"STATUS")=$P(^(%,0),U,9)
+ . . S RETURN(%,"OB")=$D(^("OB"))
+ Q
  ;

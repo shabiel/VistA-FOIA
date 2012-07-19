@@ -70,11 +70,20 @@ GETAPTS(RETURN,DFN,SD) ; Get patient appointments
  D GETREC^SDMDAL(.APTS,DFN,FILE,,.SFILES,1,1,1)
  I '$D(SD) M RETURN=APTS Q
  I $G(SD)>0&'$D(SD(0)) D  Q
- . S DT=$O(APTS("APT",$P(SD,".")))
- . M RETURN("APT",DT)=APTS("APT",DT)
+ . I $D(APTS("APT",SD)) M RETURN("APT",SD)=APTS("APT",SD) Q
  S DT=$S(SD(0)=1:$P(SD,"."),SD(0)=0:$O(APTS("APT","")))
- F  S DT=$O(APTS("APT",DT)) Q:DT=""  D
+ F  S DT=$O(APTS("APT",DT)) Q:'$D(DT)!(DT="")  D
  . M RETURN("APT",DT)=APTS("APT",DT)
+ Q
+ ;
+GETDAPTS(RETURN,DFN,SD) ; Get all appointments in the day
+ S RETURN=0
+ S IND=$P(SD,".")
+ F  S IND=$O(^DPT(DFN,"S",IND)) Q:IND=""!($P(IND,".")>$P(SD,"."))  D
+ . S NOD=^(IND,0)
+ . S RETURN(IND,1)=$P(NOD,U,1)
+ . S RETURN(IND,2)=$P(NOD,U,2)
+ S RETURN=1
  Q
  ;
 LSTCRSNS(RETURN,SEARCH,START,NUMBER) ; Return cancelation reasons.
@@ -90,8 +99,8 @@ LSTCSTA1(RETURN,SEARCH,START,NUMBER) ; Returns the list of states that allow can
  N FILE,FIELDS,RET,SCR
  S FILE="409.63",FIELDS="@;.01"
  S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
- S START("IEN")=1
  S START(1)=1
+ S START(2)=0
  D LIST^DIC(FILE,"",FIELDS,"",$G(NUMBER),.START,SEARCH,"ACAN",.SCR,"","RETURN","ERR")
  Q
  ;
@@ -99,9 +108,18 @@ LSTCIST1(RETURN,SEARCH,START,NUMBER) ; Returns the list of states that allow che
  N FILE,FIELDS,RET,SCR
  S FILE="409.63",FIELDS="@;.01"
  S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
- S START("IEN")=1
  S START(1)=1
+ S START(2)=0
  D LIST^DIC(FILE,"",FIELDS,"",$G(NUMBER),.START,SEARCH,"ACI",.SCR,"","RETURN","ERR")
+ Q
+ ;
+LSTNSTA1(RETURN,SEARCH,START,NUMBER) ; Returns the list of states that allow no-show.
+ N FILE,FIELDS,RET,SCR
+ S FILE="409.63",FIELDS="@;.01"
+ S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ S START(1)=1
+ S START(2)=0
+ D LIST^DIC(FILE,"",FIELDS,"",$G(NUMBER),.START,SEARCH,"ANS",,"","RETURN","ERR")
  Q
  ;
 GETAPT0(DFN,SD) ; Get appointment 0 node

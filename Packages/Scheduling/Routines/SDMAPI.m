@@ -12,3 +12,6 @@ BLDLST(RETURN,LST) ; Build simple list.
  S RETURN=1
  Q 1
  ;
+DTS(SD) ; Return formated date (07/16/2012)
+ Q $TR($$FMTE^XLFDT(SD,"5DF")," ","0")
+ ;

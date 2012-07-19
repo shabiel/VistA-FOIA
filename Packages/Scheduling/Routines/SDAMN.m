@@ -9,14 +9,13 @@ EN ; -- protocol SDAM APPT NO-SHOW entry pt
  D SEL^VALM2 G ENQ:'$O(VALMY(0))
  D FULL^VALM1 S VALMBCK="R",SDI=0
  F  S SDI=$O(VALMY(SDI)) Q:'SDI  I $D(^TMP("SDAMIDX",$J,SDI)) K SDAT S SDAT=^(SDI) D  Q:SDSTOP
- .D NOW^%DTC S SDTIME=%
- .W !,^TMP("SDAM",$J,+SDAT,0),!
- .S DFN=+$P(SDAT,U,2),SDT=+$P(SDAT,U,3),SDCL=+$P(SDAT,U,4)
- .S SDSTB=$$STATUS^SDAM1(DFN,SDT,SDCL,$G(^DPT(DFN,"S",SDT,0))) ; before status
- .Q:'$$CHK
- .S SDSTOP=$$NS(DFN,SDT,SDCL,SDTIME,.SDNSACT)
- .S SDSTA=$$STATUS^SDAM1(DFN,SDT,SDCL,$G(^DPT(DFN,"S",SDT,0))) ; after status
- .I 'SDNSACT,'$$UPD(SDSTB,SDSTA,SDAT,$G(CNSTLNK)) S SDNSACT=2
+ . D NOW^%DTC S SDTIME=%
+ . W !,^TMP("SDAM",$J,+SDAT,0),!
+ . S DFN=+$P(SDAT,U,2),SDT=+$P(SDAT,U,3),SDCL=+$P(SDAT,U,4)
+ . S SDSTOP=$$NOSHOW(.RETURN,DFN,SDT,SDCL)
+ . S SDSTB=RETURN("BEFORE") ; before status
+ . S SDSTA=RETURN("AFTER") ; after status
+ . I 'SDNSACT,'$$UPD(SDSTB,SDSTA,SDAT,$G(CNSTLNK)) S SDNSACT=2
  ; values for SDNSACT :   0 = no re-build
  ;                        1 = re-build because of re-book
  ;                        2 = re-build because after not for list
@@ -24,28 +23,19 @@ EN ; -- protocol SDAM APPT NO-SHOW entry pt
  I SDNSACT,SDAMTYP="C" D BLD^SDAM3
 ENQ Q
  ;
-NS(DFN,SDT,SC,SDTIME,SDNSACT) ; execute no-show code
- ; input:   DFN := pt file ifn
- ;          SDT := d/t of appt
- ;           SC := clinic ifn
- ;       SDTIME := now
- ;      SDNSACT := ns processing flag
- ;     [return] := did user uparrow [ 0|no , 1|yes]
- ;
- N SDI,SDCP,SDYES,SDINP,SDLT1,SDLT,SDDT,SDMSG,A,L,I,SDV1,SDCL
- K ^UTILITY($J)
- D LO^DGUTL S SDLT1="",SDYES="",SDDT=DT,I=SDT,SDT=$P(I,".")
- S SDMSG=" DOES NOT HAVE A NO-SHOW LETTER ASSIGNED TO IT!"
- S SDV1=$O(^DG(40.8,0)) D DIV^SDUTL I $T S SDV1=$P($G(^SC(SC,0)),U,15)
- D EN1^SDN,73^SDN,PAUSE^VALM1
-NSQ Q 'Y
- ;
-CHK() ; -- check if status of appt permits no-show
- N SDOK S SDOK=1
- I '$D(^SD(409.63,"ANS",1,+SDSTB)) S SDOK=0,X="You cannot execute no-show processing for this appointment."
- I SDOK,SDT>SDTIME S SDOK=1,X="It is too soon to no-show this appointment."
- I 'SDOK W !!,*7,X K VALMY(SDI) D PAUSE^VALM1
- Q SDOK
+NOSHOW(ERR,DFN,SD,SC,LVL) ; No-show appointment
+ S %=$$NOSHOW^SDMAPI2(.ERR,DFN,SC,SD,.LVL)
+ I ERR=1 D PAUSE^VALM1  Q 'Y
+ I $P(ERR(0),U,3)=1 W !!,$P(ERR(0),U,2),! Q 1
+ I $P(ERR(0),U,3)>1 D
+ . S OV=$$ALNS($P(ERR(0),U,2)) I OV=2 Q
+ . I OV=1 D NOSHOW(.ERR,DFN,SD,SC,$P(ERR(0),U,3)-1)
+ Q 'Y
+ALNS(TXT) ;
+ALNS1
+ S %=2 W *7,!,TXT D YN^DICN
+ I '% W !,"RESPOND YES OR NO" G ALNS1
+ Q %
  ;
 UPD(BEFORE,AFTER,SDAT,CNST) ; can just the 1 display line be changed w/o re-build
  ; input:   BEFORE := before status info in $$STATUS format
