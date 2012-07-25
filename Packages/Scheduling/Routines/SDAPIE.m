@@ -33,6 +33,7 @@ CLNURGT ;;Access to ^$TXT1^ is prohibited!^$TXT2^Only users with a special code 
 CLNNOSL ;;No 'SL' node defined - cannot proceed with this clinic.
 PATDIED ;;PATIENT HAS DIED.
 PATNFND ;;Patient not found.
+PATSENS ;;Do you want to continue processing this patient record
 NOAVSLO ;;No available slots found on the same day in all the selected clinics for this date range
 APTCRGT ;;Appt. in ^$TXT1^ NOT CANCELLED^$TXT2^Access to this clinic is restricted to only privileged users!
 APTCCHO ;;>>> Appointment has a check out date and cannot be cancelled.

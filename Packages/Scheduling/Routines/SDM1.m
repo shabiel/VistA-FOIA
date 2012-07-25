@@ -44,17 +44,17 @@ ADT S:'$D(SDW) SDW=""
  I $E($P(X,"@",2),1,4)?1.4"0" K %DT S X=$P(X,"@"),X=$S($L(X):X,1:"T"),%DT="XF" D ^%DT G ADT:Y'>0 S X1=Y,X2=-1 D C^%DTC S X=X_.24
  K %DT S %DT="TXEF" D ^%DT
  I $P(Y,".",2)=24 S X1=$P(Y,"."),X2=1 D C^%DTC S Y=X_".000001"
- D MAKE(DFN,SC,Y,SDAPTYP,SL)
+ D MAKE(DFN,SC,Y,SDAPTYP,SDXSCAT,SL,$P(SDSRTY,U,2))
  Q
-MAKE(DFN,SC,SD,TYP,SL,LVL) ; Make appointmemnt
- S %=$$MAKE^SDMAPI2(.ERR,DFN,SC,SD,TYP,SL,.LVL)
+MAKE(DFN,SC,SD,TYP,STYP,SL,SRT,LVL) ; Make appointmemnt
+ S %=$$MAKE^SDMAPI2(.ERR,DFN,SC,SD,TYP,STYP,SL,SRT,,.LVL)
  I ERR=0 D
  . I $P(ERR(0),U,3)=1 W !!,$P(ERR(0),U,2),! G 1
  . I $P(ERR(0),U,3)>1 D
  . . S TXT1="...OK"
  . . S:$P(ERR(0),U)="APTPAHA" TXT1="DO YOU WANT TO CANCEL IT"
  . . S OV=$$OVB($P(ERR(0),U,2),TXT1) I OV=2 G 1
- . . I OV=1 D MAKE(DFN,SC,SD,TYP,SL,$P(ERR(0),U,3)-1)
+ . . I OV=1 D MAKE(DFN,SC,SD,TYP,STYP,SL,SRT,$P(ERR(0),U,3)-1)
  Q
  ;
  ;SD*5.3*408  verify that day hasn't been canceled via "SET UP A CLINIC"

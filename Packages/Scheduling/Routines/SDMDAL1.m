@@ -97,7 +97,7 @@ SETST(SC,SD,S) ; Set availability
  S ^SC(SC,"ST",$P(SD,".",1),1)=S
  Q
  ;
-MAKE(SC,SD,DFN,LEN,SM,USR) ; Make clinic appointment
+MAKE(SC,SD,DFN,LEN,SM,USR,OTHR) ; Make clinic appointment
  N ERR,FDA,IENS
  S ^SC(SC,"S",SD,0)=SD
  S:'$D(^SC(SC,"S",0)) ^(0)="^44.001DA^^"
@@ -105,11 +105,11 @@ MAKE(SC,SD,DFN,LEN,SM,USR) ; Make clinic appointment
  S IENS="?+1,"_SD_","_SC_","
  S FDA(44.003,IENS,.01)=DFN
  S FDA(44.003,IENS,1)=LEN
+ S FDA(44.003,IENS,3)=$G(OTHR)
  S FDA(44.003,IENS,7)=USR
  S FDA(44.003,IENS,8)=$P($$NOW^XLFDT,".")
- S:SM FDA(44.003,IENS,9)="O"
+ S:$G(SM) FDA(44.003,IENS,9)="O"
  D UPDATE^DIE("","FDA","","ERR") Q
- ZW ERR
  Q
  ;
 CANCEL(SC,SD,DFN,IFN) ; Kill clinic appointment

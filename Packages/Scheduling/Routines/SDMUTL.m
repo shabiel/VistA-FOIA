@@ -3,6 +3,7 @@ SDMUTL ;UI Utils; 06/28/2012  10:17 AM
 SELECT(ROUTINE,PRMPT,FILE,FLDS,FLDOR,HLP1,HLP2,ROU1) ;
  N LNAME,Y,RETURN,R1,R2,R3,EXS
  S R1=ROUTINE_"(.LSTS)"
+ S:$D(ROU1) R3=ROU1_"(.EXS)"
  S L="L",R2=ROUTINE_"(.LSTS,X)"
 LS ;
  S Y=-1
@@ -10,13 +11,13 @@ LS ;
  I X="?" D
  . D @R1
  . I $$LSTSH1(.LSTS,FILE,.FIELDS)  D
- . . I $L($G(ROU1))>0 D @ROU1 D PRINTALL(.EXS,0)
+ . . I $L($G(R3))>0 D @R3 D PRINTALL(.EXS,0)
  . . D:$L(L)>0&($G(HLP1(0))'="") @HLP1(0)
  . . D PRINTALL(.LSTS,1,.FLDOR) 
  . D:$L(L)>0&($G(HLP1)'="") @HLP1
  I X?1"??".E D
  . I X="??"  D
- . . I $L($G(ROU1))>0 D @ROU1 D PRINTALL(.EXS,0)
+ . . I $L($G(R3))>0 D @R3 D PRINTALL(.EXS,0)
  . . D:$L(L)>0&($G(HLP2(0))'="") @HLP2(0)
  . . D @R1 D PRINTALL(.LSTS,1,.FLDOR) D:$L(L)>0&($G(HLP2)'="") @HLP2
  E  D:X'="?"
@@ -36,8 +37,10 @@ SELLST(LSTS,X,FLDOR) ;
  I CNT=1 W $E(LSTS(1,"NAME"),$L(X)+1,$L(LSTS(1,"NAME"))) Q LSTS(1,"ID")_U_LSTS(1,"NAME")
  S MAXP=5,CLINE=1,SEL=0,OUT=0,RE=0
  F IND=1:1:CNT  D  Q:OUT
- . S CLINE=CLINE+1
- . W !,$C(9)_IND_$C(9)_LSTS(IND,"NAME")
+ . S CLINE=CLINE+1,STR=""
+ . I $D(FLDOR) S STR="   "_IND F FIND=1:1 S FLD=$P(FLDOR,U,FIND) Q:'$L(FLD)  S STR=STR_"   "_LSTS(IND,FLD)
+ . E  S STR=$C(9)_IND_$C(9)_LSTS(IND,"NAME")
+ . W !,STR
  . I CLINE>MAXP D
  . . W !,"Press <RETURN> to see more, '^' to exit this list, OR"
  . I CLINE>MAXP!(IND=CNT) D

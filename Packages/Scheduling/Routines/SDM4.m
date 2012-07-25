@@ -14,7 +14,7 @@ TYPE ;
  D SC
 RAT ;Display rated service connected disabilities patch SD*5.3*394
  D 2^VADPT
- I '$D(PAT) D GETPAT^SDMAPI3(.PAT,DFN)
+ I '$D(PAT) S %=$$GETPAT^SDMAPI3(.PAT,DFN,1)
  W !!,"PATIENT'S SERVICE CONNECTION AND RATED DISABILITIES:"
  IF $P(PAT("SERVICE CONNECTED?"),U,2)="YES"&($P(VAEL(3),"^",2)'="") D
  .W !,"SC Percent: "_$P(VAEL(3),"^",2)_"%"

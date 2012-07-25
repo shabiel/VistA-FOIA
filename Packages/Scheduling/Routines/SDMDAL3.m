@@ -66,7 +66,7 @@ GETAPPS(RETURN,DFN,SD) ; Get day appointment
  . S RETURN(SD)=+^(S,0)
  Q
  ;
-MAKE(DFN,SD,SC,TYPE,STAT,RSN) ; Make patient appointment
+MAKE(DFN,SD,SC,TYPE,STYP,STAT,RSN,USR,DT,SRT,NAAI) ; Make patient appointment
  N ERR,FDA,IENS
  I $D(^DPT(DFN,"S",SD,0)),$P(^(0),U,2)["C" D
  . S IENS=SD_","_DFN_","
@@ -75,7 +75,7 @@ MAKE(DFN,SD,SC,TYPE,STAT,RSN) ; Make patient appointment
  . S FDA(2.98,IENS,"9")=$G(RSN)
  . S FDA(2.98,IENS,"9.5")=TYPE
  . S FDA(2.98,IENS,"17")="@"
- . S FDA(2.98,IENS,"20")=$P($$NOW^XLFDT,".")
+ . S FDA(2.98,IENS,"20")=DT
  . D FILE^DIE("","FDA","ERR")
  E  D
  . S IENS="?+2,"_DFN_","
@@ -84,7 +84,11 @@ MAKE(DFN,SD,SC,TYPE,STAT,RSN) ; Make patient appointment
  . S FDA(2.98,IENS,"3")=STAT
  . S FDA(2.98,IENS,"9")=$G(RSN)
  . S FDA(2.98,IENS,"9.5")=TYPE
- . S FDA(2.98,IENS,"20")=$P($$NOW^XLFDT,".")
+ . S FDA(2.98,IENS,"19")=USR
+ . S FDA(2.98,IENS,"20")=DT
+ . S FDA(2.98,IENS,"24")=$G(STYP)
+ . S FDA(2.98,IENS,"25")=$G(SRT)
+ . S FDA(2.98,IENS,"26")=$G(NAAI)
  . D UPDATE^DIE("","FDA","IENS","ERR")
  Q
  ;
