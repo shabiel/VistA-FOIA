@@ -79,7 +79,7 @@ E S Y=CLN("PRINCIPAL CLINIC")
  Q:$D(SDXXX)
 EN2 F X=0:0 S X=$O(^DPT(DFN,"DE",X)) Q:'$D(^(+X,0))  I ^(0)-SC=0!'(^(0)-Y) F XX=0:0 S XX=$O(^DPT(DFN,"DE",X,1,XX)) Q:XX<1  S SDDIS=$P(^(XX,0),U,3) I 'SDDIS D:'$D(SDMULT) A^SDCNSLT G ^SDM0
  I '$D(^SC(+Y,0)) S Y=+SC
- S Y=$P(^SC(Y,0),U)
+ S Y=$P(^SC(+Y,0),U)
  ; SCRESTA = Array of pt's teams causing restricted consults
  N SCRESTA
  S SCREST=$$RESTPT^SCAPMCU4(DFN,DT,"SCRESTA")

@@ -21,10 +21,10 @@ DEL1 F J=1:1 S SDDH=$P(APP,",",J) Q:SDDH']""  S SDDI=$P(SDDH,"-"),SDDM=$P(SDDH,"
  G:SDERR WH1 G NOPE^SDCNP1
 BEGD S (SD,S)=$P(^UTILITY($J,"SDCNP",A1),"^",1),I=$P(^UTILITY($J,"SDCNP",A1),"^",2)
  S %=$$CANCEL^SDMAPI2(.ERR,DFN,I,SD,SDWH,SDSCR,SDREM)
- S CNT=CNT+1
  I ERR=0,$P(ERR(0),U)="APTCCHO" W !,*7,">>> Appointment #",A1," has a check out date and cannot be cancelled." Q
  I ERR=0 W !,*7,$P(ERR(0),U,2) Q
  S $P(^UTILITY($J,"SDCNP",A1),"^",4)="*** JUST CANCELLED ***" Q
+ S CNT=CNT+1
  Q
  ;
 NO W !,"NO ",$S('SDPV:"PENDING",1:"PREVIOUS")," APPOINTMENTS",*7,*7,*7
