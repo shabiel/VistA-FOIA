@@ -1,5 +1,5 @@
-SDMDAL1 ;MAKE APPOINTMENT API; 05/28/2012  11:46 AM
- ;;;Scheduling;;05/28/2012;
+SDMDAL1 ;RGI/CBR - APPOINTMENT API; 08/10/2012
+ ;;5.3;scheduling;**260003**;08/13/93;
 GETCLN(RETURN,CLN,INT,EXT,REZ) ; Get clinic detail
  N FILE,SFILES,FLDS
  S FILE=44
@@ -42,7 +42,7 @@ LSTTMPL(RETURN,CLN) ; List defined day template
  Q
  ;
 NXTAV(CLN,SD) ; Get next available day.
- Q $N(^SC(CLN,"ST",SD))
+ Q $O(^SC(CLN,"ST",SD))
  ;
 GETHOL(RETURN,SDATE) ; Get holiday.
  S RETURN=0
@@ -58,22 +58,25 @@ GETPATT(RETURN,SC,SD) ; Get date pattern
  Q
  ;
 GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
- N ZL,NOD0
+ N ZL,NOD0,CO
  I $D(^SC(SC,"S",SD))  D
  . S ZL=0
  . F  S ZL=$O(^SC(SC,"S",SD,1,ZL)) Q:'ZL  D
  . . I '$D(^SC(SC,"S",SD,1,ZL,0)) D FLEN1 Q
  . . I +^SC(SC,"S",SD,1,ZL,0)=DFN  D
- . . . S NOD0=^(0)
+ . . . S NOD0=^(0),CO=$G(^("C"))
  . . . S RETURN("IFN")=ZL
  . . . S RETURN("USER")=$P(NOD0,U,6)
  . . . S RETURN("DATE")=$P(NOD0,U,7)
+ . . . S RETURN("CHECKOUT")=$P(CO,U,3)
  . . . S RETURN("LENGTH")=$P(NOD0,U,2)
  . . . S RETURN("CONSULT")=$P($G(^SC(SC,"S",SD,1,ZL,"CONS")),U)
  . Q
  Q
  ;
-FLEN1 Q:'$D(^SC(SC,"S",SD,1,ZL,"C"))
+FLEN1 ;
+ N DA,DIK
+ Q:'$D(^SC(SC,"S",SD,1,ZL,"C"))
  S DA(2)=SC,DA(1)=NDT,DA=ZL,DIK="^SC("_DA(2)_",""S"","_DA(1)_",1," D ^DIK
  Q
  ;
@@ -112,8 +115,9 @@ MAKE(SC,SD,DFN,LEN,SM,USR,OTHR) ; Make clinic appointment
  D UPDATE^DIE("","FDA","","ERR") Q
  Q
  ;
-CANCEL(SC,SD,DFN,IFN) ; Kill clinic appointment
+CANCEL(SC,SD,DFN,CIFN) ; Kill clinic appointment
  ;S SDNODE=^SC(SC,"S",SD,1,CIFN,0)
+ N HSI,SB,SDDIF,SI,SL,SS,ST,STARTDAY,STR
  S ^SC("ARAD",SC,SD,DFN)="N"
  S TLNK=$P($G(^SC(SC,"S",SD,1,CIFN,"CONS")),U)
  K ^SC(SC,"S",SD,1,CIFN)
@@ -145,19 +149,19 @@ CHECKIN(IEN,SC,SD,USR,DT) ; Check in appointment
 GETFSTA(SC) ; Get first available day.
  N I
  S I=0
- Q $N(^SC(SC,"T",I))
+ Q $O(^SC(SC,"T",I))
  ;
 GETDAYA(RETURN,SC,SD) ; Get all day appointments
  N IND,I,D
  S I=$P(SD,".",1)
- F D=I-.01:0 S D=$N(^SC(SC,"S",D)) Q:$P(D,".",1)-I  D
- . F %=0:0 S %=$N(^SC(SC,"S",D,1,%)) Q:%'>0  D
+ F D=I-.01:0 S D=$O(^SC(SC,"S",D)) Q:$P(D,".",1)-I  D
+ . F %=0:0 S %=$O(^SC(SC,"S",D,1,%)) Q:%'>0  D
  . . S RETURN(%,"STATUS")=$P(^(%,0),U,9)
  . . S RETURN(%,"OB")=$D(^("OB"))
  Q
  ;
 LSTCAPTS(RETURN,SC,SDBEG,SDEND) ; 
- N SDT,SDDA,CNT,APT,SDATA S CNT=0
+ N SDT,SDDA,CNT,APT,SDATA,CNSTLNK S CNT=0
  F SDT=SDBEG:0 S SDT=$O(^SC(SC,"S",SDT)) Q:'SDT!($P(SDT,".",1)>SDEND)  D
  . F SDDA=0:0 S SDDA=$O(^SC(SC,"S",SDT,1,SDDA)) Q:'SDDA  D
  . . S CNSTLNK=$P($G(^SC(SC,"S",SDT,1,SDDA,"CONS")),U)
@@ -175,7 +179,7 @@ LSTCAPTS(RETURN,SC,SDBEG,SDEND) ;
  Q
  ;
 LSTPAPTS(RETURN,DFN,SDBEG,SDEND) ; Get patient appointments
- N SDT,CNT,SDDA,SC,CN
+ N SDT,CNT,SDDA,SC,CN,CNPAT
  S CNT=0
  F SDT=SDBEG:0 S SDT=$O(^DPT(DFN,"S",SDT)) Q:'SDT!($P(SDT,".",1)>SDEND)  D
  . Q:'$D(^(SDT,0))

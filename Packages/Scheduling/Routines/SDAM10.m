@@ -1,5 +1,5 @@
-SDAM10 ;MJK/ALB - Appt Mgt (Patient cont.); 3/18/05 3:51pm  ; Compiled March 31, 2008 16:38:47
- ;;5.3;Scheduling;**189,258,403,478,491**;Aug 13, 1993;Build 53
+SDAM10 ;MJK/ALB - Appt Mgt (Patient cont.); 08/01/2012  ; Compiled March 31, 2008 16:38:47
+ ;;5.3;Scheduling;**189,258,403,478,491,260003**;Aug 13, 1993;Build 53
  ;
 HDR ; -- list screen header
  ;   input:       SDFN := ifn of pat

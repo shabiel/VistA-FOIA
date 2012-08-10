@@ -1,5 +1,5 @@
-SDAMC ;ALB/MJK - Cancel Appt Action ; 8/31/05 3:02pm  ; 12/26/08 12:26pm  ; Compiled January 8, 2009 15:41:48
- ;;5.3;Scheduling;**20,28,32,46,263,414,444,478,538**;Aug 13, 1993;Build 5
+SDAMC ;ALB/MJK - Cancel Appt Action ; 07/25/2012  ; Compiled January 8, 2009 15:41:48
+ ;;5.3;Scheduling;**20,28,32,46,263,414,444,478,538,260003**;Aug 13, 1993;Build 5
  ;
 EN ; -- protocol SDAM APPT CANCEL entry pt
  ; input:  VALMY := array entries

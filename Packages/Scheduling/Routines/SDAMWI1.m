@@ -1,5 +1,5 @@
-SDAMWI1 ;ALB/MJK - Walk-Ins (cont.) ; 6/17/09 4:00pm
- ;;5.3;Scheduling;**94,167,206,168,544**;Aug 13, 1993;Build 11
+SDAMWI1 ;ALB/MJK - Walk-Ins (cont.) ; 07/25/2012
+ ;;5.3;Scheduling;**94,167,206,168,544,260003**;Aug 13, 1993;Build 11
  ;
 MAKE(DFN,SDCL,SDT,TYP,STYP) ; -- set globals for appt
  ;    input:     DFN ; SDCL := clinic# ; SDT := appt d/t

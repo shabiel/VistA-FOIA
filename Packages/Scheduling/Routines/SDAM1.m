@@ -1,5 +1,5 @@
-SDAM1 ;MJK/ALB - Appt Mgt (Patient);Apr 23 1999
- ;;5.3;Scheduling;**149,155,193,189,445,478,466**;Aug 13, 1993;Build 2
+SDAM1 ;MJK/ALB - Appt Mgt (Patient);08/01/2012
+ ;;5.3;Scheduling;**149,155,193,189,445,478,466,260003**;Aug 13, 1993;Build 2
  ;
 INIT ; -- get init pat appt data
  ;  input:          DFN := ifn of pat

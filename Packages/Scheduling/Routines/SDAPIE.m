@@ -1,11 +1,11 @@
-SDAPIE ; / Scheduling Error provider;06/06/2012
- ;;;Scheduling;;06/06/2012
+SDAPIE ;RGI/CBR - Scheduling Error provider; 08/10/2012
+ ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
+ N ERRTXT,IND,ST,STR,TXT,I
  Q:'$D(RETURN)
  Q:'$D(ERRNO)
  S:$G(LVL)="" LVL=1
  S TEXT=$G(TEXT)
- N I
  F I=0:1 Q:$O(RETURN(I))=""!('+$O(RETURN(I)))
  S ERRTXT=$P($T(@ERRNO),";;",2)
  S IND=1,TXT=1,STR=""
@@ -62,3 +62,13 @@ APTNSTS ;;It is too soon to no-show this appointment.
 APTNSAL ;;ALREADY RECORDED AS NO-SHOW... WANT TO ERASE
 APTNSAR ;;THIS APPOINTMENT ALREADY A NO-SHOW AND REBOOKED... ARE YOU SURE YOU WANT TO ERASE
 APTNSIA ;;Inpatient Appointments cannot reflect No-Show status!
+PATDARD ;;PATIENT ALREADY DISCHARGED FROM '^$TXT1^' CLINIC
+PATDNEN ;;>>> Patient not enrolled in '^$TXT1^' clinic.
+PATDHFA ;;PATIENT HAS FUTURE APPOINTMENTS, MUST BE CANCELLED PRIOR TO DISCHARGE !!
+APTDCOD ;;>>> The appointment must have a check out date/time to delete.
+APTDCOO ;;>>> Editing and deleting old encounters not allowed.
+APTCOCE ;;>>> You can not check out this appointment.
+APTCOTS ;;>>> It is too soon to check out this appointment.
+APTCOCN ;;>>> You cannot check out this appointment.
+APTCOAC ;;Appointment already checked out
+APTCONW ;;Appointment new encounter

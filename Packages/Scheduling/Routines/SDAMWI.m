@@ -1,5 +1,5 @@
-SDAMWI ;ALB/MJK - Unscheduled Appointments ; 5/3/05 5:50pm
- ;;5.3;Scheduling;**63,94,241,250,296,380,327**;Aug 13, 1993
+SDAMWI ;ALB/MJK - Unscheduled Appointments ; 7/25/2012
+ ;;5.3;Scheduling;**63,94,241,250,296,380,327,260003**;Aug 13, 1993
  ;
 EN(DFN,SC) ; -- main entry point
  ;    input: DFN ; SC := clinic#

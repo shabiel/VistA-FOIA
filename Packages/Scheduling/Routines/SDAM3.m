@@ -1,5 +1,5 @@
-SDAM3 ;MJK/ALB - Appt Mgt (Clinic) ; 4/21/05 12:23pm
- ;;5.3;Scheduling;**63,189,380,478,492**;Aug 13, 1993;Build 1
+SDAM3 ;MJK/ALB - Appt Mgt (Clinic) ; 08/01/2012 12:23pm
+ ;;5.3;Scheduling;**63,189,380,478,492,260003**;Aug 13, 1993;Build 1
  ;
 INIT ; -- get init clinic appt data
  ;  input:        SDCLN := ifn of pat

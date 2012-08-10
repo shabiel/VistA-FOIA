@@ -1,5 +1,5 @@
-SDMLST ;Lists Utils; 06/28/2012  10:17 AM
- ;;;Scheduling;;06/28/2012;
+SDMLST ;RGI/CBR - Lists Utils; 07/25/2012
+ ;;5.3;scheduling;**260003**;08/13/93
 LSTCLNS(RETURN,SEARCH,START,NUMBER) ; Lists clinics
  S %=$$LSTCLNS^SDMAPI1(.RETURN,.SEARCH,.START,.NUMBER)
  Q

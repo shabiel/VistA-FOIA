@@ -1,5 +1,5 @@
-SDMAPI1 ;MAKE APPOINTMENT API; 05/28/2012  11:46 AM
- ;;;Scheduling;;05/28/2012;
+SDMAPI1 ;RGI/CBR - APPOINTMENT API; 08/10/2012
+ ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
  ;           DSP   = Error Message Display, 1 - Display or 0 No Display
@@ -87,7 +87,7 @@ SLOTS(RETURN,SC) ; Get available slots
  Q 1
  ;
 SCEXST(RETURN,CSC) ; Get Stop Cod Exception status
- N RET
+ N RET,LAST
  D SCEXST^SDMDAL2(.RET,CSC)
  S RETURN=RET
  I RET>0 S LAST=99999999999,LAST=$O(RET("EFFECTIVE DATE",LAST),-1) D
@@ -174,7 +174,7 @@ LSTPAPTS(RETURN,DFN,SDBEG,SDEND,STAT) ; Returns patient appointments filtered by
  Q 1
  ;
 BLDAPTS(RETURN,APTS,SSC,SDFN) ; Build appointment list
- N IND,DFN,SC,VA,VADM
+ N IND,DFN,SC,VA,VADM,CDATA,SDATA,SDDA,SDSTAT
  F IND=0:0 S IND=$O(APTS(IND)) Q:IND=""  D
  . S SDATA=APTS(IND,"SDATA")
  . Q:'$G(SDFN)&($P(SDATA,U,2)["C")
@@ -200,7 +200,7 @@ BLDAPTS(RETURN,APTS,SSC,SDFN) ; Build appointment list
  Q
  ;
 GAFREQ(DFN,SC,CVSIT) ;
- N SDELIG,SDGAF
+ N SDELIG,SDGAF,SDGAFST
  S SDELIG=$$ELSTAT^SDUTL2(DFN)
  I $$MHCLIN^SDUTL2(SC),'($$COLLAT^SDUTL2(SDELIG)!$G(CVSIT)) D  Q SDGAFST
  . S SDGAF=$$NEWGAF^SDUTL2(DFN),SDGAFST=$P(SDGAF,"^") Q
