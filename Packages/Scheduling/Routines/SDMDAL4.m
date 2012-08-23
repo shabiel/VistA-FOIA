@@ -23,7 +23,7 @@ UPDPAPT(DATA,DFN,SD) ; Update patient appointment
  F I=0:0 S I=$O(DATA(I)) Q:I=""  D
  . S FDA(2.98,IENS,I)=DATA(I)
  N ERR
- D UPDATE^DIE("","FDA","ERR")
+ D UPDATE^DIE("","FDA",,"ERR")
  Q
  ;
 UPDCAPT(DATA,SC,SD,IEN) ; Update clinic appointment
@@ -33,7 +33,7 @@ UPDCAPT(DATA,SC,SD,IEN) ; Update clinic appointment
  F I=0:0 S I=$O(DATA(I)) Q:I=""  D
  . S FDA(44.003,IENS,I)=DATA(I)
  N ERR
- D UPDATE^DIE("","FDA","ERR")
+ D UPDATE^DIE("","FDA",,"ERR")
  Q
  ;
 DELCLS(SDOE) ;Delete Classification

@@ -7,6 +7,8 @@ ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  S:$G(LVL)="" LVL=1
  S TEXT=$G(TEXT)
  F I=0:1 Q:$O(RETURN(I))=""!('+$O(RETURN(I)))
+ I I=0,$D(RETURN(0)) S I=I+1
+ E  S:I>0 I=I+1
  S ERRTXT=$P($T(@ERRNO),";;",2)
  S IND=1,TXT=1,STR=""
  F  Q:IND=0  D
@@ -24,6 +26,7 @@ ERRTXT(RETURN) ;
 ERRTABLE ; Error table
 INVPARAM ;;Invalid parameter value - ^$TXT1^.
 CLNINV ;;Invalid Clinic.
+CLNNFND ;;Clinic not found.
 CLNNDFN ;;Clinic not define or has no zero node.
 CLNSCIN ;;Invalid Clinic Stop Code ^$TXT1^.
 CLNSCRD ;;Clinic's Stop Code ^$TXT1^ cannot be used. Restriction date is ^$TXT2^ ^$TXT3^.
@@ -72,3 +75,4 @@ APTCOTS ;;>>> It is too soon to check out this appointment.
 APTCOCN ;;>>> You cannot check out this appointment.
 APTCOAC ;;Appointment already checked out
 APTCONW ;;Appointment new encounter
+APTWHEN ;;WHEN??

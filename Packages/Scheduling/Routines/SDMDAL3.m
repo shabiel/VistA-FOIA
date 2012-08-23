@@ -73,17 +73,17 @@ MAKE(DFN,SD,SC,TYPE,STYP,STAT,RSN,USR,DT,SRT,NAAI) ; Make patient appointment
  . S FDA(2.98,IENS,".01")=SC
  . S FDA(2.98,IENS,"3")="@"
  . S FDA(2.98,IENS,"9")=$G(RSN)
- . S FDA(2.98,IENS,"9.5")=TYPE
+ . S FDA(2.98,IENS,"9.5")=$G(TYPE)
  . S FDA(2.98,IENS,"17")="@"
  . S FDA(2.98,IENS,"20")=DT
- . D FILE^DIE("","FDA","ERR")
+ . D FILE^DIE("","FDA",,"ERR")
  E  D
  . S IENS="?+2,"_DFN_","
  . S IENS(2)=SD
  . S FDA(2.98,IENS,.01)=SC
  . S FDA(2.98,IENS,"3")=STAT
  . S FDA(2.98,IENS,"9")=$G(RSN)
- . S FDA(2.98,IENS,"9.5")=TYPE
+ . S FDA(2.98,IENS,"9.5")=$G(TYPE)
  . S FDA(2.98,IENS,"19")=USR
  . S FDA(2.98,IENS,"20")=DT
  . S FDA(2.98,IENS,"24")=$G(STYP)
@@ -127,12 +127,12 @@ UPDENRL(ENS,DFN) ;
  S SC=$O(ENS(""))
  S IENS=ENS(SC,"IEN")_","_DFN_","
  S FDA(2.001,IENS,2)="I"
- D UPDATE^DIE("","FDA","ERR")
+ D UPDATE^DIE("","FDA",,"ERR")
  F IND=0:0 S IND=$O(ENS(SC,"EN",IND)) Q:IND=""  D
  . Q:(IND'>0)
  . S IENS=IND_","_ENS(SC,"IEN")_","_DFN_","
  . S:$D(ENS(SC,"EN",IND,"DISCHARGE")) FDA(2.011,IENS,3)=ENS(SC,"EN",IND,"DISCHARGE")
  . S:$D(ENS(SC,"EN",IND,"REASON")) FDA(2.011,IENS,4)=ENS(SC,"EN",IND,"REASON")
- . D UPDATE^DIE("","FDA","ERR")
+ . D UPDATE^DIE("","FDA",,"ERR")
  Q
  ;
