@@ -1,5 +1,5 @@
 SDAMEP3 ;ALB/CAW - Extended Display (Appt. Event Log) ; 08/31/2012
- ;;5.3;Scheduling;**20,241**;Aug 13, 1993
+ ;;5.3;Scheduling;**20,241,260003**;Aug 13, 1993
  ;
 APLOG ;
  D SET^SDAMEP1("                       *** Appointment Event Log ***")
