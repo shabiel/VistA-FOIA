@@ -1,6 +1,6 @@
-SDMAPI ;RGI/CBR - APPOINTMENT API UTILS; 07/19/2012
+SDMAPI ;RGI/CBR - APPOINTMENT API UTILS; 08/31/2012
  ;;5.3;scheduling;**260003**;08/13/93
-BLDLST(RETURN,LST) ; Build simple list.
+BLDLST(RETURN,LST,FLDS) ; Build simple list.
  N DL,IN
  S RETURN=0
  S RETURN(0)=LST("DILIST",0)
@@ -8,7 +8,12 @@ BLDLST(RETURN,LST) ; Build simple list.
  F IN=1:1:$P(RETURN(0),U,1) D
  . S RETURN(IN)=""
  . S RETURN(IN,"ID")=LST(DL,2,IN)
- . S RETURN(IN,"NAME")=LST(DL,"ID",IN,".01")
+ . I $O(LST(DL,"ID",IN,".01",""))'="" D
+ . . S RETURN(IN,"NAME")=$G(LST(DL,"ID",IN,".01","I"))_"^"_LST(DL,"ID",IN,".01","E")
+ . E  S RETURN(IN,"NAME")=LST(DL,"ID",IN,".01")
+ . I $D(FLDS) D
+ . . F FLD=0:0 S FLD=$O(FLDS(FLD)) Q:FLD=""  D
+ . . . S RETURN(IN,FLDS(FLD))=LST(DL,"ID",IN,FLD)
  S RETURN=1
  Q 1
  ;
