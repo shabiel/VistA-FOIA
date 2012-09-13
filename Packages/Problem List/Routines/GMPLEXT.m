@@ -15,7 +15,7 @@ PATNAME(GMPDFN) ; Returns patient name
 ICDCODE(GMPICD) ;
  Q $P($G(^ICD9(+GMPICD,0)),U)
  ;
-NOS ; Return PTR ^ 799.9 ICD code
+NOS() ; Return PTR ^ 799.9 ICD code
  N X
  S X=$O(^ICD9("BA",799.9,0))
  Q (+X_"^799.9")
@@ -60,7 +60,9 @@ USERVIEW() ; Returns user's preferred view
  Q X
  ;
 HASKEY(KEY) ; Returns true if user has KEY assigned
- Q $D(^XUSEC(KEY,DUZ))
+ N RET
+ D OWNSKEY^XUSRB(.RET,KEY)
+ Q RET(0)
  ;
 CLINUSER() ;is this a clinical user?
  N GMPLUSER

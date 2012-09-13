@@ -1,4 +1,4 @@
-GMPLEDT3 ; SLC/MKB/KER -- Problem List edit utilities ; 03/28/12
+GMPLEDT3 ; SLC/MKB/KER -- Problem List edit utilities ; 09/13/12
  ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -14,7 +14,7 @@ MSG() ; List Manager Message Bar
 KEYS ; Setup XQORM("KEY") array
  ;   Numbers ref'd also in IN4^-EDIT, NTES^-EDT4
  N I,PROTCL,NUM,ICD
- S ICD=$S($D(^XUSEC("GMPL ICD CODE",DUZ)):1,1:0)
+ S ICD=$$HASKEY^GMPLEXT("GMPL ICD CODE")
  S XQORM("KEY","1")=$O(^ORD(101,"B","GMPL EDIT REFORMULATE",0))_"^1"
  S XQORM("KEY","2")=$O(^ORD(101,"B","GMPL EDIT ONSET",0))_"^1"
  S XQORM("KEY","3")=$O(^ORD(101,"B","GMPL EDIT STATUS",0))_"^1"
@@ -43,7 +43,7 @@ GETFLDS(DA) ; Define GMPFLD(#) and GMPORIG(#) Arrays with Current Values
 FLDS ; Define GMPFLD("FLD") Array for Editing
  S (GMPFLD("FLD",2),GMPFLD("FLD",6),GMPFLD("FLD",7))="Q"
  S GMPFLD("FLD",1)="TERM",GMPFLD("FLD","PROBLEM")=1
- S:$D(^XUSEC("GMPL ICD CODE",DUZ)) GMPFLD("FLD",2)="ICD",GMPFLD("FLD","ICD CODE")=2
+ S:$$HASKEY^GMPLEXT("GMPL ICD CODE") GMPFLD("FLD",2)="ICD",GMPFLD("FLD","ICD CODE")=2
  S GMPFLD("FLD",3)="NOTE",GMPFLD("FLD","COMMENT")=3
  S GMPFLD("FLD",4)="ONSET",GMPFLD("FLD","DATE OF ONSET")=4
  S GMPFLD("FLD",5)="STATUS",GMPFLD("FLD","STATUS")=5
