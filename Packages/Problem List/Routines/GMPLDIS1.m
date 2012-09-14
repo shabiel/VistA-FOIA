@@ -39,6 +39,6 @@ DIS1 W !! W:'VALMCC $$REPEAT^XLFSTR("-",79)
  E  W !,"   Clinic: "_$P(GMPFLD(1.08),U,2)
  W:$L(SP,U)>2 ?65,$P(SP,U,3)
  W !," Recorded: "_$P(GMPFLD(1.09),U,2)_" by "_$P(GMPFLD(1.04),U,2)
- I $$HASKEY^GMPLEXT("GMPL ICD CODE") W ?55,"ICD Code: "_$P(GMPFLD(.01),U,2)
+ I $$KCHK^XUSRB("GMPL ICD CODE") W ?55,"ICD Code: "_$P(GMPFLD(.01),U,2)
  W:'VALMCC !,$$REPEAT^XLFSTR("-",79)
  Q

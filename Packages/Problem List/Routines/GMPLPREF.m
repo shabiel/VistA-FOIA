@@ -1,12 +1,12 @@
-GMPLPREF ; SLC/MKB -- Problem List User Preferences ;2/1/96  12:31
- ;;2.0;Problem List;**3,5**;Aug 25, 1994
+GMPLPREF ; SLC/MKB -- Problem List User Preferences ;09/13/12
+ ;;2.0;Problem List;**3,5,260002**;Aug 25, 1994
 EN ; -- main entry point for GMPL USER PREFS
  D CURRENT^GMPLPRF0(DUZ) Q:'$$CHANGE^GMPLPRF0
  D EN^VALM("GMPL USER PREFS")
  Q
  ;
 INIT ; -- init variables and list array
- S GMPLVIEW=$P($G(^VA(200,DUZ,125)),U),GMPLMODE=$E(GMPLVIEW) ; 'S' or 'C'
+ S GMPLVIEW=$$USERVIEW^GMPLEXT(),GMPLMODE=$E(GMPLVIEW) ; 'S' or 'C'
  S GMPLMODE=$$VIEW^GMPLPRF0(GMPLMODE)
  I GMPLMODE="^" K GMPLVIEW,GMPLMODE S VALMQUIT=1 Q
  I $$ALL^GMPLPRF0(GMPLMODE,$L(GMPLVIEW,"/")) D SAVE^GMPLPRF1 W !!,"Preferred View saved.",! H 1 S VALMQUIT=1 Q
@@ -52,7 +52,7 @@ ITEM(IFN,NAME,VIEW,CNT) ;Add item to list display
  Q
  ;
 HDR ; -- header code
- N NUM,USER,X S USER=$P($G(^VA(200,DUZ,0)),U)
+ N NUM,USER,X S USER=$$PROVNAME^GMPLEXT(DUZ)
  S X="CLINIC"_$S(GMPLMODE="S":"AL SERVICE",1:"")_"S"
  S NUM=+$G(^TMP("GMPLIST",$J,"VIEW",0))_" "_$S(GMPLMODE="S":"services",1:"clinics")
  S VALMHDR(1)=USER_$J(NUM,79-$L(USER)),VALMHDR(2)=$J(X,$L(X)\2+41)

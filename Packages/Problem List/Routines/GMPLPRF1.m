@@ -1,5 +1,5 @@
-GMPLPRF1 ; SLC/MKB -- Problem List User Prefs cont ;;9-5-95 11:54am
- ;;2.0;Problem List;**3**;Aug 25, 1994
+GMPLPRF1 ; SLC/MKB -- Problem List User Prefs cont ;09/14/12
+ ;;2.0;Problem List;**3,260002**;Aug 25, 1994
 ADD ; -- add item(s) to view
  N GMPLSEL,GMPLNO,IFN,NUM,CNUM,I,J S VALMBCK=$S(VALMCC:"",1:"R")
 ADD1 S GMPLSEL=$$SELECT Q:GMPLSEL="^"
@@ -60,13 +60,14 @@ DIFFRENT() ; -- Returns 1 if view has changed, else 0
  N I,TEMP S TEMP=""
  F I=0:0 S I=$O(^TMP("GMPLIST",$J,"VIEW",I)) Q:I'>0  S TEMP=TEMP_I_"/"
  S:$L(TEMP) TEMP=GMPLMODE_"/"_TEMP
- Q TEMP'=$P($G(^VA(200,DUZ,125)),U)
+ Q TEMP'=$$USERVIEW^GMPLEXT()
  ;
 SAVE ; -- save new view in File #200/Field #125
- N I,TEMP,TMP S TEMP=GMPLMODE,TMP=$P($G(^VA(200,DUZ,125)),U,2,999)
+ N I,TEMP,TMP S TEMP=GMPLMODE,TMP=$$USERLST^GMPLEXT()
  F I=0:0 S I=$O(^TMP("GMPLIST",$J,"VIEW",I)) Q:I'>0  S TEMP=TEMP_"/"_I
  S:$L(TEMP)>1 TEMP=TEMP_"/"
- S ^VA(200,DUZ,125)=TEMP_U_TMP,GMPSAVED=1
+ D UPUSRLST^GMPLEXT(TEMP,TMP)
+ S GMPSAVED=1
  Q
  ;
 SWITCH ; -- change preferred views (service <--> clinic)

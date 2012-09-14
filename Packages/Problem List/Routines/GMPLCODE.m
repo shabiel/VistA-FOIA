@@ -1,4 +1,4 @@
-GMPLCODE ; SLC/MKB/AJB -- Problem List ICD Code Utilities ; 09/13/12
+GMPLCODE ; SLC/MKB/AJB -- Problem List ICD Code Utilities ; 09/14/12
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 EN ; -- main entry point for GMPL CODE LIST
  K GMPLUSER
@@ -54,7 +54,7 @@ ICD(NUM,IFN) ; -- search ICD Diagnosis file #80
  ; Added for Code Set Versioning (CSV) - screen allows ONLY active codes
  S DIR("S")="I +($$STATCHK^ICDAPIU($$CODEC^ICDCODE(+($G(Y))),DT))>0"
  D ^DIR I $D(DTOUT)!($D(DUOUT)) S GMPQUIT=1 Q
- I X="@" Q:'$D(DIR("B"))  S:$$SURE^GMPLX Y=$$NOS^GMPLX
+ I X="@" Q:'$D(DIR("B"))  S:$$SURE^GMPLX Y=$$NOS^GMPLEXT()
  I +Y>0,Y'=OLD D  S GMPSAVED=1
  . S NEW=Y
  . S %=$$REPLACE^GMPLAPI4(.RET,IFN,NEW)

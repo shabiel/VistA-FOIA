@@ -1,4 +1,4 @@
-GMPLHS ; SLC/MKB/KER - Extract Prob List Health Summary ; 03/27/12
+GMPLHS ; SLC/MKB/KER - Extract Prob List Health Summary ; 09/14/12
  ;;2.0;Problem List;**22,26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -90,8 +90,8 @@ GETCOMM(IFN,CNT) ; Get Active Comments for a Note
  . S LOC=+$G(^AUPNPROB(IFN,11,IFN2,0)),IFN3=0
  . F  S IFN3=$O(^AUPNPROB(IFN,11,IFN2,11,IFN3)) Q:IFN3'>0  D
  . . S NODE=$G(^AUPNPROB(IFN,11,IFN2,11,IFN3,0)) Q:$P(NODE,U,4)']""
- . . S ^TMP("GMPLHS",$J,CNT,"C",LOC,$P(NODE,U),0)=$P(NODE,U,3)_U_$P(NODE,U,5)_U_$P($G(^VA(200,+$P(NODE,U,6),0)),U)
+ . . S ^TMP("GMPLHS",$J,CNT,"C",LOC,$P(NODE,U),0)=$P(NODE,U,3)_U_$P(NODE,U,5)_U_$$PROVNAME^GMPLEXT(+$P(NODE,U,6))
  Q
 SERV(X,SERV) ; Returns Service Name Abbreviation
- N ABBREV S ABBREV=$P($G(^DIC(49,+X,0)),U,2) S:ABBREV="" ABBREV=$E($G(SERV),1,5)
+ N ABBREV S ABBREV=$$SVCABBV^GMPLEXT(+X) S:ABBREV="" ABBREV=$E($G(SERV),1,5)
  Q ABBREV
