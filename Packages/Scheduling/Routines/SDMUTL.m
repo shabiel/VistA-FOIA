@@ -144,3 +144,11 @@ FLDNAME(FLDS,NAMES,FLD)    ; Returns field name for display
  G:J'>0 FNQ
  S NAME=$P(NAMES,U,J)
 FNQ Q NAME
+ ;
+READ(TYPE,PROMPT,DEFAULT,HELP) ; Calls reader, returns response
+ N DIR,DA,X,Y
+ S DIR(0)=TYPE,DIR("A")=PROMPT I $D(DEFAULT) S DIR("B")=DEFAULT
+ I $D(HELP) S DIR("?")=HELP
+ D ^DIR
+ Q Y
+ ;

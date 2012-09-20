@@ -1,4 +1,4 @@
-SDMDAL1 ;RGI/CBR - APPOINTMENT API; 08/10/2012
+SDMDAL1 ;RGI/CBR - APPOINTMENT API; 09/19/2012
  ;;5.3;scheduling;**260003**;08/13/93;
 GETCLN(RETURN,CLN,INT,EXT,REZ) ; Get clinic detail
  N FILE,SFILES,FLDS
@@ -213,7 +213,7 @@ UPDPATT(DATA,SC,SD) ; Update day pattern
  D UPDATE^DIE("","FDA",,"ERR")
  Q
  ;
-ADDPATT(DATA,SC,SD) ; Update day pattern
+ADDPATT(DATA,SC,SD) ; Add day pattern
  N IENS,I,FDA,ERR
  S IENS="+1,"_SC_","
  S IENS(1)=SD
@@ -221,5 +221,14 @@ ADDPATT(DATA,SC,SD) ; Update day pattern
  . S FDA(44.005,IENS,I)=DATA(I)
  D UPDATE^DIE("","FDA","IENS","ERR")
  ZW ERR
+ Q
+ ;
+LSTAENC(RETURN,SEARCH,START,NUMBER) ; Returns active encounters.
+ N FILE,FIELDS,RET,SCR
+ S FILE="409.68",FIELDS="@;.01I;.04I;.06"
+ S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ S SCR="I $P(^(0),""^"",2)="_SEARCH_"&($D(^SCE(""ADFN"","_SEARCH_",$P(^(0),""^"",1))))"
+ K SEARCH
+ D LIST^DIC(FILE,"",.FIELDS,"",$G(NUMBER),.START,.SEARCH,"B",.SCR,"","RETURN","ERR")
  Q
  ;

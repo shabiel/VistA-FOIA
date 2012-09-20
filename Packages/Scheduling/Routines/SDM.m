@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 08/31/2012
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 09/19/2012
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -45,6 +45,7 @@ EN K SDMLT1 W:$P(VAEL(9),U,2)]"" !!,?15,"MEANS TEST STATUS: ",$P(VAEL(9),U,2),!
  I PAT("REMARKS")]"" W !?3,*7,$P(PAT("REMARKS"),U,2)
  I $D(^DGS(41.1,"B",DFN)) F I=0:0 S I=$O(^DGS(41.1,"B",DFN,I)) Q:I'>0  I $P(^DGS(41.1,I,0),U,2)'<DT&('$P(^DGS(41.1,I,0),U,13)) W !,"SCHEDULED FOR ADMISSION ON " S Y=$P(^(0),U,2) D DT^SDM0
 PEND S %=""
+ N PEND
  S %=$$GETPEND^SDMAPI1(.PEND,DFN,DT) W:PEND=0 !,"NO PENDING APPOINTMENTS"
  I PEND D  G END:%<0,HELP:'%
  .S %=1 W !,"DISPLAY PENDING APPOINTMENTS:"

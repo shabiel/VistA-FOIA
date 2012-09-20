@@ -1,5 +1,5 @@
-SDAMEVT ;ALB/MJK - Appt Event Driver Utilities ; 12/1/91 [ 09/19/96  1:39 PM ]
- ;;5.3;Scheduling;**15,132,443**;Aug 13, 1993
+SDAMEVT ;ALB/MJK - Appt Event Driver Utilities ; 09/19/2012 [ 09/19/96  1:39 PM ]
+ ;;5.3;Scheduling;**15,132,443,260003**;Aug 13, 1993
  ;
 BEFORE(SDATA,DFN,SDT,SDCL,SDDA,SDHDL) ; -- get before values
  K ^TMP("SDAMEVT",$J)
@@ -49,15 +49,6 @@ MAKE(DFN,SDT,SDCL,SDDA,SDMODE) ; -- make appt event #1
  D AFTER(.SDATA,DFN,SDT,SDCL,SDDA,SDMKHDL)
  S SDATA=SDDA_U_DFN_U_SDT_U_SDCL
  D EVT(.SDATA,1,+$G(SDAMODE),SDMKHDL)
- ; -- if appt d/t is less than NOW then check-in
- D NOW^%DTC
- I SDT<% W:'$G(SDMODE) ! D
- .N SDACT,SDCOQUIT
- .S SDDA=+SDATA,DFN=$P(SDATA,U,2),SDT=$P(SDATA,U,3),SDCL=$P(SDATA,U,4) K SDATA
- .I $$REQ^SDM1A(SDT)="CO",'$G(SDCOACT) D
- ..S SDACT=$S(SDT<DT:"CO",1:$$ASK^SDAMEX) I SDACT']"" S SDCOQUIT=1 Q
- ..I SDACT="CO" D CO^SDCO1(DFN,SDT,SDCL,SDDA,0,SDT)
- .I '$G(SDCOQUIT),$G(SDACT)'="CO" D ONE^SDAM2(DFN,SDCL,SDT,SDDA,0,SDT)
  Q
  ;
  ;

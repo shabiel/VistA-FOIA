@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/CBR - APPOINTMENT API; 08/10/2012
+SDMAPI1 ;RGI/CBR - APPOINTMENT API; 09/19/2012
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -91,6 +91,7 @@ GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  . S RETURN("USER")=$P(NOD0,U,6)
  . S RETURN("DATE")=$P(NOD0,U,7)
  . S RETURN("CHECKOUT")=$P(CO,U,3)
+ . S RETURN("CHECKIN")=$P(CO,U,1)
  . S RETURN("LENGTH")=$P(NOD0,U,2)
  . S RETURN("CONSULT")=$P($G(RETURN("CONS")),U)
  Q 1
@@ -226,4 +227,39 @@ GAFREQ(DFN,SC,CVSIT) ;
 GETCSC(RETURN,SC) ; Get clinic stop code
  D GETCSC^SDMDAL1(.RETURN,SC)
  Q 1
+ ;
+CPAIR(RETURN,SC) ;Validate primary stop code, get credit pair
+ ;Input: SC=HOSPITAL LOCATION record IFN
+ ;Input: RETURN=variable to return clinic credit pair (pass by reference)
+ ;Output: 1=success, 0=invalid primary stop code
+ N SDSSC
+ D GETCLN^SDMDAL1(.CLN,SC,1)
+ D GETCSC^SDMDAL1(.CS,CLN(8))
+ S RETURN=$G(CS(1)),RETURN=$S(RETURN<100:0,RETURN>999:0,1:RETURN)
+ Q:RETURN'>0 0
+ K CS D GETCSC^SDMDAL1(.CS,CLN(2503))
+ S SDSSC=$G(CS(1)),RETURN=RETURN_$S(SDSSC<100:"000",SDSSC>999:"000",1:SDSSC)
+ Q 1
+ ;
+PTFU(RETURN,DFN,SC)    ;Determine if this is a follow-up (return to clinic within 24 months)
+ ;Input: DFN=patient ifn
+ ;Input: SC=clinic ifn
+ ;Output: '1' if seen within 24 months, '0' otherwise
+ ;
+ Q:'DFN!'SC 0  ;variable check
+ N SDBDT,SDT,SDX,SDY,SDZ,SDCP,SDCP1,SC0,SDENC,SDCT,LST,ENC,FLDS
+ ;set up variables
+ S SDBDT=(DT-20000)+.24,SDT=DT_.999999,SDY=0
+ S SDX=$$CPAIR(.SDCP,SC)  ;get credit pair for this clinic
+ ;Iterate through encounters
+ D LSTAENC^SDMDAL1(.LST,DFN)
+ S FLDS(.04)="CLINIC",FLDS(.06)="PARENT"
+ D BLDLST^SDMAPI(.ENC,.LST,.FLDS)
+ F  S SDT=$O(ENC(SDT),-1) Q:'SDT!SDY  D
+ . Q:ENC(SDT,"PARENT")]""  ;parent encounters only
+ . Q:ENC(SDT,"NAME")<SDBDT
+ . S SDX=$$CPAIR(.SDCP1,ENC(SDT,"CLINIC"))  ;get credit pair for encounter
+ . S SDY=SDCP=SDCP1  ;compare credit pairs
+ . Q
+ Q SDY
  ;
