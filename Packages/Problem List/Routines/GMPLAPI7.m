@@ -1,12 +1,5 @@
-GMPLAPI7 ; RGI -- Problem List Group Data ; 03/12/12
+GMPLAPI7 ; RGI/VSL -- Problem List Group Data ; 09/14/12
  ;;2.0;Problem List;**260002**;Aug 25, 1994
- Q
- ;
- ; Temporary.  To be merged with others.
-GETPAT(DFN,PATIENT) ;
- N NODE0
- S NODE0=^DPT(DFN,0)
- S PATIENT("NAME")=$P(NODE0,"^",1)
  Q
  ;
  ; Temporary.  To be merged with others.
@@ -26,7 +19,7 @@ GETPROB(IFN,PROBLEM) ;
  ; Results stored as TARGET(PATIENT_NAME)=<# Active Problems>_"^"_<# Inactive Problems>
  ; Returns number of patients.
 PPROBCNT(TARGET) ;
- N DFN,IFN,CNT,PATCNT,ST,PATIENT,PROBLEM
+ N DFN,IFN,CNT,PATCNT,ST,PROBLEM
  S PATCNT=0
  F DFN=0:0 S DFN=$O(^AUPNPROB("AC",DFN)) Q:DFN'>0  D
  . S (CNT("A"),CNT("I"),IFN)=0
@@ -37,8 +30,7 @@ PPROBCNT(TARGET) ;
  . . S CNT(ST)=CNT(ST)+1
  . I (CNT("A")>0)!(CNT("I")>0) D
  . . S PATCNT=PATCNT+1
- . . K PATIENT D GETPAT(DFN,.PATIENT)
- . . S @TARGET@(PATIENT("NAME"))=CNT("A")_"^"_CNT("I")
+ . . S @TARGET@($$PATNAME^GMPLEXT(DFN))=CNT("A")_"^"_CNT("I")
  Q PATCNT
  ;
  ; Finds patients with specified active or inactive problems
@@ -47,17 +39,16 @@ PPROBCNT(TARGET) ;
  ;   GMPTEXT: Problem text
  ;   STATUS: Problem status
 PPRBSPEC(TARGET,GMPTERM,GMPTEXT,STATUS) ;
- N IFN,PROBLEM,ST,DFN,TXT,PATIENT,STWORD,PATCNT,NAME,LINE
+ N IFN,PROBLEM,ST,DFN,TXT,STWORD,PATCNT,NAME,LINE
  S PATCNT=0
  F IFN=0:0 S IFN=$O(^AUPNPROB("C",+GMPTERM,IFN)) Q:IFN'>0  D
  . K PROBLEM D GETPROB(IFN,.PROBLEM)
  . Q:PROBLEM("DELETED")
  . S ST=PROBLEM("ACTFLAG")
  . Q:STATUS'[ST
- . I GMPTERM'>1,GMPTEXT'=$$UP^XLFSTR($P(^AUTNPOV(+TXT,0),"^")) Q
+ . I GMPTERM'>1,GMPTEXT'=$$UP^XLFSTR($$NARR^GMPLEXT(+TXT)) Q
  . S DFN=PROBLEM("DFN"),TXT=PROBLEM("TEXT")
- . K PATIENT D GETPAT(DFN,.PATIENT)
- . S NAME=PATIENT("NAME")
+ . S NAME=$$PATNAME^GMPLEXT(DFN)
  . S STWORD=$S(ST="A":"active",1:"inactive")
  . I '$D(@TARGET@(NAME)) S PATCNT=PATCNT+1,@TARGET@(NAME)=STWORD Q
  . S LINE=@TARGET@(NAME)

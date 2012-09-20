@@ -1,4 +1,4 @@
-GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ; 04/06/12
+GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ;09/14/12
  ;;2.0;Problem List;**3,26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -99,7 +99,7 @@ CKDEAD(DATE) ; Dead patient ... continue?  Returns 1 if YES, 0 otherwise
  ;
 REQPROV() ; Returns requesting provider
  N DIR,X,Y
- I $D(GMPLUSER) S Y=DUZ_U_$P(^VA(200,DUZ,0),U) Q Y
+ I $D(GMPLUSER) S Y=DUZ_U_$$PROVNAME^GMPLEXT(DUZ) Q Y
  S DIR("?")="Enter the name of the provider responsible for this data."
  S DIR(0)="PA^200:AEQM",DIR("A")="Provider: "
  S:$G(GMPROV) DIR("B")=$P(GMPROV,U,2) W ! D ^DIR
@@ -108,21 +108,17 @@ REQPROV() ; Returns requesting provider
  ;
 NAME(USER) ; Formats user name into "Lastname,F"
  N NAME,LAST,FIRST
- S NAME=$P($G(^VA(200,+USER,0)),U) I '$L(NAME) Q ""
+ S NAME=$$PROVNAME^GMPLEXT(+USER) I '$L(NAME) Q ""
  S LAST=$P(NAME,","),FIRST=$P(NAME,",",2)
  S:$E(FIRST)=" " FIRST=$E(FIRST,2,99)
  Q $E(LAST,1,15)_","_$E(FIRST)
  ;
-SERVICE(USER) ; Returns User's service/section from file #49
- N X S X=+$P($G(^VA(200,USER,5)),U)
- I $P($G(^DIC(49,X,0)),U,9)'="C" S X=0
- S:X>0 X=X_U_$P($G(^DIC(49,X,0)),U) S:X'>0 X=""
- Q X
- ;
 SERV(X) ; Return service name abbreviation
- N NODE,ABBREV
- S NODE=$G(^DIC(49,+X,0)) I NODE="" Q ""
- S ABBREV=$P(NODE,U,2) I ABBREV="" S ABBREV=$E($P(NODE,U),1,4)
+ N NAME,ABBREV
+ S NAME=$$SVCNAME^GMPLEXT(+X)
+ I NAME="" Q ""
+ S ABBREV=$$SVCABBV^GMPLEXT(+X)
+ I ABBREV="" S ABBREV=$E($P(NAME,U),1,4)
  Q ABBREV_"/"
  ;
 CLINIC(LAST) ; Returns clinic from file #44
@@ -136,10 +132,6 @@ CLIN1 ; Ask Clinic
  D ^DIC I Y'>0 W !?5,"Only clinics are allowed!",! G CLIN1
 CLINQ ; Quit Asking
  Q Y
- ;
-VIEW(USER) ; Returns user's preferred view
- N X S X=$P($G(^VA(200,USER,125)),U)
- Q X
  ;
 VOCAB() ; Select search vocabulary
  N DIR,X,Y S DIR(0)="SAOM^N:NURSING;I:IMMUNOLOGIC;D:DENTAL;S:SOCIAL WORK;P:GENERAL PROBLEM"
@@ -155,14 +147,16 @@ VOCAB() ; Select search vocabulary
  Q X
  ;
 PARAMS ; Edit pkg parameters in file #125.99
- N DIE,DA,DR,OLDVERFY,VERFY,BLANK S BLANK="       "
+ N OLDVERFY,VERFY,BLANK,MN,NAME
+ S BLANK="       "
  S OLDVERFY=$$PARMS() Q:'OLDVERFY
- S DA(1)=$O(^ORD(101,"B","GMPL PROBLEM LIST",0)) Q:'DA(1)
- S VERFY=$O(^ORD(101,"B","GMPL VERIFY",0)) W "."
- S DA=$O(^ORD(101,DA(1),10,"B",VERFY,0)) Q:'DA
- S DR=$S(OLDVERFY:"2///@;6///^S X=BLANK",1:"2////$;6///@") W "."
- S DIE="^ORD(101,"_DA(1)_",10,"
- D ^DIE W "."
+ S DA(1)=$$PROTKEY^GMPLEXT("GMPL PROBLEM LIST") Q:'DA(1)
+ S VERFY=$$PROTKEY^GMPLEXT("GMPL VERIFY") W "."
+ S MN=$S(OLDVERFY:"@",1:"$")
+ S NAME=$S(OLDVERFY:BLANK,1:"@")
+ W "."
+ D UPDITEM^GMPLEXT(DA(1),VERFY,MN,NAME)
+ W "."
  Q
  ;
 PARMS() ;
