@@ -6,9 +6,9 @@ DETAIL(GMPIFN,GMPFLD,ERT) ; Return problem details
  ;                
  ; Output  GMPFLD Array, passed by reference
  ;
- N GMPBUF,FILE,I
+ N GMPBUF,FILE,I,PROBLEM
  S PROBLEM=9000011
- D GETS^DIQ(PROBLEM,GMPIFN,".01:.03;.05;.06;.08;.12;.13;1.01:1.18","IE","GMPBUF","ERT")
+ D GETS^DIQ(PROBLEM,GMPIFN,".01:.03;.05;.06:.08;.12;.13;1.01:1.18","IE","GMPBUF","ERT")
  Q:'$D(GMPBUF(PROBLEM,GMPIFN_",")) 0
  S I=""
  F  S I=$O(GMPBUF(PROBLEM,GMPIFN_",",I)) Q:I=""  D

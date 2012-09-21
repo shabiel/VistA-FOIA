@@ -14,16 +14,22 @@ INIT ; -- init variables and list array
  Q
  ;
 GETSLIST ; -- init SERVICE list array
- N LCNT,IFN,NAME,PARENT K ^TMP("GMPLIST",$J) S LCNT=0,^TMP("GMPLIST",$J,"VIEW",0)=0
+ N LCNT,IFN,NAME,PARENT,CLDRN,SVCD,SVCPD,SVCS
+ K ^TMP("GMPLIST",$J) S LCNT=0,^TMP("GMPLIST",$J,"VIEW",0)=0
  W !!,"Retrieving the list of clinical services ..."
- F IFN=0:0 S IFN=$O(^DIC(49,"F","C",IFN)) Q:IFN'>0  D
+ D SVCLIST^GMPLEXT(.SVCS,"C")
+ F IFN=0:0 S IFN=$O(SVCS(IFN)) Q:IFN'>0  D
  . Q:$D(^TMP("GMPLIST",$J,"B",IFN))  ; service already on list
- . S PARENT=+$P($G(^DIC(49,IFN,0)),U,4) I PARENT,PARENT'=IFN,$D(^DIC(49,"F","C",PARENT)) Q  ; child of clin service
- . S NAME=$P($G(^DIC(49,IFN,0)),U)
+ . D SVCDET^GMPLEXT(.SVCD,IFN)
+ . S PARENT=+$G(SVCD("PARENT"))
+ . I PARENT D SVCDET^GMPLEXT(.SVCPD,PARENT)
+ . I PARENT,PARENT'=IFN,$G(SVCPD("TYPE"))="C" Q  ; child of clin service
+ . S NAME=$G(SVCD("NAME"))
  . D ITEM(IFN,NAME,GMPLVIEW,.LCNT)
- . Q:'$D(^DIC(49,"ACHLD",IFN))  ; service has no 'children'
- . F CHILD=0:0 S CHILD=$O(^DIC(49,"ACHLD",IFN,CHILD)) Q:CHILD'>0  I CHILD'=IFN D
- . . S NAME="  "_$P($G(^DIC(49,CHILD,0)),U)
+ . D SVCCHLD^GMPLEXT(IFN,.CLDRN)
+ . Q:CLDRN=0  ; service has no 'children'
+ . F CHILD=0:0 S CHILD=$O(CLDRN(CHILD)) Q:CHILD'>0  I CHILD'=IFN D
+ . . S NAME="  "_CLDRN(CHILD)
  . . D ITEM(CHILD,NAME,GMPLVIEW,.LCNT)
  I LCNT'>0 S ^TMP("GMPLIST",$J,1,0)="   ",^TMP("GMPLIST",$J,2,0)="    No clinical services available to select from."
  D:$P(VALMDDF("SERVICE"),U,4)'="Service" CHGCAP^VALM("SERVICE","Service")
@@ -31,11 +37,14 @@ GETSLIST ; -- init SERVICE list array
  Q
  ;
 GETCLIST ; -- init CLINIC list array
- N LCNT,IFN,NAME K ^TMP("GMPLIST",$J) S LCNT=0,^TMP("GMPLIST",$J,"VIEW",0)=0
+ N LCNT,IFN,NAME,LIST,DET
+ K ^TMP("GMPLIST",$J) S LCNT=0,^TMP("GMPLIST",$J,"VIEW",0)=0
  W !!,"Retrieving the list of clinics ..."
- F IFN=0:0 S IFN=$O(^SC(IFN)) Q:IFN'>0  D
- . S NODE=$G(^SC(IFN,0)) Q:$P(NODE,U,3)'="C"  ; loc not a clinic
- . S NAME=$P(NODE,U) D ITEM(IFN,NAME,GMPLVIEW,.LCNT)
+ D CLINLST^GMPLEXT(.LIST)
+ F IFN=0:0 S IFN=$O(LIST(IFN)) Q:IFN'>0  D
+ . D CLINDET^GMPLEXT(.DET,IFN)
+ . Q:$G(DET("TYPE"))'="C"  ; loc not a clinic
+ . S NAME=$G(DET("NAME")) D ITEM(IFN,NAME,GMPLVIEW,.LCNT)
  I LCNT'>0 S ^TMP("GMPLIST",$J,1,0)="   ",^TMP("GMPLIST",$J,2,0)="    No clinics available to select from."
  D:$P(VALMDDF("SERVICE"),U,4)'="Clinic" CHGCAP^VALM("SERVICE","Clinic")
  S VALMCNT=LCNT,^TMP("GMPLIST",$J,0)=VALMCNT,VALMSG=$$MSG

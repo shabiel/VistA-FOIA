@@ -90,7 +90,7 @@ CREATE(PL,PLY) ; Creates a new problem
  K PLY S PLY=-1,PLY(0)=""
  S GMPVAMC=+$G(DUZ(2)),GMPVA=$S($G(DUZ("AG"))="V":1,1:0)
  I '$L($G(PL("NARRATIVE"))) S PLY(0)="Missing problem narrative" Q
- I '$D(^DPT(+$G(PL("PATIENT")),0)) S PLY(0)="Invalid patient" Q
+ I $$PATNAME^GMPLEXT(+$G(PL("PATIENT")))="" S PLY(0)="Invalid patient" Q
  I $$ACTIVE^XUSER(+$G(PL("PROVIDER")))="" S PLY(0)="Invalid provider" Q
  S GMPDFN=+PL("PATIENT"),(GMPSC,GMPAGTOR,GMPION,GMPGULF,GMPHNC,GMPMST,GMPCV,GMPSHD)=0
  D:GMPVA VADPT^GMPLX1(GMPDFN)

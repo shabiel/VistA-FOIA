@@ -18,7 +18,7 @@ GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ;09/14/12
 PAT() ; Select patient -- returns DFN^NAME^BID
  N DIC,X,Y,DFN,VADM,VA,PAT
 P1 S DIC="^AUPNPAT(",DIC(0)="AEQM" D ^DIC I +Y<1 Q -1
- I $P(Y,U,2)'=$P(^DPT(+Y,0),U) W $C(7),!!,"ERROR -- Please check your Patient Files #2 and #9000001 for inconsistencies.",! G P1
+ I $P(Y,U,2)'=$$PATNAME^GMPLEXT(+Y) W $C(7),!!,"ERROR -- Please check your Patient Files #2 and #9000001 for inconsistencies.",! G P1
  S DFN=+Y,PAT=Y D DEM^VADPT
  S PAT=PAT_U_$E($P(PAT,U,2))_VA("BID"),AUPNSEX=$P(VADM(5),U)
  I VADM(6) S PAT=PAT_U_+VADM(6) ; date of death
@@ -36,8 +36,10 @@ VADPT(DFN) ; Get Service/Elig Flags
  ;   GMPCV     Combat Veteran
  ;   GMPSHD    Shipboard Hazard and Defense
  ;          
- N VAEL,VASV,VAERR,HNC,X D 7^VADPT S GMPSC=VAEL(3),GMPAGTOR=VASV(2)
- S GMPION=VASV(3),X=$P($G(^DPT(DFN,.322)),U,10),GMPGULF=$S(X="Y":1,X="N":0,1:"")
+ N VAEL,VASV,VAERR,HNC,X,PD,% D 7^VADPT S GMPSC=VAEL(3),GMPAGTOR=VASV(2)
+ S GMPION=VASV(3)
+ S %=$$PATDET^GMPLEXT(.PD,DFN)
+ S X=$P($G(PD("PGSVC")),U),GMPGULF=$S(X="Y":1,X="N":0,1:"")
  S GMPCV=0 I +$G(VASV(10)) S:DT'>$P($G(VASV(10,1)),U) GMPCV=1  ;CV
  S GMPSHD=+$G(VASV(14,1))  ;SHAD
  S X=$P($$GETSTAT^DGMSTAPI(DFN),"^",2),GMPMST=$S(X="Y":1,X="N":0,1:"")
@@ -55,10 +57,12 @@ SCS(PROB,SC) ; Get Exposure/Conditions Strings
  ;   NOTE:  Military Sexual Trauma (MST) is suppressed
  ;          if the current device is a printer.
  ;                     
- N ND,DA,FL,AO,IR,EC,HNC,MST,PTR S DA=+($G(PROB)) Q:+DA=0
- S ND=$G(^AUPNPROB(+DA,1)),AO=+($P(ND,"^",11)),IR=+($P(ND,"^",12))
- S EC=+($P(ND,"^",13)),HNC=+($P(ND,"^",15)),MST=+($P(ND,"^",16))
- S CV=+($P(ND,"^",17)),SHD=+($P(ND,"^",18))
+ N DA,FL,AO,IR,EC,HNC,MST,PTR,%,PRB
+ S DA=+($G(PROB)) Q:+DA=0
+ S %=$$DETAIL^GMPLAPI2(.PRB,DA)
+ S AO=+($P(PRB(1.11),U)),IR=+($P(PRB(1.12),U))
+ S EC=+($P(PRB(1.13),U)),HNC=+($P(PRB(1.15),U)),MST=+($P(PRB(1.16),U))
+ S CV=+($P(PRB(1.17),U)),SHD=+($P(PRB(1.18),U))
  S PTR=$$PTR^GMPLUTL4
  I +AO>0 D
  . S:$G(SC(1))'["AO" SC(1)=$G(SC(1))_"/AO" S:$G(SC(2))'["A" SC(2)=$G(SC(2))_"/A" S:$G(SC(3))'["A" SC(3)=$G(SC(3))_"A"
@@ -78,11 +82,12 @@ SCS(PROB,SC) ; Get Exposure/Conditions Strings
  Q
 SCCOND(DFN,SC) ; Get Service/Elig Flags (array)
  ; Returns local array .SC passed by value
- N HNC,VAEL,VASV,VAERR,X D 7^VADPT
+ N HNC,VAEL,VASV,VAERR,X,PD,% D 7^VADPT
  S SC("DFN")=$G(DFN),SC("SC")=$P(VAEL(3),"^",1)
  S SC("AO")=$P(VASV(2),"^",1)
  S SC("IR")=$P(VASV(3),"^",1)
- S X=$P($G(^DPT(DFN,.322)),U,10),SC("PG")=$S(X="Y":1,X="N":0,1:"")
+ S %=$$PATDET^GMPLEXT(.PD,DFN)
+ S X=$P($G(PD("PGSVC")),U),SC("PG")=$S(X="Y":1,X="N":0,1:"")
  S SC("CV")=0 I +$G(VASV(10)) S:DT'>$P($G(VASV(10,1)),U) SC("CV")=1  ;CV
  S SC("SHD")=+$G(VASV(14,1))  ;SHAD
  S X=$P($$GETSTAT^DGMSTAPI(DFN),"^",2),SC("MST")=$S(X="Y":1,X="N":0,1:"")

@@ -26,8 +26,9 @@ SEARCH(X,Y,PROMPT,UNRES,VIEW) ; Search Lexicon for Problem X
  Q
  ;
 PROBTEXT(IFN) ; Returns Display Text
- N X,Y,GMPLEXP,GMPLPOV,GMPLSO,GMPLTXT
- S Y=$P($G(^AUPNPROB(+IFN,0)),U,5),X=$$NARR^GMPLEXT(+Y)
+ N X,Y,GMPLEXP,GMPLPOV,GMPLSO,GMPLTXT,%,PRB
+ S %=$$DETAIL^GMPLAPI2(.PRB,+IFN)
+ S Y=$P($G(PRB(.05)),U),X=$P($G(PRB(.05)),U,2)
  S GMPLEXP=$$EP(IFN),GMPLSO=$$CS(X),GMPLPOV=$$PT(X,GMPLSO)
  S GMPLTXT=GMPLPOV S:$L(GMPLEXP) GMPLTXT=GMPLTXT_" ("_GMPLEXP_")"
  S:$L(GMPLSO) GMPLTXT=GMPLTXT_" "_GMPLSO
@@ -86,24 +87,17 @@ SEL1(HELP) ; Select 1 Problem
  D ^DIR I $D(DTOUT)!(X="") S Y="^"
  Q Y
  ;
-DUPL(DFN,TERM,TEXT) ; Check's for Duplicate Entries
- N DA,IFN,NODE0,NODE1 S DA=0,TEXT=$$UP^XLFSTR(TEXT)
- I '$D(^AUPNPROB("C",TERM))!('$D(^AUPNPROB("AC",DFN))) Q DA
- F IFN=0:0 S IFN=$O(^AUPNPROB("AC",DFN,IFN)) Q:IFN'>0  D  Q:DA>0
- . S NODE0=$G(^AUPNPROB(IFN,0)),NODE1=$G(^(1)) Q:$P(NODE1,U,2)="H"
- . I TERM>1 S:+NODE1=TERM DA=IFN Q
- . S:TEXT=$$UP^XLFSTR($$NARR^GMPLEXT($P(NODE0,U,5))) DA=IFN
- Q DA
- ;
 DUPLOK(IFN) ; Ask to Duplicate Problem
- N DIR,X,Y,GMPL0,GMPL1,DATE,PROV S DIR(0)="YA",GMPL0=$G(^AUPNPROB(IFN,0)),GMPL1=$G(^(1))
+ N DIR,X,Y,DATE,PRB,%,PROV
+ S DIR(0)="YA"
+ S %=$$DETAIL^GMPLAPI2(.PRB,IFN)
  S DIR("A")="Are you sure you want to continue? ",DIR("B")="NO"
  S DIR("?",1)="Enter YES if you want to duplicate this problem on this patient's list;",DIR("?")="press <return> to re-enter the problem name."
  W $C(7),!!,">>>  "_$$PROBTEXT(IFN),!?5,"is already an "
- W $S($P(GMPL0,U,12)="I":"IN",1:"")_"ACTIVE problem on this patient's list!",!
- S PROV=+$P(GMPL1,U,5) W:PROV !?5,"Provider: "_$$PROVNAME^GMPLEXT(PROV)_" ("_$P($$SERVICE^GMPLEXT(PROV),U,2)_")"
- I $P(GMPL0,U,12)="A" W !?8,"Onset: " S DATE=$P(GMPL0,U,13)
- I $P(GMPL0,U,12)="I" W !?5,"Resolved: " S DATE=$P(GMPL1,U,7)
+ W $S($P(PRB(.12),U)="I":"IN",1:"")_"ACTIVE problem on this patient's list!",!
+ S PROV=+PRB(1.05) W:PROV !?5,"Provider: "_$P(PRB(1.05),U,2)_" ("_$P($$SERVICE^GMPLEXT(PROV),U,2)_")"
+ I $P(PRB(.12),U)="A" W !?8,"Onset: " S DATE=$P(PRB(.13),U)
+ I $P(PRB(.12),U)="I" W !?5,"Resolved: " S DATE=$P(PRB(1.07),U)
  W $S(DATE>0:$$FMTE^XLFDT(DATE),1:"unspecified"),!
  D ^DIR W !
  Q +Y

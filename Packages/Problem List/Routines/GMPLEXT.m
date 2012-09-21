@@ -94,3 +94,85 @@ UPDITEM(KEY,ITEM,MN,NAME) ;Update protocol item details
 CONTEXT(LEXIEN) ;Returns concept displayable text
  Q $G(^LEX(757.01,LEXIEN,0))
  ;
+PATDET(RETURN,DFN) ;RETURN PATIENT DETAILS
+ Q:'+$G(DFN) 0
+ N REC,ERT
+ K RETURN
+ D GETS^DIQ(2,DFN,".01;.351;.32201","IE","REC","ERT")
+ S RETURN("NAME")=REC(2,DFN_",",.01,"I")_"^"_REC(2,DFN_",",.01,"E")
+ S RETURN("DOD")=REC(2,DFN_",",.351,"I")_"^"_REC(2,DFN_",",.351,"E")
+ S RETURN("PGSVC")=REC(2,DFN_",",.32201,"I")_"^"_REC(2,DFN_",",.32201,"E")
+ Q 1
+ ;
+LEXINST() ;Is LEX package installed?
+ Q $D(^LEX(757.01,0))
+ ;
+LDMSG(XMZ,MSG) ;Load message (MailMan)
+ N NL
+ M ^XMB(3.9,XMZ,2)=MSG
+ S NL=$O(^XMB(3.9,XMZ,2,""),-1)
+ S ^XMB(3.9,XMZ,2,0)="^3.92^"_+NL_U_+NL_U_DT
+ Q
+ ;
+LISTPXRM(RETURN,ACTION) ;List ^PXRMINDX entries
+ ;ACTION = 1 Return array of IEN's, otherwise return # of entries
+ N CNT,DAT,IEN,PL,PRI,PT,STAT
+ S CNT=0
+ S RETURN=0
+ S PT=0 F  S PT=$O(^PXRMINDX(9000011,"PSPI",PT)) Q:PT'>0  D
+ .S STAT=""
+ .F  S STAT=$O(^PXRMINDX(9000011,"PSPI",PT,STAT)) Q:STAT=""  D
+ ..I '$D(^PXRMINDX(9000011,"PSPI",PT,STAT,0)) Q
+ ..S PL=0
+ ..F  S PL=$O(^PXRMINDX(9000011,"PSPI",PT,STAT,0,PL)) Q:PL'>0  D
+ ...S DAT=0
+ ...F  S DAT=$O(^PXRMINDX(9000011,"PSPI",PT,STAT,0,PL,DAT)) Q:DAT'>0  D
+ ....S IEN=0
+ ....F  S IEN=$O(^PXRMINDX(9000011,"PSPI",PT,STAT,0,PL,DAT,IEN)) Q:IEN'>0  D
+ .....S CNT=CNT+1
+ .....I ACTION=1 S RETURN(CNT)=IEN
+ S RETURN=CNT
+ Q
+ ;
+SVCCHLD(SVC,LIST) ;Return children
+ N J
+ K LIST
+ S LIST=0
+ Q:'$D(^DIC(49,"ACHLD",SVC))
+ F J=0:0 S J=$O(^DIC(49,"ACHLD",SVC,J)) Q:J'>0  D
+ . S LIST(J)=$P($G(^DIC(49,J,0)),U)
+ Q
+ ;
+SVCLIST(LIST,TYPE) ;Get list of services
+ N IEN,CNT
+ K LIST
+ S LIST=0
+ F IEN=0:0 S IEN=$O(^DIC(49,"F",TYPE,IEN)) Q:IEN'>0  D
+ . S LIST(IEN)=$P($G(^DIC(49,IEN,0)),U)
+ . S LIST=LIST+1
+ Q
+ ;
+SVCDET(RETURN,IEN) ;Service detail
+ K RETURN
+ S RETURN("NAME")=$P($G(^DIC(49,IEN,0)),U)
+ S RETURN("PARENT")=+$P($G(^DIC(49,IEN,0)),U,4)
+ S RETURN("TYPE")=+$P($G(^DIC(49,IEN,0)),U,9)
+ Q
+ ;
+CLINLST(LIST) ;List clinics
+ N IFN
+ K LIST
+ S LIST=0
+ F IFN=0:0 S IFN=$O(^SC(IFN)) Q:IFN'>0  D
+ . S LIST(IFN)=$P($G(^SC(IFN,0)),U)
+ . S LIST=LIST+1
+ Q
+ ;
+CLINDET(RETURN,IEN) ;Clinic details
+ N NODE
+ K RETURN
+ S NODE=$G(^SC(IEN,0))
+ S RETURN("NAME")=$P(NODE,U)
+ S RETURN("TYPE")=$P(NODE,U,3)
+ Q
+ ;
