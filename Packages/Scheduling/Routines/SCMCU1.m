@@ -1,4 +1,4 @@
-SCMCU1 ;ALB/CMM - Team Information Display ;08/31/2012
+SCMCU1 ;ALB/CMM - Team Information Display ;09/25/2012
  ;;5.3;Scheduling;**41,177,260003**;AUG 13, 1993
  ;
  ;action on Appointment Management
@@ -15,10 +15,7 @@ SEL ;selection - getting patient
  Q
  ;
 GETPT() ;function to get patient
- S ROU="LSTPATS^SDMLST",PRMPT="Select PATIENT NAME: "
- S FILE="PATIENT",FIELDS="NAME, or ABBREVIATION, or TEAM"
- S FLDOR="NAME^BIRTHDATE^SSN^VETERAN^TYPE"
- S Y=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS,FLDOR)
+ S Y=$$SELECT^SDMUTL("Patient")
  Q $S(Y="^":-1,(Y<0):-1,1:+Y)
  ;
 INIT ;gather team data

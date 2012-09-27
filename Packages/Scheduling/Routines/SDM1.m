@@ -1,4 +1,4 @@
-SDM1 ;SF/GFT - MAKE APPOINTMENT ; 09/19/2012  ; Compiled March 8, 2007 14:55:24  ; Compiled May 9, 2007 13:19:18  ; Compiled August 28, 2007 12:19:08
+SDM1 ;SF/GFT - MAKE APPOINTMENT ; 09/24/2012  ; Compiled March 8, 2007 14:55:24  ; Compiled May 9, 2007 13:19:18  ; Compiled August 28, 2007 12:19:08
  ;;5.3;Scheduling;**32,167,168,80,223,263,273,408,327,478,490,446,547,260003**;Aug 13, 1993;Build 17
 1 L  Q:$D(SDXXX)  S CCXN=0 K MXOK,COV,SDPROT Q:DFN<0  S SC=+SC
  S X1=DT S SDEDT=CLN("MAX # DAYS FOR FUTURE BOOKING")
@@ -60,12 +60,14 @@ MAKE(DFN,SC,SD,TYP,STYP,SL,SRT,LVL) ; Make appointmemnt
  I $P(CLN("VARIABLE APP'NTMENT LENGTH"),U)="V" D LEN
  I $D(SDSRTY(0)) S SDX=$$CONF^SDM1A(.SDSRTY,.SDSRFU,DFN,SD,SC) W !
  D ORD
- S CIO=$$CHIO()
+ S CIO=$$CHIO(SD)
  S %=$$MAKE^SDMAPI2(.ERR,DFN,SC,SD,TYP,STYP,.SL,$P(SDX,U,2),.OTHR,.CIO,.LAB,.XRAY,.EKG,.LVL)
  I $G(CIO)="CO" D CO^SDCO1(DFN,SD,SC,,1,SD)
  Q
  ;
-CHIO() ; -- if appt d/t is less than NOW then check-in
+CHIO(SD) ; -- if appt d/t is less than NOW then check-in
+ N SDACT,SDT,SDCOQUIT,%
+ S SDACT=""
  D NOW^%DTC
  I SD<% W ! D
  . S SDT=SD

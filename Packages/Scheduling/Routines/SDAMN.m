@@ -1,4 +1,4 @@
-SDAMN ;ALB/MJK - No-Show Appt Action ; 09/19/2012
+SDAMN ;ALB/MJK - No-Show Appt Action ; 09/25/2012
  ;;5.3;Scheduling;**478,260003**;Aug 13, 1993
  ;
 EN ; -- protocol SDAM APPT NO-SHOW entry pt
@@ -26,7 +26,9 @@ ENQ Q
 NOSHOW(ERR,DFN,SD,SC,LVL) ; No-show appointment
  N NERR
  S %=$$NOSHOW^SDMAPI2(.NERR,DFN,SC,SD,.LVL)
- I NERR=1 D PAUSE^VALM1  Q 'Y
+ S SDMSG=" DOES NOT HAVE A NO-SHOW LETTER ASSIGNED TO IT!"
+ S SDLT1="",SDYES="",SDDT=DT,I=SDT,SDT=$P(I,".")
+ I NERR=1 S SDYES=1 D 73^SDN,PAUSE^VALM1  Q 'Y
  I $P(NERR(0),U,3)=1 W !!,$P(NERR(0),U,2),! Q 1
  I $P(NERR(0),U,3)>1 D
  . S OV=$$ALNS($P(NERR(0),U,2)) I OV=2 Q

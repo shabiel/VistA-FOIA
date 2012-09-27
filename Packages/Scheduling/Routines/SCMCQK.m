@@ -1,4 +1,4 @@
-SCMCQK ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 08/31/2012
+SCMCQK ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 09/25/2012
  ;;5.3;Scheduling;**148,177,297,260003**;AUG 13, 1993
  ;
 EN ; - main call
@@ -93,8 +93,5 @@ ERROR ;
 PATIENT() ;Return Patient DFN or -1
  ;
  N Y
- S ROU="LSTPATS^SDMLST",PRMPT="Select PATIENT NAME: "
- S FILE="PATIENT",FIELDS="NAME, or ABBREVIATION, or TEAM"
- S FLDOR="NAME^BIRTHDATE^SSN^VETERAN^TYPE"
- S Y=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS,FLDOR)
+ S Y=$$SELECT^SDMUTL("Patient")
  Q $S(Y="^":-1,(Y<0):-1,1:+Y)

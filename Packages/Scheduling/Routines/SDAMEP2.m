@@ -1,4 +1,4 @@
-SDAMEP2 ;ALB/CAW - Extended Display (Patient Data) ; 08/31/2012
+SDAMEP2 ;ALB/CAW - Extended Display (Patient Data) ; 09/26/2012
  ;;5.3;Scheduling;**258,325,441,260003**;Aug 13, 1993;Build 14
  ;
 PDATA ; Patient Data
@@ -11,7 +11,7 @@ PDATA ; Patient Data
 PTDOB ; Date of Birth and SSN Info
  ;
  S X="",X=$$SETSTR^VALM1("Date of Birth:",X,1,14)
- S X=$$SETSTR^VALM1($$FTIME^VALM1(PAT("BIRTH")),X,SDFSTCOL,18)
+ S X=$$SETSTR^VALM1($$FTIME^VALM1(PAT("BIRTH","I")),X,SDFSTCOL,18)
  S X=$$SETSTR^VALM1(" ID:",X,55,4)
  S X=$$SETSTR^VALM1(VA("PID"),X,SDSECCOL,20)
  D SET^SDAMEP1(X)
