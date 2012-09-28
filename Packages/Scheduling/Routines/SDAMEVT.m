@@ -1,4 +1,4 @@
-SDAMEVT ;ALB/MJK - Appt Event Driver Utilities ; 09/19/2012 [ 09/19/96  1:39 PM ]
+SDAMEVT ;ALB/MJK - Appt Event Driver Utilities ; 09/27/2012
  ;;5.3;Scheduling;**15,132,443,260003**;Aug 13, 1993
  ;
 BEFORE(SDATA,DFN,SDT,SDCL,SDDA,SDHDL) ; -- get before values
@@ -49,7 +49,21 @@ MAKE(DFN,SDT,SDCL,SDDA,SDMODE) ; -- make appt event #1
  D AFTER(.SDATA,DFN,SDT,SDCL,SDDA,SDMKHDL)
  S SDATA=SDDA_U_DFN_U_SDT_U_SDCL
  D EVT(.SDATA,1,+$G(SDAMODE),SDMKHDL)
+ D:$D(SDAMODE) CHIO(SDT,DFN,SDCL)
  Q
+ ;
+ ;
+CHIO(SD,DFN,SC) ; -- if appt d/t is less than NOW then check-in
+ N SDACT,SDT,SDCOQUIT,%
+ S SDACT=""
+ D NOW^%DTC
+ I SD<% W ! D
+ . S SDT=SD
+ . I $$REQ^SDM1A(SDT)="CO" D
+ . . S SDACT=$S(SDT<DT:"CO",1:$$ASK^SDAMEX) I SDACT']"" S SDCOQUIT=1 Q
+ . . I SDACT="CO" D CO^SDCO1(DFN,SD,SC,,1,SD)
+ . I '$G(SDCOQUIT),$G(SDACT)'="CO" S %=$$CHECKIN^SDMAPI2(.CHKIN,DFN,SD,SC,SD)
+ Q SDACT
  ;
  ;
 CANCEL(SDATA,DFN,SDT,SDCL,SDDA,SDMODE,SDHDL) ; -- cancel event #2
