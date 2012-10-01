@@ -1,4 +1,4 @@
-SDMAPI ;RGI/CBR - APPOINTMENT API UTILS; 09/27/2012
+SDMAPI ;RGI/CBR - APPOINTMENT API UTILS; 10/01/2012
  ;;5.3;scheduling;**260003**;08/13/93
 BLDLST(RETURN,LST,FLDS) ; Build simple list.
  N DL,IN
@@ -14,7 +14,9 @@ BLDLST(RETURN,LST,FLDS) ; Build simple list.
  . E  S RETURN(IN,"NAME")=LST(DL,"ID",IN,".01")
  . I $D(FLDS) D
  . . F FLD=0:0 S FLD=$O(FLDS(FLD)) Q:FLD=""  D
- . . . S RETURN(IN,FLDS(FLD))=LST(DL,"ID",IN,FLD)
+ . . . I $O(LST(DL,"ID",IN,FLD,""))'="" D
+ . . . . S RETURN(IN,FLDS(FLD))=$G(LST(DL,"ID",IN,FLD,"I"))_"^"_LST(DL,"ID",IN,FLD,"E")
+ . . . E  S RETURN(IN,FLDS(FLD))=LST(DL,"ID",IN,FLD)
  S RETURN=1
  Q 1
  ;

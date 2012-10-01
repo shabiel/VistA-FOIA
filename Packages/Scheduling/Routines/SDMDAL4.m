@@ -1,4 +1,4 @@
-SDMDAL4 ;RGI/CBR - APPOINTMENT API; 09/26/2012
+SDMDAL4 ;RGI/CBR - APPOINTMENT API; 10/01/2012
  ;;5.3;scheduling;**260003**;08/13/93;
 GETOE(RETURN,SDOE) ; Get outpatient encounter
  N IND S IND=0
@@ -79,8 +79,3 @@ GETPAT(RETURN,DFN) ; Get patient
  M RETURN=PAT(2,DFN)
  Q
  ;
-DDDDDD
- S U="^"
- D GETPAT(.P,1)
- ZW P
- Q

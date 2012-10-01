@@ -1,4 +1,4 @@
-SDMUTL ;RGI/CBR - UI UTILS; 09/25/2012
+SDMUTL ;RGI/CBR - UI UTILS; 10/01/2012
  ;;5.3;scheduling;**260003**;08/13/93;
 SELECT(ROUTINE,PRMPT,FILE,FLDS,FLDOR,HLP1,HLP2,ROU1) ;
  N LNAME,Y,RETURN,R1,R2,R3,EXS,L
@@ -78,7 +78,7 @@ CONTINUE() ; -- end of page prompt
 LSTSH1(LSTS,FILE,FIELDS) ; All items ??
  N DIR,X,Y,CNT
  S CNT=$P(LSTS(0),U,1) Q:CNT=0 1
- W !," Answer with "_FILE_" "_FIELDS
+ W !," Answer with "_FILE_" "_$G(FIELDS)
  Q:CNT<(IOSL-4) 1
  S:CNT>(IOSL-4) DIR("A")=" Do you want the entire "_CNT_"-Entry "_FILE_" List"
  S DIR(0)="YO"
