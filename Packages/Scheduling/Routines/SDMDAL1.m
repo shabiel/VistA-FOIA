@@ -1,10 +1,11 @@
-SDMDAL1 ;RGI/CBR - APPOINTMENT API; 09/19/2012
+SDMDAL1 ;RGI/CBR - APPOINTMENT API; 10/08/2012
  ;;5.3;scheduling;**260003**;08/13/93;
 GETCLN(RETURN,CLN,INT,EXT,REZ) ; Get clinic detail
  N FILE,SFILES,FLDS
  S FILE=44
  S FLDS("*")=""
  S SFILES("2501")="",SFILES("2501","N")="PRIVILEGED USER",SFILES("2501","F")="44.04"
+ S SFILES("1910")="",SFILES("1910","N")="SI",SFILES("1910","F")="44.03"
  D GETREC^SDMDAL(.RETURN,CLN,FILE,.FLDS,.SFILES,$G(INT),$G(EXT),$G(REZ))
  Q
  ;
@@ -102,7 +103,7 @@ SETST(SC,SD,S) ; Set availability
  S ^SC(SC,"ST",$P(SD,".",1),1)=S
  Q
  ;
-MAKE(SC,SD,DFN,LEN,SM,USR,OTHR) ; Make clinic appointment
+MAKE(SC,SD,DFN,LEN,SM,USR,OTHR,RQXRAY) ; Make clinic appointment
  N ERR,FDA,IENS
  S ^SC(SC,"S",SD,0)=SD
  S:'$D(^SC(SC,"S",0)) ^(0)="^44.001DA^^"
@@ -114,7 +115,8 @@ MAKE(SC,SD,DFN,LEN,SM,USR,OTHR) ; Make clinic appointment
  S FDA(44.003,IENS,7)=USR
  S FDA(44.003,IENS,8)=$P($$NOW^XLFDT,".")
  S:$G(SM) FDA(44.003,IENS,9)="O"
- D UPDATE^DIE("","FDA","","ERR") Q
+ I $D(RQXRAY),RQXRAY>0 S ^SC("ARAD",SC,SD,DFN)=""
+ D UPDATE^DIE("","FDA","","ERR")
  Q
  ;
 CANCEL(SC,SD,DFN,CIFN) ; Kill clinic appointment
