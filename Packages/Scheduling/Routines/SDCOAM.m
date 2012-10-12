@@ -1,4 +1,4 @@
-SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 10/10/2012
+SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 10/12/2012
  ;;5.3;Scheduling;**1,20,27,66,132,260003**;08/13/93
  ;
 CO(SDCOACT,SDCOACTD) ;Check Out Classification, Provider and Diagnosis
@@ -86,7 +86,8 @@ DIS(SDFN,SDCLN) ;Discharge from Clinic
  Q
  ;
 DEL ;Entry point for SDAM DELETE CHECK OUT protocol
- I '$D(^XUSEC("SD SUPERVISOR",DUZ)) W !!,*7,">>> You must have the 'SD SUPERVISOR' key to delete an appointment check out." D PAUSE^VALM1 S VALMBCK="R" G DELQ
+ N ERR
+ I '$$CANDELCO^SDMAPI4(.ERR) W !!,*7,">>> "_$P($G(ERR(0)),U,2) D PAUSE^VALM1 S VALMBCK="R" G DELQ
  N DFN,SDCL,SDCOAP,SDDA,SDOE,SDT,VALMY,VALSTP
  S VALMBCK="",VALSTP="" ;VALSTP is used in scdxhldr to identify deletes
  D EN^VALM2(XQORNOD(0))
@@ -100,7 +101,7 @@ DEL ;Entry point for SDAM DELETE CHECK OUT protocol
  ..S DEQ=0
  ..I RETURN>0 D  Q:DEQ=1
  ...I '$$ASK S DEQ=1 Q
- ...S %=$$DELCO^SDMAPI4(.RETURN,DFN,SDT,1)
+ ...S %=$$DELCOSD^SDMAPI4(.RETURN,DFN,SDT,1)
  ...W !!,">>> Deleting check out information..."
  ...W !?3,"...deleting check out date/time"
  ...W !,">>> done."
