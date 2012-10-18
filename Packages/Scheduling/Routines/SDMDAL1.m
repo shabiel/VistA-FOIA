@@ -1,4 +1,4 @@
-SDMDAL1 ;RGI/CBR - APPOINTMENT API; 10/17/2012
+SDMDAL1 ;RGI/CBR - APPOINTMENT API; 10/18/2012
  ;;5.3;scheduling;**260003**;08/13/93;
 GETCLN(RETURN,CLN,INT,EXT,REZ) ; Get clinic detail
  N FILE,SFILES,FLDS
@@ -70,21 +70,25 @@ GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  I $D(^SC(SC,"S",SD))  D
  . S ZL=0
  . F  S ZL=$O(^SC(SC,"S",SD,1,ZL)) Q:'ZL  D
- . . I '$D(^SC(SC,"S",SD,1,ZL,0)) D FLEN1 Q
+ . . I '$D(^SC(SC,"S",SD,1,ZL,0)) Q
  . . I +^SC(SC,"S",SD,1,ZL,0)=DFN  D
  . . . M RETURN=^SC(SC,"S",SD,1,ZL)
  . . . S RETURN=ZL
  . Q
  Q
  ;
-FLEN1 ;
- N DA,DIK
- Q:'$D(^SC(SC,"S",SD,1,ZL,"C"))
- S DA(2)=SC,DA(1)=NDT,DA=ZL,DIK="^SC("_DA(2)_",""S"","_DA(1)_",1," D ^DIK
+GETCAPT(RETURN,SC,SD,IFN,FLAG) ; Get clinic appointment by IFN
+ N CAPT
+ S DIQ="CAPT(",DIC="^SC(SC,""S"",SD,1,",DIQ(0)=$G(FLAG)
+ S DA=IFN,DR=".01;1;3;7;8;9;30;309;302;303;304;306;688"
+ D EN^DIQ1
+ M RETURN=CAPT(44.003,IFN)
+ S RETURN(222)=SC
+ S RETURN(333)=IFN
  Q
  ;
 LOCKST(SC,SD) ; Lock availability node
- L +^SC(SC,"ST",$P(SD,"."),1):$S($G(DILOCKTM)>0:DILOCKTM,1:5) Q:'$T 0
+ L +^SC(SC,"ST",$P(SD,"."),1):5 Q:'$T 0
  Q 1
  ;
 UNLCKST(SC,SD) ; Lock availability node
@@ -92,7 +96,7 @@ UNLCKST(SC,SD) ; Lock availability node
  Q
  ;
 LOCKS(SC,SD) ; Lock clinic date node
- L +^SC(SC,"S",$P(SD,"."),1):$S($G(DILOCKTM)>0:DILOCKTM,1:5) Q:'$T 0
+ L +^SC(SC,"S",$P(SD,"."),1):5 Q:'$T 0
  Q 1
  ;
 UNLCKS(SC,SD) ; Unlock clinic date node
