@@ -1,4 +1,4 @@
-SDCDAL1 ;RGI/CBR - CONSULT DAL; 08/10/2012
+SDCDAL1 ;RGI/CBR - CONSULT DAL; 10/19/2012
  ;;5.3;scheduling;**260003**;08/13/93
 GETCONSR(RETURN,DFN,FLDS) ; Get consult requests
  N FILE,FIELDS,RET,SCR,LST,SFLS,DL,IN
@@ -35,6 +35,7 @@ GETCONS(RETURN,CONS,FLAG) ; Get consult
  M RETURN=GMR(123,CONS)
  Q
  ;
-CONSLNKD(RETURN,CONS) ; Return 1 if consult is already linked
+CONSLNKD(CONS) ; Return 1 if consult is already linked
+ Q:'$D(CONS) 0
  Q $D(^SC("AWAS1",CONS))
  ;
