@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/CBR - APPOINTMENT API; 10/23/2012
+SDMAPI1 ;RGI/CBR - APPOINTMENT API; 10/26/2012
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -69,7 +69,6 @@ CLNRGHT(RETURN,CLN) ; Verifies (DUZ) user access to Clinic
  . . D ERRX^SDAPIE(.RETURN,"CLNURGT",.TXT)
  . . S RETURN("CLN")=DATA(.01)
  E  S RETURN=1 Q 1
- Q 1
  ;
 CLNVSC(RETURN,SC) ; Verifies clinic stop code validation
  N DATA
@@ -101,6 +100,7 @@ GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  ;
 SLOTS(RETURN,SC) ; Get available slots
  D SLOTS^SDMDAL2(.RETURN,SC)
+ S RETURN=1
  Q 1
  ;
 SCEXST(RETURN,CSC) ; Get Stop Cod Exception status
@@ -134,10 +134,6 @@ GETAPPT(RETURN,TYPE) ; Returns Appointment Type detail
 GETELIG(RETURN,ELIG) ; Returns Eligibility Code detail 
  D GETELIG^SDMDAL2(.RETURN,ELIG,1,1,1)
  S RETURN=1
- Q 1
- ;
-HASPEND(RETURN,DFN,DT) ; Check if patient has panding appointments
- D HASPEND^SDMDAL2(.RETURN,DFN,DT)
  Q 1
  ;
 GETPEND(RETURN,DFN,DT) ; Get pending appointments
@@ -238,7 +234,10 @@ GAFREQ(DFN,SC,CVSIT) ;
  Q 0
  ;
 GETCSC(RETURN,SC) ; Get clinic stop code
- D GETCSC^SDMDAL1(.RETURN,SC)
+ N CLN
+ D GETCLN^SDMDAL1(.CLN,SC,1)
+ D GETCSC^SDMDAL1(.RETURN,$G(CLN(8)))
+ S RETURN=1
  Q 1
  ;
 CPAIR(RETURN,SC) ;Validate primary stop code, get credit pair
@@ -260,6 +259,7 @@ PTFU(RETURN,DFN,SC)    ;Determine if this is a follow-up (return to clinic withi
  ;Output: '1' if seen within 24 months, '0' otherwise
  ;
  Q:'DFN!'SC 0  ;variable check
+ S RETURN=1
  N SDBDT,SDT,SDX,SDY,SDZ,SDCP,SDCP1,SC0,SDENC,SDCT,LST,ENC,FLDS
  ;set up variables
  S SDBDT=(DT-20000)+.24,SDT=DT_.999999,SDY=0

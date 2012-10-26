@@ -1,4 +1,4 @@
-SDMDAL1 ;RGI/CBR - APPOINTMENT API; 10/23/2012
+SDMDAL1 ;RGI/CBR - APPOINTMENT API; 10/26/2012
  ;;5.3;scheduling;**260003**;08/13/93;
 GETCLN(RETURN,CLN,INT,EXT,REZ) ; Get clinic detail
  N FILE,SFILES,FLDS
@@ -109,10 +109,13 @@ SETST(SC,SD,S) ; Set availability
  ;
 MAKE(SC,SD,DFN,LEN,SM,USR,OTHR,RQXRAY) ; Make clinic appointment
  N ERR,FDA,IENS
- S ^SC(SC,"S",SD,0)=SD
- S:'$D(^SC(SC,"S",0)) ^(0)="^44.001DA^^"
- S:'$D(^(0)) ^(0)="^44.003PA^^"
- S IENS="?+1,"_SD_","_SC_","
+ S IENS="+2,"_SC_","
+ S IENS(2)=+SD
+ S FDA(44.001,IENS,.01)=+SD
+ D UPDATE^DIE("","FDA","IENS","ERR")
+ S SD=$G(IENS(2))
+ K FDA,IENS
+ S IENS="?+1,"_+SD_","_SC_","
  S FDA(44.003,IENS,.01)=DFN
  S FDA(44.003,IENS,1)=LEN
  S FDA(44.003,IENS,3)=$G(OTHR)
@@ -120,7 +123,7 @@ MAKE(SC,SD,DFN,LEN,SM,USR,OTHR,RQXRAY) ; Make clinic appointment
  S FDA(44.003,IENS,8)=$P($$NOW^XLFDT,".")
  S:$G(SM) FDA(44.003,IENS,9)="O"
  I $D(RQXRAY),RQXRAY>0 S ^SC("ARAD",SC,SD,DFN)=""
- D UPDATE^DIE("","FDA","","ERR")
+ D UPDATE^DIE("","FDA","IENS","ERR")
  Q
  ;
 CANCEL(SC,SD,DFN,CIFN) ; Kill clinic appointment
@@ -155,8 +158,10 @@ GETDAYA(RETURN,SC,SD) ; Get all day appointments
  N IND,I,D
  S I=$P(SD,".",1)
  F D=I-.01:0 S D=$O(^SC(SC,"S",D)) Q:$P(D,".",1)-I  D
- . F %=0:0 S %=$O(^SC(SC,"S",D,1,%)) Q:%'>0  D
- . . S RETURN(%,"STATUS")=$P(^(%,0),U,9)
+ . S %=0
+ . F  S %=$O(^SC(SC,"S",D,1,%)) Q:%'>0  D
+ . . Q:'$D(^SC(SC,"S",D,1,%,0))
+ . . S RETURN(%,"STATUS")=$P(^(0),U,9)
  . . S RETURN(%,"OB")=$D(^("OB"))
  Q
  ;
