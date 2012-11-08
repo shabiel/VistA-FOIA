@@ -55,7 +55,7 @@ VERIFY ; Mark current problem as verified
 NPERSON ; look up into #200, given PROMPT,HELPMSG,DEFAULT (returns X, Y)
  N DIC
 NP N DIR
- S DIR(0)="EA"
+ S DIR(0)="FA"
  S DIR("A")=PROMPT_$S(+DEFAULT:$P(DEFAULT,U,2)_"//",1:"")
  D ^DIR
  I $D(DTOUT)!(X="^") S GMPQUIT=1 Q
@@ -88,7 +88,7 @@ DATE ; Edit date fields given PROMPT,HELPMSG,DEFAULT (ret'ns X,Y)
  N %DT,DIR,MSG S %DT="EP"
 D1 ;
  K DIR
- S DIR(0)="EA"
+ S DIR(0)="DA"
  S DIR("A")=PROMPT_$S(+DEFAULT:$P(DEFAULT,U,2)_"//",1:"")
  D ^DIR
  I $D(DTOUT)!(X="^") S GMPQUIT=1 Q

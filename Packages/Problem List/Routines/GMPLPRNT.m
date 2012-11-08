@@ -21,7 +21,7 @@ EN ; Print/Display (Main)
  I '(($L(GMPLVIEW("ACT")))!(GMPLVIEW("PROV"))!($L(GMPLVIEW("VIEW"),"/")>2)) S Y="A" G EN1
  S DIR(0)="SAOM^C:CURRENT VIEW;A:ALL PROBLEMS;"
  D BLD^DIALOG(1250000.407,,,"DIR(""A"")")
- D BLD^DIALOG(1250000.408,,,"DIR)""?"")")
+ D BLD^DIALOG(1250000.408,,,"DIR(""?"")")
  D ^DIR G:$D(DTOUT)!($D(DUOUT))!(Y="") ENQ
 EN1 ;   Print View
  W ! D @$S(Y="C":"LIST",1:"VAF")
@@ -104,7 +104,7 @@ FTR ; Footer Code
  D EN^DDIOL(LOC,,"?"_(79-$L(LOC)))
  D EN^DDIOL(FORM,,"?"_(79-$L(FORM)))
  D EN^DDIOL($$REPEAT^XLFSTR("-",79))
- D EN^DDIOL(@IOF,,"?0")
+ W @IOF
  Q
  ;
 RETURN() ; End of page

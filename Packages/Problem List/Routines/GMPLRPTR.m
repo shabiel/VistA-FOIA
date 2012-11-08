@@ -33,7 +33,7 @@ DISPLAY ; -- show list on screen
  ;
 HDR ; -- header code
  N PARAM
- D EN^DDIOL(@IOF,,"?0")
+ W @IOF
  S PARAM(1)=$P(GMPDFN,U,2),PARAM(2)=$P(GMPDFN,U,3)
  D EN^DDIOL($$EZBLD^DIALOG(1250000.432,.PARAM),,"?0")
  D EN^DDIOL($$EZBLD^DIALOG(1250000.433),,"!!")
