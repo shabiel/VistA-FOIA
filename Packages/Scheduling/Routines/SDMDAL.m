@@ -35,3 +35,21 @@ GETSREC(RETURN,REC,SFILE,SFLD,FLAG) ; Get record subfile data
  . . . S RETURN(SFLD,ID,FLD,SI)=REC(SFILE,IDX,FLD,SI),RETURN(SFLD,ID,FLD)=""
  Q
  ;
+LSTSCOD(FILE,FIELD,LIST) ;List codes in SET OF CODE fields
+ ;FILE = file number
+ ;FIELD = field number
+ ;LIST = output array:
+ ;   LIST(#)=code^display_name
+ N SET,NODE,CODE,NAME,I,COUNT
+ S SET=$$GET1^DID(FILE,FIELD,,"POINTER")
+ S COUNT=1
+ F I=1:1:$L(SET,";") D
+ . S NODE=$P(SET,";",I)
+ . S CODE=$P(NODE,":")
+ . Q:CODE=""
+ . S NAME=$P(NODE,":",2)
+ . S LIST(COUNT)=CODE_"^"_NAME
+ . S COUNT=COUNT+1
+ S LIST(0)=COUNT-1
+ Q
+ ;

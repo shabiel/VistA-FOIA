@@ -276,3 +276,25 @@ PTFU(RETURN,DFN,SC)    ;Determine if this is a follow-up (return to clinic withi
  . Q
  Q SDY
  ;
+HASPEND(RETURN,DFN,DT) ; Check if patient has panding appointments
+ D HASPEND^SDMDAL2(.RETURN,DFN,DT)
+ Q 1
+ ;
+LSTSRT(RETURN) ;List scheduling request types
+ K RETURN
+ S RETURN=1
+ D LSTSCOD^SDMDAL(2.98,25,.RETURN)
+ Q 1
+ ;
+LSTAPPST(RETURN) ;List appointment statuses
+ K RETURN
+ S RETURN=1
+ D LSTSCOD^SDMDAL(2.98,3,.RETURN)
+ Q 1
+ ;
+LSTHLTP(RETURN) ;List hospital location types
+ K RETURN
+ S RETURN=1
+ D LSTSCOD^SDMDAL(44,2,.RETURN)
+ Q 1
+ ;
