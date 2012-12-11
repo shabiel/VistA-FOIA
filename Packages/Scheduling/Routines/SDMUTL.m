@@ -1,4 +1,4 @@
-SDMUTL ;RGI/CBR - UI UTILS; 12/10/2012
+SDMUTL ;RGI/CBR - UI UTILS; 12/11/2012
  ;;5.3;scheduling;**260003**;08/13/93;
 SELECT(ROUTINE,PRMPT,FILE,FLDS,FLDOR,HLP1,HLP2,ROU1) ;
  N LNAME,Y,RETURN,R1,R2,R3,EXS,L
@@ -23,7 +23,7 @@ LS ;
  E  D:X'="?"
  . D @R2
  . S Y=$$SELLST(.LSTS,.X,.FLDOR)
- G:Y<0 LS I Y=0,$L(L)'>0 W " ??",! G LS
+ G:Y<0 LS I Y=0 W " ??",! G LS
  I Y=0 D
  . I $L(X)>30!(X?.N)!($L(X)<3)!'(X'?1P.E) W " ??",! G LS
  S:Y<0 Y(1)=Y,Y="^"
