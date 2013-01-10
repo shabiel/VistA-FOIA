@@ -1,5 +1,5 @@
-DGPMV33 ;ALB/MIR - DISCHARGE A PATIENT, CONTINUED ; 8/4/03 1:13pm
- ;;5.3;Registration;**204,544**;Aug 13, 1993
+DGPMV33 ;ALB/MIR - DISCHARGE A PATIENT, CONTINUED ; 1/10/2013
+ ;;5.3;Registration;**204,544,260003**;Aug 13, 1993
  ;
  I '$P(DGPMA,"^",4)!$S($P(DGPMA,"^",18)'=10:0,'$P(DGPMA,"^",5):1,1:0) W !,"Incomplete Discharge" S DIK="^DGPM(",DA=DGPMDA D ^DIK W "   deleted" S DGPMA="" D  G Q
  .S ^UTILITY("DGPM",$J,3,DA,"A")=$G(^("P"))
@@ -19,16 +19,16 @@ DICS ;input transform on discharge type
  I $S(DGX1=31:1,DGX1=32:1,1:0),$S(DGSV="":0,"NHD"[DGSV:1,1:0) S DGER=1 Q
  I DGX1=34,$S(DGSV="":1,DGSV="NH":1,1:0) S DGER=1 Q
  ;I "^21^47^48^49^"[("^"_DGX1_"^") S DGER=1 Q
- I DGX1=42,'$O(^DGPM("ATID2",+$P(^DGPM(DA,0),"^",3),9999999.9999999-^(0))) S DGER=1 Q
+ I DGX1=42,+DA>0,'$O(^DGPM("ATID2",+$P(^DGPM(DA,0),"^",3),9999999.9999999-^(0))) S DGER=1 Q
  S DGX=+$P(DGPMP,"^",18) I DGX,"^41^46^"[("^"_DGX_"^"),(DGX1'=DGX) S DGER=1 Q
- I "^42^47^"[("^"_DGX1_"^"),(DGX1'=$P(^DGPM(DA,0),"^",18)) S DGER=1 Q
- I "^42^47^"[("^"_DGX_"^"),(DGX1'=$P(^DGPM(DA,0),"^",18)) S DGER=1 Q
+ I "^42^47^"[("^"_DGX1_"^"),(DGX1'=$P($G(^DGPM(DA,0)),"^",18)) S DGER=1 Q
+ I "^42^47^"[("^"_DGX_"^"),(DGX1'=$P($G(^DGPM(DA,0)),"^",18)) S DGER=1 Q
  I DGX,"^41^42^46^47^"'[("^"_DGX_"^"),("^41^42^46^47^"[("^"_DGX1_"^")) S DGER=1 Q
  I $P(DGPMAN,"^",18)=40,("^42^47^"[("^"_DGX1_"^")) S DGER=1 Q  ;if admission type is TO ASIH and d/c type is WHILE ASIH
  I $P(DGPMAN,"^",18)'=40,("^41^46^"[("^"_DGX1_"^")) S DGER=1 Q  ;if adm type not TO ASIH and d/c type FROM ASIH or CONTINUED ASIH (O.F.)
  I $P(DGPMAN,"^",18)'=40 S DGER=0 Q
  I "^41^46^"'[("^"_DGX1_"^") S DGER=0 Q
- D SET^DGPMV32 S X1=+DGPMAB,X2=30,DGHX=X D C^%DTC I ^DGPM(DA,0)>X S DGER=1,X=DGHX K DGHX Q
+ D SET^DGPMV32 S X1=+DGPMAB,X2=30,DGHX=X D C^%DTC I $G(^DGPM(DA,0))>X S DGER=1,X=DGHX K DGHX Q
  S X=DGHX,DGER=0 K DGHX
  I $D(^DGPM(+$P(DGPMAN,"^",21),0)),$D(^DGPM(+$P(^(0),"^",14),0)),$D(^DGPM(+$P(^(0),"^",17),0)),($P(^(0),"^",18)=47) S DGER=1 Q  ;if discharge from NHCU/DOM is type 47
  S DGER=0 Q

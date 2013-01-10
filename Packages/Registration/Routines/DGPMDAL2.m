@@ -1,4 +1,4 @@
-DGPMDAL2 ;RGI/VSL - PATIENT MOVEMENT DAL; 12/14/2012
+DGPMDAL2 ;RGI/VSL - PATIENT MOVEMENT DAL; 1/10/2013
  ;;5.3;Registration;**260003**;
 GETAREG(DATA,IFN,FLDS) ; Get admission regulation
  N TMP,ERR
@@ -16,9 +16,9 @@ GETADMS(DATA,IFN,FLDS) ; Get source of admission
  S DATA=1 M DATA=TMP(45.1,IFN_",")
  Q
  ;
-GETADMMT(DATA,IFN,FLDS) ; Get movement type
+GETMVTT(DATA,IFN,FLDS) ; Get movement type
  N TMP,ERR
- I '$D(FLDS) S FLDS=".001;.01;.02"
+ I '$D(FLDS) S FLDS=".01;.02;.03;"
  D GETS^DIQ(405.1,IFN,FLDS,"IE","TMP","ERR")
  I $D(ERR) S DATA=0 M DATA=ERR Q
  S DATA=1 M DATA=TMP(405.1,IFN_",")
@@ -26,7 +26,7 @@ GETADMMT(DATA,IFN,FLDS) ; Get movement type
  ;
 GETMASMT(DATA,IFN,FLDS) ; Get mas movement type
  N TMP,ERR
- I '$D(FLDS) S FLDS=".001;.01;.02;.08"
+ I '$D(FLDS) S FLDS=".01;.02;.05;.06;50.01;50.02;50.03;"
  D GETS^DIQ(405.2,IFN,FLDS,"IE","TMP","ERR")
  I $D(ERR) S DATA=0 M DATA=ERR Q
  S DATA=1 M DATA=TMP(405.2,IFN_",")
@@ -78,16 +78,16 @@ GETFTS(DATA,IFN,FLDS) ; Get facility treating specialty
  I FLDS["100*" F  S I=$O(TMP(45.702,I)) Q:'I  M DATA("E",$P(I,","))=TMP(45.702,I)
  Q
  ;
-LSTPMVT(RETURN,DFN,TYPE,FLDS) ; Return patient movements.
+LSTPMVT(RETURN,DFN,TYPE,FLDS,AFN) ; Return patient movements.
  N SCR
  S:'$D(FLDS) FLDS="@;.01;.03IE;.06;.07;.17I"
- S SCR="I $P(^(0),U,3)=DFN,$P(^(0),U,2)=TYPE"
+ S SCR="I $P(^(0),U,3)=DFN,$P(^(0),U,2)=TYPE"_$S($D(AFN):",$P(^(0),U,14)=AFN",1:"")
  D LIST^DIC(405,"",FLDS,"",,,,"B",.SCR,"","RETURN","E")
  Q
  ;
 LSTDIAG(RETURN) ; Return movements diagnosis.
- N ID,I,D
- F I=0:0 S I=$O(RETURN(I)) Q:I=""  D
+ N ID,I,D S I=0
+ F  S I=$O(RETURN(I)) Q:I=""  D
  . N DIAG
  . S ID=RETURN(I,"ID")
  . D GETDIAG(.DIAG,ID)
@@ -101,7 +101,7 @@ GETDIAG(RETURN,MFN) ; Return movement diagnosis.
  Q
  ;
 LSTWARD(RETURN,SEARCH,START,NUMBER,FLDS) ; Return wards.
- N SCR,TMP
+ N SCR,TMP,E
  S:'$D(FLDS) FLDS=".01;.017IE;.03IE;"
  S FLDS="@;"_FLDS
  D LIST^DIC(42,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
@@ -109,7 +109,7 @@ LSTWARD(RETURN,SEARCH,START,NUMBER,FLDS) ; Return wards.
  Q
  ;
 LSTWBED(RETURN,SEARCH,START,NUMBER,FLDS,WARD) ; Return ward beds.
- N SCR,TMP
+ N SCR,TMP,E
  S:'$D(FLDS) FLDS=".01;.02;.2;"
  S FLDS="@;"_FLDS
  S SCR="I $D(^DG(405.4,""W"",WARD,+Y))"
@@ -118,7 +118,7 @@ LSTWBED(RETURN,SEARCH,START,NUMBER,FLDS,WARD) ; Return ward beds.
  Q
  ;
 LSTPROV(RETURN,SEARCH,START,NUMBER,FLDS,DGDT) ; Return providers.
- N SCR,TMP
+ N SCR,TMP,E
  S:'$D(FLDS) FLDS=".01;8;"
  S FLDS="@;"_FLDS
  S SCR="I $$SCREEN^DGPMDD(Y,,.DGDT)"
@@ -127,7 +127,7 @@ LSTPROV(RETURN,SEARCH,START,NUMBER,FLDS,DGDT) ; Return providers.
  Q
  ;
 LSTADREG(RETURN,SEARCH,START,NUMBER,FLDS) ; Return admitting regulation.
- N SCR,TMP
+ N SCR,TMP,E
  S:'$D(FLDS) FLDS=".01;2;"
  S FLDS="@;"_FLDS
  I +$G(SEARCH)>0 S TMP=+SEARCH K SEARCH
@@ -138,7 +138,7 @@ LSTADREG(RETURN,SEARCH,START,NUMBER,FLDS) ; Return admitting regulation.
  Q
  ;
 LSTADSRC(RETURN,SEARCH,START,NUMBER,FLDS,DGDT) ; Return facility treating specialties
- N SCR,TMP,S,L
+ N SCR,TMP,S,L,E
  S:'$D(FLDS) FLDS=".01;2;11"
  S FLDS="@;"_FLDS S S=$S('$D(SEARCH):"",1:SEARCH),L=$L(S)
  I +$E(S,1)>0 S SCR="I $E($P(^(0),U),1,L)=S"
@@ -148,7 +148,7 @@ LSTADSRC(RETURN,SEARCH,START,NUMBER,FLDS,DGDT) ; Return facility treating specia
  Q
  ;
 LSTFTS(RETURN,SEARCH,START,NUMBER,FLDS,DGDT) ; Return facility treating specialties
- N SCR,TMP
+ N SCR,TMP,E
  S:'$D(FLDS) FLDS=".01;1;"
  S FLDS="@;"_FLDS
  S SCR="I $$ACTIVE^DGACT(45.7,Y,DGDT)"
@@ -156,24 +156,45 @@ LSTFTS(RETURN,SEARCH,START,NUMBER,FLDS,DGDT) ; Return facility treating specialt
  I $D(E) M RETURN=E
  Q
  ;
-LSTMVTT(RETURN,SEARCH,START,NUMBER,FLDS,TYPE) ; Return movement types.
- N SCR,TMP
+LSTFCTY(RETURN,SEARCH,START,NUMBER,FLDS) ; Return transfer facilities
+ N SCR,TMP,E
+ S:'$D(FLDS) FLDS=".01;"
+ S FLDS="@;"_FLDS
+ D LIST^DIC(4,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
+ I $D(E) M RETURN=E
+ Q
+ ;
+LSTMVTT(RETURN,SEARCH,START,NUMBER,FLDS,TYPE,DFN,DGDT,MFN) ; Return movement types.
+ N SCR,TMP,ADM,MVT,DGPM0,DGPM2,DGPMABL,DGPMAN,DGPMCA,DGPMP,X1,DA,DGX,E,X
  S:'$D(FLDS) FLDS=".01;.02IE;.04IE"
  S FLDS="@;"_FLDS
  I +$G(SEARCH)>0 S TMP=+SEARCH K SEARCH
- S SCR="I $P(^(0),U,2)=TYPE,$P(^(0),""^"",4),$P(^(0),U,3)'=40,$P(^(0),U,3)'=18"
+ S (DGPM0,DGPM2)=""
+ D GETLASTM^DGPMDAL1(.MVT,+DFN,DGDT)
+ S DGX=DGDT,ADM=MVT(13),DA=+$G(MFN)
+ S DGPMP=$S($D(MFN):^DGPM(MFN,0),1:"")
+ S DGPMAN=$S('MVT(1):0,$D(^DGPM(+MVT(13),0)):^(0),1:0),DGPMCA=$S(DGPMAN:MVT(13),1:"")
+ S:$G(MFN)>0 DGX=+^DGPM(MFN,0)
+ S:+ADM>0 X=$O(^DGPM("APMV",DFN,ADM,(9999999.9999999-DGX))),X1=$O(^DGPM("APMV",DFN,ADM,+X,0))
+ S:+ADM>0 DGPM0=$S($D(^DGPM(+X1,0)):^(0),1:"") ;DGPM0=prior movement
+ S:+ADM>0 X=$O(^DGPM("APCA",DFN,ADM,+DGX)),X=$O(^(+X,0)),DGPM2=$S($D(^DGPM(+X,0)):^(0),1:"") ;DGPM2=next movement
+ S DGPMABL=0 I DGPM2,$D(^DG(405.2,+$P(DGPM2,"^",18),"E")) S DGPMABL=+^("E") ;is the next movement an absence?
+ S SCR="I $D(TYPE),($P(^(0),U,2)=TYPE),$P(^(0),U,4) S DGER=0,DGPMTYP=$P(^(0),U,3)"
+ S SCR=SCR_" D:TYPE<4!(TYPE=6)!(TYPE=5) @(""DICS^DGPMV3""_TYPE) I 'DGER"
+ ;S SCR="I $P(^(0),U,2)=TYPE,$P(^(0),""^"",4),$P(^(0),U,3)'=40,$P(^(0),U,3)'=18"
  S:$D(TMP) SCR=SCR_",$D(TMP),+Y=TMP"
  D LIST^DIC(405.1,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
  I $D(E) M RETURN=E
  Q
  ;
-LSTPATS(RETURN,SEARCH,START,NUMBER) ; Get patients
+LSTPATS(RETURN,SEARCH,START,NUMBER,TYPE) ; Get patients
  N FILE,FIELDS,RET,SCR,INDX
  S FILE="2",FIELDS="@;.01;.03;.09;391;1901",INDX="B"
  S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
  I $D(SEARCH),SEARCH?4N S INDX="BS"
  I $L(SEARCH)>1,SEARCH?.N S INDX="SSN"
  I $L(SEARCH)>0,SEARCH?1A4N S INDX="BS5"
+ I $G(TYPE) S SCR="I $D(^DGPM(""APTT""_TYPE,+Y))"
  D LIST^DIC(FILE,"",FIELDS,"",$G(NUMBER),.START,SEARCH,INDX,.SCR,"","RETURN")
  Q
  ;

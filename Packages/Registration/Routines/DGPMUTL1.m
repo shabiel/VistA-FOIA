@@ -1,4 +1,4 @@
-DGPMUTL1 ;ALB/MJK - PATIENT MOVEMENT UTILS ; 12/14/2012 ;
+DGPMUTL1 ;ALB/MJK - PATIENT MOVEMENT UTILS ; 1/10/2013 ;
  ;;5.3;Registration;;
 SELECT(PARAM,LIST,DEFVAL) ; Select an item from list
  N IFN
@@ -121,7 +121,7 @@ CONTINUE() ; -- end of page prompt
  Q +Y
  ;
 SELTEXT(PARAM,DEFVAL) ; Get text
- N DIR,X,Y,EXTXT
+ N DIR,X,Y,V,EXTXT
  S DIR(0)="FOr^"_$G(PARAM("MIN"))_":"_$G(PARAM("MAX"))
  S DIR("A")=PARAM("PROMPT")
  S:$D(DEFVAL) DIR("B")=DEFVAL
