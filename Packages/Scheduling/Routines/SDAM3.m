@@ -1,4 +1,4 @@
-SDAM3 ;MJK/ALB - Appt Mgt (Clinic) ; 09/24/2012
+SDAM3 ;MJK/ALB - Appt Mgt (Clinic) ; 1/14/2013
  ;;5.3;Scheduling;**63,189,380,478,492,260003**;Aug 13, 1993;Build 1
  ;
 INIT ; -- get init clinic appt data
@@ -32,7 +32,8 @@ CLN ; -- change clinic
  I $G(SDAMLIST)["CANCELLED" S VALMBCK="" W !!,*7,"You must be viewing a patient to list cancelled appointments." D PAUSE^VALM1 G CLNQ
  D FULL^VALM1 S VALMBCK="R" W !
  S X="" I $D(XQORNOD(0)) S X=$P($P(XQORNOD(0),U,4),"=",2)
- S Y=$$SELCLN^SDMUTL("Clinic")
+ S PAR("PRMPT")=$$EZBLD^DIALOG(480000.031)
+ S Y=$$SELCLN^SDMUI(.PAR)
  I Y<0!(+Y=0) D  G CLNQ
  .I SDAMTYP="C" S VALMSG=$C(7)_"Clinic has not been changed."
  .I SDAMTYP="P" S VALMSG=$C(7)_"View of patient remains in affect."

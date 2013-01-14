@@ -1,4 +1,4 @@
-SDAM10 ;MJK/ALB - Appt Mgt (Patient cont.); 09/25/2012  ; Compiled March 31, 2008 16:38:47
+SDAM10 ;MJK/ALB - Appt Mgt (Patient cont.); 1/14/2013
  ;;5.3;Scheduling;**189,258,403,478,491,260003**;Aug 13, 1993;Build 53
  ;
 HDR ; -- list screen header
@@ -20,7 +20,8 @@ PAT ; -- change pat
  K X I $D(XQORNOD(0)) S X=$P($P(XQORNOD(0),U,4),"=",2)
  ;I $D(X),X="" R !!,"Select Patient: ",X:DTIME
  ;D RT^SDAMEX S DIC="^DPT(",DIC(0)="EMQ" D ^DIC K DIC G PAT:X["?"
- S Y=$$SELPAT^SDMUTL("Patient") S:+Y=0 X="" S DFN=+Y G PAT:X["?"
+ S PAR("PRMPT")=$$EZBLD^DIALOG(480000.034)
+ S Y=$$SELPAT^SDMUI(.PAR) S:+Y=0 X="" S DFN=+Y G PAT:X["?"
 PAT1 S %=1 I Y>0 W !,"   ...OK" D YN^DICN I %=0 W "   Answer with 'Yes' or 'No'" G PAT1
  I %'=1 S Y=-1
  I Y<0 D  G PATQ

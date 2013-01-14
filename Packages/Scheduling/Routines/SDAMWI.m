@@ -1,4 +1,4 @@
-SDAMWI ;ALB/MJK - Unscheduled Appointments ; 9/24/2012
+SDAMWI ;ALB/MJK - Unscheduled Appointments ; 1/14/2013
  ;;5.3;Scheduling;**63,94,241,250,296,380,327,260003**;Aug 13, 1993
  ;
 EN(DFN,SC) ; -- main entry point
@@ -42,8 +42,9 @@ CL(DFN) ; -- make wi appt
  ;    input: DFN
  ; returned: success or fail := 1/0
  ;
- N Y
- S Y=$$SELCLN^SDMUTL("Clinic")
+ N Y,PAR
+ S PAR("PRMPT")=$$EZBLD^DIALOG(480000.031)
+ S Y=$$SELCLN^SDMUI(.PAR)
  I Y<0 S SDY=0 G CLQ
  S SC=+Y S SDY=$$EN(.DFN,.SC)
 CLQ Q SDY
@@ -52,8 +53,9 @@ PT(SC) ;
  ;    input:  SC := clinic#
  ; returned: success or fail := 1/0
  ;
- N Y
- S Y=$$SELPAT^SDMUTL("Patient")
+ N Y,PAR
+ S PAR("PRMPT")=$$EZBLD^DIALOG(480000.034)
+ S Y=$$SELPAT^SDMUI(.PAR)
  I Y<0 S SDY=0 G PTQ
  S DFN=+Y S SDY=$$EN(.DFN,.SC)
 PTQ Q SDY

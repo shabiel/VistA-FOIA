@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 12/11/2012
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 1/14/2013
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -7,10 +7,12 @@ SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 12/11/2012
  ; 
  S:'$D(SDMM) SDMM=0
 EN1 ;
- N ERR,PAT,CLN
+ N ERR,PAT,CLN,PAR
  L  W !! D I^SDUTL
  N Y S Y=$G(SDCLN)
- I '$D(SDCLN) S Y=$$SELCLN^SDMUTL()
+ S PAR("FLAG")="AQZME"
+ S PAR("PRMPT")=$$EZBLD^DIALOG(480000.031)
+ I '$D(SDCLN) S Y=$$SELCLN^SDMUI(.PAR)
  S:+Y>0!($D(SDCLN)) %=$$GETCLN^SDMAPI1(.CLN,+Y) G:+Y<0!'$D(CLN("LENGTH OF APP'T")) END
  N SDRES S:$D(SDCLN) Y=+SDCLN S SDRES=$$CLNCK^SDMAPI1(.ERR,+Y)
  I 'SDRES W !,?5,$P(ERR(0),U,2),!,?5,$$EZBLD^DIALOG(480000.002) G END:$D(SDCLN),SDM
@@ -26,7 +28,8 @@ EN1 ;
  S STR="#@!$* XXWVUTSRQPONMLKJIHGFEDCBA0123456789jklmnopqrstuvwxyz",SDDIF=$S(HSI<3:8/HSI,1:2) K Y
  K ERR S %=$$CLNRGHT^SDMAPI1(.ERR,+SC) I ERR=0 W !,*7,$P(ERR(0),U,2) S:$D(SDCLN) SDAMERR="" G END:$D(SDCLN),SDM
  D CS^SDM1A S SDW="",WY="Y"
- I '$D(ORACTION),'$D(SDFN) S Y=$$SELPAT^SDMUTL() S:+Y=0 X="" S DFN=+Y G:+Y<0 END:$D(SDCLN),^SDM0:X[U,SDM
+ K PAR("PRMPT")
+ I '$D(ORACTION),'$D(SDFN) S Y=$$SELPAT^SDMUI(.PAR) S:+Y=0 X="" S DFN=+Y G:+Y<0 END:$D(SDCLN),^SDM0:X[U,SDM
  S:$D(SDFN) DFN=SDFN
  S %=$$GETPAT^SDMAPI3(.PAT,DFN,1)
  I $D(PAT("DATE OF DEATH")),PAT("DATE OF DEATH")]"" W !?10,*7,$$EZBLD^DIALOG(480000.1) S:$D(SDFN) SDAMERR="" G END:$D(SDFN),SDM
@@ -64,14 +67,14 @@ PEND S %=""
  . . S CN=CN+1
  ;Prompt for ETHNICITY if no value on file
  I '$O(PAT("ETHNICITY INFORMATION","")) D
- . N ROU,PRMPT,FILE,FIELDS,FLDOR
- . S ROU="LSTETNS^SDMLST",PRMPT="Select ETHNICITY: "
- . S FILE="ETHNICITY",FIELDS=""
- . S ETN=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS)
- . I +ETN>0 N RE S %=$$SETETN^SDMAPI3(.RE,DFN,ETN)
+ .S DA=DFN,DR="6ETHNICITY",DIE="^DPT("
+ .S DR(2,2.06)=".01ETHNICITY"
+ .D ^DIE K DR
  ;Prompt for RACE if no value on file
  I '$O(PAT("RACE INFORMATION","")) D
- . D RACE
+ .S DA=DFN,DR="2RACE",DIE="^DPT("
+ .S DR(2,2.02)=".01RACE"
+ .D ^DIE K DR
  I $S('$D(PAT("STREET ADDRESS [LINE 1]")):1,PAT("STREET ADDRESS [LINE 1]")="":1,1:0) N FLG S FLG(1)=1 D EN^DGREGAED(DFN,.FLG)
  Q:$D(SDXXX)
 E S Y=CLN("PRINCIPAL CLINIC")
@@ -118,39 +121,3 @@ CNAM(SDCL) ;Return clinic name
  N SDX
  S SDX=CLN("NAME")
  Q $S($L(SDX):SDX,1:"this clinic")
-RACE ; Set race
- N ROU,PRMPT,FILE,FIELDS,FLDOR,ROU1
- S ROU="LSTRACES^SDMLST",PRMPT="Select RACE: "
- S FILE="RACE",FIELDS="",ROU1="GETPRES^SDMLST"
- S HLP1(0)="HLP1^SDM",HLP2(0)="HLP2^SDM"
- D SETRACE
- Q
-SETRACE ;
- N RE
- S ETN=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS,,.HLP1,.HLP2,ROU1)
- I +ETN>0  D
- . N RES
- . S %=$$GETPRES^SDMAPI3(.RES,DFN)
- . S ADD=$$ASKADD($P(ETN,U,2),+RES(0))
- . S:ADD %=$$SETRACE^SDMAPI3(.RE,DFN,ETN)
- . G SETRACE
- Q
-HLP1 ;
- W !?4,"You may enter a new RACE INFORMATION, if you wish"
- W !?4,"Select from the available listing all races which best identify this"
- W !?4,"patient"
- W !?4,"Inactive values are not selectable",!
- Q
- ;
-HLP2 ;
- W !?4,"You may enter a new RACE INFORMATION, if you wish"
- W !?4,"Patient's race",!!
- Q
- ;
-ASKADD(NEWEL,RESCNT) ; Ask
- N DIR,X,Y
- S RESCNT=RESCNT+1_$S(RESCNT=0:"st",1:"nd")
- S DIR("A")=" Are you adding '"_NEWEL_"' as a new RACE INFORMATION (the "_RESCNT_" for this PATIENT"
- S DIR(0)="YO",DIR("B")="No"
- D ^DIR Q Y
- ;

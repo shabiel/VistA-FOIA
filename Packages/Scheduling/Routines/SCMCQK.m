@@ -1,4 +1,4 @@
-SCMCQK ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 12/10/2012
+SCMCQK ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 1/14/2013
  ;;5.3;Scheduling;**148,177,297,260003**;AUG 13, 1993
  ;
 EN ; - main call
@@ -92,6 +92,7 @@ ERROR ;
  ;
 PATIENT() ;Return Patient DFN or -1
  ;
- N Y
- S Y=$$SELPAT^SDMUTL()
+ N Y,PAR
+ S PAR("FLAG")="AQZME"
+ S Y=$$SELPAT^SDMUI(.PAR)
  Q $S(Y="^":-1,(Y<0):-1,1:+Y)

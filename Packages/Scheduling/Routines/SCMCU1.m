@@ -1,4 +1,4 @@
-SCMCU1 ;ALB/CMM - Team Information Display ;09/25/2012
+SCMCU1 ;ALB/CMM - Team Information Display ;1/14/2013
  ;;5.3;Scheduling;**41,177,260003**;AUG 13, 1993
  ;
  ;action on Appointment Management
@@ -15,7 +15,9 @@ SEL ;selection - getting patient
  Q
  ;
 GETPT() ;function to get patient
- S Y=$$SELECT^SDMUTL("Patient")
+ N Y,PAR
+ S PAR("PRMPT")=$$EZBLD^DIALOG(480000.034)
+ S Y=$$SELPAT^SDMUI(.PAR)
  Q $S(Y="^":-1,(Y<0):-1,1:+Y)
  ;
 INIT ;gather team data

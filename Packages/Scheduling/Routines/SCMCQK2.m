@@ -1,4 +1,4 @@
-SCMCQK2 ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 08/31/2012
+SCMCQK2 ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 1/14/2013
  ;;5.3;Scheduling;**297,260003**;AUG 13, 1993
  ;
 DSPL ;
@@ -83,9 +83,8 @@ ASTM ;assign patient to team
  S OK=0
  W !!,"About to Assign "_$$NAME(DFN)_" to a non primary care team"
  I $$SC^SCMCQK1(DFN) W !!,"********** This patient is 50 percent or greater service-connected ************"
- S ROU="LSTATMS^SDMLST",PRMPT="Select TEAM NAME: "
- S FILE="TEAM",FIELDS="TEAM NAME"
- S Y=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS)
+ S PAR("SCR")="IF $$ACTTM^SCMCTMU(Y,DT) I $$NEW^SCMCQK2()"
+ S Y=$$SELPCTM^SDMUI(.PAR)
  G:Y<1 QTASTM
  S SCTM=+Y
  S SCASSDT=$$DATE("A")
@@ -116,14 +115,13 @@ ASTP ;assign patient to practitioner
  I $$SC^SCMCQK1(DFN) W !!,"********** This patient is 50 percent or greater service-connected ************"
  ;lookup to display only position and [practitioner]
  IF SCSELECT="PRACT" D
- . S ROU="LSTAPRS^SDMLST",PRMPT="POSITION's Current PRACTITIONER: "
- . S FILE="POSITION ASSIGNMENT HISTORY PRACTITIONER",FIELDS="POSITION ASSIGNMENT HISTORY PRACTITIONER"
- . S FLDOR="USER^NAME^USER"
+ . S PAR("PRMPT")=$$EZBLD^DIALOG(480000.032)
+ . S PAR("SCR")="I $$PRACSCR^SCMCQK2(Y)"
+ . S Y=$$SELPOSCP^SDMUI(.PAR)
  ELSE  D
- . S ROU="LSTAPOS^SDMLST",PRMPT="POSITION's Name: "
- . S FILE="TEAM POSITION",FIELDS="TEAM POSITION"
- . S FLDOR="NAME^TEAM^USER^CLINIC"
- S Y=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS,FLDOR)
+ . S PAR("PRMPT")=$$EZBLD^DIALOG(480000.033)
+ . S PAR("SCR")="I $$POSSCR^SCMCQK2(Y)"
+ . S Y=$$SELPOSN^SDMUI(.PAR)
  G:Y<1 QTASTP
  IF SCSELECT="PRACT" D
  .S SCTP=$P(Y,U,2)
@@ -198,3 +196,20 @@ DATE(TYPE) ;return date type=A or D
  D ^DIR
  Q Y
  ;
+NEW() ;
+ F I=0:0 S I=$O(SCD(I)) Q:'I  I (+SCD(I))=(+Y) Q
+ Q 'I
+PRACSCR(SC40452) ;screen for for file 404.52
+ N SCP,SCNODE,OK
+ S SCP=$G(^SCTM(404.52,SC40452,0))
+ S OK=0
+ G:'SCP QTPP
+ S SCNODE=$G(^SCTM(404.57,+SCP,0))
+ S OK=$S($P(SCNODE,U,2)'=SCTM:0,$P(SCNODE,U,4):0,($O(^SCTM(404.52,"AIDT",+SCP,1,""))'=-$P(SCP,U,2)):0,($O(^SCTM(404.52,"AIDT",+SCP,0,-$P(SCP,U,2)),-1)):0,($$ACTTP^SCMCTPU(+SCP)>0):1,1:0)
+QTPP Q OK
+ ;
+POSSCR(SCTP) ;screen for file 404.57
+ N SCNODE
+ S SCNODE=$G(^SCTM(404.57,SCTP,0))
+ Q $S($P(SCNODE,U,2)'=SCTM:0,$P(SCNODE,U,4):0,($$ACTTP^SCMCTPU(SCTP)>0):1,1:0)
+ Q

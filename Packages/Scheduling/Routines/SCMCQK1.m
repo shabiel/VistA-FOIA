@@ -1,4 +1,4 @@
-SCMCQK1 ;ALBOI/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge;08/31/2012
+SCMCQK1 ;ALBOI/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge;1/14/2013
  ;;5.3;Scheduling;**148,177,231,264,436,297,446,524,535,260003**;AUG 13, 1993;Build 3
  ;
  ;04/25/2006 SD*5.3*446 INTER-FACILITY TRANSFER
@@ -111,9 +111,8 @@ ASTM ;assign patient to PC team
  S OK=0
  W !!,"About to Assign "_$$NAME(DFN)_" to a primary care team"
  I $$SC(DFN) W !!,"********** This patient is 50 percent or greater service-connected ************"
- S ROU="LSTAPCTM^SDMLST",PRMPT="Select TEAM NAME: "
- S FILE="TEAM",FIELDS="TEAM NAME"
- S Y=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS)
+ S PAR("SCR")="IF $$ACTTM^SCMCTMU(Y,DT)&($P($G(^SCTM(404.51,Y,0)),U,5))"
+ S Y=$$SELPCTM^SDMUI(.PAR)
  G:Y="^" QTASTM
  S SCTM=+Y
  ;The following logic to present warning message added per SD*5.3*436
@@ -154,14 +153,13 @@ ASTP ;assign patient to PC practitioner
  I $$SC(DFN) W !!,"********** This patient is 50 percent or greater service-connected ************"
  ;lookup to display only position and [practitioner]
  IF SCSELECT="PRACT" D
- . S ROU="LSTAPRPO^SDMLST",PRMPT="POSITION's Current PRACTITIONER: "
- . S FILE="POSITION ASSIGNMENT HISTORY PRACTITIONER",FIELDS="POSITION ASSIGNMENT HISTORY PRACTITIONER"
- . S FLDOR="USER^NAME^USER"
+ . S PAR("PRMPT")=$$EZBLD^DIALOG(480000.032)
+ . S PAR("SCR")="I $$PRACSCR^SCMCQK1(Y)"
+ . S Y=$$SELPOSCP^SDMUI(.PAR)
  ELSE  D
- . S ROU="LSTAPOS^SDMLST",PRMPT="POSITION's Name: "
- . S FILE="TEAM POSITION",FIELDS="TEAM POSITION"
- . S FLDOR="NAME^TEAM^USER^CLINIC"
- S Y=$$SELECT^SDMUTL(ROU,PRMPT,FILE,FIELDS,FLDOR)
+ . S PAR("PRMPT")=$$EZBLD^DIALOG(480000.033)
+ . S PAR("SCR")="I $$POSSCR^SCMCQK1(Y)"
+ . S Y=$$SELPOSN^SDMUI(.PAR)
  G:Y<1 QTASTP
  IF SCSELECT="PRACT" D
  .S SCTP=$P(Y,U,2)
@@ -179,7 +177,7 @@ ASTP ;assign patient to PC practitioner
  G:'$$CONFIRM() QTASTP
  ;setup fields
  S SCTPFLDS(.03)=SCASSDT
- S SCTPFLDS(.05)=1 ;pc pract role
+ ;S SCTPFLDS(.05)=1 ;pc pract role
  S SCTPFLDS(.06)=$G(DUZ,.5)
  D NOW^%DTC S SCTPFLDS(.07)=%
  IF $$ACPTTP^SCAPMC21(DFN,SCTP,"SCTPFLDS",SCASSDT,"SCTPTME",0) D
@@ -244,6 +242,19 @@ ACTCL(DFN,SCCL) ;is patient enrolled in clinic? - not called with SD*5.3*535
  N SCXX
  S SCXX=$O(^DPT(DFN,"DE","B",SCCL,9999),-1)
  Q $S('SCXX:0,($P(^DPT(DFN,"DE",+SCXX,0),U,2)="I"):0,1:1)
+PRACSCR(SC40452) ;screen for for file 404.52
+ N SCP,SCNODE,OK
+ S SCP=$G(^SCTM(404.52,SC40452,0))
+ S OK=0
+ G:'SCP QTPP
+ S SCNODE=$G(^SCTM(404.57,+SCP,0))
+ S OK=$S($P(SCNODE,U,2)'=SCTM:0,'$P(SCNODE,U,4):0,($O(^SCTM(404.52,"AIDT",+SCP,1,""))'=-$P(SCP,U,2)):0,($O(^SCTM(404.52,"AIDT",+SCP,0,-$P(SCP,U,2)),-1)):0,($$ACTTP^SCMCTPU(+SCP)>0):1,1:0)
+QTPP Q OK
+POSSCR(SCTP) ;screen for file 404.57
+ N SCNODE
+ S SCNODE=$G(^SCTM(404.57,SCTP,0))
+ Q $S($P(SCNODE,U,2)'=SCTM:0,'$P(SCNODE,U,4):0,($$ACTTP^SCMCTPU(SCTP)>0):1,1:0)
+ Q
 WAITYN() ;
  N %,OK,Y
  I SCTMCT<SCTMMAX Q 0
