@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 1/14/2013
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 1/15/2013
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -65,7 +65,7 @@ CLNRGHT(RETURN,CLN) ; Verifies (DUZ) user access to Clinic
  I DATA(2500)="Y"  D  Q RETURN
  . I $D(DATA(2501,DUZ,.01))>0 S RETURN=1 Q
  . E  D
- . . S RETURN=0 S TXT(1)=DATA(.01),TXT(2)=$C(10)
+ . . S RETURN=0 S TXT(1)=DATA(.01),TXT(2)=" "
  . . D ERRX^SDAPIE(.RETURN,"CLNURGT",.TXT)
  . . S RETURN("CLN")=DATA(.01)
  E  S RETURN=1 Q 1
