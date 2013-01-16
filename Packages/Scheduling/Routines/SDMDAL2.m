@@ -1,4 +1,4 @@
-SDMDAL2 ;RGI/VSL - APPOINTMENT API; 11/09/2012
+SDMDAL2 ;RGI/VSL - APPOINTMENT API; 1/16/2013
  ;;5.3;scheduling;**260003**;08/13/93;
 FRSTAVBL(RETURN,SC) ; Get first available date
  S RETURN=$O(^SC(+SC,"T",0))
@@ -64,16 +64,16 @@ APTYNAME(TYPE) ; Get appointment type name
  Q $$GET1^DIQ(409.1,TYPE_",",.01)
  ;
 GETAPTS(RETURN,DFN,SD) ; Get patient appointments
- N FILE,SFILES,APTS,DT
+ N FILE,SFILES,APTS,TDT
  S FILE=2
  S SFILES("1900")="",SFILES("1900","N")="APT",SFILES("1900","F")="2.98"
  D GETREC^SDMDAL(.APTS,DFN,FILE,,.SFILES,1,1,1)
  I '$D(SD) M RETURN=APTS Q
  I $G(SD)>0&'$D(SD(0)) D  Q
- . I $D(APTS("APT",SD)) M RETURN("APT",SD)=APTS("APT",SD) Q
- S DT=$S(SD(0)=1:$P(SD,"."),SD(0)=0:$O(APTS("APT","")))
- F  S DT=$O(APTS("APT",DT)) Q:'$D(DT)!(DT="")  D
- . M RETURN("APT",DT)=APTS("APT",DT)
+ . I $D(APTS("APT",+SD)) M RETURN("APT",+SD)=APTS("APT",+SD) Q
+ S TDT=$S(+SD(0)=1:$P(SD,"."),+SD(0)=0:$O(APTS("APT","")))
+ F  S TDT=$O(APTS("APT",TDT)) Q:'$D(TDT)!(TDT="")  D
+ . M RETURN("APT",TDT)=APTS("APT",TDT)
  Q
  ;
 GETDAPTS(RETURN,DFN,SD) ; Get all appointments in the day
