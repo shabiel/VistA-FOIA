@@ -1,4 +1,4 @@
-SDMDAL2 ;RGI/VSL - APPOINTMENT API; 1/16/2013
+SDMDAL2 ;RGI/VSL - APPOINTMENT API; 1/22/2013
  ;;5.3;scheduling;**260003**;08/13/93;
 FRSTAVBL(RETURN,SC) ; Get first available date
  S RETURN=$O(^SC(+SC,"T",0))
@@ -41,15 +41,15 @@ GETELIG(RETURN,ELIG,INT,EXT,REZ) ; Get eligibility code
  D GETREC^SDMDAL(.RETURN,ELIG,FILE,.FLDS,,$G(INT),$G(EXT),$G(REZ))
  Q
  ;
-HASPEND(RETURN,PAT,DT) ; Return 1 if patient has pending appointment
+HASPEND(RETURN,PAT,SDT) ; Return 1 if patient has pending appointment
  S RETURN=0
  I '$D(^DPT(+$G(PAT),0)) D ERRX^SDAPIE(.RETURN,"PATNFND") Q RETURN
- S:$O(^DPT(PAT,"S",DT))>DT RETURN=1
+ S:$O(^DPT(PAT,"S",DT)) RETURN=1
  Q RETURN
  ;
-GETPEND(RETURN,PAT,DT) ; Get pending appointments
+GETPEND(RETURN,PAT,SDT) ; Get pending appointments
  N Y,AP
- F Y=DT:0 S Y=$O(^DPT(PAT,"S",Y)) Q:Y'>0  D
+ F Y=SDT:0 S Y=$O(^DPT(PAT,"S",Y)) Q:Y'>0  D
  . S AP=^(Y,0)
  . I "I"[$P(AP,U,2) D
  . . S RETURN(Y,.01)=$P(AP,U,1)
