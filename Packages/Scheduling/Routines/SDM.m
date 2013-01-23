@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 1/22/2013
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 1/23/2013
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -46,8 +46,8 @@ EN K SDMLT1 W:$P(VAEL(9),U,2)]"" !!,?15,"MEANS TEST STATUS: ",$P(VAEL(9),U,2),!
  I +$G(SADM(0))>0 S Y=$P($G(SADM(1,"DATE")),U,1),TXT(1)=$$FMTE^XLFDT(Y) W !,$$EZBLD^DIALOG(480000.003,.TXT)
 PEND S %=""
  N PEND,LXE
- S %=$$GETPEND^SDMAPI1(.PEND,DFN) W:PEND=0 !,$$EZBLD^DIALOG(480000.001)
- I PEND D  G END:%<0,HELP:'%
+ S %=$$GETPEND^SDMAPI1(.PEND,DFN) W:'$O(PEND(0)) !,$$EZBLD^DIALOG(480000.001)
+ I $O(PEND(0)) D  G END:%<0,HELP:'%
  .S %=1 W !,$$EZBLD^DIALOG(480000.004)
  .D YN^DICN
  .I %Y["^" S SDMLT1=1
