@@ -1,4 +1,4 @@
-SDAM2 ;ALB/MJK - Appt Mgt (cont); 09/24/2012  ; Compiled April 16, 2007 09:43:32
+SDAM2 ;ALB/MJK - Appt Mgt (cont); 01/18/2013
  ;;5.3;Scheduling;**250,296,327,478,446,260003**;Aug 13, 1993;Build 77
  ;
 CI ; -- protocol SDAM APPT CHECK IN entry pt
@@ -24,11 +24,17 @@ ONE(DFN,SDCL,SDT,SDDA,SDASK,SDAMCIDT) ; -- check in one appt
  ;       SDASK := ask d/t of ci always [1|yes or 0|no]
  ;    SDAMCIDT := ci date/time [optional]
  ;
- N APT,OAPT
+ N APT,OAPT,CLN,CIDT,ASK
  I $D(XRTL) D T0^%ZOSV
  S %=$$GETSCAP^SDMAPI1(.OAPT,SDCL,DFN,SDT)
- I $D(OAPT),OAPT("CHECKIN")]"" S CIDT=$$READ^SDMUTL("DO^::EXTR^","CHECKED-IN",$$FTIME^VALM1(OAPT("CHECKIN")),"^D HELP^%DTC")
- E  S CIDT=$$NOW^XLFDT()
+ S %=$$GETCLN^SDMAPI1(.CLN,SDCL)
+ S ASK=(+CLN("ASK FOR CHECK IN/OUT TIME"))!SDASK
+ S CIDT=$S($D(SDAMCIDT):SDAMCIDT,1:$$NOW^XLFDT())
+ I $D(OAPT) D
+ . I OAPT("CHECKIN")]"" S ASK=1,CIDT=OAPT("CHECKIN")
+ . I OAPT("CHECKIN")="",OAPT("CHECKOUT")]"" S CIDT=OAPT("CHECKOUT")
+ S CIDT=$$TRIMSEC(CIDT)
+ S:ASK CIDT=$$READ^SDMUTL("DO^::EXTR^","CHECKED-IN",$$FTIME^VALM1(CIDT),"^D HELP^%DTC")
  S %=$$CHECKIN^SDMAPI2(.APT,DFN,SDT,SDCL,.CIDT)
  I '% W !!,*7,$P(APT(0),U,2) D PAUSE^VALM1 G ONEQ
  I '$P(APT("AFTER","STATUS"),U,4),'$P(APT("BEFORE","STATUS"),U,4) W !?8,*7,"...appointment has not been checked in" D PAUSE^VALM1
@@ -121,3 +127,7 @@ VALID(DFN,SDCL,SDT,SDDA) ; -- return valid appt.
  ;                SDDA := ifn of appt
  ;  output: [returned] := 1 for valid appt., 0 for not valid
  Q $S($P(^SC(SDCL,"S",SDT,1,SDDA,0),U,9)'="C":1,$P(^DPT(DFN,"S",SDT,0),U,2)["C":1,1:0)
+ ;
+TRIMSEC(TIME) ;Trims seconds from the Date/Time value
+ Q $P(TIME,".")_"."_$E($P(TIME,".",2)_"0000",1,4)
+ ;
