@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 1/23/2013
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 01/24/2013
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -86,7 +86,7 @@ CLNVSC(RETURN,SC) ; Verifies clinic stop code validation
 GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  N NOD0,CO
  K RETURN S RETURN=0
- F I="SC","DFN","SD" I +$G(@I)'>0 S RETURN=0,TXT(1)=I D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT)
+ I +$G(DFN)'>0 S TXT(1)=I D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT)
  S %=$$CHKPAT^SDMAPI3(.RETURN,+DFN) Q:'% 0
  S %=$$CHKCLN^SDMAPI3(.RETURN,+SC) Q:'% 0
  D GETSCAP^SDMDAL1(.RETURN,+SC,+DFN,+SD)

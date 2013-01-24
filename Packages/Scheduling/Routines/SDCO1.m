@@ -1,4 +1,4 @@
-SDCO1 ;ALB/RMO - Appointment - Check Out;08/10/2012  ; Compiled December 12, 2008 13:01:34
+SDCO1 ;ALB/RMO - Appointment - Check Out;01/24/2013  ; Compiled December 12, 2008 13:01:34
  ;;5.3;Scheduling;**27,132,149,193,250,296,446,538,260003**;08/13/93;Build 5
  ;
  ;check out if sd/369 is released before 446!!!
@@ -14,14 +14,19 @@ EN ;Entry point for SDCO APPT CHECK OUT protocol
  ..W !!,^TMP("SDAM",$J,+SDAT,0)
  ..K RETURN
  ..S %=$$CHKCO^SDMAPI4(.RETURN,+$P(SDAT,"^",2),+$P(SDAT,"^",3))
- ..I RETURN=0 W !!,*7,RETURN(0) Q
+ ..I RETURN=0 D ERR($P(RETURN(0),U,2)) Q
  ..D CO(+$P(SDAT,"^",2),+$P(SDAT,"^",3),+$P(SDAT,"^",4),+$P(SDAT,"^",5),0,SDCODT,"CO",+SDAT,.SDCOALBF)
- ..I RETURN=0 W !!,*7,RETURN(0)
+ ..I RETURN=0 D ERR($P(RETURN(0),U,2))
  I $G(SDCOALBF) S SDCOBG=VALMBG W ! D BLD^SDAM S:$D(@VALMAR@(SDCOBG,0)) VALMBG=SDCOBG
  S VALMBCK="R"
  K SDAT
  Q
  ;
+ERR(TEXT) ;
+ N TXT
+ S TXT(1)=" ",TXT(2)=TEXT
+ D EN^DDIOL(.TXT) D PAUSE^VALM1
+ Q
 CO(DFN,SDT,SDCL,SDDA,SDASK,SDCODT,SDCOACT,SDLNE,SDCOALBF) ;Appt Check Out
  ; Input  -- DFN      Patient file IEN
  ;           SDT      Appointment Date/Time
@@ -35,13 +40,15 @@ CO(DFN,SDT,SDCL,SDDA,SDASK,SDCODT,SDCOACT,SDLNE,SDCOALBF) ;Appt Check Out
  I $D(XRTL) D T0^%ZOSV
  N SDCOQUIT,SDOE,SDATA,NEWE,IND,RETURN
  S NEWE=1
- S %=$$CHECKO^SDMAPI4(.RETURN,DFN,SDT,SDCL)
- I 'RETURN W !!,*7,RETURN(0) D PAUSE^VALM1 G COQ
+ S %=$$GETCO^SDMAPI4(.RETURN,DFN,SDT,SDCL)
+ I 'RETURN D ERR($P(RETURN(0),U,2)) G COQ
  S SDOE=RETURN("SDOE")
  S IND=0
  F  S IND=$O(RETURN(IND)) Q:IND=""  I $P(RETURN(IND),U)="APTCONW" S NEWE=0 Q
  I NEWE D  S VALMBCK="R",SDCOALBF=1 G COQ
  . ; -- has appt already been checked out
+ . S SDOE=$$GETAPT^SDMAPI4(DFN,SDT,SDCL)
+ . S %=$$GETCO^SDMAPI4(.RETURN,DFN,SDT,SDCL)
  . S SDCOED=$G(RETURN("CO"))
  . ; -- if not checked out then do interview process
  . IF 'RETURN("COD") D
