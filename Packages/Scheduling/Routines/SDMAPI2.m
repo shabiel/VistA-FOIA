@@ -1,9 +1,12 @@
-SDMAPI2 ;RGI/VSL - APPOINTMENT API; 1/23/2013
+SDMAPI2 ;RGI/VSL - APPOINTMENT API; 1/24/2013
  ;;5.3;scheduling;**260003**;08/13/93
 CHKAPP(RETURN,SC,DFN,SD,LEN,LVL) ; Check make appointment
  N PAT,CLN,VAL,PATT,HOL,TXT,X1,X2,APT,CAPT,FRSTA,SDEDT,SDSOH,%
  K RETURN S RETURN=1
  S:'$G(LVL) LVL=7
+ I '+$G(SD)!'(SD#1) D  Q 0
+ . S TXT(1)="SD",RETURN=0
+ . D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT)
  D GETPAT^SDMDAL3(.PAT,+DFN,1) ; get patient data
  D GETCLN^SDMDAL1(.CLN,+SC,1) ; get clinic data
  ;check patient, stop code and inactive
