@@ -1,4 +1,4 @@
-SDAMC ;ALB/MJK - Cancel Appt Action ; 09/24/2012  ; Compiled January 8, 2009 15:41:48
+SDAMC ;ALB/MJK - Cancel Appt Action ; 01/24/2013  ; Compiled January 8, 2009 15:41:48
  ;;5.3;Scheduling;**20,28,32,46,263,414,444,478,538,260003**;Aug 13, 1993;Build 5
  ;
 EN ; -- protocol SDAM APPT CANCEL entry pt
@@ -58,10 +58,11 @@ WHO() ;
 RSN(SDWH) ;
 RSN1 ;
  W !
- S Y=$$GETRSN^SDCNP($S(SDWH["P":"P",1:"C"))
- I X["^" S Y=-1 G RSNQ
- I Y="^" W *7 G RSN1
-RSNQ Q +Y
+ S SDSCRPC=$S(SDWH["P":"P",1:"C")
+ S SDSCR=$$SELCRSN^SDMUI(,SDSCRPC)
+ I X["^" S SDSCR=-1 G RSNQ
+ I SDSCR=-1 W *7 G RSN1
+RSNQ Q +SDSCR
  ;
 REM() ;
  W ! S DIR(0)="2.98,17" D ^DIR K DIR

@@ -1,4 +1,4 @@
-SDMDAL4 ;RGI/CBR - APPOINTMENT API; 10/26/2012
+SDMDAL4 ;RGI/CBR - APPOINTMENT API; 1/25/2013
  ;;5.3;scheduling;**260003**;08/13/93;
 GETOE(RETURN,SDOE) ; Get outpatient encounter
  N IND S IND=0
@@ -85,5 +85,13 @@ GETPAT(RETURN,DFN) ; Get patient
 DELCODT(RETURN,SDOE) ;Delete Check Out Process Completion Date
  N DA,DE,DIE,DQ,DR
  S DA=SDOE,DIE="^SCE(",DR=".07///@" D ^DIE
+ Q
+ ;
+GETCRSN(RETURN,CRFN) ; Get cancellation reason
+ N RSN,DIQ,DIC,DA,DR
+ S DIQ(0)="IE",DIQ="RSN(",DIC="^SD(409.2,",DA=CRFN
+ S DR=".01;2;3;4;"
+ D EN^DIQ1
+ M RETURN=RSN(409.2,CRFN)
  Q
  ;

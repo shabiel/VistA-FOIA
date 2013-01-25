@@ -1,4 +1,4 @@
-SDMDAL3 ;RGI/CBR - APPOINTMENT API; 1/21/2013
+SDMDAL3 ;RGI/CBR - APPOINTMENT API; 1/25/2013
  ;;5.3;scheduling;**260003**;08/13/93;
 GETPATS(RETURN,SEARCH,START,NUMBER) ; Get patients
  N FILE,FIELDS,RET,SCR,INDX
@@ -139,4 +139,7 @@ PATEXST(DFN) ; Patient exists
  ;
 CLNEXST(SC) ; Clinic exists
  Q $D(^SC($G(SC)))
+ ;
+RSNEXST(RSN) ; Cancellation reason exists
+ Q $D(^SD(409.2,$G(RSN)))
  ;

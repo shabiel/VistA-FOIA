@@ -1,4 +1,4 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider; 1/17/2013
+SDAPIE ;RGI/CBR - Scheduling Error provider; 1/25/2013
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -70,3 +70,4 @@ APTCONW ;;480000.087;;Appointment new encounter
 APTCOSU ;;480000.088;;You must have the 'SD SUPERVISOR' key to delete an appointment check out.
 APTWHEN ;;480000.089;;WHEN??
 APTPAHCO ;;480000.06;;PATIENT ALREADY HAS APPOINTMENT ^$TXT1^ THEN.
+RSNNFND ;;480000.095;;Cancellation reason not found.
