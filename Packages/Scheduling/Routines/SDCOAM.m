@@ -1,4 +1,4 @@
-SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 10/12/2012
+SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 1/25/2012
  ;;5.3;Scheduling;**1,20,27,66,132,260003**;08/13/93
  ;
 CO(SDCOACT,SDCOACTD) ;Check Out Classification, Provider and Diagnosis
@@ -101,9 +101,12 @@ DEL ;Entry point for SDAM DELETE CHECK OUT protocol
  ..S DEQ=0
  ..I RETURN>0 D  Q:DEQ=1
  ...I '$$ASK S DEQ=1 Q
- ...S %=$$DELCOSD^SDMAPI4(.RETURN,DFN,SDT,1)
+ ...S %=$$SETCO^SDMAPI4(.SDOE,.DFN,.SDT,.OE,.SC,.SDDA)
+ ...S X=$$DELVFILE^PXAPI("ALL",OE(.05),"","","",1)
  ...W !!,">>> Deleting check out information..."
  ...W !?3,"...deleting check out date/time"
+ ...S %=$$DELCOL^SDMAPI3(.RETURN,+DFN,+SDT,+SC,SDDA,+SDOE,.OE)
+ ...S SDOE=$$GETAPT^SDMAPI4(+DFN,+SDT,+SC)
  ...W !,">>> done."
  ..E  W !!,$P(RETURN(0),U,2)
  ..D PAUSE^VALM1
