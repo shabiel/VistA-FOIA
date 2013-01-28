@@ -4,7 +4,7 @@ CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
  ;
  ;  OUTPUT:  1 if no error or 0^error message
- N PSC,SSC,ND0,VAL,FLDS
+ N PSC,SSC,ND0,VAL,FLDS,%
  K RETURN S RETURN=0
  I CLN="" D ERRX^SDAPIE(.RETURN,"CLNINV") Q 0
  D GETCLN^SDMDAL1(.FLDS,+CLN,1,0,0)
@@ -60,7 +60,7 @@ LSTCLNS(RETURN,SEARCH,START,NUMBER) ; Return clinics filtered by name.
  Q 1
  ;
 CLNRGHT(RETURN,CLN) ; Verifies (DUZ) user access to Clinic
- N DATA,TXT
+ N DATA,TXT,%
  K RETURN S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,+CLN) Q:'% 0
  D GETCLN^SDMDAL1(.DATA,+CLN,1)
@@ -70,10 +70,11 @@ CLNRGHT(RETURN,CLN) ; Verifies (DUZ) user access to Clinic
  . . S RETURN=0 S TXT(1)=DATA(.01),TXT(2)=" "
  . . D ERRX^SDAPIE(.RETURN,"CLNURGT",.TXT)
  . . S RETURN("CLN")=DATA(.01)
- E  S RETURN=1 Q 1
+ S RETURN=1
+ Q 1
  ;
 CLNVSC(RETURN,SC) ; Verifies clinic stop code validation
- N DATA
+ N DATA,TEXT
  K RETURN S RETURN=0
  D GETCSC^SDMDAL1(.DATA,+SC)
  I $S('$D(DATA):1,'DATA(2):0,1:$G(DATA(2))'>DT) D  Q RETURN
@@ -84,7 +85,7 @@ CLNVSC(RETURN,SC) ; Verifies clinic stop code validation
  Q RETURN
  ;
 GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
- N NOD0,CO
+ N NOD0,CO,TXT,%
  K RETURN S RETURN=0
  I +$G(DFN)'>0 S TXT(1)=I D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT)
  S %=$$CHKPAT^SDMAPI3(.RETURN,+DFN) Q:'% 0
@@ -165,7 +166,7 @@ GETPEND(RETURN,DFN) ; Get pending appointments
  Q 1
  ;
 GETAPTS(RETURN,DFN,SD) ; Get patient appointments
- K RETURN
+ K RETURN,%
  S %=$$CHKPAT^SDMAPI3(.RETURN,+DFN) Q:'% 0
  D GETAPTS^SDMDAL2(.RETURN,+DFN,.SD)
  S RETURN=($D(RETURN)>0)
@@ -186,7 +187,7 @@ FRSTAVBL(RETURN,SC) ; Get first available date
  Q 1
  ;
 LSTCAPTS(RETURN,SC,SDBEG,SDEND,STAT) ; Returns clinic appointments filtered by date and status
- N APTS,CNT,IND,FAPTS,GROUPS
+ N APTS,CNT,IND,FAPTS,GROUPS,%
  K RETURN S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,+SC) Q:'% 0
  S CNT=0,IND=0
@@ -198,7 +199,7 @@ LSTCAPTS(RETURN,SC,SDBEG,SDEND,STAT) ; Returns clinic appointments filtered by d
  Q 1
  ;
 LSTPAPTS(RETURN,DFN,SDBEG,SDEND,STAT) ; Returns patient appointments filtered by date and status
- N APTS,CNT,IND,FAPTS,GROUPS
+ N APTS,CNT,IND,FAPTS,GROUPS,%
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,+DFN) Q:'% 0
  S CNT=0,IND=0
@@ -210,7 +211,7 @@ LSTPAPTS(RETURN,DFN,SDBEG,SDEND,STAT) ; Returns patient appointments filtered by
  Q 1
  ;
 BLDAPTS(RETURN,APTS,SSC,SDFN,GROUPS) ; Build appointment list
- N IND,DFN,SC,VA,VADM,CDATA,SDATA,SDDA,SDSTAT,CAPT,PAPT,SD
+ N IND,DFN,SC,VA,VADM,CDATA,SDATA,SDDA,SDSTAT,CAPT,PAPT,SD,CNT
  K RETURN S RETURN=0
  F IND=0:0 S IND=$O(APTS(IND)) Q:IND=""  D
  . S SDATA=APTS(IND,"SDATA")
@@ -254,7 +255,7 @@ GAFREQ(DFN,SC,CVSIT) ;
  Q 0
  ;
 GETCSC(RETURN,SC) ; Get clinic stop code
- N CLN
+ N CLN,%
  K RETURN S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,+SC) Q:'% 0
  D GETCLN^SDMDAL1(.CLN,+SC,1)
@@ -266,7 +267,7 @@ CPAIR(RETURN,SC) ;Validate primary stop code, get credit pair
  ;Input: SC=HOSPITAL LOCATION record IFN
  ;Input: RETURN=variable to return clinic credit pair (pass by reference)
  ;Output: 1=success, 0=invalid primary stop code
- N SDSSC
+ N SDSSC,CLN,CS
  K RETURN S RETURN=0
  D GETCLN^SDMDAL1(.CLN,+SC,1)
  D GETCSC^SDMDAL1(.CS,CLN(8))
