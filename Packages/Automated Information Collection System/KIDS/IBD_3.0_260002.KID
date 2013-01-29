@@ -1,0 +1,546 @@
+KIDS Distribution saved on Jan 29, 2013@13:48:11
+PROBLEM LIST REFACTORING
+**KIDS**:IBD*3.0*260002^
+
+**INSTALL NAME**
+IBD*3.0*260002
+"BLD",8812,0)
+IBD*3.0*260002^AUTOMATED INFO COLLECTION SYS^0^3130129^y
+"BLD",8812,1,0)
+^^1^1^3130129^
+"BLD",8812,1,1,0)
+PROBLEM LIST REFACTORING
+"BLD",8812,4,0)
+^9.64PA^^
+"BLD",8812,6.3)
+2
+"BLD",8812,"ABPKG")
+n
+"BLD",8812,"KRN",0)
+^9.67PA^779.2^20
+"BLD",8812,"KRN",.4,0)
+.4
+"BLD",8812,"KRN",.401,0)
+.401
+"BLD",8812,"KRN",.402,0)
+.402
+"BLD",8812,"KRN",.403,0)
+.403
+"BLD",8812,"KRN",.5,0)
+.5
+"BLD",8812,"KRN",.84,0)
+.84
+"BLD",8812,"KRN",3.6,0)
+3.6
+"BLD",8812,"KRN",3.8,0)
+3.8
+"BLD",8812,"KRN",9.2,0)
+9.2
+"BLD",8812,"KRN",9.8,0)
+9.8
+"BLD",8812,"KRN",9.8,"NM",0)
+^9.68A^2^2
+"BLD",8812,"KRN",9.8,"NM",1,0)
+IBDFBK3^^0^B40577361
+"BLD",8812,"KRN",9.8,"NM",2,0)
+IBDFN11^^0^B4080929
+"BLD",8812,"KRN",9.8,"NM","B","IBDFBK3",1)
+
+"BLD",8812,"KRN",9.8,"NM","B","IBDFN11",2)
+
+"BLD",8812,"KRN",19,0)
+19
+"BLD",8812,"KRN",19.1,0)
+19.1
+"BLD",8812,"KRN",101,0)
+101
+"BLD",8812,"KRN",409.61,0)
+409.61
+"BLD",8812,"KRN",771,0)
+771
+"BLD",8812,"KRN",779.2,0)
+779.2
+"BLD",8812,"KRN",870,0)
+870
+"BLD",8812,"KRN",8989.51,0)
+8989.51
+"BLD",8812,"KRN",8989.52,0)
+8989.52
+"BLD",8812,"KRN",8994,0)
+8994
+"BLD",8812,"KRN","B",.4,.4)
+
+"BLD",8812,"KRN","B",.401,.401)
+
+"BLD",8812,"KRN","B",.402,.402)
+
+"BLD",8812,"KRN","B",.403,.403)
+
+"BLD",8812,"KRN","B",.5,.5)
+
+"BLD",8812,"KRN","B",.84,.84)
+
+"BLD",8812,"KRN","B",3.6,3.6)
+
+"BLD",8812,"KRN","B",3.8,3.8)
+
+"BLD",8812,"KRN","B",9.2,9.2)
+
+"BLD",8812,"KRN","B",9.8,9.8)
+
+"BLD",8812,"KRN","B",19,19)
+
+"BLD",8812,"KRN","B",19.1,19.1)
+
+"BLD",8812,"KRN","B",101,101)
+
+"BLD",8812,"KRN","B",409.61,409.61)
+
+"BLD",8812,"KRN","B",771,771)
+
+"BLD",8812,"KRN","B",779.2,779.2)
+
+"BLD",8812,"KRN","B",870,870)
+
+"BLD",8812,"KRN","B",8989.51,8989.51)
+
+"BLD",8812,"KRN","B",8989.52,8989.52)
+
+"BLD",8812,"KRN","B",8994,8994)
+
+"BLD",8812,"QUES",0)
+^9.62^^
+"BLD",8812,"REQB",0)
+^9.611^^
+"MBREQ")
+0
+"PKG",76,-1)
+1^1
+"PKG",76,0)
+AUTOMATED INFO COLLECTION SYS^IBD^The utilities for generating a paper encounter form.
+"PKG",76,20,0)
+^9.402P^^
+"PKG",76,22,0)
+^9.49I^1^1
+"PKG",76,22,1,0)
+3.0^3051119^2970501^1
+"PKG",76,22,1,"PAH",1,0)
+260002^3130129
+"PKG",76,22,1,"PAH",1,1,0)
+^^1^1^3130129
+"PKG",76,22,1,"PAH",1,1,1,0)
+PROBLEM LIST REFACTORING
+"QUES","XPF1",0)
+Y
+"QUES","XPF1","??")
+^D REP^XPDH
+"QUES","XPF1","A")
+Shall I write over your |FLAG| File
+"QUES","XPF1","B")
+YES
+"QUES","XPF1","M")
+D XPF1^XPDIQ
+"QUES","XPF2",0)
+Y
+"QUES","XPF2","??")
+^D DTA^XPDH
+"QUES","XPF2","A")
+Want my data |FLAG| yours
+"QUES","XPF2","B")
+YES
+"QUES","XPF2","M")
+D XPF2^XPDIQ
+"QUES","XPI1",0)
+YO
+"QUES","XPI1","??")
+^D INHIBIT^XPDH
+"QUES","XPI1","A")
+Want KIDS to INHIBIT LOGONs during the install
+"QUES","XPI1","B")
+NO
+"QUES","XPI1","M")
+D XPI1^XPDIQ
+"QUES","XPM1",0)
+PO^VA(200,:EM
+"QUES","XPM1","??")
+^D MG^XPDH
+"QUES","XPM1","A")
+Enter the Coordinator for Mail Group '|FLAG|'
+"QUES","XPM1","B")
+
+"QUES","XPM1","M")
+D XPM1^XPDIQ
+"QUES","XPO1",0)
+Y
+"QUES","XPO1","??")
+^D MENU^XPDH
+"QUES","XPO1","A")
+Want KIDS to Rebuild Menu Trees Upon Completion of Install
+"QUES","XPO1","B")
+NO
+"QUES","XPO1","M")
+D XPO1^XPDIQ
+"QUES","XPZ1",0)
+Y
+"QUES","XPZ1","??")
+^D OPT^XPDH
+"QUES","XPZ1","A")
+Want to DISABLE Scheduled Options, Menu Options, and Protocols
+"QUES","XPZ1","B")
+NO
+"QUES","XPZ1","M")
+D XPZ1^XPDIQ
+"QUES","XPZ2",0)
+Y
+"QUES","XPZ2","??")
+^D RTN^XPDH
+"QUES","XPZ2","A")
+Want to MOVE routines to other CPUs
+"QUES","XPZ2","B")
+NO
+"QUES","XPZ2","M")
+D XPZ2^XPDIQ
+"RTN")
+2
+"RTN","IBDFBK3")
+0^1^B40577361
+"RTN","IBDFBK3",1,0)
+IBDFBK3 ;ALB/AAS - AICS broker Utilities ; 03/27/12
+"RTN","IBDFBK3",2,0)
+ ;;3.0;AUTOMATED INFO COLLECTION SYS;**12,38,36,260002**;APR 24, 1997;Build 2
+"RTN","IBDFBK3",3,0)
+ ;
+"RTN","IBDFBK3",4,0)
+LSTDATA(RESULT,PXCA,LCNT) ;
+"RTN","IBDFBK3",5,0)
+ ; -- expand the PXCA array data into human readable terms for
+"RTN","IBDFBK3",6,0)
+ ;    display on the workstation
+"RTN","IBDFBK3",7,0)
+ ;
+"RTN","IBDFBK3",8,0)
+ ;    Input : Result - (called by reference, see output)
+"RTN","IBDFBK3",9,0)
+ ;            PXCA   - (by referencethe array of data formated to
+"RTN","IBDFBK3",10,0)
+ ;                      the PCE device interface specification
+"RTN","IBDFBK3",11,0)
+ ;            lcnt   - (by reference) a counter for the result array
+"RTN","IBDFBK3",12,0)
+ ;    Output: RESULT - a new array element result(lcnt) will be
+"RTN","IBDFBK3",13,0)
+ ;                     created for each piece of data received
+"RTN","IBDFBK3",14,0)
+ ;
+"RTN","IBDFBK3",15,0)
+ N I,J,M,X,IBX
+"RTN","IBDFBK3",16,0)
+ ;
+"RTN","IBDFBK3",17,0)
+ ; -- noshow, cancel or reschedule checked
+"RTN","IBDFBK3",18,0)
+ I $D(PXCA("IBD-ABORT")) D
+"RTN","IBDFBK3",19,0)
+ .S I="" F  S I=$O(PXCA("IBD-ABORT",I)) Q:I=""  S J="" F  S J=$O(PXCA("IBD-ABORT",I,J)) Q:J=""  D
+"RTN","IBDFBK3",20,0)
+ ..S IBX=PXCA("IBD-ABORT",I,J)
+"RTN","IBDFBK3",21,0)
+ ..S X="The following Data was NOT Sent to PCE because "_$P(IBX,"^",2)_" was marked!"
+"RTN","IBDFBK3",22,0)
+ ..D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",23,0)
+ .Q
+"RTN","IBDFBK3",24,0)
+ ;
+"RTN","IBDFBK3",25,0)
+ ; -- expand the encounter node
+"RTN","IBDFBK3",26,0)
+ I $D(PXCA("ENCOUNTER")) S IBX=PXCA("ENCOUNTER") D
+"RTN","IBDFBK3",27,0)
+ .I $P(IBX,"^",14) S X="Checkout Date/Time: "_$$FMTE^XLFDT($P(IBX,"^",14)) D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",28,0)
+ .I $P(IBX,"^",4) S X=$S($P(IBX,"^",15)="P":"Primary ",$P(IBX,"^",15)="S":"Secondary ",1:"")_"Provider: "_$P($G(^VA(200,+$P(IBX,"^",4),0)),"^") D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",29,0)
+ .;; --change to api cpt ; dhh
+"RTN","IBDFBK3",30,0)
+ .I $P(IBX,"^",5) S X=$P(IBX,"^",5) D
+"RTN","IBDFBK3",31,0)
+ .. I X'="" D
+"RTN","IBDFBK3",32,0)
+ ... N IBVST
+"RTN","IBDFBK3",33,0)
+ ... S X=$$CPT^ICPTCOD(X)
+"RTN","IBDFBK3",34,0)
+ ... S (X,IBVST)=$S(+X=-1:"",1:$P(X,"^",2))
+"RTN","IBDFBK3",35,0)
+ ... S X="Visit Type CPT: "_X D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",36,0)
+ ... I $D(PXCA("ENCOUNTER","MODIFIER")) D
+"RTN","IBDFBK3",37,0)
+ .... S X="    Modifier(s): " D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",38,0)
+ .... N IBM S IBM=0
+"RTN","IBDFBK3",39,0)
+ .... F  S IBM=$O(PXCA("ENCOUNTER","MODIFIER",IBM)) Q:IBM']""  D
+"RTN","IBDFBK3",40,0)
+ ..... N IBMDESC S IBMDESC=$$MODP^ICPTMOD(IBVST,IBM,"E") Q:+IBMDESC<0
+"RTN","IBDFBK3",41,0)
+ ..... S X="         "_IBM_"-"_$P(IBMDESC,"^",2)
+"RTN","IBDFBK3",42,0)
+ ..... D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",43,0)
+ .; add sc,ao,ir,ec,mst,eligibility,credit stop (pieces 6-10,13,17)
+"RTN","IBDFBK3",44,0)
+ .I $P(IBX,"^",6) D NEWLINE(.RESULT,"Visit for SC Condition",.LCNT)
+"RTN","IBDFBK3",45,0)
+ .I $P(IBX,"^",7) D NEWLINE(.RESULT,"Visit for Agent Orange Condition",.LCNT)
+"RTN","IBDFBK3",46,0)
+ .I $P(IBX,"^",8) D NEWLINE(.RESULT,"Visit for Ionizing Radiation Condition",.LCNT)
+"RTN","IBDFBK3",47,0)
+ .I $P(IBX,"^",9) D NEWLINE(.RESULT,"Visit for Environmental Contaminates Condition",.LCNT)
+"RTN","IBDFBK3",48,0)
+ .I $P(IBX,"^",10) D NEWLINE(.RESULT,"Visit for MST",.LCNT)
+"RTN","IBDFBK3",49,0)
+ .I $P(IBX,"^",13) D NEWLINE(.RESULT,"Eligibility for Visit: "_$P($G(^DIC(8,+$P(IBX,"^",13),0)),"^"),.LCNT)
+"RTN","IBDFBK3",50,0)
+ .I $P(IBX,"^",17) D NEWLINE(.RESULT,"Additional Credit Stop: "_$P($G(^DIC(40.7,+$P(IBX,"^",17),0)),"^"),.LCNT)
+"RTN","IBDFBK3",51,0)
+ ;
+"RTN","IBDFBK3",52,0)
+ ; -- expand the other nodes
+"RTN","IBDFBK3",53,0)
+ F M="DIAGNOSIS/PROBLEM","PROVIDER","DIAGNOSIS","PROCEDURE","VITALS","PROBLEM","EXAM","IMMUNIZATION","HEALTH FACTORS","SKIN TEST","PATIENT ED","LOCAL" I $D(PXCA(M)) D
+"RTN","IBDFBK3",54,0)
+ .S I="" F  S I=$O(PXCA(M,I)) Q:I=""  D:M="PROVIDER" PROV S J="" F  S J=$O(PXCA(M,I,J)) Q:J=""  D
+"RTN","IBDFBK3",55,0)
+ ..K X S IBX=PXCA(M,I,J) D  D:$D(X) NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",56,0)
+ ...;
+"RTN","IBDFBK3",57,0)
+ ...I M="DIAGNOSIS" S X=$S($P(IBX,"^",2)="P":"Primary",$P(IBX,"^",2)="S":"Secondary",1:"")_" Diagnosis: "_$P($G(^ICD9(+$P($G(IBX),"^"),0)),"^")_" - "_$P(IBX,"^",9)_" - "_$P(IBX,"^",8) Q
+"RTN","IBDFBK3",58,0)
+ ...;
+"RTN","IBDFBK3",59,0)
+ ...I M="PROCEDURE" D
+"RTN","IBDFBK3",60,0)
+ ....I +IBX D
+"RTN","IBDFBK3",61,0)
+ ..... S X=$$CPT^ICPTCOD(+IBX)
+"RTN","IBDFBK3",62,0)
+ ..... S X=$S(X=-1:"",1:$P(X,"^",2))
+"RTN","IBDFBK3",63,0)
+ ..... S X="Procedure: "_X_" - "_$P(IBX,"^",7)_" - "_$P(IBX,"^",6)_" - "_$S($P(IBX,"^",2)="P":"Primary ",$P(IBX,"^",2)="S":"Secondary ",1:"Quantity: "_+$P(IBX,"^",2))
+"RTN","IBDFBK3",64,0)
+ ..... Q
+"RTN","IBDFBK3",65,0)
+ ....I 'IBX S X="Treatment: "_$P(IBX,"^",6)
+"RTN","IBDFBK3",66,0)
+ ...;
+"RTN","IBDFBK3",67,0)
+ ...I M="VITALS" S X="Vital Sign: "_$$VTYPE($P(IBX,"^"))_": "_$P(IBX,"^",2) Q
+"RTN","IBDFBK3",68,0)
+ ...;
+"RTN","IBDFBK3",69,0)
+ ...I M="IMMUNIZATION" S X="Immunization: "_$$DSPLYIM^PXAPIIB(+IBX) I $P(IBX,"^",5) S X=X_" - Contraindicated" Q
+"RTN","IBDFBK3",70,0)
+ ...;
+"RTN","IBDFBK3",71,0)
+ ...I M="EXAM" S X="Exam: "_$$DSPLYEX^PXAPIIB(+IBX)_$S($P(IBX,"^",2)="A":" Abnormal",$P(IBX,"^",2)="N":" Normal",1:"") Q
+"RTN","IBDFBK3",72,0)
+ ...;
+"RTN","IBDFBK3",73,0)
+ ...I M="PROBLEM" S X="Problem List: "_$P(IBX,"^") Q
+"RTN","IBDFBK3",74,0)
+ ...;
+"RTN","IBDFBK3",75,0)
+ ...I M="HEALTH FACTORS" S X="Health Factor: "_$$DSPLYHF^PXAPIIB(+IBX) N Y S Y=$P(IBX,"^",2) I Y'="" S X=X_" Level/Severity: "_$S(Y="M":"Minimal",Y="MO":"Moderate",Y="H":"Heavy/Severe",1:"") Q
+"RTN","IBDFBK3",76,0)
+ ...;
+"RTN","IBDFBK3",77,0)
+ ...I M="SKIN TEST" S X="Skin Tests: "_$$DSPLYSK^PXAPIIB(+IBX) Q
+"RTN","IBDFBK3",78,0)
+ ...;
+"RTN","IBDFBK3",79,0)
+ ...I M="PATIENT ED" S X="Patient Eduction: "_$$DSPLYED^PXAPIIB(+IBX) I $P(IBX,"^",2) S X=X_" , Level of Understanding: "_$S(IBX=1:"Poor",IBX=2:"Fair",IBX=3:"Good",IBX=4:"N/A",IBX=5:"Refused",1:"") Q
+"RTN","IBDFBK3",80,0)
+ ...;
+"RTN","IBDFBK3",81,0)
+ ...I M="DIAGNOSIS/PROBLEM" D  S:X="" X="Diagnosis/Problem: unspecified"
+"RTN","IBDFBK3",82,0)
+ ....N Y S X=""
+"RTN","IBDFBK3",83,0)
+ ....S Y=$P(IBX,"^",2) S X=$S(Y="P":"Primary ",Y="S":"Secondary ",1:"")_"Diagnosis/Problem"
+"RTN","IBDFBK3",84,0)
+ ....;I $P(IBX,"^",4) S X=X_$S($P(IBX,"^",6)="I":", Inactive",1:", Active")
+"RTN","IBDFBK3",85,0)
+ ....I $P(IBX,"^",13)'="" S X=X_" '"_$P(IBX,"^",14)_$S($P(IBX,"^",14)'="":" ",1:"")_$P(IBX,"^",13)_"'"
+"RTN","IBDFBK3",86,0)
+ ....;I +$P(IBX,"^",3) S X=X_", Clinical Lexicon term: "_$P($G(^GMP(757.01,+$P(IBX,"^",3),0)),"^") ;clinical lexicon term passed
+"RTN","IBDFBK3",87,0)
+ ....I +$P(IBX,"^",3) S X=X_", Clinical Lexicon term: " D
+"RTN","IBDFBK3",88,0)
+ .....I $D(^LEX) S X=X_$P($G(^LEX(757.01,+$P(IBX,"^",3),0)),"^") Q
+"RTN","IBDFBK3",89,0)
+ .....S X=X_$P($G(^GMP(757.01,+$P(IBX,"^",3),0)),"^")
+"RTN","IBDFBK3",90,0)
+ ....I $P(IBX,"^",5) S X=X_", Added to Problem List "
+"RTN","IBDFBK3",91,0)
+ ....I +$P(IBX,"^",4) S X=X_", Patient Active Problem: "_$$PROBNAR($P(IBX,"^",4)) ;problem entry passed
+"RTN","IBDFBK3",92,0)
+ ....I +IBX S IBY=$P($G(^ICD9(+IBX,0)),"^") I IBX'[IBY S X=X_", ICD9: "_IBY
+"RTN","IBDFBK3",93,0)
+ ....I $P(IBX,"^",9) S X=X_" SC Condition "
+"RTN","IBDFBK3",94,0)
+ ....I $P(IBX,"^",10) S X=X_" AO Condition "
+"RTN","IBDFBK3",95,0)
+ ....I $P(IBX,"^",11) S X=X_" IR Condition "
+"RTN","IBDFBK3",96,0)
+ ....I $P(IBX,"^",12) S X=X_" EC Condition "
+"RTN","IBDFBK3",97,0)
+ ...I M="LOCAL" S X="Local Data Received: "_IBX Q
+"RTN","IBDFBK3",98,0)
+ ..I M="PROCEDURE",$D(PXCA(M,I,J)) D MODLIST
+"RTN","IBDFBK3",99,0)
+LSTQ Q
+"RTN","IBDFBK3",100,0)
+ ;
+"RTN","IBDFBK3",101,0)
+MODLIST ; -- expand the modifiers filed
+"RTN","IBDFBK3",102,0)
+ N IBM,X S IBM=0
+"RTN","IBDFBK3",103,0)
+ S X="    Modifier(s): " D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",104,0)
+ F  S IBM=$O(PXCA(M,I,J,IBM)) Q:IBM']""  D
+"RTN","IBDFBK3",105,0)
+ . S X="         "_IBM_"-"_$P(PXCA(M,I,J,IBM),"^",3)
+"RTN","IBDFBK3",106,0)
+ . D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",107,0)
+ Q
+"RTN","IBDFBK3",108,0)
+PROV ; -- expand the additional provider node
+"RTN","IBDFBK3",109,0)
+ S IBX=$G(PXCA(M,I))
+"RTN","IBDFBK3",110,0)
+ S X=$S($E(IBX,1)="P":"Primary ",$E(IBX,1)="S":"Secondary ",1:"")_"Provider: "_$P($G(^VA(200,I,0)),"^")_$S($P(IBX,"^",2)=1:" Attending",1:"")
+"RTN","IBDFBK3",111,0)
+ D NEWLINE(.RESULT,X,.LCNT)
+"RTN","IBDFBK3",112,0)
+ Q
+"RTN","IBDFBK3",113,0)
+ ;
+"RTN","IBDFBK3",114,0)
+NEWLINE(RESULT,X,LCNT) ;
+"RTN","IBDFBK3",115,0)
+ ; -- increment count and add new line to results array.
+"RTN","IBDFBK3",116,0)
+ S LCNT=LCNT+1
+"RTN","IBDFBK3",117,0)
+ S RESULT(LCNT)=X
+"RTN","IBDFBK3",118,0)
+ Q
+"RTN","IBDFBK3",119,0)
+ ;
+"RTN","IBDFBK3",120,0)
+VTYPE(X) ;
+"RTN","IBDFBK3",121,0)
+ ; -- Vital sign type from codes
+"RTN","IBDFBK3",122,0)
+ S X=$G(X)
+"RTN","IBDFBK3",123,0)
+ Q $S(X="BP":"Blood Pressure",X="HT":"Height",X="WT":"Weight",X="TMP":"Temperature",X="PU":"Pulse",1:"Other Vital")
+"RTN","IBDFBK3",124,0)
+ ;
+"RTN","IBDFBK3",125,0)
+PROBNAR(IEN) ; -- display problem narrative
+"RTN","IBDFBK3",126,0)
+ N NARR
+"RTN","IBDFBK3",127,0)
+ S %=$$PROBNARR^GMPLAPI4(.NARR,IEN)
+"RTN","IBDFBK3",128,0)
+ Q $P(NARR,"^",2)
+"RTN","IBDFBK3",129,0)
+ ;
+"RTN","IBDFBK3",130,0)
+PROBDIA(IEN) ; -- return problem diagnosis code pointer
+"RTN","IBDFBK3",131,0)
+ N ICD
+"RTN","IBDFBK3",132,0)
+ S %=$$DIAG^GMPLAPI4(.ICD,IEN)
+"RTN","IBDFBK3",133,0)
+ Q +ICD
+"RTN","IBDFN11")
+0^2^B4080929
+"RTN","IBDFN11",1,0)
+IBDFN11 ;ALB/CMR - ENCOUNTER FORM - (entry points for reprint of dynamic data) ; 03/27/12
+"RTN","IBDFN11",2,0)
+ ;;3.0;AUTOMATED INFO COLLECTION SYS;**260002**;APR 24, 1997;Build 2
+"RTN","IBDFN11",3,0)
+ ;
+"RTN","IBDFN11",4,0)
+REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
+"RTN","IBDFN11",5,0)
+ ; -- input    IBPFID = ien of forms tracking file
+"RTN","IBDFN11",6,0)
+ ;             LIST = ien of selection list file
+"RTN","IBDFN11",7,0)
+ ;             ARY = name of array to return list in
+"RTN","IBDFN11",8,0)
+ ;
+"RTN","IBDFN11",9,0)
+ ; -- output   The format of the returned array is as follows:
+"RTN","IBDFN11",10,0)
+ ;            @ARY(0) = count of array element (0 if nothing found)
+"RTN","IBDFN11",11,0)
+ ;            @ARY(1) = provider ien^provider
+"RTN","IBDFN11",12,0)
+ ;         or @ARY(1) = problem ien^problem text^ICD code
+"RTN","IBDFN11",13,0)
+ ;         or @ARY(1) = classification question
+"RTN","IBDFN11",14,0)
+ ;
+"RTN","IBDFN11",15,0)
+ Q:'IBPFID!('LIST)
+"RTN","IBDFN11",16,0)
+ N FID,ITEM,IBDIEN,NODE,COUNT,ICD
+"RTN","IBDFN11",17,0)
+ ; -- initialize counter
+"RTN","IBDFN11",18,0)
+ S COUNT=0
+"RTN","IBDFN11",19,0)
+ ; -- clean out storage area
+"RTN","IBDFN11",20,0)
+ K @ARY
+"RTN","IBDFN11",21,0)
+ ; -- get field ids associated with this list
+"RTN","IBDFN11",22,0)
+ S FID="S"_LIST
+"RTN","IBDFN11",23,0)
+ S XREF=$S($O(^IBD(357.96,IBPFID,"AD",FID))[LIST:"AD",$O(^IBD(357.96,IBPFID,"AC",FID))[LIST:"AC",1:"") Q:XREF']""
+"RTN","IBDFN11",24,0)
+ S FID=$O(^IBD(357.96,IBPFID,XREF,FID)) Q:FID'[LIST  D
+"RTN","IBDFN11",25,0)
+ .; -- get all items for the field id
+"RTN","IBDFN11",26,0)
+ .S ITEM=0 F  S ITEM=$O(^IBD(357.96,IBPFID,XREF,FID,ITEM)) Q:'ITEM  D
+"RTN","IBDFN11",27,0)
+ ..; -- get ien for dynamic data entry
+"RTN","IBDFN11",28,0)
+ ..S IBDIEN=0 F  S IBDIEN=$O(^IBD(357.96,IBPFID,XREF,FID,ITEM,IBDIEN)) Q:'IBDIEN  S NODE=$S(XREF="AD":$G(^IBD(357.96,IBPFID,2,IBDIEN,0)),1:$G(^IBD(357.96,IBPFID,1,IBDIEN,0))) I NODE]"" D
+"RTN","IBDFN11",29,0)
+ ...; -- set output array with dynamic data previously printed
+"RTN","IBDFN11",30,0)
+ ...S COUNT=COUNT+1
+"RTN","IBDFN11",31,0)
+ ...S %=$$DIAG^GMPLAPI4(.ICD,+$P(NODE,"^",4))
+"RTN","IBDFN11",32,0)
+ ...S @ARY@(COUNT)=$P(NODE,"^",4)_"^"_$P(NODE,"^",8)_"^"_$S(ARY["GMP SELECT PATIENT ACTIVE PROBLEMS":$P(ICD,"^",2),1:"")
+"RTN","IBDFN11",33,0)
+ S @ARY@(0)=COUNT
+"RTN","IBDFN11",34,0)
+ Q
+"VER")
+8.0^22.0
+**END**
+**END**

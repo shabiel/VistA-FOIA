@@ -1,0 +1,1392 @@
+KIDS Distribution saved on Jan 29, 2013@13:49:47
+PROBLEM LIST REFACTORING
+**KIDS**:OR*3.0*260002^
+
+**INSTALL NAME**
+OR*3.0*260002
+"BLD",8814,0)
+OR*3.0*260002^ORDER ENTRY/RESULTS REPORTING^0^3130129^y
+"BLD",8814,1,0)
+^^1^1^3130129^
+"BLD",8814,1,1,0)
+PROBLEM LIST REFACTORING
+"BLD",8814,4,0)
+^9.64PA^^
+"BLD",8814,6.3)
+2
+"BLD",8814,"KRN",0)
+^9.67PA^779.2^20
+"BLD",8814,"KRN",.4,0)
+.4
+"BLD",8814,"KRN",.401,0)
+.401
+"BLD",8814,"KRN",.402,0)
+.402
+"BLD",8814,"KRN",.403,0)
+.403
+"BLD",8814,"KRN",.5,0)
+.5
+"BLD",8814,"KRN",.84,0)
+.84
+"BLD",8814,"KRN",3.6,0)
+3.6
+"BLD",8814,"KRN",3.8,0)
+3.8
+"BLD",8814,"KRN",9.2,0)
+9.2
+"BLD",8814,"KRN",9.8,0)
+9.8
+"BLD",8814,"KRN",9.8,"NM",0)
+^9.68A^4^4
+"BLD",8814,"KRN",9.8,"NM",1,0)
+ORCPROB^^0^B26330580
+"BLD",8814,"KRN",9.8,"NM",2,0)
+ORQQPL1^^0^B54914434
+"BLD",8814,"KRN",9.8,"NM",3,0)
+ORQQPL2^^0^B8439993
+"BLD",8814,"KRN",9.8,"NM",4,0)
+ORQQPL3^^0^B18556395
+"BLD",8814,"KRN",9.8,"NM","B","ORCPROB",1)
+
+"BLD",8814,"KRN",9.8,"NM","B","ORQQPL1",2)
+
+"BLD",8814,"KRN",9.8,"NM","B","ORQQPL2",3)
+
+"BLD",8814,"KRN",9.8,"NM","B","ORQQPL3",4)
+
+"BLD",8814,"KRN",19,0)
+19
+"BLD",8814,"KRN",19.1,0)
+19.1
+"BLD",8814,"KRN",101,0)
+101
+"BLD",8814,"KRN",409.61,0)
+409.61
+"BLD",8814,"KRN",771,0)
+771
+"BLD",8814,"KRN",779.2,0)
+779.2
+"BLD",8814,"KRN",870,0)
+870
+"BLD",8814,"KRN",8989.51,0)
+8989.51
+"BLD",8814,"KRN",8989.52,0)
+8989.52
+"BLD",8814,"KRN",8994,0)
+8994
+"BLD",8814,"KRN","B",.4,.4)
+
+"BLD",8814,"KRN","B",.401,.401)
+
+"BLD",8814,"KRN","B",.402,.402)
+
+"BLD",8814,"KRN","B",.403,.403)
+
+"BLD",8814,"KRN","B",.5,.5)
+
+"BLD",8814,"KRN","B",.84,.84)
+
+"BLD",8814,"KRN","B",3.6,3.6)
+
+"BLD",8814,"KRN","B",3.8,3.8)
+
+"BLD",8814,"KRN","B",9.2,9.2)
+
+"BLD",8814,"KRN","B",9.8,9.8)
+
+"BLD",8814,"KRN","B",19,19)
+
+"BLD",8814,"KRN","B",19.1,19.1)
+
+"BLD",8814,"KRN","B",101,101)
+
+"BLD",8814,"KRN","B",409.61,409.61)
+
+"BLD",8814,"KRN","B",771,771)
+
+"BLD",8814,"KRN","B",779.2,779.2)
+
+"BLD",8814,"KRN","B",870,870)
+
+"BLD",8814,"KRN","B",8989.51,8989.51)
+
+"BLD",8814,"KRN","B",8989.52,8989.52)
+
+"BLD",8814,"KRN","B",8994,8994)
+
+"MBREQ")
+0
+"PKG",35,-1)
+1^1
+"PKG",35,0)
+ORDER ENTRY/RESULTS REPORTING^OR^Order Entry/Results Reporting
+"PKG",35,22,0)
+^9.49I^1^1
+"PKG",35,22,1,0)
+3.0^3051119^2990416^1
+"PKG",35,22,1,"PAH",1,0)
+260002^3130129
+"PKG",35,22,1,"PAH",1,1,0)
+^^1^1^3130129
+"PKG",35,22,1,"PAH",1,1,1,0)
+PROBLEM LIST REFACTORING
+"QUES","XPF1",0)
+Y
+"QUES","XPF1","??")
+^D REP^XPDH
+"QUES","XPF1","A")
+Shall I write over your |FLAG| File
+"QUES","XPF1","B")
+YES
+"QUES","XPF1","M")
+D XPF1^XPDIQ
+"QUES","XPF2",0)
+Y
+"QUES","XPF2","??")
+^D DTA^XPDH
+"QUES","XPF2","A")
+Want my data |FLAG| yours
+"QUES","XPF2","B")
+YES
+"QUES","XPF2","M")
+D XPF2^XPDIQ
+"QUES","XPI1",0)
+YO
+"QUES","XPI1","??")
+^D INHIBIT^XPDH
+"QUES","XPI1","A")
+Want KIDS to INHIBIT LOGONs during the install
+"QUES","XPI1","B")
+NO
+"QUES","XPI1","M")
+D XPI1^XPDIQ
+"QUES","XPM1",0)
+PO^VA(200,:EM
+"QUES","XPM1","??")
+^D MG^XPDH
+"QUES","XPM1","A")
+Enter the Coordinator for Mail Group '|FLAG|'
+"QUES","XPM1","B")
+
+"QUES","XPM1","M")
+D XPM1^XPDIQ
+"QUES","XPO1",0)
+Y
+"QUES","XPO1","??")
+^D MENU^XPDH
+"QUES","XPO1","A")
+Want KIDS to Rebuild Menu Trees Upon Completion of Install
+"QUES","XPO1","B")
+NO
+"QUES","XPO1","M")
+D XPO1^XPDIQ
+"QUES","XPZ1",0)
+Y
+"QUES","XPZ1","??")
+^D OPT^XPDH
+"QUES","XPZ1","A")
+Want to DISABLE Scheduled Options, Menu Options, and Protocols
+"QUES","XPZ1","B")
+NO
+"QUES","XPZ1","M")
+D XPZ1^XPDIQ
+"QUES","XPZ2",0)
+Y
+"QUES","XPZ2","??")
+^D RTN^XPDH
+"QUES","XPZ2","A")
+Want to MOVE routines to other CPUs
+"QUES","XPZ2","B")
+NO
+"QUES","XPZ2","M")
+D XPZ2^XPDIQ
+"RTN")
+4
+"RTN","ORCPROB")
+0^1^B26330580
+"RTN","ORCPROB",1,0)
+ORCPROB ; SLC/MKB/REV - Problem List interface ; 03/27/12
+"RTN","ORCPROB",2,0)
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**27,48,181,260002**;Dec 17, 1997;Build 2
+"RTN","ORCPROB",3,0)
+ADD ; -- add new problem
+"RTN","ORCPROB",4,0)
+ N GMPLIST,ORPROV
+"RTN","ORCPROB",5,0)
+ D FULL^VALM1 S VALMBCK="R",ORPROV=$$PROVIDER Q:ORPROV="^"
+"RTN","ORCPROB",6,0)
+ S:'$G(ORL) ORL=$$LOCATION^ORCMENU1 Q:'ORL
+"RTN","ORCPROB",7,0)
+ D ADD^GMPLUTL2(+ORVP,+ORL,ORPROV)
+"RTN","ORCPROB",8,0)
+ D:$O(GMPLIST(0)) TAB^ORCHART(ORTAB,1)
+"RTN","ORCPROB",9,0)
+ Q
+"RTN","ORCPROB",10,0)
+ ;
+"RTN","ORCPROB",11,0)
+EDIT ; -- edit problem
+"RTN","ORCPROB",12,0)
+ N GMPLIST,ORPROV,PIECE,NMBR,IFN S VALMBCK=""
+"RTN","ORCPROB",13,0)
+ I '$G(ORNMBR) S ORNMBR=$$ORDERS^ORCHART("edit") Q:'ORNMBR
+"RTN","ORCPROB",14,0)
+ D FULL^VALM1 S VALMBCK="R",ORPROV=$$PROVIDER Q:ORPROV="^"
+"RTN","ORCPROB",15,0)
+ S:'$G(ORL) ORL=$$LOCATION^ORCMENU1 Q:'ORL
+"RTN","ORCPROB",16,0)
+ F PIECE=1:1:$L(ORNMBR,",") S NMBR=$P(ORNMBR,",",PIECE) I NMBR D
+"RTN","ORCPROB",17,0)
+ . S IFN=+$G(^TMP("OR",$J,"CURRENT","IDX",NMBR))
+"RTN","ORCPROB",18,0)
+ . I 'IFN W !,"Problem #"_NMBR_" has been removed!",! H 1 Q
+"RTN","ORCPROB",19,0)
+ . K GMPLIST D EDIT^GMPLUTL2(+ORVP,+ORL,ORPROV,IFN)
+"RTN","ORCPROB",20,0)
+ . S:$D(GMPLIST) OREBUILD=1
+"RTN","ORCPROB",21,0)
+ Q
+"RTN","ORCPROB",22,0)
+ ;
+"RTN","ORCPROB",23,0)
+INACT ; -- inactivate a problem
+"RTN","ORCPROB",24,0)
+ N ORPROV,ORPL,ORY,NUM,NMBR,PIECE,IFN,STS S VALMBCK=""
+"RTN","ORCPROB",25,0)
+ I '$G(ORNMBR) S ORNMBR=$$ORDERS^ORCHART("inactivate") Q:'ORNMBR
+"RTN","ORCPROB",26,0)
+ S NUM=$L(ORNMBR,",")-1 Q:'$$OK("inactivate",NUM)
+"RTN","ORCPROB",27,0)
+ S ORPROV=$$PROVIDER Q:ORPROV="^"
+"RTN","ORCPROB",28,0)
+ F PIECE=1:1:$L(ORNMBR,",") S NMBR=$P(ORNMBR,",",PIECE) I NMBR D
+"RTN","ORCPROB",29,0)
+ . S IFN=$G(^TMP("OR",$J,"CURRENT","IDX",NMBR)),STS=$P(IFN,U,4),IFN=+IFN
+"RTN","ORCPROB",30,0)
+ . I 'IFN W !,"Problem #"_NMBR_" has been removed!",! H 1 Q
+"RTN","ORCPROB",31,0)
+ . I STS="I" W !,"Problem #"_NMBR_" is already inactive!",! H 1 Q
+"RTN","ORCPROB",32,0)
+ . S ORPL("PROVIDER")=ORPROV,ORPL("STATUS")="I",ORPL("PROBLEM")=IFN
+"RTN","ORCPROB",33,0)
+ . W !,$$PROBTEXT^GMPLX(IFN)
+"RTN","ORCPROB",34,0)
+ . D UPDATE^GMPLUTL(.ORPL,.ORY) I ORY'>0 W !?5,"ERROR - "_ORY(0) H 1 Q
+"RTN","ORCPROB",35,0)
+ . W:$X>64 !?5 W " ... inactivated" H 1 S OREBUILD=1
+"RTN","ORCPROB",36,0)
+ . S $P(^TMP("OR",$J,"CURRENT","IDX",NMBR),U,4)="I"
+"RTN","ORCPROB",37,0)
+ Q
+"RTN","ORCPROB",38,0)
+ ;
+"RTN","ORCPROB",39,0)
+CMMT ; -- comment problem
+"RTN","ORCPROB",40,0)
+ N DIR,X,Y,ORPL,ORY,NMBR,PIECE,QUIT,TEXT,ORPROV,CMMT S VALMBCK=""
+"RTN","ORCPROB",41,0)
+ I '$G(ORNMBR) S ORNMBR=$$ORDERS^ORCHART("") Q:'ORNMBR
+"RTN","ORCPROB",42,0)
+ D FULL^VALM1 S VALMBCK="R",ORPROV=$$PROVIDER Q:ORPROV="^"
+"RTN","ORCPROB",43,0)
+ S CMMT=+$P($P($G(^TMP("OR",$J,ORTAB,0)),U,3),";",4) ;show comments
+"RTN","ORCPROB",44,0)
+ F PIECE=1:1:$L(ORNMBR,",") S NMBR=$P(ORNMBR,",",PIECE) I NMBR D  Q:$D(QUIT)
+"RTN","ORCPROB",45,0)
+ . S IFN=+$G(^TMP("OR",$J,"CURRENT","IDX",NMBR))
+"RTN","ORCPROB",46,0)
+ . I 'IFN W !,"Problem #"_NMBR_" has been removed!",! H 2 Q
+"RTN","ORCPROB",47,0)
+ . I '$$CODESTS^GMPLX(IFN,DT) D  Q
+"RTN","ORCPROB",48,0)
+ . . W !,"Problem #"_NMBR_" has an inactive code.  Please use the EDIT action instead",! H 2 S QUIT=1
+"RTN","ORCPROB",49,0)
+ . S DIR(0)="FAO^1:60",DIR("A")="COMMENT (<60 char): "
+"RTN","ORCPROB",50,0)
+ . S DIR("A",1)=$$UP^XLFSTR($$PROBTEXT^GMPLX(IFN))
+"RTN","ORCPROB",51,0)
+ . S DIR("?")="Enter up to 60 characters of additional text to be appended to this problem" S:$D(TEXT) DIR("B")=TEXT
+"RTN","ORCPROB",52,0)
+ . W ! D ^DIR I $D(DTOUT)!("^"[Y) S QUIT=1 Q
+"RTN","ORCPROB",53,0)
+ . S (TEXT,ORPL("COMMENT"))=Y,ORPL("PROBLEM")=IFN
+"RTN","ORCPROB",54,0)
+ . S ORPL("PROVIDER")=ORPROV
+"RTN","ORCPROB",55,0)
+ . D UPDATE^GMPLUTL(.ORPL,.ORY) S:CMMT&(ORY>0) OREBUILD=1
+"RTN","ORCPROB",56,0)
+ . W !?5,$S(ORY>0:"... 1 comment added",1:"ERROR - "_ORY(0)) H 1
+"RTN","ORCPROB",57,0)
+ Q
+"RTN","ORCPROB",58,0)
+ ;
+"RTN","ORCPROB",59,0)
+REMOVE ; -- remove problem
+"RTN","ORCPROB",60,0)
+ N DIR,X,Y,IFN,TEXT,ORY,SUB,NUM,NMBR,PIECE,QUIT,ORPROV S VALMBCK=""
+"RTN","ORCPROB",61,0)
+ I '$G(ORNMBR) S ORNMBR=$$ORDERS^ORCHART("remove") Q:'ORNMBR
+"RTN","ORCPROB",62,0)
+ S NUM=$L(ORNMBR,",")-1 Q:'$$OK("remove",NUM)
+"RTN","ORCPROB",63,0)
+ D FULL^VALM1 S VALMBCK="R",ORPROV=$$PROVIDER Q:ORPROV="^"
+"RTN","ORCPROB",64,0)
+ F PIECE=1:1:$L(ORNMBR,",") S NMBR=$P(ORNMBR,",",PIECE) I NMBR D  Q:$D(QUIT)
+"RTN","ORCPROB",65,0)
+ . S IFN=+$G(^TMP("OR",$J,"CURRENT","IDX",NMBR))
+"RTN","ORCPROB",66,0)
+ . I 'IFN W !,"Problem #"_NMBR_" has already been removed!",! H 1 Q
+"RTN","ORCPROB",67,0)
+ . S DIR(0)="FAO^1:60",DIR("A")="REASON FOR REMOVAL: "
+"RTN","ORCPROB",68,0)
+ . S DIR("A",1)=$$UP^XLFSTR($$PROBTEXT^GMPLX(IFN))
+"RTN","ORCPROB",69,0)
+ . S:$D(TEXT) DIR("B")=TEXT
+"RTN","ORCPROB",70,0)
+ . S DIR("?")="Enter up to 60 characters of additional text to be appended to this problem"
+"RTN","ORCPROB",71,0)
+ . W ! D ^DIR I $D(DTOUT)!($D(DUOUT)) S QUIT=1 Q
+"RTN","ORCPROB",72,0)
+ . S TEXT=Y S %=$$DELETE^GMPLAPI2(.ORY,IFN,ORPROV,TEXT)
+"RTN","ORCPROB",73,0)
+ . I ORY'>0 W !?5,"ERROR - "_ORY(0) H 1 Q
+"RTN","ORCPROB",74,0)
+ . W !?5,"... removed" H 1 S OREBUILD=1
+"RTN","ORCPROB",75,0)
+ Q
+"RTN","ORCPROB",76,0)
+ ;
+"RTN","ORCPROB",77,0)
+VERIFY ; -- verify problem
+"RTN","ORCPROB",78,0)
+ N GMPARAM
+"RTN","ORCPROB",79,0)
+ D PARAM^GMPLUTL2(.GMPARAM)
+"RTN","ORCPROB",80,0)
+ I 'GMPARAM("VER") W !,"This action is not in use.",! H 1 Q
+"RTN","ORCPROB",81,0)
+ I '$D(^XUSEC("ORES",DUZ)),'$D(^XUSEC("ORELSE",DUZ)) W !,"You must have either the ORES or ORELSE key to verify these problems!",! H 1 Q
+"RTN","ORCPROB",82,0)
+ N NUM,PIECE,GMPIFN,OROLD,GMPSAVED
+"RTN","ORCPROB",83,0)
+ S GMPSAVED=0
+"RTN","ORCPROB",84,0)
+ S VALMBCK=""
+"RTN","ORCPROB",85,0)
+ I '$G(ORNMBR) S ORNMBR=$$ORDERS^ORCHART("verify") Q:'ORNMBR
+"RTN","ORCPROB",86,0)
+ S VALMBCK="",NUM=$L(ORNMBR,",")-1 Q:'$$OK("verify",NUM)
+"RTN","ORCPROB",87,0)
+ F PIECE=1:1:$L(ORNMBR,",") S NUM=$P(ORNMBR,",",PIECE) I NUM D
+"RTN","ORCPROB",88,0)
+ . S GMPIFN=+$G(^TMP("OR",$J,"CURRENT","IDX",NUM))
+"RTN","ORCPROB",89,0)
+ . I 'GMPIFN W !,"Problem #"_NUM_" has already been removed!",! H 1 Q
+"RTN","ORCPROB",90,0)
+ . D VERIFY^GMPL1
+"RTN","ORCPROB",91,0)
+ . S:GMPSAVED OREBUILD=1
+"RTN","ORCPROB",92,0)
+ Q
+"RTN","ORCPROB",93,0)
+ ;
+"RTN","ORCPROB",94,0)
+OK(ACTION,NUM) ; -- Are you sure?
+"RTN","ORCPROB",95,0)
+ N DIR,X,Y
+"RTN","ORCPROB",96,0)
+ S DIR(0)="YA",DIR("B")="NO",DIR("A")="Are you sure you want to "_ACTION_" "_$S(NUM>1:"these problems? ",1:"this problem? ")
+"RTN","ORCPROB",97,0)
+ S DIR("?")="Enter YES to continue with this action, or NO to cancel"
+"RTN","ORCPROB",98,0)
+ D ^DIR
+"RTN","ORCPROB",99,0)
+ Q +Y
+"RTN","ORCPROB",100,0)
+ ;
+"RTN","ORCPROB",101,0)
+PROVIDER() ; --Return Responsible Provider
+"RTN","ORCPROB",102,0)
+ N X,Y,DIC
+"RTN","ORCPROB",103,0)
+ I '$D(^XUSEC("OREMAS",DUZ)),'$G(ORNP)!($G(ORNP)=DUZ) S Y=DUZ_U_$P($G(^VA(200,DUZ,0)),U) G PVQ
+"RTN","ORCPROB",104,0)
+ S DIC=200,DIC(0)="AEQM",DIC("A")="Requesting Clinician: "
+"RTN","ORCPROB",105,0)
+ S:$G(ORNP) DIC("B")=ORNP D ^DIC S:Y'>0 Y="^"
+"RTN","ORCPROB",106,0)
+PVQ Q Y
+"RTN","ORCPROB",107,0)
+ ;
+"RTN","ORCPROB",108,0)
+EX ; -- exit action
+"RTN","ORCPROB",109,0)
+ D:$G(OREBUILD) TAB^ORCHART(ORTAB,1)
+"RTN","ORCPROB",110,0)
+ S:$D(^TMP("OR",$J,"CURRENT","MENU")) XQORM("HIJACK")=^("MENU")
+"RTN","ORCPROB",111,0)
+ Q
+"RTN","ORQQPL1")
+0^2^B54914434
+"RTN","ORQQPL1",1,0)
+ORQQPL1 ; ALB/PDR/REV - PROBLEM LIST FOR CPRS GUI ; 05/23/12
+"RTN","ORQQPL1",2,0)
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,85,148,173,203,206,249,243,280,260002**;Dec 17, 1997;Build 2
+"RTN","ORQQPL1",3,0)
+ ;
+"RTN","ORQQPL1",4,0)
+ ;------------------------- GET PROBLEM FROM LEXICON -------------------
+"RTN","ORQQPL1",5,0)
+ ;
+"RTN","ORQQPL1",6,0)
+LEXSRCH(LIST,FROM,N,VIEW,ORDATE) ; Get candidate Problems from LEX file
+"RTN","ORQQPL1",7,0)
+ N LEX,VAL,VAL1,COD,CIEN,SYS,MAX,NAME
+"RTN","ORQQPL1",8,0)
+ S:'+$G(ORDATE) ORDATE=DT
+"RTN","ORQQPL1",9,0)
+ S:'$G(N) N=100
+"RTN","ORQQPL1",10,0)
+ S:'$L($G(VIEW)) VIEW="PL1"
+"RTN","ORQQPL1",11,0)
+ D CONFIG^LEXSET("GMPL",VIEW,ORDATE)
+"RTN","ORQQPL1",12,0)
+ D LOOK^LEXA(FROM,"GMPL",N,"",ORDATE)
+"RTN","ORQQPL1",13,0)
+ S S=0
+"RTN","ORQQPL1",14,0)
+ F  S S=$O(LEX("LIST",S)) Q:S<1  D
+"RTN","ORQQPL1",15,0)
+ . S VAL1=LEX("LIST",S)
+"RTN","ORQQPL1",16,0)
+ . S COD="",CIEN="",SYS="",NAME=""
+"RTN","ORQQPL1",17,0)
+ . I $L(VAL1,"CPT-4 ")>1 D
+"RTN","ORQQPL1",18,0)
+ .. S SYS="ICD-9-CM "
+"RTN","ORQQPL1",19,0)
+ .. S COD="799.9"
+"RTN","ORQQPL1",20,0)
+ .. S CIEN=""
+"RTN","ORQQPL1",21,0)
+ .. S NAME=$P(VAL1," (CPT-4")
+"RTN","ORQQPL1",22,0)
+ . I $L(VAL1,"DSM-IV ")>1 D
+"RTN","ORQQPL1",23,0)
+ .. S SYS="DSM-IV "
+"RTN","ORQQPL1",24,0)
+ .. S COD=$P($P(VAL1,SYS,2),")")
+"RTN","ORQQPL1",25,0)
+ .. S:COD["/" COD=$P(COD,"/",1)
+"RTN","ORQQPL1",26,0)
+ .. S CIEN=$$CODEN^ICDCODE($$ICDONE^LEXU($P(VAL1,U,1),ORDATE),80)
+"RTN","ORQQPL1",27,0)
+ .. S NAME=$P(VAL1," (DSM-IV")
+"RTN","ORQQPL1",28,0)
+ .. ;
+"RTN","ORQQPL1",29,0)
+ . I $L(VAL1,"(TITLE 38 ")>1 D
+"RTN","ORQQPL1",30,0)
+ .. S SYS="TITLE 38 "
+"RTN","ORQQPL1",31,0)
+ .. S COD=$P($P(VAL1,SYS,2),")")
+"RTN","ORQQPL1",32,0)
+ .. S:COD["/" COD=$P(COD,"/",1)
+"RTN","ORQQPL1",33,0)
+ .. S CIEN=$$CODEN^ICDCODE($$ICDONE^LEXU($P(VAL1,U,1),ORDATE),80)
+"RTN","ORQQPL1",34,0)
+ .. S NAME=$P(VAL1,"(TITLE 38 ")
+"RTN","ORQQPL1",35,0)
+ .. ;
+"RTN","ORQQPL1",36,0)
+ . I $L(VAL1,"ICD-9-CM ")>1 D
+"RTN","ORQQPL1",37,0)
+ .. S SYS="ICD-9-CM "
+"RTN","ORQQPL1",38,0)
+ .. S COD=$P($P(VAL1,SYS,2),")")
+"RTN","ORQQPL1",39,0)
+ .. S:COD["/" COD=$P(COD,"/",1)
+"RTN","ORQQPL1",40,0)
+ .. S CIEN=+$$CODEN^ICDCODE(COD,80)
+"RTN","ORQQPL1",41,0)
+ .. S NAME=$P(VAL1," (ICD-9-CM")
+"RTN","ORQQPL1",42,0)
+ . I $L(NAME)=0 S NAME=$P($P(VAL1," (")," *")
+"RTN","ORQQPL1",43,0)
+ . ;
+"RTN","ORQQPL1",44,0)
+ . ; jeh Clean left over codes
+"RTN","ORQQPL1",45,0)
+ . S NAME=$P(NAME," (CPT-4")
+"RTN","ORQQPL1",46,0)
+ . S NAME=$P(NAME," (DSM-IV")
+"RTN","ORQQPL1",47,0)
+ . S NAME=$P(NAME,"(TITLE 38 ")
+"RTN","ORQQPL1",48,0)
+ . S NAME=$P(NAME," (ICD-9-CM")
+"RTN","ORQQPL1",49,0)
+ . ;
+"RTN","ORQQPL1",50,0)
+ . S VAL=NAME_U_COD_U_CIEN_U_SYS ; ien^.01^icd^icdifn^system
+"RTN","ORQQPL1",51,0)
+ . S LIST(S)=VAL
+"RTN","ORQQPL1",52,0)
+ . S MAX=S
+"RTN","ORQQPL1",53,0)
+ I $G(MAX)'="" S LIST(MAX+1)=$G(LEX("MAT"))
+"RTN","ORQQPL1",54,0)
+ K ^TMP("LEXSCH",$J)
+"RTN","ORQQPL1",55,0)
+ Q
+"RTN","ORQQPL1",56,0)
+ ;
+"RTN","ORQQPL1",57,0)
+ICDREC(COD) ;
+"RTN","ORQQPL1",58,0)
+ N CODIEN
+"RTN","ORQQPL1",59,0)
+ I COD="" Q ""
+"RTN","ORQQPL1",60,0)
+ S COD=$P($P(COD,U),"/")
+"RTN","ORQQPL1",61,0)
+ S CODIEN=$$CODEN^ICDCODE(COD,80) ;ICR #3990
+"RTN","ORQQPL1",62,0)
+ Q CODIEN
+"RTN","ORQQPL1",63,0)
+ ;
+"RTN","ORQQPL1",64,0)
+CPTREC(COD) ;
+"RTN","ORQQPL1",65,0)
+ I COD="" Q ""
+"RTN","ORQQPL1",66,0)
+ Q $$CODEN^ICPTCOD(COD) ;ICR #1995
+"RTN","ORQQPL1",67,0)
+ ;
+"RTN","ORQQPL1",68,0)
+EDLOAD(RETURN,DA,GMPROV,GMPVAMC) ; LOAD  EDIT ARRAYS
+"RTN","ORQQPL1",69,0)
+ ; DA=problem IFN
+"RTN","ORQQPL1",70,0)
+ N I,GMPL
+"RTN","ORQQPL1",71,0)
+ S %=$$DETAIL^GMPLAPI2(.GMPL,DA)
+"RTN","ORQQPL1",72,0)
+ S I=0
+"RTN","ORQQPL1",73,0)
+ D LOADFLDS(.RETURN,"GMPL","NEW",.I)
+"RTN","ORQQPL1",74,0)
+ D LOADFLDS(.RETURN,"GMPL","ORG",.I)
+"RTN","ORQQPL1",75,0)
+ K GMPL  ; should not have to do this
+"RTN","ORQQPL1",76,0)
+ Q
+"RTN","ORQQPL1",77,0)
+ ;
+"RTN","ORQQPL1",78,0)
+LOADFLDS(RETURN,NAM,TYP,I) ; LOAD FIELDS FOR TYPE OF ARRAY
+"RTN","ORQQPL1",79,0)
+ N S,V,CVP,PN,PID
+"RTN","ORQQPL1",80,0)
+ S S="",V=$C(254)
+"RTN","ORQQPL1",81,0)
+ F  S S=$O(@NAM@(S)) Q:S=10  D
+"RTN","ORQQPL1",82,0)
+ . S RETURN(I)=TYP_V_S_V_@NAM@(S)
+"RTN","ORQQPL1",83,0)
+ . S I=I+1
+"RTN","ORQQPL1",84,0)
+ S S=""
+"RTN","ORQQPL1",85,0)
+ F  S S=$O(@NAM@(10,S)) Q:S=""  D
+"RTN","ORQQPL1",86,0)
+ . S CVP=@NAM@(10,S)
+"RTN","ORQQPL1",87,0)
+ . S PN="" ; provider name
+"RTN","ORQQPL1",88,0)
+ . S PID=$P(CVP,U,6) ; provider id
+"RTN","ORQQPL1",89,0)
+ . I PID'=""  S PN=$$GET1^DIQ(200,PID,.01) ; get provider name
+"RTN","ORQQPL1",90,0)
+ . S RETURN(I)=TYP_V_"10,"_S_V_CVP_U_PN
+"RTN","ORQQPL1",91,0)
+ . S I=I+1
+"RTN","ORQQPL1",92,0)
+ Q
+"RTN","ORQQPL1",93,0)
+ ;
+"RTN","ORQQPL1",94,0)
+EDSAVE(RETURN,GMPIFN,GMPROV,GMPVAMC,UT,EDARRAY) ; SAVE EDITED RES
+"RTN","ORQQPL1",95,0)
+ ; RETURN - boolean, 1 success, 0 failure
+"RTN","ORQQPL1",96,0)
+ ; EDARRAY - array used for indirect sets of GMPORIG() and GMPFLDS()
+"RTN","ORQQPL1",97,0)
+ ;
+"RTN","ORQQPL1",98,0)
+ N ERR,GMPLUSER,S
+"RTN","ORQQPL1",99,0)
+ S GMPLUSER=$S(UT:1,1:0)
+"RTN","ORQQPL1",100,0)
+ S S=""
+"RTN","ORQQPL1",101,0)
+ F  S S=$O(EDARRAY(S)) Q:S=""  D
+"RTN","ORQQPL1",102,0)
+ . S @EDARRAY(S)
+"RTN","ORQQPL1",103,0)
+ S RETURN=$$UPDATE^GMPLAPI2(.ERR,GMPIFN,.GMPORIG,.GMPFLD,GMPLUSER,GMPROV)
+"RTN","ORQQPL1",104,0)
+ K GMPFLD,GMPORIG
+"RTN","ORQQPL1",105,0)
+ Q
+"RTN","ORQQPL1",106,0)
+ ;
+"RTN","ORQQPL1",107,0)
+UPDATE(ORRETURN,UPDARRAY) ; UPDATE A PROBLEM RECORD
+"RTN","ORQQPL1",108,0)
+ ; Does essentially same job as EDSAVE above, however does not handle edits to comments
+"RTN","ORQQPL1",109,0)
+ ; or addition of multiple comments.
+"RTN","ORQQPL1",110,0)
+ ; Use initially just for status updates.
+"RTN","ORQQPL1",111,0)
+ ;
+"RTN","ORQQPL1",112,0)
+ N S,GMPL,GMPORIG ; last 2 vars created in nested call
+"RTN","ORQQPL1",113,0)
+ S S=""
+"RTN","ORQQPL1",114,0)
+ F  S S=$O(UPDARRAY(S)) Q:S=""  D
+"RTN","ORQQPL1",115,0)
+ . S @UPDARRAY(S)
+"RTN","ORQQPL1",116,0)
+ D UPDATE^GMPLUTL(.ORARRAY,.ORRETURN)
+"RTN","ORQQPL1",117,0)
+ K ORARRAY
+"RTN","ORQQPL1",118,0)
+ ; broker wont pick up root node RETURN
+"RTN","ORQQPL1",119,0)
+ S ORRETURN(1)=ORRETURN(0) ; error text
+"RTN","ORQQPL1",120,0)
+ S ORRETURN(0)=ORRETURN ; gmpdfn
+"RTN","ORQQPL1",121,0)
+ I ORRETURN(0)=""  S ORRETURN=1 ; insurance ? need
+"RTN","ORQQPL1",122,0)
+ Q
+"RTN","ORQQPL1",123,0)
+ ;
+"RTN","ORQQPL1",124,0)
+ADDSAVE(RETURN,GMPDFN,GMPROV,GMPVAMC,ADDARRAY) ; SAVE NEW RECORD
+"RTN","ORQQPL1",125,0)
+ ; RETURN - Problem IFN if success, 0 otherwise
+"RTN","ORQQPL1",126,0)
+ ; ADDARRAY - array used for indirect sets of  GMPFLDS()
+"RTN","ORQQPL1",127,0)
+ ;
+"RTN","ORQQPL1",128,0)
+ N S,GMPFLD,GMPORIG
+"RTN","ORQQPL1",129,0)
+ S S=""
+"RTN","ORQQPL1",130,0)
+ F  S S=$O(ADDARRAY(S)) Q:S=""  D
+"RTN","ORQQPL1",131,0)
+ . S @ADDARRAY(S)
+"RTN","ORQQPL1",132,0)
+ S %=$$NEW^GMPLAPI2(.RETURN,GMPDFN,GMPROV,.GMPFLD)
+"RTN","ORQQPL1",133,0)
+ S:$G(RETURN)>0 RETURN=1
+"RTN","ORQQPL1",134,0)
+ Q
+"RTN","ORQQPL1",135,0)
+ ;
+"RTN","ORQQPL1",136,0)
+INITUSER(RETURN,ORDUZ) ; INITIALIZE FOR NEW USER
+"RTN","ORQQPL1",137,0)
+ ; taken from INIT^GMPLMGR
+"RTN","ORQQPL1",138,0)
+ ; leave GMPLUSER on symbol table - is evaluated in EDITSAVE
+"RTN","ORQQPL1",139,0)
+ ;
+"RTN","ORQQPL1",140,0)
+ N GMPARAM,PV,CTXT,GMPLPROV
+"RTN","ORQQPL1",141,0)
+ S GMPLUSER=$$CLINUSER(DUZ)
+"RTN","ORQQPL1",142,0)
+ S CTXT=$$GET^XPAR("ALL","ORCH CONTEXT PROBLEMS",1)
+"RTN","ORQQPL1",143,0)
+ D GET^GMPLSITE(.GMPARAM)
+"RTN","ORQQPL1",144,0)
+ S RETURN(0)=GMPLUSER ;  problem list user, or other user
+"RTN","ORQQPL1",145,0)
+ S RETURN(1)=$$USERVIEW^GMPLEXT ; GMPLVIEW("VIEW") - users default view
+"RTN","ORQQPL1",146,0)
+ S RETURN(2)=GMPARAM("VER") ; verify transcribed problems
+"RTN","ORQQPL1",147,0)
+ S RETURN(3)=GMPARAM("PRT") ; prompt for chart copy
+"RTN","ORQQPL1",148,0)
+ S RETURN(4)=GMPARAM("CLU") ; use lexicon
+"RTN","ORQQPL1",149,0)
+ S RETURN(5)=GMPARAM("REV") ; chron or reverse chron listing
+"RTN","ORQQPL1",150,0)
+ S RETURN(6)=$S($P($G(CTXT),";",3)'="":$P($G(CTXT),";",3),1:"A")
+"RTN","ORQQPL1",151,0)
+ S GMPLPROV=$P($G(CTXT),";",5)
+"RTN","ORQQPL1",152,0)
+ I +GMPLPROV>0,$D(^VA(200,GMPLPROV)) D
+"RTN","ORQQPL1",153,0)
+ . S RETURN(7)=GMPLPROV_U_$P(^VA(200,GMPLPROV,0),U)
+"RTN","ORQQPL1",154,0)
+ E  S RETURN(7)="0^All"
+"RTN","ORQQPL1",155,0)
+ S RETURN(8)=$$SERVICE^GMPLEXT ; user's service/section
+"RTN","ORQQPL1",156,0)
+ ; Guessing from what I see in the data that $$VIEW^GMPLX1 actually returns a composite
+"RTN","ORQQPL1",157,0)
+ ; of default view (in/out patient)/(c1/c2... if out patient i.e. GMPLVIEW("CLIN")) or
+"RTN","ORQQPL1",158,0)
+ ;                                 /(s1/s2... if in patient i.e. GMPLVIEW("SERV"))
+"RTN","ORQQPL1",159,0)
+ ; Going with this assumption for now:
+"RTN","ORQQPL1",160,0)
+ I $L(RETURN(1),"/")>1 D
+"RTN","ORQQPL1",161,0)
+ . S PV=RETURN(1)
+"RTN","ORQQPL1",162,0)
+ . S RETURN(1)=$P(PV,"/")
+"RTN","ORQQPL1",163,0)
+ . I RETURN(1)="C" S GMPLVIEW("CLIN")=$P(PV,"/",2,99)
+"RTN","ORQQPL1",164,0)
+ . I RETURN(1)="S" S GMPLVIEW("SERV")=$P(PV,"/",2,99)
+"RTN","ORQQPL1",165,0)
+ S RETURN(9)=$G(GMPLVIEW("SERV")) ; ??? Where from - see tech doc
+"RTN","ORQQPL1",166,0)
+ S RETURN(10)=$G(GMPLVIEW("CLIN")) ; ??? Where from - see tech doc
+"RTN","ORQQPL1",167,0)
+ S RETURN(11)=""
+"RTN","ORQQPL1",168,0)
+ S RETURN(12)=+$P($G(CTXT),";",4)    ; should comments display?
+"RTN","ORQQPL1",169,0)
+ K GMPLVIEW,GMPARAM
+"RTN","ORQQPL1",170,0)
+ Q
+"RTN","ORQQPL1",171,0)
+ ;
+"RTN","ORQQPL1",172,0)
+CLINUSER(ORDUZ) ;is this a clinical user?
+"RTN","ORQQPL1",173,0)
+ N ORUSER
+"RTN","ORQQPL1",174,0)
+ S ORUSER=0
+"RTN","ORQQPL1",175,0)
+ I $D(^XUSEC("ORES",ORDUZ)) S ORUSER=1
+"RTN","ORQQPL1",176,0)
+ I $D(^XUSEC("ORELSE",ORDUZ)) S ORUSER=1
+"RTN","ORQQPL1",177,0)
+ I $D(^XUSEC("PROVIDER",ORDUZ)) S ORUSER=1
+"RTN","ORQQPL1",178,0)
+ Q ORUSER
+"RTN","ORQQPL1",179,0)
+ ;
+"RTN","ORQQPL1",180,0)
+INITPT(RETURN,DFN) ; GET PATIENT PARAMETERS
+"RTN","ORQQPL1",181,0)
+ Q:+$G(DFN)=0
+"RTN","ORQQPL1",182,0)
+ N GMPSC,GMPAGTOR,GMPION,GMPGULF,GMPHNC,GMPMST,GMPCV,GMPSHD
+"RTN","ORQQPL1",183,0)
+ ;
+"RTN","ORQQPL1",184,0)
+ S RETURN(0)=DUZ(2) ; facility #
+"RTN","ORQQPL1",185,0)
+ D DEM^VADPT ; get death indicator
+"RTN","ORQQPL1",186,0)
+ S RETURN(1)=$G(VADM(6)) ; death indicator
+"RTN","ORQQPL1",187,0)
+ D VADPT^GMPLX1(DFN) ; get eligibilities
+"RTN","ORQQPL1",188,0)
+ S RETURN(2)=$P(GMPSC,U) ; service connected
+"RTN","ORQQPL1",189,0)
+ S RETURN(3)=$G(GMPAGTOR) ; agent orange exposure
+"RTN","ORQQPL1",190,0)
+ S RETURN(4)=$G(GMPION) ; ionizing radiation exposure
+"RTN","ORQQPL1",191,0)
+ S RETURN(5)=$G(GMPGULF) ; gulf war exposure
+"RTN","ORQQPL1",192,0)
+ S RETURN(6)=VA("BID") ; need this to reconstitute GMPDFN on return
+"RTN","ORQQPL1",193,0)
+ S RETURN(7)=$G(GMPHNC) ; head/neck cancer
+"RTN","ORQQPL1",194,0)
+ S RETURN(8)=$G(GMPMST) ; MST
+"RTN","ORQQPL1",195,0)
+ S RETURN(9)=$G(GMPCV) ; CV
+"RTN","ORQQPL1",196,0)
+ S RETURN(10)=$G(GMPSHD) ; SHAD
+"RTN","ORQQPL1",197,0)
+ Q
+"RTN","ORQQPL1",198,0)
+ ;
+"RTN","ORQQPL1",199,0)
+PROVSRCH(LST,FLAG,N,FROM,PART) ; Get candidate Rroviders from person file
+"RTN","ORQQPL1",200,0)
+ N LV,NS,RV,IEN
+"RTN","ORQQPL1",201,0)
+ S RV=$NAME(LV("DILIST","ID"))
+"RTN","ORQQPL1",202,0)
+ IF +$G(N)=0 S N=50
+"RTN","ORQQPL1",203,0)
+ S FLAG=$G(FLAG),N=$G(N),FROM=$G(FROM),PART=$G(PART)
+"RTN","ORQQPL1",204,0)
+ D LIST^DIC(200,"",".01;1",FLAG,N,FROM,PART,"","","","LV")
+"RTN","ORQQPL1",205,0)
+ S NS=""
+"RTN","ORQQPL1",206,0)
+ F  S NS=$O(LV("DILIST",1,NS)) Q:NS=""  D
+"RTN","ORQQPL1",207,0)
+ . S IEN=""
+"RTN","ORQQPL1",208,0)
+ . S IEN=$O(^VA(200,"B",@RV@(NS,.01),IEN)) ; compliments of PROV^ORQPTQ
+"RTN","ORQQPL1",209,0)
+ . S LST(NS)=IEN_U_@RV@(NS,.01)  ; initials_U_@RV@(NS,1)
+"RTN","ORQQPL1",210,0)
+ Q
+"RTN","ORQQPL1",211,0)
+ ;
+"RTN","ORQQPL1",212,0)
+CLINSRCH(Y,X) ; Get LIST OF CLINICS
+"RTN","ORQQPL1",213,0)
+ ; Note: This comes from CLIN^ORQPTQ2, where it was commented out in place of
+"RTN","ORQQPL1",214,0)
+ ; a call to ^XPAR. I would have just used CLIN^ORQPTQ2, but it didn't work - at
+"RTN","ORQQPL1",215,0)
+ ; least on SLC OEX directory.
+"RTN","ORQQPL1",216,0)
+ ; X has no purpose other than to satisfy apparent rpc and tcallv requirement for args
+"RTN","ORQQPL1",217,0)
+ N I,NAME,IEN
+"RTN","ORQQPL1",218,0)
+ S I=1,IEN=0,NAME=""
+"RTN","ORQQPL1",219,0)
+ ;access to SC global granted under DBIA #518:
+"RTN","ORQQPL1",220,0)
+ F  S NAME=$O(^SC("B",NAME)) Q:NAME=""  S IEN=$O(^(NAME,0)) D
+"RTN","ORQQPL1",221,0)
+ . I $P(^SC(IEN,0),"^",3)="C" S Y(I)=IEN_"^"_NAME,I=I+1
+"RTN","ORQQPL1",222,0)
+ Q
+"RTN","ORQQPL1",223,0)
+ ;
+"RTN","ORQQPL1",224,0)
+SRVCSRCH(Y,FROM,DIR,ALL) ; GET LIST OF SERVICES
+"RTN","ORQQPL1",225,0)
+ N I,IEN,CNT S I=0,CNT=44
+"RTN","ORQQPL1",226,0)
+ F  Q:I=CNT  S FROM=$O(^DIC(49,"B",FROM),DIR) Q:FROM=""  D
+"RTN","ORQQPL1",227,0)
+ . S IEN=$O(^DIC(49,"B",FROM,0)) I '$G(ALL),$P(^DIC(49,IEN,0),U,9)'="C" Q
+"RTN","ORQQPL1",228,0)
+ . S I=I+1,Y(I)=IEN_"^"_FROM
+"RTN","ORQQPL1",229,0)
+ Q
+"RTN","ORQQPL1",230,0)
+ ;
+"RTN","ORQQPL1",231,0)
+DUP(Y,DFN,TERM,TEXT) ;Check for duplicate problem
+"RTN","ORQQPL1",232,0)
+ N ACTIVE
+"RTN","ORQQPL1",233,0)
+ S %=$$DUPL^GMPLAPI2(.Y,DFN,TERM,TEXT)
+"RTN","ORQQPL1",234,0)
+ Q:Y=0 
+"RTN","ORQQPL1",235,0)
+ S %=$$ACTIVE^GMPLAPI2(.ACTIVE,Y)
+"RTN","ORQQPL1",236,0)
+ S Y=Y_U_$S(ACTIVE:"A",1:"I")
+"RTN","ORQQPL1",237,0)
+ Q
+"RTN","ORQQPL2")
+0^3^B8439993
+"RTN","ORQQPL2",1,0)
+ORQQPL2 ; ALB/PDR/REV - RPCs FOR CPRS GUI IMPLEMENTATION ; 04/12/12
+"RTN","ORQQPL2",2,0)
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,260002**;Dec 17, 1997;Build 2
+"RTN","ORQQPL2",3,0)
+ ;
+"RTN","ORQQPL2",4,0)
+ ; -------------- GET HISTORY FOR DETAIL DISPLAY ----------------------
+"RTN","ORQQPL2",5,0)
+ ;
+"RTN","ORQQPL2",6,0)
+HIST(RETURN,GMPIFN) ; GET AUDIT HISTORY
+"RTN","ORQQPL2",7,0)
+ ; taken from EN^GMPLDISP
+"RTN","ORQQPL2",8,0)
+ N S,ORDT,TXT,I,L,GMPDT,RET,AUDIT,LCNT
+"RTN","ORQQPL2",9,0)
+ S LCNT=0,AID=0
+"RTN","ORQQPL2",10,0)
+ D GETHIST^GMPLHIST(.RET,GMPIFN)
+"RTN","ORQQPL2",11,0)
+ F  S AID=$O(RET(AID)) Q:AID'>0  D
+"RTN","ORQQPL2",12,0)
+ . S %=$$AUDET^GMPLHIST(.AUDIT,RET(AID))
+"RTN","ORQQPL2",13,0)
+ . D DT^GMPLDISP(.GMPDT,.LCNT,.AUDIT)
+"RTN","ORQQPL2",14,0)
+ I '$D(GMPDT) D  Q  ;BAIL OUT - NO CHANGES
+"RTN","ORQQPL2",15,0)
+ . S RETURN(0)="NONE"
+"RTN","ORQQPL2",16,0)
+ ;         Transfer data and clean up for return to GUI
+"RTN","ORQQPL2",17,0)
+ S S="",I=0,TXT=""
+"RTN","ORQQPL2",18,0)
+ F  S S=$O(GMPDT(S)) Q:S=""  D
+"RTN","ORQQPL2",19,0)
+ . S L=GMPDT(S,0)
+"RTN","ORQQPL2",20,0)
+ . I $L(L,": ")>1 D  Q  ; does line begin with date? (hope ": " can't be part of text)
+"RTN","ORQQPL2",21,0)
+ .. D FLUSH(.RETURN,.I)
+"RTN","ORQQPL2",22,0)
+ .. S ORDT=$P(L,": ") ; get new date
+"RTN","ORQQPL2",23,0)
+ .. S TXT=$$STRIP($P(L,": ",2,999)) ; start new text string
+"RTN","ORQQPL2",24,0)
+ . S TXT=TXT_" "_$$STRIP(L)  ; line does not begin with date, so add to existing text line
+"RTN","ORQQPL2",25,0)
+ I '$D(RETURN(0)) S RETURN(0)=I
+"RTN","ORQQPL2",26,0)
+ D FLUSH(.RETURN,.I)
+"RTN","ORQQPL2",27,0)
+ Q 
+"RTN","ORQQPL2",28,0)
+ ;
+"RTN","ORQQPL2",29,0)
+FLUSH(RETURN,I) ; FLUSH FORMATTED AUDIT STRING
+"RTN","ORQQPL2",30,0)
+  I I'=0 D  ; do we have a text string built?
+"RTN","ORQQPL2",31,0)
+ . S RETURN(I)=$$STRIP(ORDT)_U_TXT  ; return date and text
+"RTN","ORQQPL2",32,0)
+  S I=I+1
+"RTN","ORQQPL2",33,0)
+ Q
+"RTN","ORQQPL2",34,0)
+ ;
+"RTN","ORQQPL2",35,0)
+STRIP(VAL) ; STRIP LEADING SPACES FROM VALUES
+"RTN","ORQQPL2",36,0)
+ N J
+"RTN","ORQQPL2",37,0)
+ F J=1:1 Q:$E(VAL,J)'=" "
+"RTN","ORQQPL2",38,0)
+ Q $E(VAL,J,9999)
+"RTN","ORQQPL2",39,0)
+ ;
+"RTN","ORQQPL2",40,0)
+ ; ------------------- DELETE A PROBLEM FROM LIST ---------------------
+"RTN","ORQQPL2",41,0)
+ ;
+"RTN","ORQQPL2",42,0)
+DELETE(RESULT,GMPIFN,GMPROV,GMPVAMC,REASON) ; DELETE A PROBLEM
+"RTN","ORQQPL2",43,0)
+ S %=$$DELETE^GMPLAPI2(.RESULT,GMPIFN,GMPROV,REASON)
+"RTN","ORQQPL2",44,0)
+ Q
+"RTN","ORQQPL2",45,0)
+ ; ------------------ REPLACE REMOVED PROBLEM ----------------------
+"RTN","ORQQPL2",46,0)
+ ;
+"RTN","ORQQPL2",47,0)
+REPLACE(RETURN,DA) ; -- replace problem on patient's list
+"RTN","ORQQPL2",48,0)
+ S %=$$UNDELETE^GMPLAPI4(.RETURN,DA)
+"RTN","ORQQPL2",49,0)
+ Q
+"RTN","ORQQPL2",50,0)
+ ;
+"RTN","ORQQPL2",51,0)
+ ; -------------------  VERIFY A PROBLEM ------------------------
+"RTN","ORQQPL2",52,0)
+ ;
+"RTN","ORQQPL2",53,0)
+VERIFY(RETURN,GMPIFN) ; -- verify a transcribed problem
+"RTN","ORQQPL2",54,0)
+ ; RETURN:  ;(consistent with UPDATE function)
+"RTN","ORQQPL2",55,0)
+ ;   SUCCESS:
+"RTN","ORQQPL2",56,0)
+ ;     RETURN>0, RETURN(0)=""
+"RTN","ORQQPL2",57,0)
+ ;   FAILURE:
+"RTN","ORQQPL2",58,0)
+ ;      RETURN<0, RETURN(0)=verbose error message
+"RTN","ORQQPL2",59,0)
+ S %=$$VERIFY^GMPLAPI2(.RETURN,GMPIFN)
+"RTN","ORQQPL2",60,0)
+ I RETURN=1 S RETURN(0)=""
+"RTN","ORQQPL2",61,0)
+ E  S RETURN=-1,RETURN(0)=$P(RETURN(0),"^",2)
+"RTN","ORQQPL2",62,0)
+ Q
+"RTN","ORQQPL2",63,0)
+INACT(RETURN,GMPIFN) ; -- inactivate a problem
+"RTN","ORQQPL2",64,0)
+ ; RETURN:  ;(consistent with UPDATE function)
+"RTN","ORQQPL2",65,0)
+ ;   SUCCESS:
+"RTN","ORQQPL2",66,0)
+ ;     RETURN>0, RETURN(0)=""
+"RTN","ORQQPL2",67,0)
+ ;   FAILURE:
+"RTN","ORQQPL2",68,0)
+ ;      RETURN<0, RETURN(0)=verbose error message
+"RTN","ORQQPL2",69,0)
+ S %=$$INACTV^GMPLAPI2(.RETURN,GMPIFN,DUZ,"","")
+"RTN","ORQQPL2",70,0)
+ I RETURN=1 S RETURN(0)=""
+"RTN","ORQQPL2",71,0)
+ E  S RETURN=-1,RETURN(0)=$P(RETURN(0),"^",2)
+"RTN","ORQQPL2",72,0)
+ Q
+"RTN","ORQQPL2",73,0)
+OLDCOMM(ORY,PIFN) ; Return comments for a problem - SINGLE DIVISION!
+"RTN","ORQQPL2",74,0)
+ ;N FAC,NIFN,NOTE,NOTECNT
+"RTN","ORQQPL2",75,0)
+ ;S NOTECNT=0
+"RTN","ORQQPL2",76,0)
+ ;S FAC=$O(^AUPNPROB(PIFN,11,"B",+$G(DUZ(2)),0)) Q:'FAC
+"RTN","ORQQPL2",77,0)
+ ;F NIFN=0:0 S NIFN=$O(^AUPNPROB(PIFN,11,FAC,11,"B",NIFN)) Q:NIFN'>0  D
+"RTN","ORQQPL2",78,0)
+ ;. Q:$P($G(^AUPNPROB(PIFN,11,FAC,11,NIFN,0)),U,4)'="A"
+"RTN","ORQQPL2",79,0)
+ ;. S NOTE=$P($G(^AUPNPROB(PIFN,11,FAC,11,NIFN,0)),U,3)
+"RTN","ORQQPL2",80,0)
+ ;. S NOTECNT=NOTECNT+1,ORY(NOTECNT)=NOTE
+"RTN","ORQQPL2",81,0)
+ Q
+"RTN","ORQQPL2",82,0)
+GETCOMM(ORY,PIFN)       ; Return comments for a problem - MULTI-DIVISIONAL
+"RTN","ORQQPL2",83,0)
+ S %=$$NOTES^GMPLAPI3(.ORY,PIFN)
+"RTN","ORQQPL2",84,0)
+ Q
+"RTN","ORQQPL2",85,0)
+SAVEVIEW(Y,GMPLVIEW) ; -- save new view in File #200/Field #125
+"RTN","ORQQPL2",86,0)
+ N TMP
+"RTN","ORQQPL2",87,0)
+ Q:'$D(GMPLVIEW)
+"RTN","ORQQPL2",88,0)
+ S TMP=$P($G(^VA(200,DUZ,125)),U,2,999)
+"RTN","ORQQPL2",89,0)
+ S ^VA(200,DUZ,125)=$P(GMPLVIEW,U,1)_U_TMP
+"RTN","ORQQPL2",90,0)
+ S TMP=$$GET^XPAR(DUZ_";VA(200,","ORCH CONTEXT PROBLEMS",1)
+"RTN","ORQQPL2",91,0)
+ I TMP'="" D  Q
+"RTN","ORQQPL2",92,0)
+ . D CHG^XPAR(DUZ_";VA(200,","ORCH CONTEXT PROBLEMS",1,$P(GMPLVIEW,U,2))
+"RTN","ORQQPL2",93,0)
+ D ADD^XPAR(DUZ_";VA(200,","ORCH CONTEXT PROBLEMS",1,$P(GMPLVIEW,U,2))
+"RTN","ORQQPL2",94,0)
+ Q
+"RTN","ORQQPL2",95,0)
+ ;
+"RTN","ORQQPL3")
+0^4^B18556395
+"RTN","ORQQPL3",1,0)
+ORQQPL3 ; ALB/PDR/REV - Problem List RPCs ; 04/12/12
+"RTN","ORQQPL3",2,0)
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,148,173,243,280,260002**;Dec 17, 1997;Build 2
+"RTN","ORQQPL3",3,0)
+ ;
+"RTN","ORQQPL3",4,0)
+ ;---------------- LIST PATIENT PROBLEMS ------------------------
+"RTN","ORQQPL3",5,0)
+ ;
+"RTN","ORQQPL3",6,0)
+PROBL(ROOT,DFN,CONTEXT)        ;  GET LIST OF PATIENT PROBLEMS
+"RTN","ORQQPL3",7,0)
+ N DIWL,DIWR,DIWF
+"RTN","ORQQPL3",8,0)
+ N ST,ORI,ORX
+"RTN","ORQQPL3",9,0)
+ S (LCNT,NUM)=0
+"RTN","ORQQPL3",10,0)
+ S DIWL=1,DIWR=48,DIWF="C48"
+"RTN","ORQQPL3",11,0)
+ S CONTEXT=";;"_$G(CONTEXT)
+"RTN","ORQQPL3",12,0)
+ I CONTEXT=";;" S CONTEXT=";;A"
+"RTN","ORQQPL3",13,0)
+ S ST=$P(CONTEXT,";",3)
+"RTN","ORQQPL3",14,0)
+ ;
+"RTN","ORQQPL3",15,0)
+ I ST="R" D DELLIST(.ROOT,+DFN) ; show deleted only
+"RTN","ORQQPL3",16,0)
+ I ST'="R"  D LIST(.ROOT,+DFN,ST) ; show others - don't trust ELSE here
+"RTN","ORQQPL3",17,0)
+ ;
+"RTN","ORQQPL3",18,0)
+ I ROOT(0)<1 D
+"RTN","ORQQPL3",19,0)
+ . S LCNT=1
+"RTN","ORQQPL3",20,0)
+ . S ROOT(1)="     "_$$PAD^ORCHTAB("No data available.",49)_"|"
+"RTN","ORQQPL3",21,0)
+ Q
+"RTN","ORQQPL3",22,0)
+ ;
+"RTN","ORQQPL3",23,0)
+ ;
+"RTN","ORQQPL3",24,0)
+LIST(GMPL,GMPDFN,GMPSTAT)       ; -- Returns list of problems for patient GMPDFN
+"RTN","ORQQPL3",25,0)
+ ;    in GMPL(#)=ifn^status^description^ICD^onset^last modified^SC^SpExp^Condition^Loc^
+"RTN","ORQQPL3",26,0)
+ ;                          loc.type^prov^service
+"RTN","ORQQPL3",27,0)
+ ;     & GMPL(0)=number of problems returned
+"RTN","ORQQPL3",28,0)
+ ; This is virtually same as LIST^GMPLUTL2 except that it appends the
+"RTN","ORQQPL3",29,0)
+ ; condition - T)ranscribed or P)ermanent,location,loc type,provider, service.
+"RTN","ORQQPL3",30,0)
+ ;
+"RTN","ORQQPL3",31,0)
+ N GMPREV,GMPARAM
+"RTN","ORQQPL3",32,0)
+ Q:$G(GMPDFN)'>0
+"RTN","ORQQPL3",33,0)
+ D GET^GMPLSITE(.GMPARAM)
+"RTN","ORQQPL3",34,0)
+ S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,GMPSTAT,"","",GMPARAM("REV"),0)
+"RTN","ORQQPL3",35,0)
+ Q
+"RTN","ORQQPL3",36,0)
+ ;
+"RTN","ORQQPL3",37,0)
+ ;
+"RTN","ORQQPL3",38,0)
+ ;------------------------------------- GET LIST OF DELETED PROBLEMS -----------------------------
+"RTN","ORQQPL3",39,0)
+ ;
+"RTN","ORQQPL3",40,0)
+DELLIST(RETURN,GMPDFN) ; GET LIST OF DELETED PROBLEMS
+"RTN","ORQQPL3",41,0)
+ ; see GETPLIST^GMPLMGR1 and LIST^GMPUTL2
+"RTN","ORQQPL3",42,0)
+ K RETURN
+"RTN","ORQQPL3",43,0)
+ S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,"R","","",0,0)
+"RTN","ORQQPL3",44,0)
+ F I=1:1:GMPL D
+"RTN","ORQQPL3",45,0)
+ . S $P(GMPL(I),"^",10)=$P($P(GMPL(I),"^",10),";")
+"RTN","ORQQPL3",46,0)
+ . S $P(GMPL(I),"^",12)=$P($P(GMPL(I),"^",12),";")
+"RTN","ORQQPL3",47,0)
+ M RETURN=GMPL
+"RTN","ORQQPL3",48,0)
+ Q
+"RTN","ORQQPL3",49,0)
+ ;
+"RTN","ORQQPL3",50,0)
+ ;
+"RTN","ORQQPL3",51,0)
+ ; ----------------------- GET USER PROBLEM CATEGORIES --------------
+"RTN","ORQQPL3",52,0)
+ ;
+"RTN","ORQQPL3",53,0)
+CAT(TMP,ORDUZ,CLIN) ; Get user category list
+"RTN","ORQQPL3",54,0)
+ N GSEQ,GCNT,IFN,TG,GMPLSLST,RETURN
+"RTN","ORQQPL3",55,0)
+ ; S TG=$NAME(^TMP("GMPLMENU",$J)) ; put list in global for testing
+"RTN","ORQQPL3",56,0)
+ S TG=$NAME(TMP) ; put list in local
+"RTN","ORQQPL3",57,0)
+ K @TG
+"RTN","ORQQPL3",58,0)
+ S (GSEQ,GCNT)=0
+"RTN","ORQQPL3",59,0)
+ ;
+"RTN","ORQQPL3",60,0)
+ S GMPLSLST=$$GETUSLST(DUZ,CLIN)  ; get approp list for user
+"RTN","ORQQPL3",61,0)
+ ; Build multiple of category\problems
+"RTN","ORQQPL3",62,0)
+ ; Iterate categories
+"RTN","ORQQPL3",63,0)
+ S %=$$GETLIST^GMPLAPI1(.RETURN,+GMPLSLST)
+"RTN","ORQQPL3",64,0)
+ F  S GSEQ=$O(RETURN("SEQ",GSEQ)) Q:GSEQ'>0  D
+"RTN","ORQQPL3",65,0)
+ . S IFN=RETURN("SEQ",GSEQ)
+"RTN","ORQQPL3",66,0)
+ . S GCNT=GCNT+1
+"RTN","ORQQPL3",67,0)
+ . S @TG@(GCNT)=$P(RETURN(IFN),U,2,4) ; put category into temp global
+"RTN","ORQQPL3",68,0)
+ Q
+"RTN","ORQQPL3",69,0)
+ ;
+"RTN","ORQQPL3",70,0)
+GETUSLST(ORDUZ,CLIN) ; GET AN APPROPRIATE CATEGORY LIST FOR THE USER
+"RTN","ORQQPL3",71,0)
+ N GMPLSLST,RETURN
+"RTN","ORQQPL3",72,0)
+ S %=$$GETULST^GMPLAPI6(.RETURN,ORDUZ)
+"RTN","ORQQPL3",73,0)
+ S GMPLSLST=RETURN
+"RTN","ORQQPL3",74,0)
+ I 'GMPLSLST,CLIN S %=$$GETCLST^GMPLAPI6(.RETURN,+CLIN) S GMPLSLST=RETURN
+"RTN","ORQQPL3",75,0)
+ Q GMPLSLST
+"RTN","ORQQPL3",76,0)
+ ;
+"RTN","ORQQPL3",77,0)
+ ;----------------------- USER PROBLEM LIST --------------------------
+"RTN","ORQQPL3",78,0)
+ ;
+"RTN","ORQQPL3",79,0)
+PROB(TMP,GROUP) ; Get user problem list for given group
+"RTN","ORQQPL3",80,0)
+ N PSEQ,PCNT,IFN,TG,CODE,ORICD186,RETURN
+"RTN","ORQQPL3",81,0)
+ ; S TG=$NAME(^TMP("GMPLMENU",$J)) ; put list in global for testing
+"RTN","ORQQPL3",82,0)
+ S TG=$NAME(TMP) ; put list in local
+"RTN","ORQQPL3",83,0)
+ K @TG
+"RTN","ORQQPL3",84,0)
+ S ORICD186=$$PATCH^XPDUTL("ICD*18.0*6")
+"RTN","ORQQPL3",85,0)
+ ;
+"RTN","ORQQPL3",86,0)
+ ; iterate through problems in category
+"RTN","ORQQPL3",87,0)
+ S %=$$GETCAT^GMPLAPI1(.RETURN,+GROUP)
+"RTN","ORQQPL3",88,0)
+ S (PSEQ,PCNT)=0
+"RTN","ORQQPL3",89,0)
+ F  S PSEQ=$O(RETURN("SEQ",PSEQ)) Q:PSEQ'>0  D
+"RTN","ORQQPL3",90,0)
+ . S IFN=RETURN("SEQ",PSEQ)
+"RTN","ORQQPL3",91,0)
+ . ; SEE DD for GMPL(125.12,4 :
+"RTN","ORQQPL3",92,0)
+ . ; "...code which is to be displayed... generally assumed to be ICD"
+"RTN","ORQQPL3",93,0)
+ . I +ORICD186,$D(RETURN(IFN,"CODE"))'>0 Q
+"RTN","ORQQPL3",94,0)
+ . S CODE=RETURN(IFN,"CODE")
+"RTN","ORQQPL3",95,0)
+ . I $P(CODE,U,2)=1 Q
+"RTN","ORQQPL3",96,0)
+ . S PCNT=PCNT+1
+"RTN","ORQQPL3",97,0)
+ . ; RETURN:
+"RTN","ORQQPL3",98,0)
+ . ; PROBLEM^DISPLAY TEXT^CODE^CODE IFN
+"RTN","ORQQPL3",99,0)
+ . I +ORICD186 D
+"RTN","ORQQPL3",100,0)
+ . . S @TG@(PCNT)=$P(RETURN(IFN),U,2,4)_U_$$CODEN^ICDCODE($P(CODE,U,1),80)
+"RTN","ORQQPL3",101,0)
+ . E  D
+"RTN","ORQQPL3",102,0)
+ . . S @TG@(PCNT)=$P(RETURN(IFN),U,2,4)_U_$$ICDCODE($P(CODE,U,1))
+"RTN","ORQQPL3",103,0)
+ Q
+"RTN","ORQQPL3",104,0)
+ ;
+"RTN","ORQQPL3",105,0)
+ICDCODE(COD)    ; RETURN INTERNAL ICD FOR EXTERNAL CODE  (obsolete after CSV patches released - RV)
+"RTN","ORQQPL3",106,0)
+ N CODIEN
+"RTN","ORQQPL3",107,0)
+ I COD="" Q ""
+"RTN","ORQQPL3",108,0)
+ S CODIEN=$$CODEN^ICDCODE($P(COD,U),80) ;ICR #3990
+"RTN","ORQQPL3",109,0)
+ Q CODIEN
+"RTN","ORQQPL3",110,0)
+ ;
+"RTN","ORQQPL3",111,0)
+ ;------------------ Filter Providers ---------------------
+"RTN","ORQQPL3",112,0)
+ ;
+"RTN","ORQQPL3",113,0)
+GETRPRV(RETURN,INP) ; GET LIST OF RESPONSIBLE PROVIDERS FROM PRBLM LIST
+"RTN","ORQQPL3",114,0)
+ ; RETURN - aa list of responsible providers from which to select for filtering
+"RTN","ORQQPL3",115,0)
+ ; INP - array of problem list providers to select from
+"RTN","ORQQPL3",116,0)
+ ;
+"RTN","ORQQPL3",117,0)
+ N S
+"RTN","ORQQPL3",118,0)
+ S S=""
+"RTN","ORQQPL3",119,0)
+ F I=1:1 S S=$O(INP(S)) Q:S=""  D
+"RTN","ORQQPL3",120,0)
+ . I INP(S)'="",$G(^VA(200,INP(S),0))'="" D  Q  ; get next
+"RTN","ORQQPL3",121,0)
+ .. S RETURN(I)=INP(S)_U_$P(^VA(200,INP(S),0),U)
+"RTN","ORQQPL3",122,0)
+ S RETURN(0)="-1"_U_"<None recorded>" ; return empty provider
+"RTN","ORQQPL3",123,0)
+ Q
+"RTN","ORQQPL3",124,0)
+ ;
+"RTN","ORQQPL3",125,0)
+ ;---------------------------------------------------- GET FILTERED CLINIC LIST ------------------------
+"RTN","ORQQPL3",126,0)
+ ;
+"RTN","ORQQPL3",127,0)
+GETCLIN(RETURN,INP) ; Get FILTERED LIST OF CLINICS
+"RTN","ORQQPL3",128,0)
+ ; RETURN NAMES FOR LIST OF CLINICS PASSED IN
+"RTN","ORQQPL3",129,0)
+ N I,S
+"RTN","ORQQPL3",130,0)
+ S S=""
+"RTN","ORQQPL3",131,0)
+ F I=1:1 S S=$O(INP(S)) Q:S=""  D
+"RTN","ORQQPL3",132,0)
+ . I INP(S)'="",$G(^SC(INP(S),0))'="" D  Q  ; get next
+"RTN","ORQQPL3",133,0)
+ .. S RETURN(I)=INP(S)_U_$P(^SC(INP(S),0),U,1)
+"RTN","ORQQPL3",134,0)
+ ;. S RETURN(I)="-1"_U_"None" ; return empty location
+"RTN","ORQQPL3",135,0)
+ Q
+"RTN","ORQQPL3",136,0)
+ ;
+"RTN","ORQQPL3",137,0)
+GETSRVC(RETURN,INP) ; GET FILTERED LIST OF INPATIENT SERVICES
+"RTN","ORQQPL3",138,0)
+ ; RETURN NAMES FOR LIST OF IEN PASSED IN
+"RTN","ORQQPL3",139,0)
+ N I,S
+"RTN","ORQQPL3",140,0)
+ S S=""
+"RTN","ORQQPL3",141,0)
+ F I=1:1 S S=$O(INP(S)) Q:S=""  D
+"RTN","ORQQPL3",142,0)
+ . I INP(S)'="",$G(^DIC(49,INP(S),0))'="" D  Q  ; get next
+"RTN","ORQQPL3",143,0)
+ .. S RETURN(I)=INP(S)_U_$P(^DIC(49,INP(S),0),U,1)
+"RTN","ORQQPL3",144,0)
+ ;. S RETURN(I)="-1"_U_"None" ; return empty service
+"RTN","ORQQPL3",145,0)
+ Q
+"VER")
+8.0^22.0
+**END**
+**END**
