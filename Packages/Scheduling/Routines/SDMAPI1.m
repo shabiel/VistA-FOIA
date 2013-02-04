@@ -165,7 +165,8 @@ GETPEND(RETURN,DFN) ; Get pending appointments
  Q 1
  ;
 GETAPTS(RETURN,DFN,SD) ; Get patient appointments
- K RETURN,%
+ K RETURN
+ N %
  S %=$$CHKPAT^SDMAPI3(.RETURN,+DFN) Q:'% 0
  D GETAPTS^SDMDAL2(.RETURN,+DFN,.SD)
  S RETURN=($D(RETURN)>0)

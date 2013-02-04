@@ -128,7 +128,7 @@ MAKE(SC,SD,DFN,LEN,SM,USR,OTHR,RQXRAY) ; Make clinic appointment
  ;
 CANCEL(SC,SD,DFN,CIFN) ; Kill clinic appointment
  ;S SDNODE=^SC(SC,"S",SD,1,CIFN,0)
- N HSI,SB,SDDIF,SI,SL,SS,ST,STARTDAY,STR
+ N HSI,SB,SDDIF,SI,SL,SS,ST,STARTDAY,STR,I,S,X,Y,TLNK
  S ^SC("ARAD",SC,SD,DFN)="N"
  S TLNK=$P($G(^SC(SC,"S",SD,1,CIFN,"CONS")),U)
  K ^SC(SC,"S",SD,1,CIFN)
@@ -155,7 +155,7 @@ GETFSTA(SC) ; Get first available day.
  Q $O(^SC(SC,"T",I))
  ;
 GETDAYA(RETURN,SC,SD) ; Get all day appointments
- N IND,I,D
+ N IND,I,D,%
  S I=$P(SD,".",1)
  F D=I-.01:0 S D=$O(^SC(SC,"S",D)) Q:$P(D,".",1)-I  D
  . S %=0
@@ -185,14 +185,13 @@ LSTCAPTS(RETURN,SC,SDBEG,SDEND) ;
  Q
  ;
 LSTPAPTS(RETURN,DFN,SDBEG,SDEND) ; Get patient appointments
- N SDT,CNT,SDDA,SC,CN,CNPAT
+ N SDT,CNT,SDDA,SC,CN,CNPAT,SDATA,CNSTLNK
  S CNT=0 
  F SDT=SDBEG:0 S SDT=$O(^DPT(DFN,"S",SDT)) Q:'SDT!($P(SDT,".",1)>SDEND)  D
  . Q:'$D(^(SDT,0))
  . S CNT=CNT+1
  . S SDATA=^DPT(+DFN,"S",SDT,0)
  . S SC=+SDATA
- . S RETURN(CNT,"CONS")=$G(CNSTLNK)
  . S RETURN(CNT,"SD")=SDT
  . S RETURN(CNT,"SC")=SC
  . S RETURN(CNT,"DFN")=DFN
@@ -204,6 +203,8 @@ LSTPAPTS(RETURN,DFN,SDBEG,SDEND) ; Get patient appointments
  . S RETURN(CNT,"SDDA")=SDDA
  . S RETURN(CNT,"SDATA")=SDATA
  . S:SDDA>0 RETURN(CNT,"CDATA")=$G(^SC(SC,"S",SDT,1,SDDA,0))
+ . S CNSTLNK=$P($G(^SC(SC,"S",SDT,1,SDDA,"CONS")),U)
+ . S RETURN(CNT,"CONS")=$G(CNSTLNK)
  Q
  ;
 GETDST(SC,SD) ; Get day slot

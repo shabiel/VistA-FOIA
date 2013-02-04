@@ -85,7 +85,7 @@ GETAPTS(RETURN,DFN,SD) ; Get patient appointments
  Q
  ;
 GETDAPTS(RETURN,DFN,SD) ; Get all appointments in the day
- N NOD
+ N NOD,IND
  S RETURN=0
  S IND=$P(SD,".")
  F  S IND=$O(^DPT(DFN,"S",IND)) Q:IND=""!($P(IND,".")>$P(SD,"."))  D

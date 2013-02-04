@@ -288,6 +288,7 @@ DELCOL(RETURN,DFN,SD,SC,SDDA,SDOE,OE) ; Delete check out
  Q 1
  ;
 DELOE(SDOE,OE) ; Delete Outpatient Encounter
+ N X
  I '$D(OE) D
  . S OE(.05)="",OE(.01)="",OE(.08)=""
  . D GETOE^SDMDAL4(.OE,+SDOE)

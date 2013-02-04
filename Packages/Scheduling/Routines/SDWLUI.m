@@ -7,7 +7,7 @@ SELPAT(STATUS) ; SELECT PATIENT
  ;          Default: ""
  ;RETURN    -1=failed to access patient file or user entered '^'
  ;          >0 Patient IEN
- N DFN,DIC,Y
+ N DFN,DIC,Y,DUOUT
  S STATUS=$E($G(STATUS))
  I (STATUS="O")!(STATUS="C") S DIC("S")="I $P(^SDWL(409.3,+Y,0),U,17)="""_STATUS_""""
  S DIC(0)="EMNQA",DIC=409.3 D ^DIC S DFN=$P(Y,U,2)
@@ -15,7 +15,7 @@ SELPAT(STATUS) ; SELECT PATIENT
  Q DFN
  ;
 SELDATE(SDBEG,SDEND) ;SELECT BEGIN/END DATE
- N DIR,%DT
+ N DIR,%DT,Y
  S SDBEG="",SDEND=""
  S %DT="AE",%DT("A")="Start with Date Entered: " D ^%DT
  I Y<1 Q 0

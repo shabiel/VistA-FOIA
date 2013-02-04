@@ -23,7 +23,8 @@ GETREC(RETURN,IFN,FILE,FLDS,SFILES,INT,EXT,REZ) ; Get one record and specified s
  Q
  ;
 GETSREC(RETURN,REC,SFILE,SFLD,FLAG) ; Get record subfile data
- N IDX,ID S FLD="",IDX=""
+ N IDX,ID,FLD
+ S FLD="",IDX=""
  F  S IDX=$O(REC(SFILE,IDX)) Q:IDX=""  D
  . F  S FLD=$O(REC(SFILE,IDX,FLD)) Q:FLD=""  D
  . . S ID=$P(IDX,",",1)
