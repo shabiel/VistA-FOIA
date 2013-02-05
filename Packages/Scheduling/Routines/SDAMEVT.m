@@ -1,4 +1,4 @@
-SDAMEVT ;ALB/MJK - Appt Event Driver Utilities ; 11/09/2012
+SDAMEVT ;ALB/MJK - Appt Event Driver Utilities ; 02/05/2013
  ;;5.3;Scheduling;**15,132,443,260003**;Aug 13, 1993
  ;
 BEFORE(SDATA,DFN,SDT,SDCL,SDDA,SDHDL) ; -- get before values
@@ -53,16 +53,18 @@ MAKE(DFN,SDT,SDCL,SDDA,SDMODE) ; -- make appt event #1
  Q
  ;
  ;
-CHIO(SD,DFN,SC) ; -- if appt d/t is less than NOW then check-in
- N SDACT,SDT,SDCOQUIT,%
+CHIO(SDT,DFN,SC) ; -- if appt d/t is less than NOW then check-in
+ N SDACT,SDCOQUIT,%
  S SDACT=""
  D NOW^%DTC
- I SD<% W ! D
- . S SDT=SD
+ I SDT<% W ! D
  . I $$REQ^SDM1A(SDT)="CO" D
  . . S SDACT=$S(SDT<DT:"CO",1:$$ASK^SDAMEX) I SDACT']"" S SDCOQUIT=1 Q
- . . I SDACT="CO" D CO^SDCO1(DFN,SD,SC,,1,SD)
- . I '$G(SDCOQUIT),$G(SDACT)'="CO" S %=$$CHECKIN^SDMAPI2(.CHKIN,DFN,SD,SC,SD)
+ . . I SDACT="CO" D CO^SDCO1(DFN,SDT,SC,,1,SDT)
+ . I '$G(SDCOQUIT),$G(SDACT)'="CO" D
+ . . N SDDA
+ . . D GETSCAP^SDMDAL1(.SDDA,SC,DFN,SDT)
+ . . D ONE^SDAM2(DFN,SC,SDT,SDDA,0,SDT) ; S %=$$CHECKIN^SDMAPI2(.CHKIN,DFN,SD,SC,SD)
  Q
  ;
  ;
