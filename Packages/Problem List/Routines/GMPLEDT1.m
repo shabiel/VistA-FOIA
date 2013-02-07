@@ -66,7 +66,7 @@ SC ; Edit Service Connected - field 1.1
  ELSE  D
  . D BLD^DIALOG(1250000.218,,,"DIR(""A"")")
  . S:$L($G(GMPFLD(1.1))) DIR("B")=$P(GMPFLD(1.1),U,2)
- . D EN^DDIOL("")
+ . D EN^DDIOL("",,"!")
  D BLD^DIALOG(1250000.219,,,"DIR(""?"")")
  S DIR(0)="YAO"
 SC1 ;   Get Service Connection

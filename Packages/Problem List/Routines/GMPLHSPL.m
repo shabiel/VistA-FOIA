@@ -29,12 +29,12 @@ SUBHDR ; Subheader for Problem List Component
  S NUM=$$EZBLD^DIALOG($S(STATUS="A":1250000.303,STATUS="I":1250000.304,1:1250000.319),NUM)
  D CKP^GMTSUP Q:$D(GMTSQIT)  ;I 'GMTSNPG D BREAK^GMTSUP
  D EN^DDIOL(NUM,,"?56")
- D EN^DDIOL("")
+ D EN^DDIOL("",,"!")
  D CKP^GMTSUP Q:$D(GMTSQIT)  ;I 'GMTSNPG D BREAK^GMTSUP
  D EN^DDIOL($$EZBLD^DIALOG(1250000.305),,"?6")
  D EN^DDIOL($$EZBLD^DIALOG(1250000.306),,"?46")
  D EN^DDIOL($$EZBLD^DIALOG(1250000.307),,"?56")
- D EN^DDIOL("")
+ D EN^DDIOL("",,"!")
  Q
  ;
 WRT ; Writes Problem List Component
@@ -50,8 +50,8 @@ LINE ;Prints individual line
  D EN^DDIOL(TEXT(1),,"?6")
  D EN^DDIOL($P(PROBLEM,"^",3),,"?46")
  D EN^DDIOL($P(PROBLEM,"^",4),,"?56")
- D EN^DDIOL("")
+ D EN^DDIOL("",,"!")
  I TEXT>1 F I=2:1:TEXT D
  . D EN^DDIOL(TEXT(I),,"?8")
- . D EN^DDIOL("")
+ . D EN^DDIOL("",,"!")
  Q

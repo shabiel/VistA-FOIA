@@ -81,7 +81,7 @@ NPHELP ; List names in New Person file
  . . S Y=X
  . . S:$D(DTOUT) Y="^"
  . S I=$O(^VA(200,"B",NM,0)) D EN^DDIOL("   "_$P($G(^VA(200,I,0)),U))
- D EN^DDIOL("")
+ D EN^DDIOL("",,"!")
  Q
  ;
 DATE ; Edit date fields given PROMPT,HELPMSG,DEFAULT (ret'ns X,Y)

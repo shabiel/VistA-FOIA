@@ -139,7 +139,7 @@ CLIN1 ; Ask Clinic
  S DIC="^SC(",DIC(0)="EMQ",DIC("S")="I $P(^(0),U,3)=""C"""
  D ^DIC I Y'>0 D  G CLIN1
  . D EN^DDIOL($$EZBLD^DIALOG(1250000.504),,"!?5")
- . D EN^DDIOL("")
+ . D EN^DDIOL("",,"!")
 CLINQ ; Quit Asking
  Q Y
  ;

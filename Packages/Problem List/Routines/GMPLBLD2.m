@@ -158,7 +158,7 @@ PRINTALL(LSTS,CHOOSE) ;
  . S LINE=LINE+1
  . D EN^DDIOL("   "_LSTS(IND,"NAME"))
  . I LINE>(IOSL-4) S LINE=1 S:'$$CONTINUE GMPQUIT=1 Q:$D(GMPQUIT)  Q
- D EN^DDIOL("")
+ D EN^DDIOL("",,"!")
  Q
  ;
 CONTINUE() ; -- end of page prompt

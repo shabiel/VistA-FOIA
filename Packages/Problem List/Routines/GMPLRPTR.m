@@ -9,7 +9,7 @@ EN ; -- main entry point
  I GMPLIST(0)'>0 D  Q
  . D EN^DDIOL($C(7))
  . D EN^DDIOL($$EZBLD^DIALOG(1250000.431),,"!?10")
- . D EN^DDIOL("")
+ . D EN^DDIOL("",,"!")
  D DISPLAY,REPLACE
  K GMPDFN,GMPLIST
  Q

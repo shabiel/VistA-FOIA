@@ -100,7 +100,7 @@ VERIFY ; -- verify a transcribed problem, if parameter on
  D EN^DDIOL("","","!")
  S GMPSAVED=$$VERIFY^GMPLAPI2(.GMPERR,GMPIFN)
  D:GMPSAVED EN^DDIOL($$EZBLD^DIALOG(1250000.017),"","")
- D:GMPSAVED EN^DDIOL("")
+ D:GMPSAVED EN^DDIOL("",,"!")
  D:'GMPSAVED EN^DDIOL($$ERRTXT^GMPLAPIE(.GMPERR),"","")
  Q
 ICDMSG ; If Lexicon returns ICD code 799.9

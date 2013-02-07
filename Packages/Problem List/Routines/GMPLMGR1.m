@@ -30,7 +30,7 @@ INACTIVE ; Incl inactive problems
  S %=$$HASPRBS^GMPLAPI4(.ACTIVE,+GMPDFN,"I")
  I 'ACTIVE D  Q
  . D EN^DDIOL($$EZBLD^DIALOG(1250000.328),,"!!")
- . D EN^DDIOL("")
+ . D EN^DDIOL("",,"!")
  . H 1
  S GMPLVIEW("ACT")="",VALMBCK="R",VALMSG=$$MSG^GMPLX
  D GETPLIST(.GMPLIST,.GMPTOTAL,.GMPLVIEW),BUILD^GMPLMGR(.GMPLIST),HDR^GMPLMGR
@@ -84,7 +84,7 @@ LISTSERV ; List clinical services
  . . S:$D(DTOUT) Y="^"
  . D EN^DDIOL("   "_$P(^DIC(49,I,0),U))
  . D:$P(^(0),U,4) EN^DDIOL("  ("_$P(^DIC(49,$P(^(0),U,4),0),U)_")",,"?0")
- D EN^DDIOL("") Q
+ D EN^DDIOL("",,"!") Q
  ;
 LISTCLIN ; List clinics
  N I,CNT,Y,DIR,DTOUT S CNT=0,Y=""
@@ -98,7 +98,7 @@ LISTCLIN ; List clinics
  . . D ^DIR
  . . S:$D(DTOUT) Y="^"
  . D EN^DDIOL("   "_$P($G(^SC(I,0)),U))
- D EN^DDIOL("") Q
+ D EN^DDIOL("",,"!") Q
  ;
 NEWPROV ; select new provider
  N X,Y,DIC,NEWPROV,DIR,DTOUT,MSG Q:$D(GMPQUIT)  S NEWPROV=""

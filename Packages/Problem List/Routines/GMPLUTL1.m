@@ -1,5 +1,5 @@
 GMPLUTL1 ; SLC/MKB/KER -- PL Utilities (cont)               ; 09/14/12
- ;;2.0;Problem List;**3,8,7,9,26,35,39,260002**;Aug 25, 1994
+ ;;2.0;Problem List;**3,8,7,9,26,35,39,260002**;Aug 25, 1994;Build 4
  ;
  ; External References
  ;   DBIA   446  ^AUTNPOV(
@@ -26,7 +26,7 @@ GMPLUTL1 ; SLC/MKB/KER -- PL Utilities (cont)               ; 09/14/12
  Q
 DIAGNOSI ; ICD Diagnosis Pointer
  S:'$L($G(PL("DIAGNOSIS"))) PL("DIAGNOSIS")=$$NOS^GMPLEXT()
- Q:$$ICDCODE^GMPLEXT(+PL("DIAGNOSIS"))=""
+ Q:$$ICDCODE^GMPLEXT(+PL("DIAGNOSIS"))'=""
  S GMPQUIT=1,PLY(0)=$$EZBLD^DIALOG(1250000.461)
  Q
  ;
@@ -46,7 +46,7 @@ DUPLICAT ; Problem Already on the List
  ;
 LOCATION ; Hospital Location (Clinic) Pointer
  S:'$D(PL("LOCATION")) PL("LOCATION")="" Q:'$L(PL("LOCATION"))
- I $$CLINNAME^GMPLEXT(+PL("LOCATION")) S:$$LOCTYPE^GMPLEXT(+PL("LOCATION"))'="C" PL("LOCATION")="" Q
+ I $$CLINNAME^GMPLEXT(+PL("LOCATION"))'="" S:$$LOCTYPE^GMPLEXT(+PL("LOCATION"))'="C" PL("LOCATION")="" Q
  S GMPQUIT=1,PLY(0)=$$EZBLD^DIALOG(1250000.464)
  Q
  ;
