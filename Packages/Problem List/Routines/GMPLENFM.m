@@ -1,5 +1,5 @@
 GMPLENFM ; SLC/MKB/KER -- Problem List Enc Form utilities ; 03/28/12
- ;;2.0;Problem List;**3,4,7,26,35,260002**;Aug 25, 1994
+ ;;2.0;Problem List;**3,4,7,26,35,260002**;Aug 25, 1994;Build 4
  ;
  ; External References
  ;   DBIA 10082  ^ICD9(
@@ -40,7 +40,7 @@ SELECT ; Select Common Problems
  ;            
  N X,Y,DIC,PROB D CONFIG^LEXSET("ICD","ICD")
  K ^TMP("IB",$J,"INTERFACES","GMP SELECT CLINIC COMMON PROBLEMS")
- D BLD^DIALOG(1250000.301,,,"DIC(""A"")")
+ S DIC("A")=$$EZBLD^DIALOG(1250000.301)
  S DIC(0)="AEQM",DIC="^LEX(757.01,"
  D ^DIC Q:+Y<0  S PROB=Y I +Y'>1 S PROB=+Y_U_X
  S PROB=PROB_U_$G(Y(1))
