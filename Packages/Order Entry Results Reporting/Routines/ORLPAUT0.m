@@ -1,12 +1,12 @@
-ORLPAUT0 ; slc/CLA -  Automatically load patients into lists ;2/12/92
- ;;3.0;ORDER ENTRY/RESULTS REPORTING;**247**;Dec 17, 1997
+ORLPAUT0 ; slc/CLA -  Automatically load patients into lists ;2/11/2013
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**247,260005**;Dec 17, 1997
  Q
 EN ;called by protocol ORU AUTOLIST - automatically update lists with AUTOLINK set.
  Q:'$D(DGPMT)!('$D(DFN))  S TYPE=DGPMT
- W !!,"Updating automated team lists..."
+ W:'+$G(DGQUIET) !!,"Updating automated team lists..."
  K VAINDT S VA200=1 D INP^VADPT ;regenerate VAIN array to get NEW PERSON primary provider (and in some cases other protocols kill VAIN)
  D DELPT
- W "completed."
+ W:'+$G(DGQUIET) "completed."
 EXIT K DIK,EN,LINK,ORLIST,PROV,RB,TYPE,VA200
  Q
 DELPT ;called by EN - remove patient from autolists
