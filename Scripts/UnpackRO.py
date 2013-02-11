@@ -34,6 +34,8 @@ def unpack(ro):
             if m:
                 m.close()
                 m = None
+		elif line == '.\n':
+			#skip
         elif m:
             m.write(line)
         else:

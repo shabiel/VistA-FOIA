@@ -81,6 +81,10 @@ Copy (or move) the global .zwr files:
 
  $ cp /tmp/VistA/Globals/*.zwr Packages/
 
+Split large global .zwr files into pieces no larger than 64 MiB:
+
+ $ ls Packages/*.zwr | python Scripts/SplitZWR.py --size 64 --stdin
+
 
 Populate Package Directories
 ----------------------------

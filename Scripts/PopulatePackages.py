@@ -119,7 +119,8 @@ def populate(input):
 
     # Map globals explicitly listed in each package.
     for p in packages:
-        gbls = [gbl for gbl in globals if gbl[:-4].split('+')[0] in p.globals]
+        gbls = [gbl for gbl in globals
+                if gbl[:-4].split('+')[0].split('-')[0] in p.globals]
         globals.difference_update(gbls)
         for src in sorted(gbls):
             place(src,os.path.join(p.path,'Globals',src))
