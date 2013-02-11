@@ -11,7 +11,7 @@ PXCAPL ;ISL/dee & LEA/Chylton,SCK - Validates data from the PCE Device Interface
  ;
 PROBLEM(PXCA,PXCABULD,PXCAERRS) ;
  Q:'$D(PXCA("PROBLEM"))
- I '$$GLBINST^GMPLAPI2()!($T(UPDATE^GMPLUTL)="") S PXCA("WARNING","PROBLEM",0,0,0)="Problem List Package is not installed" Q
+ I ($T(^GMPLAPI2)="")!($T(UPDATE^GMPLUTL)="") S PXCA("WARNING","PROBLEM",0,0,0)="Problem List Package is not installed" Q
  N PXCAPROB,PXCAPRV,PXCAINDX
  N PXCAITEM,PXCAITM2,VALID,PAT
  S PXCAPRV=""

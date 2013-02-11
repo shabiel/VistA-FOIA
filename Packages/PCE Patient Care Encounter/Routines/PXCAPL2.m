@@ -9,7 +9,7 @@ PXCAPL2 ;ISL/dee & LEA/Chylton - Translates data from the PCE Device Interface f
  ;   PXCANUMB  Count of the total number of problems
  ;
 PROBLIST ;Problem List
- Q:'$$GLBINST^GMPLAPI2()!($T(UPDATE^GMPLUTL)="")
+ Q:($T(^GMPLAPI2)="")!($T(UPDATE^GMPLUTL)="")
  N PXCAPRV,PXCAINDX,PXCANUMB
  S PXCANUMB=0
  S PXCAPRV=""
