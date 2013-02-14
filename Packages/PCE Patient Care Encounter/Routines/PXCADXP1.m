@@ -1,9 +1,9 @@
-PXCADXP1 ;ISL/dee & LEA/Chylton,SCK - Validates & Translates data from the PCE Device Interface into a call to V POV & update Problem List ; 03/27/12
- ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,33,194,260002**;Aug 12, 1996;Build 2
+PXCADXP1 ;ISL/dee & LEA/Chylton,SCK - Validates & Translates data from the PCE Device Interface into a call to V POV & update Problem List ;3/20/97
+ ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,33,194**;Aug 12, 1996;Build 2
  Q
  ;
 PART1 ;
- N PXCACLEX,VALID,PAT
+ N PXCACLEX
  S (PXCADIAG,PXCAPROB)=0
  I "^^^"'[$P(PXCADXPL,"^",5,8) S PXCAPROB=1
  ;Note
@@ -57,10 +57,8 @@ PART1 ;
  ;Add to Problem List
  S PXCAITM2=$P(PXCADXPL,"^",5)
  I PXCAITEM]"" D
- . S %=$$VALID^GMPLAPI4(.VALID,PXCAITEM)
- . S %=$$PATIENT^GMPLAPI4(.PAT,PXCAITEM)
- . I 'VALID S PXCA("ERROR","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,4)="Problem not in file 9000011^"_PXCAITEM
- . E  I PXCAPAT'=PAT S PXCA("ERROR","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,4)="Problem in file 9000011 is for a different Patient^"_PXCAITEM
+ . I $G(^AUPNPROB(PXCAITEM,0))="" S PXCA("ERROR","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,4)="Problem not in file 9000011^"_PXCAITEM
+ . E  I PXCAPAT'=$P($G(^AUPNPROB(PXCAITEM,0)),"^",2) S PXCA("ERROR","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,4)="Problem in file 9000011 is for a different Patient^"_PXCAITEM
  . I PXCAITM2=1 S PXCA("ERROR","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,5)="Cannot ADD existing Problem to file 9000011^"_PXCAITM2
  E  I PXCAPROB,PXCAITM2'=1 S PXCA("ERROR","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,4)="Cannot update an existing Problem with out an IEN to file 9000011^"_PXCAITEM
  I '(PXCAITM2=1!(PXCAITM2=0)!(PXCAITM2="")) S PXCA("ERROR","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,5)="Add to Problem List flag bad^"_PXCAITM2
