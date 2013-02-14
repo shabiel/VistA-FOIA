@@ -1,5 +1,13 @@
-DGPMDAL2 ;RGI/VSL - PATIENT MOVEMENT DAL; 1/10/2013
- ;;5.3;Registration;**260003**;
+DGPMDAL2 ;RGI/VSL - PATIENT MOVEMENT DAL; 2/11/2013
+ ;;5.3;Registration;**260005**;
+GETFCTY(DATA,IFN,FLDS) ; Get transfer facility
+ N TMP,ERR
+ I '$D(FLDS) S FLDS=".01;.02;.05;101"
+ D GETS^DIQ(4,IFN,FLDS,"IE","TMP","ERR")
+ I $D(ERR) S DATA=0 M DATA=ERR Q
+ S DATA=1 M DATA=TMP(4,IFN_",")
+ Q
+ ;
 GETAREG(DATA,IFN,FLDS) ; Get admission regulation
  N TMP,ERR
  I '$D(FLDS) S FLDS=".001;.01;4"
@@ -18,7 +26,7 @@ GETADMS(DATA,IFN,FLDS) ; Get source of admission
  ;
 GETMVTT(DATA,IFN,FLDS) ; Get movement type
  N TMP,ERR
- I '$D(FLDS) S FLDS=".01;.02;.03;"
+ I '$D(FLDS) S FLDS=".01;.02;.03;.04"
  D GETS^DIQ(405.1,IFN,FLDS,"IE","TMP","ERR")
  I $D(ERR) S DATA=0 M DATA=ERR Q
  S DATA=1 M DATA=TMP(405.1,IFN_",")
@@ -38,6 +46,14 @@ GETPAT(DATA,IFN,FLDS) ; Get patient
  D GETS^DIQ(2,IFN,FLDS,"IE","TMP","ERR")
  I $D(ERR) S DATA=0 M DATA=ERR Q
  S DATA=1 M DATA=TMP(2,IFN_",")
+ Q
+ ;
+GETPROV(DATA,IFN,FLDS) ; Get provider
+ N TMP,ERR
+ I '$D(FLDS) S FLDS=".01;1;"
+ D GETS^DIQ(200,IFN,FLDS,"IE","TMP","ERR")
+ I $D(ERR) S DATA=0 M DATA=ERR Q
+ S DATA=1 M DATA=TMP(200,IFN_",")
  Q
  ;
 GETWARD(DATA,IFN,FLDS) ; Get ward
@@ -112,7 +128,7 @@ LSTWBED(RETURN,SEARCH,START,NUMBER,FLDS,WARD) ; Return ward beds.
  N SCR,TMP,E
  S:'$D(FLDS) FLDS=".01;.02;.2;"
  S FLDS="@;"_FLDS
- S SCR="I $D(^DG(405.4,""W"",WARD,+Y))"
+ S SCR="I $D(^DG(405.4,""W"",+WARD,+Y))"
  D LIST^DIC(405.4,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
  I $D(E) M RETURN=E
  Q
@@ -172,13 +188,13 @@ LSTMVTT(RETURN,SEARCH,START,NUMBER,FLDS,TYPE,DFN,DGDT,MFN) ; Return movement typ
  S (DGPM0,DGPM2)=""
  D GETLASTM^DGPMDAL1(.MVT,+DFN,DGDT)
  S DGX=DGDT,ADM=MVT(13),DA=+$G(MFN)
- S DGPMP=$S($D(MFN):^DGPM(MFN,0),1:"")
- S DGPMAN=$S('MVT(1):0,$D(^DGPM(+MVT(13),0)):^(0),1:0),DGPMCA=$S(DGPMAN:MVT(13),1:"")
+ S DGPMP=$S(+$G(MFN)>0:^DGPM(MFN,0),1:"")
+ S DGPMAN=$S('MVT(1):0,$D(^DGPM(+MVT(13),0)):^DGPM(+MVT(13),0),1:0),DGPMCA=$S(DGPMAN:MVT(13),1:"")
  S:$G(MFN)>0 DGX=+^DGPM(MFN,0)
  S:+ADM>0 X=$O(^DGPM("APMV",DFN,ADM,(9999999.9999999-DGX))),X1=$O(^DGPM("APMV",DFN,ADM,+X,0))
- S:+ADM>0 DGPM0=$S($D(^DGPM(+X1,0)):^(0),1:"") ;DGPM0=prior movement
- S:+ADM>0 X=$O(^DGPM("APCA",DFN,ADM,+DGX)),X=$O(^(+X,0)),DGPM2=$S($D(^DGPM(+X,0)):^(0),1:"") ;DGPM2=next movement
- S DGPMABL=0 I DGPM2,$D(^DG(405.2,+$P(DGPM2,"^",18),"E")) S DGPMABL=+^("E") ;is the next movement an absence?
+ S:+ADM>0 DGPM0=$S($D(^DGPM(+X1,0)):^DGPM(+X1,0),1:"") ;DGPM0=prior movement
+ S:+ADM>0 X=$O(^DGPM("APCA",DFN,ADM,+DGX)),X=$O(^DGPM("APCA",DFN,ADM,+X,0)),DGPM2=$S($D(^DGPM(+X,0)):^DGPM(+X,0),1:"") ;DGPM2=next movement
+ S DGPMABL=0 I DGPM2,$D(^DG(405.2,+$P(DGPM2,"^",18),"E")) S DGPMABL=+^DG(405.2,+$P(DGPM2,"^",18),"E") ;is the next movement an absence?
  S SCR="I $D(TYPE),($P(^(0),U,2)=TYPE),$P(^(0),U,4) S DGER=0,DGPMTYP=$P(^(0),U,3)"
  S SCR=SCR_" D:TYPE<4!(TYPE=6)!(TYPE=5) @(""DICS^DGPMV3""_TYPE) I 'DGER"
  ;S SCR="I $P(^(0),U,2)=TYPE,$P(^(0),""^"",4),$P(^(0),U,3)'=40,$P(^(0),U,3)'=18"
@@ -198,3 +214,8 @@ LSTPATS(RETURN,SEARCH,START,NUMBER,TYPE) ; Get patients
  D LIST^DIC(FILE,"",FIELDS,"",$G(NUMBER),.START,SEARCH,INDX,.SCR,"","RETURN")
  Q
  ;
+TIMEUSD(DFN,DGDT) ; Is time used
+ N Y
+ S Y=+DGDT
+ I $D(^DGPM("APRD",DFN,Y))!$D(^DGPM("APTT6",DFN,Y))!$D(^DGPM("APTT4",DFN,Y))!$D(^DGPM("APTT5",DFN,Y)) Q 1
+ Q 0
