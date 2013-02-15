@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 1/23/2013
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 2/15/2013
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -11,7 +11,7 @@ EN1 ;
  L  W !! D I^SDUTL
  N Y S Y=$G(SDCLN)
  S PAR("FLAG")="AQZME"
- S PAR("PRMPT")=$$EZBLD^DIALOG(480000.031)
+ S PAR("PRMPT")=$$EZBLD^DIALOG(1250000.332)
  I '$D(SDCLN) S Y=$$SELCLN^SDMUI(.PAR)
  S:+Y>0!($D(SDCLN)) %=$$GETCLN^SDMAPI1(.CLN,+Y) G:+Y<0!'$D(CLN("LENGTH OF APP'T")) END
  N SDRES S:$D(SDCLN) Y=+SDCLN S SDRES=$$CLNCK^SDMAPI1(.ERR,+Y)

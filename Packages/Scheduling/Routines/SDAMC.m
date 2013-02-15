@@ -1,4 +1,4 @@
-SDAMC ;ALB/MJK - Cancel Appt Action ; 2/14/2013  ; Compiled January 8, 2009 15:41:48
+SDAMC ;ALB/MJK - Cancel Appt Action ; 2/15/2013  ; Compiled January 8, 2009 15:41:48
  ;;5.3;Scheduling;**20,28,32,46,263,414,444,478,538,554,260003**;Aug 13, 1993;Build 5
  ;
 EN ; -- protocol SDAM APPT CANCEL entry pt
@@ -35,8 +35,7 @@ CAN(DFN,SDT,CNT,L,SDWH,SDCP,SDSCR,SDREM) ;
  S APP=1,A1=L\1 S SCLHOLD=$P(^UTILITY($J,"SDCNP",A1),U,2) D BEGD^SDCNP0
  S SDFN=DFN ; Sets SDFN - PATCH SD*5.3*554
  D MES,NOPE W ! S (CNT,L)=0 K ^UTILITY($J,"SDCNP")
- Q
-CANQ(SDFN,SDCLN,SDAMTYP) ; SD*5.3*554 - Passes in SDFN, SDCLN, and SDAMTYP
+CANQ ; SD*5.3*554 - Passes in SDFN, SDCLN, and SDAMTYP
  ;Wait List Message
  ;
  Q:(SDFN=""!SDCLN="")  ; Checks to make sure that SDFN and SDCLN are set to a non null value - PATCH SD*5.3*554
