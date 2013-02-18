@@ -81,7 +81,7 @@ GETPARM(RETURN) ;Gets site parameters
  S RETURN("CLU")=$P(X,"^",4)
  S RETURN("REV")=$P(X,"^",5)
  S RETURN("SDP")=$P(X,"^",6)
- Q 1
+ Q
  ;
 SETPARM(PARAMS) ;Sets site parameters
  N FDAROOT
