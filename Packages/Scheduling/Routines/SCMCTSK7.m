@@ -15,7 +15,7 @@ TIOEND ;
  ;;Team Position              The name of the team position to which this provider is assigned
  ;;AP or PCP                  This column displays whether this provider is an Associate Primary Care Provider
  ;;                           (AP) or a Primary Care Provider (PCP)
- ;;Associated Clinic(s)     The scheduling clinic(s) associated with this position/provider in the PCMM software
+ ;;Associated Clinic(s)       The scheduling clinic(s) associated with this position/provider in the PCMM software
  ;;FTEE                       The number of hours the provider spends providing care expressed as a Full-Time Employee
  ;;                           Equivalent Examples: One FTEE=1.00=40 hours per week. 0.75 FTEE=30 hours per week. 0.50 FTEE=20 hours
  ;;                           per week. Percent FTEE is equal to 100 x the FTEE number on this report. For example FTEE=0.75= 75%

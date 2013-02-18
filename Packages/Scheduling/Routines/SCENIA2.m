@@ -72,7 +72,7 @@ EI1 S DIR(0)="409.68,.03",DA=SDOE
  W !,"Current Eligibility for Encounter: "_$S($G(SD1):$P(^DIC(8,SD1,0),U),1:""),!
  ;
  S DIR(0)="YA",DIR("B")="NO",DIR("A")="Change Eligibility/Appointment type? " D ^DIR K DIR G:$D(DIRUT)!(Y=0) A1
- ; 
+ ;
  ;SD*560 if SC Indicator in Visit equals 1 (Service Connected) do not allow edit of Appt Type or Eligibility
  I $P(^SCE(SDOE,0),U,10)'=10 S SDVST=$P(^SCE(SDOE,0),U,5) I $D(^AUPNVSIT(SDVST,800)) I +$G(^(800))=1 D  G A1
  .W !!,"The Visit associated with the selected encounter is SERVICE CONNECTED."

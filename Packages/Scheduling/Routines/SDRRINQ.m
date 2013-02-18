@@ -1,4 +1,4 @@
-SDRRINQ  ;10N20/MAH;-Recall Reminder PATIENT INQUIRY ;01/28/2008  11:32
+SDRRINQ ;10N20/MAH;-Recall Reminder PATIENT INQUIRY ;01/28/2008  11:32
  ;;5.3;Scheduling;**536,566**;Aug 13, 1993;Build 5
  ; Option: SDRR PATIENT INQUIRY
 EN ;Looping through both active recalls and archive entries

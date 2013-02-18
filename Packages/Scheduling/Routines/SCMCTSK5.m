@@ -29,10 +29,10 @@ FLAG ;
  ;;This message is generated each time when at least one new occurrence of
  ;;flagging for inactivation takes place, and unconditionally on the 15th and
  ;;the last day of a month.
- ;;Patients Scheduled for Inactivation from Primary Care panels
+ ;;Patients scheduled for Inactivation from Primary Care panels
  ;;                                                            Dates
- ;;                                                           Scheduled       
- ;;Patient Name         SSN  Provider          Team           for Inactivation
+ ;;                                                            Scheduled
+ ;;Patient Name        SSN Provider            Team            for Inactivation
  ;;----------------------------------------------------------------------------
  Q
 EXT ;
@@ -59,8 +59,8 @@ INACT ;
  ;;Inactivation of primary care patients from a PCMM panel occurs under
  ;;the following circumstances:
  ;;(a) The patient expires
- ;;(b) Newly assigned patients (either newly-enrolled patients or patients who
- ;;have been re-assigned to a different provider) who have not been seen by
+ ;;(b) Newly assigned patients (either newly-enrolled patients or patients who    
+ ;;have been re-assigned to a different provider) who have not been seen by 
  ;;their PCP or Associate Provider (AP) and 12 months have passed since the 
  ;;time of assignment to that provider.  This provides every PCP a 1-year grace
  ;;period for seeing patients added to their panel (either newly-enrolled

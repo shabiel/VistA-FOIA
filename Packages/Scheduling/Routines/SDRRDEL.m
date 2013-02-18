@@ -18,7 +18,7 @@ EN S DIDEL=403.5,Q=0,(CLIN,CLINZ)=""  ;SD*571 added linetag EN
  I Y'=1 G EXIT
  I Y=1 G KIL
  Q
-KIL      N SDRRFTR
+KIL N SDRRFTR
  S Y=0
  K DIR
  S DIR(0)="SO^1:Failure to respond;2:Moved;3:Deceased;4:Doesn't want VA services;5:Received care at another VA;6:Other",DIR("A")="Reason for Removal" D ^DIR Q:$D(DIRUT) 
@@ -26,6 +26,6 @@ KIL      N SDRRFTR
  S DA=+Q S DIE="^SD(403.5,",DR="[SDRREMARKS]",DIE("NO^")="BACKOUTOK" D ^DIE
  S DIK="^SD(403.5,",DA=+Q D ^DIK
  W !!?20,"*** Now Deleting Patient Recall ***" H .5
-EXIT     ;
+EXIT ;
  K SDRRFTR,Q,DA,DIC,X,Y,DIDEL,DIC,DIK,DIR,CLIN,CLINZ,DIE,DR,DIRUT,KEY,SDPRV,SDFLAG
  Q

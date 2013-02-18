@@ -39,7 +39,7 @@ EN ;
  W !,"Done."
  Q
 UPDINS(SDWLSC,INERROR) ; update 409.32 and the related entries in 409.3
- N SDWLINS S SDWLINS=$$GET1^DIQ(409.32,SDWLSC_",",.02,"I") ; current set up IN 409.32
+ N SDWLINS S SDWLINS=$$GET1^DIQ(409.32,SDWLSC_",",.02,"I") ; current set up in 409.32
  ;check set up in file 44
  ;get clinic
  N CL,CLN S CL=$$GET1^DIQ(409.32,SDWLSC_",",.01,"I"),CLN=$$GET1^DIQ(44,CL_",",.01)
