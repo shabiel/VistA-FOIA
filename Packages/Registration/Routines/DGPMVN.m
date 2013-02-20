@@ -1,5 +1,5 @@
-DGPMVN ;RGI/VSL - PATIENT MOVEMENT UTILS; 1/10/2013
- ;;5.3;Registration;**260003**;
+DGPMVN ;RGI/VSL - PATIENT MOVEMENT UTILS; 2/20/2013
+ ;;5.3;Registration;**260005**;
  ;
 SELPAT(RTN,PROMPT) ; Select patient
  N PAR,DFN,MT,TXT,PAT
@@ -80,7 +80,7 @@ SELMVT1 ;
  . . S:LNO=0 LN(LNO)=$$UP^XLFSTR($$EZBLD^DIALOG(8068))
  . . S LNO=LNO+1,TMP(LNO)=MVTS(I,"ID"),TMP(+MVTS(I,"DATE"))=MVTS(I,"ID")
  . . S LN(LNO)=LNO_"> "_$P(MVTS(I,"DATE"),U,2)_$C(9)_$P(MVTS(I,"TYPE"),U,2)
- . . S LN(LNO)=LN(LNO)_$C(9)_" TO: "_$P(MVTS(I,"WARD"),U,2)_" ["_$P(MVTS(I,"BED"),U,2)_"]"
+ . . S LN(LNO)=LN(LNO)_$C(9)_" TO: "_$P(MVTS(I,"WARD"),U,2)_" ["_$P(MVTS(I,"ROOMBED"),U,2)_"]"
  . . I '$D(ADMDT) S ADMDT=MVTS(I,"DATE")
  . . I +ADMDT<+MVTS(I,"DATE") S ADMDT=MVTS(I,"DATE")
  . D EN^DDIOL(.LN)

@@ -1,4 +1,4 @@
-DGPMAPIE ;RGI/VSL - Registration Error provider; 2/11/2013
+DGPMAPIE ;RGI/VSL - Registration Error provider; 2/20/2013
  ;;5.3;Registration;**260005**;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -56,3 +56,12 @@ TFCNFND ;;4070000.144;;Transfer facility not found.
 TFCINAC ;;4070000.145;;Transfer facility is inactive.
 TIMEUSD ;;4070000.146;;There is already a movement at that date/time entered for this patient
 DISINVAT ;;4070000.147;;Invalid discharge type.
+MVTNFND ;;4070000.148;;Movement not found.
+DCHCDWAH ;;4070000.149;;You can not delete a WHILE ASIH type discharge
+DCHDTCNH ;;4070000.15;;Delete through corresponding NHCU/DOM movements
+DCHCDOLA ;;4070000.151;;Can only delete discharge for last admission
+DCHDODLM ;;4070000.152;;You can only remove a discharge when it is the last movement for the patient.
+DCHMDHDF ;;4070000.153;;You must delete the hospital discharge first.
+DCHNBLM ;;4070000.154;;Not before last movement
+DCHPADON ;;4070000.155;;Patient already discharged on...
+DCHNFND ;;4070000.156;;Discharge not found
