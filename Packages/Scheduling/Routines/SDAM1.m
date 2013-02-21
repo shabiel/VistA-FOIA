@@ -1,4 +1,4 @@
-SDAM1 ;MJK/ALB - Appt Mgt (Patient);2/14/2012
+SDAM1 ;MJK/ALB - Appt Mgt (Patient);2/21/2013
  ;;5.3;Scheduling;**149,155,193,189,445,478,466,567,591,260003**;Aug 13, 1993;Build 2
  ;
 INIT ; -- get init pat appt data
@@ -54,7 +54,7 @@ BLD1Q Q
 ANC() ; -- set ancillary info
  N I,Y,C
  S Y="",C=0
- F I=1:1:3 I $P(SDATA,U,I)]"" S Y=Y_" "_$P("Lab^XRay^EKG",U,I)_"@"_$$TIME($P($P(SDATA,U,I),".",2)),C=C+1 Q:C=2
+ F I=3:1:5 I $P(SDATA,U,I)]"" S Y=Y_" "_$P("^^Lab^XRay^EKG",U,I)_"@"_$$TIME($P($P(SDATA,U,I),".",2)),C=C+1 Q:C=2
  I Y]"" S Y="/"_$E(Y,2,99)
  Q Y
  ;  

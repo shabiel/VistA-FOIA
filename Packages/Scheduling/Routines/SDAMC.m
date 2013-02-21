@@ -1,4 +1,4 @@
-SDAMC ;ALB/MJK - Cancel Appt Action ; 2/15/2013  ; Compiled January 8, 2009 15:41:48
+SDAMC ;ALB/MJK - Cancel Appt Action ; 2/21/2013  ; Compiled January 8, 2009 15:41:48
  ;;5.3;Scheduling;**20,28,32,46,263,414,444,478,538,554,260003**;Aug 13, 1993;Build 5
  ;
 EN ; -- protocol SDAM APPT CANCEL entry pt
@@ -23,9 +23,11 @@ EN ; -- protocol SDAM APPT CANCEL entry pt
 ENQ Q
  ;
 CAN(DFN,SDT,CNT,L,SDWH,SDCP,SDSCR,SDREM) ;
- N A1,NDT S NDT=SDT
+ N A1,NDT S NDT=SDT,SDCLN=$G(SC)
  S %=$$GETAPTS^SDMAPI1(.APTS,DFN,.SDT)
- I APTS("APT",SDT,"STATUS")["C" W !!,"Appointment already cancelled" H 2 G CANQ
+ S:'$G(L) L=0 ; If there is no data in L set L to 0 - PATCH SD*5.3*554
+ S:'$G(SDAMTYP) SDAMTYP="P" ; If there is no data in SDAMTYP set SDAMTYP to 0" - PATCH SD*5.3*554
+ I APTS("APT",SDT,"STATUS")["C" W !!,"Appointment already cancelled" H 2 D CANQ(DFN,SDCLN,SDAMTYP) Q  ; SD*5.3*554
  I $D(APTS),APTS("APT",SDT,"STATUS")'["C"  D
  . S SC=+APTS("APT",SDT,"CLINIC"),L=L\1+1,APL=""
  . D FLEN^SDCNP1A(.APTS)
@@ -33,9 +35,10 @@ CAN(DFN,SDT,CNT,L,SDWH,SDCP,SDSCR,SDREM) ;
  . D CHKSO^SDCNP0(.APTS)
  ;SD*5.3*414 next line added to set hold variable SCLHOLD for clinic ptr
  S APP=1,A1=L\1 S SCLHOLD=$P(^UTILITY($J,"SDCNP",A1),U,2) D BEGD^SDCNP0
- S SDFN=DFN,SDCLN=SC ; Sets SDFN - PATCH SD*5.3*554
+ S SDFN=DFN ; Sets SDFN - PATCH SD*5.3*554
  D MES,NOPE W ! S (CNT,L)=0 K ^UTILITY($J,"SDCNP")
-CANQ ; SD*5.3*554 - Passes in SDFN, SDCLN, and SDAMTYP
+ Q
+CANQ(SDFN,SDCLN,SDAMTYP) ; SD*5.3*554 - Passes in SDFN, SDCLN, and SDAMTYP
  ;Wait List Message
  ;
  Q:(SDFN=""!SDCLN="")  ; Checks to make sure that SDFN and SDCLN are set to a non null value - PATCH SD*5.3*554
