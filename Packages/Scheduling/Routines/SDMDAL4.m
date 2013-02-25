@@ -1,4 +1,4 @@
-SDMDAL4 ;RGI/CBR - APPOINTMENT API; 1/29/2013
+SDMDAL4 ;RGI/CBR - APPOINTMENT API; 2/25/2013
  ;;5.3;scheduling;**260003**;08/13/93;
 GETOE(RETURN,SDOE) ; Get outpatient encounter
  N IND S IND=0
@@ -22,6 +22,16 @@ DELOE(SDOE) ; Delete Outpatient Encounter
  N DA,DIK
  S DA=SDOE,DIK="^SCE(" D ^DIK
  Q
+UPDOE(RETURN,PARAMS,IFN) ; Update Outpatient Encounter
+ N FLD,IENS,FDA
+ S IENS=IFN_","
+ S FLD=0
+ F  S FLD=$O(PARAMS(FLD)) Q:'FLD  D
+ . S FDA(409.68,IENS,FLD)=PARAMS(FLD)
+ D FILE^DIE("","FDA","RETURN")
+ S RETURN=IFN
+ Q
+ ;
 UPDPAPT(DATA,DFN,SD) ; Update patient appointment
  N IENS,I
  S IENS=SD_","_DFN_","
