@@ -23,7 +23,7 @@ EN ; -- protocol SDAM APPT CANCEL entry pt
 ENQ Q
  ;
 CAN(DFN,SDT,CNT,L,SDWH,SDCP,SDSCR,SDREM) ;
- N A1,NDT S NDT=SDT,SDCLN=$G(SC)
+ N A1,NDT S NDT=SDT
  S %=$$GETAPTS^SDMAPI1(.APTS,DFN,.SDT)
  S:'$G(L) L=0 ; If there is no data in L set L to 0 - PATCH SD*5.3*554
  S:'$G(SDAMTYP) SDAMTYP="P" ; If there is no data in SDAMTYP set SDAMTYP to 0" - PATCH SD*5.3*554
