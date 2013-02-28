@@ -65,3 +65,6 @@ DCHMDHDF ;;4070000.153;;You must delete the hospital discharge first.
 DCHNBLM ;;4070000.154;;Not before last movement
 DCHPADON ;;4070000.155;;Patient already discharged on...
 DCHNFND ;;4070000.156;;Discharge not found
+PSRVNFND ;;4070000.163;;Period of service not found
+ADMPLODG ;;4070000.165;;Patient is a lodger...you can not add an admission!
+ADMNBLD ;;4070000.167;;New ...must enter after last ...

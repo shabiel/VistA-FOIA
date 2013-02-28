@@ -10,7 +10,11 @@ ADD S Y=DGPMY X ^DD("DD")
 ADD1 W !!,"SURE YOU WANT TO ADD '",Y,"' AS A NEW ",DGPMUC," DATE" S:"^1^4^"'[("^"_DGPMT_"^") %=1 D YN^DICN Q:%=1  I '% W !?4,"Answer YES if you wish to add this new entry otherwise answer NO!" G ADD1
  S DGPME="NOTHING ADDED" G Q
  ;
-CHK ;Check new date/time for consistency with other movements
+CHK
+ S PAR("DATE")=DGPMY,PAR("PATIENT")=DFN
+ S CHK="S %=$$CHKDT^DGPMAPI"_DGPMT_"(.RE,.PAR)" X CHK I RE=0 S DGPME=$P(RE(0),U,2) Q
+ Q
+CHKO ;Check new date/time for consistency with other movements
  I $D(^DGPM("APRD",DFN,DGPMY))!$D(^DGPM("APTT6",DFN,DGPMY))!$D(^DGPM("APTT4",DFN,DGPMY))!$D(^DGPM("APTT5",DFN,DGPMY)) S DGPME="There is already a movement at that date/time" Q
  I "^1^4^"'[("^"_DGPMT_"^"),(DGPMY<+DGPMAN) S DGPME="Not before "_$S(DGPMT<4:"admission",DGPMT>5:"admission",1:"check-in")_" movement" Q
  I "^3^5^"'[("^"_DGPMT_"^"),DGPMCA I DGPMDCD,(DGPMY>DGPMDCD) S DGPME="Not after "_$S(DGPMT<4:"discharge",DGPMT>5:"discharge",1:"check-out")_" movement" Q
@@ -25,7 +29,7 @@ CHK ;Check new date/time for consistency with other movements
  Q
  ;
  ;
-PTF S PTF=+$P(DGPMAN,"^",16) I $S('PTF:1,'$D(^DGPT(PTF,0)):1,1:0) D NOPTF Q
+PTF S PTF=+ADM("PTF") I $S('PTF:1,'$D(^DGPT(PTF,0)):1,1:0) D NOPTF Q
  I $D(^DGP(45.84,PTF)) S DGPME="***" W !,"PTF record is closed for this admission...cannot edit" G Q
  Q
  ;

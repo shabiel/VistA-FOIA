@@ -1,12 +1,13 @@
 DGPMV20 ;ALB/MIR - DISPLAY DATES FOR SELECTION ; 27 APR 90
  ;;5.3;Registration;**40**;Aug 13, 1993
- W !!,"CHOOSE FROM:" F I=1:1:6 Q:'$D(^UTILITY("DGPMVN",$J,I))  D WR
+ W !!,"CHOOSE FROM:" S I=0 F  S I=$O(MVTS(I)) Q:'I  D WR
  Q
-WR S DGX=$P(^UTILITY("DGPMVN",$J,I),"^",2,20),DGIFN=+^(I),Y=+DGX X ^DD("DD") W !,$J(I,2),">  ",Y I 'DGONE W ?27,$S('$D(^DG(405.1,+$P(DGX,"^",4),0)):"",$P(^(0),"^",7)]"":$P(^(0),"^",7),1:$E($P(^(0),"^",1),1,20))
+WR S DGIFN=MVTS(I,"ID"),Y=+MVTS(I,"DATE") X ^DD("DD")
+ W !,$J(I,2),">  ",Y I 'DGONE W ?27,$E($P(MVTS(I,"TYPE"),"^",2),1,20)
  I DGPMT=4!(DGPMT=5) S DGPMLD=$S($D(^DGPM(+DGIFN,"LD")):^("LD"),1:"")
  D @("W"_DGPMT) K DGIFN,DGX,DGPMLD Q
-W1 W ?50,"TO:  ",$S($D(^DIC(42,+$P(DGX,"^",6),0)):$E($P(^(0),"^",1),1,17),1:"") I $D(^DG(405.4,+$P(DGX,"^",7),0)) W " [",$E($P(^(0),"^",1),1,10),"]"
- I $P(DGX,"^",18)=9 W !?23,"FROM:  ",$S($D(^DIC(4,+$P(DGX,"^",5),0)):$P(^(0),"^",1),1:"")
+W1 W ?50,"TO:  ",$E($P(MVTS(I,"WARD"),"^",2),1,17) I MVTS(I,"ROOMBED") W " [",$E($P(MVTS(I,"ROOMBED"),"^",2),1,10),"]"
+ I +MVTS(I,"MASTYPE")=9 W !?23,"FROM:  ",$P(MVTS(I,"FCTY"),"^",2)
  Q
 W2 Q:"^25^26^"[("^"_$P(DGX,"^",18)_"^")
  I "^43^45^"[("^"_$P(DGX,"^",18)_"^") W ?50,"TO:  ",$S($D(^DIC(4,+$P(DGX,"^",5),0)):$E($P(^(0),"^",1),1,18),1:"") Q

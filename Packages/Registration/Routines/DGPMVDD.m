@@ -2,10 +2,10 @@ DGPMVDD ;ALB/MIR - MISCELLANEOUS DD CALLS FROM FILE 405 AND 405.1 ; 4/14/04 6:26
  ;;5.3;Registration;**418,593**;Aug 13, 1993
 W ;called from input transform for ward location
  I '$D(DGPMT) K X,DIC Q
- S DGPMTYP=$P(^DGPM(DA,0),"^",18),DGPMWD=$P(DGPMP,"^",6) D W1:DGPMT=1,W2:DGPMT=2!($P(^DGPM(DA,0),"^",2)=2) Q
+ S DGPMTYP=$P(^DG(405.1,+PAR("TYPE"),0),"^",3),DGPMWD=+$G(OLD("WARD")) D W1:DGPMT=1,W2:DGPMT=2 Q
 W1 ;consistency edits for ward location from admit option
  I $D(DGPMSVC) S DIC("S")=DIC("S")_","_$S(DGPMSVC="H":"""^NH^D^""'[(""^""_$P(^(0),""^"",3)_""^"")",1:"$P(^(0),""^"",3)=DGPMSVC") Q
- S DGX=$P(DGPMP,"^",17) I DGX,(DGPMTYP=40),$S('$D(^DGPM(+DGX,0)):0,+^(0):1,1:0) S DIC("S")="I +Y=DGPMWD" Q
+ S DGX=+$G(OLD("DISIFN")) I DGX,(DGPMTYP=40),$S('$D(^DGPM(+DGX,0)):0,+^(0):1,1:0) S DIC("S")="I +Y=DGPMWD" Q
  ;S DGX="" I DGPMTYP=18 S DIC("S")=DIC("S")_",""^NH^D^""[(""^""_$P(^(0),""^"",3)_""^"")" Q
  S DGX="" I DGPMTYP=18 S DIC("S")=DIC("S")_",""^NH^D^""[(""^""_$P(^(0),""^"",3)_""^"")!($P(^(0),""^"",17)=1)" ;p-418
  ;I (DGPMWD&$S($P(DGPM2,"^",2)=2:1,1:0))!(DGPMTYP=40) S DGX=$S($D(^DIC(42,+DGPMWD,0)):$P(^(0),"^",3),1:""),DGX=$S("^NH^D^"'[("^"_DGX_"^"):"H",1:DGX)
@@ -36,10 +36,10 @@ W2 ;Ward consistency check for transfer.  interward transfers not to same ward. 
  I $D(^DG(405.2,+DGPMTYP,"E")),'^("E") S DGX=$S(DGPMABL:0,1:$P(DGPM2,"^",6)),DIC("S")=DIC("S")_",+Y'=DGX,+Y'=$P(DGPM0,""^"",6)"
  Q
 WARD ;is ward active at time of movement?
- S DGPMOS=+^DGPM(DA,0) N D0,X S D0=+Y D WIN^DGPMDDCF I X W !,"Ward inactive at time of movement" S DGOOS=1 Q
+ S DGPMOS=+PAR("DATE") N D0,X S D0=+Y D WIN^DGPMDDCF I X W !,"Ward inactive at time of movement" S DGOOS=1 Q
  Q
 ROOM ;is room-bed active at time of movement? - called from input transform of .07 in 405
- S DGPMOS=$S('$D(DGSWITCH):+^DGPM(DA,0),1:DT) N D0,X S D0=+Y D RIN^DGPMDDCF I X W !,"Room-bed inactive at time of movement" S DGOOS=1 Q
+ S DGPMOS=$S('$D(DGSWITCH):PAR("DATE"),1:DT) N D0,X S D0=+Y D RIN^DGPMDDCF I X W !,"Room-bed inactive at time of movement" S DGOOS=1 Q
  Q
  ;
 TROC ;is bed occupied when transferring from 1 or 23 movement?
