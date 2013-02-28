@@ -89,11 +89,11 @@ HLP ;-- help for Sub-Category file
 HLPQ ;
  Q
  ;
-ADCAT(ADCAT) ;-- This function will prompt the user for the category
+ADCAT(ADCAT,DEFAULT) ;-- This function will prompt the user for the category
  ; associated with the admitting regulation selected.
  ;
  N RESULT,DGSA
- S RESULT=$$SUB(ADCAT,1,$P($G(^DGPM(+$G(DA),"PTF")),U,4))
+ S RESULT=$$SUB(ADCAT,1,$G(DEFAULT))
  Q RESULT
  ;
 GETSA(ATAR,SOURCE,ACTIVE) ;-- This function will build the DGSA array containing all the
