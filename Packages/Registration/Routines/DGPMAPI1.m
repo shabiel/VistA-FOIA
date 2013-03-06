@@ -1,30 +1,6 @@
-DGPMAPI1 ;RGI/VSL - ADMIT PATIENT API; 2/20/2013
+DGPMAPI1 ;RGI/VSL - ADMIT PATIENT API; 3/4/2013
  ;;5.3;Registration;**260005**;
 ADMIT(RETURN,PARAM) ; Admit patient
- ;
- ;Input
- ;
- ;Required elements include:
- ;  PARAM("ADMREG")=admitting regulation
- ;  PARAM("ATNDPHY")=attending physician
- ;  PARAM("DATE")=date time (admission date)
- ;  PARAM("FDEXC")=facility directory exclusion
- ;  PARAM("FTSPEC")=facility treating specialty
- ;  PARAM("PATIENT")=patient
- ;  PARAM("SHDIAG")=short diagnosis
- ;  PARAM("TYPE")=type of movement
- ;  PARAM("WARD")=ward
- ;
- ;Optional elements include:
- ;  PARAM("ADMSCC")=admitted for sc condition
- ;  PARAM("ADMCAT")=admitting category
- ;  PARAM("ADMSRC")=source of admission
- ;  PARAM("DIAG",1)=diagnosis array
- ;  PARAM("ELIGIB")=admitting eligibility
- ;  PARAM("PRYMPHY")=primary physician
- ;  PARAM("ROOMBED")=roombed
- ;  PARAM("SCADM")=scheduled admission
- ;  PARAM("SERILL")=condition (SERIOUSLY ILL)
  N %,PM6,DFN,PTF,RPTF,PM1,PM6,NOD60,IFN1,IFN6
  K RETURN S RETURN=0
  S %=$$CHKADM(.RETURN,.PARAM)
@@ -39,11 +15,12 @@ ADMIT(RETURN,PARAM) ; Admit patient
  . D UPDSCADM^DGPMDAL1(,.SCADM,+$G(PARAM("SCADM")))
  S PARAM("ADMIFN")=IFN1,PARAM("RELIFN")=IFN1
  S %=$$ADDFTS^DGPMAPI6(.RETURN,.PARAM)
- D UPDPAT(,.PARAM,DFN)
+ S %=$$UPDPAT^DGPMAPI7(,.PARAM,DFN)
  D SETAEVT^DGPMDAL1(IFN1,+RETURN,"A")
  S DGPMDA=IFN1
  D ^DGPMVBUL,CK^DGBLRV
- D MVTEVT(DFN,1,+IFN1)
+ D ADM^DGPMVODS
+ D MVTEVT^DGPMAPI7(DFN,1,+IFN1)
  S RETURN=IFN1
  D ULOCKMVT^DGPMDAL1(DFN)
  Q 1
@@ -69,9 +46,9 @@ ADDADM(RETURN,PARAM) ; Add admission
  D UPDMVT^DGPMDAL1(.RETURN,.PM1,IFN1)
  S PM1(.04)=+PARAM("TYPE")  ; type of movement
  S PM1(.06)=+PARAM("WARD")  ; ward
- S PM1(.07)=+$G(PARAM("ROOMBED"))  ; roombed
+ S:+$G(PARAM("ROOMBED"))>0 PM1(.07)=+$G(PARAM("ROOMBED"))  ; roombed
  S PM1(.1)=PARAM("SHDIAG")  ; short diagnosis
- S:$G(PARAM("ADMSCC"))'="" PM1(.11)=+$G(PARAM("ADMSCC"))  ; admitted for sc condition
+ S:+$G(PARAM("ADMSCC"))>0 PM1(.11)=+$G(PARAM("ADMSCC"))  ; admitted for sc condition
  S PM1(.12)=+PARAM("ADMREG")  ; admitting regulation
  S PM1(.25)=$S(+$G(PARAM("SCADM"))>0:1,1:0)  ; scheduled admission
  S PM1(41)=+$G(PARAM("FDEXC"))  ; facility directory exclusion
@@ -85,17 +62,6 @@ ADDADM(RETURN,PARAM) ; Add admission
  S PM1(.14)=IFN1  ; admission checkin movement
  D UPDMVT^DGPMDAL1(.RETURN,.PM1,IFN1)
  Q IFN1
- ;
-UPDPAT(RETURN,PARAM,DFN) ; Update patient
- N PAT
- S PAT(.103)=+$G(PARAM("FTSPEC"))
- S PAT(.104)=$S(+$G(PARAM("PRYMPHY"))>0:+$G(PARAM("PRYMPHY")),1:+$G(PARAM("ATNDPHY")))
- S PAT(.1041)=+$G(PARAM("ATNDPHY"))
- S PAT(401.3)=$G(PARAM("SERILL"))
- S PAT(401.4)=$P($$NOW^XLFDT(),".")
- D RESET^DGPMDDCN
- D UPDPAT^DGPMDAL1(,.PAT,DFN)
- Q 1
  ;
 CANDEL(RETURN,AFN) ; 
  N %,APMV,I,TXT,OLD
@@ -128,8 +94,9 @@ DELADM(RETURN,AFN) ; Delete admission
  I ADM(.18,"I")=40 D
  . S %=$$DELASH^DGPMAPI2(.RETURN,ADM(.21,"I"))
  D DELPTF^DGPMDAL1(ADM(.16,"I"))
+ S %=$$UPDPAT^DGPMAPI7(,,DFN)
  D DELMVT^DGPMDAL1(+AFN)
- D MVTEVT(ADM(.03,"I"),1,+AFN)
+ D MVTEVT^DGPMAPI7(ADM(.03,"I"),1,+AFN)
  D ULOCKMVT^DGPMDAL1(ADM(.03,"I"))
  S RETURN=1
  Q 1
@@ -173,7 +140,7 @@ CHKADM(RETURN,PARAM,ASH) ; Check admit parameters
  ; related physical movement
  S %=$$CHKRPM^DGPMAPI6(.RETURN,.PARAM) Q:'% 0
  ; source of admission
- I $G(PARAM("ADMSRC"))'="" D  Q:'RETURN 0
+ I $G(PARAM("ADMSRC"))'=""&($G(PARAM("ADMSRC"))'="^") D  Q:'RETURN 0
  . S %=$$CHKASRC^DGPMAPI1(.RETURN,$G(PARAM("ADMSRC")))
  Q 1
  ;
@@ -221,7 +188,7 @@ CHKUPD(RETURN,PARAM,AFN,OLD,NEW) ; Check update
  . S NEW("WARD")=+PARAM("WARD")
  S WARD=$S($D(NEW("WARD")):+NEW("WARD"),1:+OLD("WARD"))
  ; roombed
- I $G(PARAM("ROOMBED"))'="",+$G(OLD("ROOMBED"))'=$G(PARAM("ROOMBED")) D  Q:'RETURN 0
+ I $G(PARAM("ROOMBED"))'="",$G(PARAM("ROOMBED"))'="^",+$G(OLD("ROOMBED"))'=$G(PARAM("ROOMBED")) D  Q:'RETURN 0
  . S %=$$CHKBED^DGPMAPI8(.RETURN,PARAM("ROOMBED"),WARD,+OLD("PATIENT"),DATE) Q:'%
  . S NEW("ROOMBED")=+PARAM("ROOMBED")
  ; related physical movement
@@ -254,9 +221,9 @@ UPDADM(RETURN,PARAM,AFN) ; Update admission
  D UPDMVT^DGPMDAL1(.RETURN,.MVT,AFN)
  S %=$$UPDFTS^DGPMAPI6(.RETURN,.PARAM,RPHY)
  S %=$$UPDPTF(.RETURN,.PARAM,$P(OLD("PTF"),U))
- S %=$$UPDPAT(.RETURN,.PARAM,DFN)
+ S %=$$UPDPAT^DGPMAPI7(.RETURN,.PARAM,DFN)
  D SETAEVT^DGPMDAL1(AFN,RPHY,"A")
- D MVTEVT(DFN,1,AFN)
+ D MVTEVT^DGPMAPI7(DFN,1,AFN)
  D ULOCKMVT^DGPMDAL1(DFN)
  S RETURN=1
  Q 1
@@ -296,15 +263,4 @@ CHKASRC(RETURN,ADMSRC) ; Check admission source
  I TMP=0 D ERRX^DGPMAPIE(.RETURN,"ASRCNFND") Q 0
  S RETURN=1
  Q 1
- ;
-MVTEVT(DFN,TYPE,MFN) ; Movement events
- N DGPMDA,DGPMA,DGPMP,DGPMT,DGQUIET,DGNEW,DGPM0
- D START^DGPWB(DFN)
- D EN^DGPMVBM
- S DGPM0=""
- S DGPMA=$$GETMVT0^DGPMDAL1(MFN)
- S DGPMDA=MFN,DGPMP="",DGPMT=TYPE,DGQUIET=1
- S:TYPE=1 DGNEW=1
- D ^DGPMEVT
- Q
  ;

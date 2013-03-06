@@ -1,5 +1,5 @@
-DGPTFJ ;ALB/MRL - JUMP BETWEEN PTF SCREENS ; 12/12/06 9:04am
- ;;5.3;Registration;**58,517,635,729**;Aug 13, 1993;Build 59
+DGPTFJ ;ALB/MRL - JUMP BETWEEN PTF SCREENS ; DGPTXA
+ ;;5.3;Registration;**58,517,635,729,260005**;Aug 13, 1993;Build 59
  ;
 TEST K S,M G Q^DGPTF:X="^" S Z="^101^401^501^601^701^801^MAS^CDR",X1=X,X=$P($E(X,2,99),"-",1) G QUES:X1?1"^?".E Q:X=""  D IN^DGHELP G QUES:%=-1
  S Z=$T(@X) I Z="" W !!,"*** Undefined screen number. Valid screens are: ",! G QUES
@@ -26,7 +26,7 @@ M ;;^DGPTFM;'MAS' screen--surgery/procedure/diagnosis code edits
 C ;;EN^DGPTFM7;'MPCR' screen--displays MPCR information
  Q
 SA ;called from input transform on SOURCE OF ADMISSION field (#20) PTF file (#45)
- S DGER=$S('$D(PTF):1,'$D(^DGPT(PTF,0)):1,1:0) Q:DGER!("^48^49^50^"'[(U_Y_U))  S DGSU1=$P(^(0),"^",5),DGSU0=$S($D(^DGPT(PTF,101)):$P(^(101),"^",6),1:"")
+ Q:("^48^49^50^"'[(U_Y_U))  S DGSU1=$P(^(0),"^",5),DGSU0=$S($D(^DGPT(+$G(PTF),101)):$P(^(101),"^",6),1:"")
  S DGSTATYP=$S(Y=48:11,Y=49:40,Y=50:30)
  D NUMACT^DGPTSUF(DGSTATYP)
  I DGANUM>0 D

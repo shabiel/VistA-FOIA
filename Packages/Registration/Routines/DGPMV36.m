@@ -1,7 +1,7 @@
-DGPMV36 ;ALB/MIR - TREATING SPECIALTY TRANSFER, CONTINUED ; SEP 15 1989@12
- ;;5.3;Registration;;Aug 13, 1993
+DGPMV36 ;ALB/MIR - TREATING SPECIALTY TRANSFER, CONTINUED ; 3/4/2013
+ ;;5.3;Registration;**260005**;Aug 13, 1993
  ;
- I '$P(DGPMA,"^",9) S DGPMA="",DIK="^DGPM(",DA=DGPMDA D ^DIK K DIK W !,"Incomplete Treating Specialty Transfer...Deleted"
+ ;I '$P(DGPMA,"^",9) S DGPMA="",DIK="^DGPM(",DA=DGPMDA D ^DIK K DIK W !,"Incomplete Treating Specialty Transfer...Deleted"
  Q
  ;
 DICS ; -- check that it is a PROVIDER/SPECIALTY change
@@ -22,12 +22,10 @@ SPEC ; -- entry point to add/edit specialty mvt when adding/editing
  ;    Variable: DGPMPHY = physical mvt IFN ; DGPMPHY0 = 0th node
  ;              DGPMSP  = specialty mvt IFN
  ;
- Q:'$D(^DGPM(+Y,0))
- N DGPMT,DGPMN S DGPMPHY=+Y,DGPMPHY0=^DGPM(+Y,0),DGPMT=6,DGPMN=0
- S DGPMSP=$S($D(^DGPM("APHY",DGPMPHY)):$O(^(DGPMPHY,0)),1:"")
- I 'DGPMSP S Y=+$P(Y,"^",2) D ASK:'Y G SPECQ:'Y D NEW
- D EDIT:DGPMSP
-SPECQ S Y=DGPMSP K DGPMPHY,DGPMPHY0,DGPMSP Q
+ N DIAG S DIAG(1)=$G(PAR("SHDIAG")) M:$D(OLD("DIAG")) DIAG=OLD("DIAG")
+ D ASK:'Y G SPECQ:'Y D ^DGPMX6
+ M PAR("DIAG")=DIAG
+SPECQ K DGPMPHY,DGPMPHY0,DGPMSP Q
  ;
 ASK ; -- ask user if they want to make a special mvt also
  W ! S DIR(0)="YA",DIR("A")="Do you wish to associate a 'facility treating specialty' transfer? "

@@ -1,4 +1,4 @@
-DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 2/20/2013
+DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 3/4/2013
  ;;5.3;Registration;**260005**;
 ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  N FLD,IENS,FDA
@@ -80,10 +80,20 @@ INITEVT() ;
  K ^UTILITY("DGPM",$J)
  Q
  ;
+SETCIEVT(MFN,PA) ; Sets lodger check-in prior/after event
+ S ^UTILITY("DGPM",$J,4,MFN,PA)=$G(^DGPM(MFN,0))
+ S:'$D(^UTILITY("DGPM",$J,4,MFN,"P")) ^UTILITY("DGPM",$J,4,MFN,"P")=""
+ Q
+SETCOEVT(MFN,PA) ; Sets lodger check-out prior/after event
+ S ^UTILITY("DGPM",$J,5,MFN,PA)=$G(^DGPM(MFN,0))
+ S:'$D(^UTILITY("DGPM",$J,5,MFN,"P")) ^UTILITY("DGPM",$J,5,MFN,"P")=""
+ Q
 SETAEVT(MFN,RFN,PA) ; Sets admission prior/after event
  S ^UTILITY("DGPM",$J,1,MFN,PA)=$G(^DGPM(MFN,0))
  S:'$D(^UTILITY("DGPM",$J,1,MFN,"P")) ^UTILITY("DGPM",$J,1,MFN,"P")=""
- Q:$G(RFN)'>0
+ Q
+ ;
+SETREVT(RFN,PA) ;
  S ^UTILITY("DGPM",$J,6,RFN,PA)=$G(^DGPM(RFN,0))
  S:'$D(^UTILITY("DGPM",$J,6,RFN,"P")) ^UTILITY("DGPM",$J,6,RFN,"P")=""
  S ^UTILITY("DGPM",$J,6,RFN,"DX"_PA)=$P($G(^DGPM(RFN,"DX",0)),U,3,4)_$G(^DGPM(RFN,"DX",1,0))
@@ -91,17 +101,9 @@ SETAEVT(MFN,RFN,PA) ; Sets admission prior/after event
  S ^UTILITY("DGPM",$J,6,RFN,"PTF"_PA)=$G(^DGPM(RFN,"PTF"))
  S:'$D(^UTILITY("DGPM",$J,6,RFN,"PTFP")) ^UTILITY("DGPM",$J,6,RFN,"PTFP")=""
  Q
- ;
 SETTEVT(MFN,RFN,PA) ; Sets transfer prior/after event
  S ^UTILITY("DGPM",$J,2,MFN,PA)=$G(^DGPM(MFN,0))
  S:'$D(^UTILITY("DGPM",$J,2,MFN,"P")) ^UTILITY("DGPM",$J,2,MFN,"P")=""
- Q:$G(RFN)'>0
- S ^UTILITY("DGPM",$J,6,RFN,PA)=$G(^DGPM(RFN,0))
- S:'$D(^UTILITY("DGPM",$J,6,RFN,"P")) ^UTILITY("DGPM",$J,6,RFN,"P")=""
- S ^UTILITY("DGPM",$J,6,RFN,"DX"_PA)=$P($G(^DGPM(RFN,"DX",0)),U,3,4)_$G(^DGPM(RFN,"DX",1,0))
- S:'$D(^UTILITY("DGPM",$J,6,RFN,"DXP")) ^UTILITY("DGPM",$J,6,RFN,"DXP")=""
- S ^UTILITY("DGPM",$J,6,RFN,"PTF"_PA)=$G(^DGPM(RFN,"PTF"))
- S:'$D(^UTILITY("DGPM",$J,6,RFN,"PTFP")) ^UTILITY("DGPM",$J,6,RFN,"PTFP")=""
  Q
  ;
 SETDEVT(MFN,PA) ; Sets discharge prior/after event

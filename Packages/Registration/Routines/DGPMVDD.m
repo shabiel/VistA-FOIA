@@ -1,5 +1,5 @@
-DGPMVDD ;ALB/MIR - MISCELLANEOUS DD CALLS FROM FILE 405 AND 405.1 ; 4/14/04 6:26pm
- ;;5.3;Registration;**418,593**;Aug 13, 1993
+DGPMVDD ;ALB/MIR - MISCELLANEOUS DD CALLS FROM FILE 405 AND 405.1 ; 3/4/2013
+ ;;5.3;Registration;**418,593,260005**;Aug 13, 1993
 W ;called from input transform for ward location
  I '$D(DGPMT) K X,DIC Q
  S DGPMTYP=$P(^DG(405.1,+PAR("TYPE"),0),"^",3),DGPMWD=+$G(OLD("WARD")) D W1:DGPMT=1,W2:DGPMT=2 Q
@@ -10,22 +10,22 @@ W1 ;consistency edits for ward location from admit option
  S DGX="" I DGPMTYP=18 S DIC("S")=DIC("S")_",""^NH^D^""[(""^""_$P(^(0),""^"",3)_""^"")!($P(^(0),""^"",17)=1)" ;p-418
  ;I (DGPMWD&$S($P(DGPM2,"^",2)=2:1,1:0))!(DGPMTYP=40) S DGX=$S($D(^DIC(42,+DGPMWD,0)):$P(^(0),"^",3),1:""),DGX=$S("^NH^D^"'[("^"_DGX_"^"):"H",1:DGX)
  ;S DGPMWD="",DGPMTYP=40  ; simulate NOIS REN-0304-60611
- I (DGPMWD&$S($P(DGPM2,"^",2)=2:1,1:0))!(DGPMTYP=40) S DGX=$S($D(^DIC(42,+DGPMWD,0)):$P($G(^DIC(42,+DGPMWD,0)),U,3),1:""),DGX=$S("^NH^D^"'[("^"_DGX_"^")&($P($G(^DIC(42,+DGPMWD,0)),U,17)'=1):"H",1:DGX) ;p-418/593
+ I (DGPMWD&$S(+$G(NMVT("TTYPE"))=2:1,1:0))!(DGPMTYP=40) S DGX=$S($D(^DIC(42,+DGPMWD,0)):$P($G(^DIC(42,+DGPMWD,0)),U,3),1:""),DGX=$S("^NH^D^"'[("^"_DGX_"^")&($P($G(^DIC(42,+DGPMWD,0)),U,17)'=1):"H",1:DGX) ;p-418/593
  ;I DGX]"" S DIC("S")=DIC("S")_",("_$S(DGX="NH":"""^NH^:""[",DGX="D":"""^D^""[",1:"""^NH^D^""'[")_"(""^""_$P(^(0),""^"",3)_""^""))"
 ZZ I DGX]"" S DIC("S")=DIC("S")_",("_$S(DGX="NH":"""^NH^:""[",DGX="D":"""^D^""[",1:"""^NH^D^""'[")_"(""^""_$P(^(0),""^"",3)_""^"")&($P(^(0),""^"",17)'=1))" ;p-418
- I $P(DGPM2,"^",2)=2&$P(DGPM2,"^",6),'DGPMABL S DIC("S")=DIC("S")_",+Y'=$P(DGPM2,""^"",6)"
+ I +$G(NMVT("TTYPE"))=2&+$G(NMVT("WARD")),'DGPMABL S DIC("S")=DIC("S")_",+Y'=+$G(NMVT(""WARD""))"
  Q
 W2 ;Ward consistency check for transfer.  interward transfers not to same ward.  unless ASIH mvt, can't go from hospital to NHCU/DOM, vice versa
  ;I "^13^44^"[("^"_DGPMTYP_"^") S DIC("S")=DIC("S")_",""^NH^D^""'[(""^""_$P(^(0),""^"",3)_""^"")" Q
  I "^13^44^"[("^"_DGPMTYP_"^") S DIC("S")=DIC("S")_",""^NH^D^""'[(""^""_$P(^(0),""^"",3)_""^"")&($P(^(0),U,17)'=1)" Q  ;added p-418
- S DGX=$S($D(^DGPM(+$P(^DGPM(DA,0),"^",14),0)):$P(^(0),"^",6),1:0),DGX=$S($D(^DIC(42,+DGX,0)):$P(^(0),"^",3),1:"")
- N DGRAI S DGRAI=$S(DGX="":"",1:$P(^(0),"^",17)) ;added p-418
+ S DGX=$S(+$G(ADM("WARD")):+ADM("WARD"),1:0),DGX=$S($D(^DIC(42,+DGX,0)):$P(^(0),"^",3),1:"")
+ N DGRAI S DGRAI=$S(DGX="":"",1:+$G(ADM("DISIFN"))) ;added p-418
  ;I "^14^43^45^"[("^"_DGPMTYP_"^") S DIC("S")=DIC("S")_",DGX=$P(^(0),""^"",3)" Q
  I "^14^43^45^"[("^"_DGPMTYP_"^") D  Q  ;added p-418
  .I DGX="D" S DIC("S")=DIC("S")_",($P(^(0),""^"",3)="""_DGX_""")"
  .I DGX="NH"!(DGX="I"&(DGRAI=1)) S DIC("S")=DIC("S")_",""^NH^""[(""^""_$P(^(0),""^"",3)_""^"")!(""^I^""[(""^""_$P(^(0),""^"",3)_""^"")&($P(^(0),""^"",17)=1))" ;added p-418
- S DGX=$S($D(^DIC(42,+$P(DGPM0,"^",6),0)):$P(^(0),"^",3),1:"")
- S DGRAI=$S(DGX="":"",1:$P(^(0),"^",17)) ;added p-418
+ S DGX=$S($D(^DIC(42,+PMVT("WARD"),0)):$P(^(0),"^",3),1:"")
+ S DGRAI=$S(DGX="":"",1:+$G(PMVT("DISIFN"))) ;added p-418
  ;I DGX="D"!(DGX="NH") S DIC("S")=DIC("S")_",($P(^(0),""^"",3)="""_DGX_""")"
  I DGX="D"!(DGX="NH")!(DGX="I"&(DGRAI=1)) D
  .I DGX="D" S DIC("S")=DIC("S")_",($P(^(0),""^"",3)="""_DGX_""")"
@@ -33,7 +33,7 @@ W2 ;Ward consistency check for transfer.  interward transfers not to same ward. 
  ;I DGX'="D"&(DGX'="NH") S DIC("S")=DIC("S")_",""^NH^D^""'[(""^""_$P(^(0),""^"",3)_""^"")"
  I DGX'="D"&(DGX'="NH")&(DGX'="I"!(DGRAI'=1)) D
  .S DIC("S")=DIC("S")_",""^NH^D^""'[(""^""_$P(^(0),""^"",3)_""^"")&((""^I^""'[(""^""_$P(^(0),""^"",3)_""^"")!($P(^(0),""^"",17)'=1)))" ;added p-418
- I $D(^DG(405.2,+DGPMTYP,"E")),'^("E") S DGX=$S(DGPMABL:0,1:$P(DGPM2,"^",6)),DIC("S")=DIC("S")_",+Y'=DGX,+Y'=$P(DGPM0,""^"",6)"
+ I $D(^DG(405.2,+DGPMTYP,"E")),'^("E") S DGX=$S(DGPMABL:0,1:+$G(NMVT("WARD"))),DIC("S")=DIC("S")_",+Y'=DGX,+Y'=+$G(PMVT(""WARD""))"
  Q
 WARD ;is ward active at time of movement?
  S DGPMOS=+PAR("DATE") N D0,X S D0=+Y D WIN^DGPMDDCF I X W !,"Ward inactive at time of movement" S DGOOS=1 Q
@@ -67,7 +67,6 @@ ABSRET ;check absence return date for consistency with movement type
  ;
 UARET ;called from DGPM TRANSFER template...default 30 day return from UA
  N DGPMX,X,X1,X2,Y
- S DGPMX=^DGPM(DA,0)
- I $P(DGPMX,"^",18)'=3 S DGPMRET="" Q
- S X1=$P(+DGPMX,".",1),X2=30 D C^%DTC S Y=X X ^DD("DD") S DGPMRET=Y
+ I $P(^DG(405.1,+PAR("TYPE"),0),"^",3)'=3 S DGPMRET="" Q
+ S X1=$P(+PAR("DATE"),".",1),X2=30 D C^%DTC S Y=X X ^DD("DD") S DGPMRET=Y
  Q

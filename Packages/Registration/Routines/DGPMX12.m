@@ -1,9 +1,10 @@
-DGPMX12 ; ;04/03/03
+DGPMX12 ; ;3/4/2013
  D DE G BEGIN
 DE S DIE="^DGPM(",DIC=DIE,DP=405,DL=1,DIEL=0,DU="" K DG,DE,DB Q:$O(^DGPM(DA,""))=""
- I $D(^(0)) S %Z=^(0) S %=$P(%Z,U,5) S:%]"" DE(1)=% S %=$P(%Z,U,6) S:%]"" DE(6)=% S %=$P(%Z,U,7) S:%]"" DE(7)=% S %=$P(%Z,U,10) S:%]"" DE(2)=%
- I $D(^("ODS")) S %Z=^("ODS") S %=$P(%Z,U,1) S:%]"" DE(11)=%
- I $D(^("USR")) S %Z=^("USR") S %=$P(%Z,U,3) S:%]"" DE(14)=% S %=$P(%Z,U,4) S:%]"" DE(16)=%
+ S %=$P($G(OLD("FCTY")),U) S:%]"" DE(1)=%
+ S %=$P($G(OLD("WARD")),U) S:%]"" DE(6)=%
+ S %=$P($G(OLD("ROOMBED")),U) S:%]"" DE(7)=%
+ S %=$P($G(OLD("SHDIAG")),U) S:%]"" DE(2)=%
  K %Z Q
  ;
 W W !?DL+DL-2,DLB_": "
@@ -94,9 +95,10 @@ C6S S X="" G:DG(DQ)=X C6F1 K DB
  S Y=^DGPM(DA,0) I +Y,Y<DT S Y=$P(Y,U,2) I Y<3,$D(DGOWD) S DGHNYT=$S(Y=1:10,1:12) D ^DGPMGLC K DGIDX
 C6F1 Q
 X6 S DIC("S")="I $S($D(^(""ORDER"")):^(""ORDER""),1:0)" D W^DGPMVDD I $D(X) D ^DIC K DIC S DIC=DIE,X=+Y K:Y<0 X I $D(X) D WARD^DGPMVDD K:$D(DGOOS) X K DGOOS
+ S:$D(X) PAR("WARD")=$S(+Y>0:"",1:X_U)_Y
  Q
  ;
-7 S PAR("WARD")=$S(+Y>0:"",1:X_U)_Y,DQ=7,DW="0;7",DV="*P405.4'X",DU="",DLB="ROOM-BED",DIFLD=.07
+7 S DQ=7,DW="0;7",DV="*P405.4'X",DU="",DLB="ROOM-BED",DIFLD=.07
  S DE(DW)="C7^DGPMX12"
  S DU="DG(405.4,"
  G RE
@@ -108,9 +110,10 @@ C7S S X="" G:DG(DQ)=X C7F1 K DB
  S DGPMDDF=7,DGPMDDT=1 D ^DGPMDDCN
 C7F1 Q
 X7 K:'$D(DGPMT) X I $D(X) S DIC("S")="I $D(^DG(405.4,""W"",+PAR(""WARD""),+Y)) D OCC^DGPMRB I 'DGPMOC" D ^DIC K DIC S DIC=DIE,X=+Y K:Y<0 X I $D(X) D ROOM^DGPMVDD K:$D(DGOOS) X K DGOOS
+ S:$D(X) PAR("ROOMBED")=$S(+Y>0:"",1:X_U)_Y
  Q
  ;
-8 S PAR("ROOMBED")=$S(+Y>0:"",1:X_U)_Y,Y=U,DQ=8 G A
+8 S Y=U,DQ=8 G A
 9 S Y=U,DQ=9 G A
 10 S Y=U,DQ=10 D X10 D:$D(DIEFIRE)#2 FIREREC^DIE17 G A:$D(Y)[0,A:Y=U S X=Y,DIC(0)="F",DW=DQ K DG G OUT^DIE17
 X10 D DFN^DGYZODS S:'DGODS Y="@12"
@@ -118,18 +121,18 @@ X10 D DFN^DGYZODS S:'DGODS Y="@12"
 11 S DQ=11,DW="ODS;1",DV="S",DU="",DLB="ODS AT ADMISSION",DIFLD=11500.01
  S DU="1:YES;0:NO;"
  S Y="1"
- S X=Y,DB(DQ)=1,DE(DW,"4/")="" G:X="" N^DIE17:DV,A I $D(DE(DQ)),DV["I"!(DV["#") D E^DIE0 G A:'$D(X)
+ S X=Y,DB(DQ)=1,DE(DW,"4/")="" G:X="" N^DIE17:DV,A I $D(DE(DQ)),DV["I"!(DV["#") D:0 E^DIE0 G A:'$D(X)
  G RD:X="@",Z
 X11 Q
 12 S DQ=13 ;@12
 13 S Y=U,DQ=13 D X13 D:$D(DIEFIRE)#2 FIREREC^DIE17 G A:$D(Y)[0,A:Y=U S X=Y,DIC(0)="F",DW=DQ K DG G OUT^DIE17
-X13 I DGPMP=$G(^DGPM(DA,0)) S Y=""
+X13 ;I DGPMP=$G(^DGPM(DA,0)) S Y=""
  Q
 14 S DW="USR;3",DV="RP200'",DU="",DLB="LAST EDITED BY",DIFLD=102
  S DU="VA(200,"
  S X=DUZ
  S Y=X
- S X=Y,DB(DQ)=1,DE(DW,"4/")="" G:X="" N^DIE17:DV,A I $D(DE(DQ)),DV["I"!(DV["#") D E^DIE0 G A:'$D(X)
+ S X=Y,DB(DQ)=1,DE(DW,"4/")="" G:X="" N^DIE17:DV,A I $D(DE(DQ)),DV["I"!(DV["#") D:0 E^DIE0 G A:'$D(X)
  G RD:X="@",Z
 X14 Q
 15 S Y=U,DQ=15 G A
@@ -141,4 +144,4 @@ X14 Q
 X16 S %DT="STX" D ^%DT S X=Y K:Y<1 X
  Q
  ;
-17 G 0^DIE17
+17 K DG ;G 0^DIE17
