@@ -1,4 +1,4 @@
-GMPLAPI1 ;RGI/VSL -- Build Problem Selection Lists ; 09/13/12
+GMPLAPI1 ;RGI/VSL -- Build Problem Selection Lists ; 3/7/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 NEWLST(RETURN,GMPLLST,GMPLLOC) ; Add new Problem Selection List
  ; Input
@@ -150,7 +150,7 @@ GETCAT(RETURN,GMPLGRP) ; Return category details
  S %=$$GETCAT^GMPLDAL1(.RETURN,GMPLGRP)
  S SEQ=0
  S MODIF=RETURN("CAT","MODIFIED")
- S RETURN("CAT","MODIFIED")=$S(+MODIF:$$FMTE^XLFDT(MODIF),1:"<new category")
+ S RETURN("CAT","MODIFIED")=$S(+MODIF:$$FMTE^XLFDT(MODIF),1:"<new category>")
  F  S SEQ=$O(RETURN("SEQ",SEQ)) Q:SEQ'>0  D
  . S IFN=$G(RETURN("SEQ",SEQ))
  . S CODE=$G(RETURN(IFN,"CODE"))
