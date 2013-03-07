@@ -1,4 +1,4 @@
-DGPMAPIE ;RGI/VSL - Registration Error provider; 2/20/2013
+DGPMAPIE ;RGI/VSL - Registration Error provider; 3/4/2013
  ;;5.3;Registration;**260005**;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -68,3 +68,5 @@ DCHNFND ;;4070000.156;;Discharge not found
 PSRVNFND ;;4070000.163;;Period of service not found
 ADMPLODG ;;4070000.165;;Patient is a lodger...you can not add an admission!
 ADMNBLD ;;4070000.167;;New ...must enter after last ...
+LDGPINP ;;4070000.173;;Patient is an inpatient...you can not add a lodger movement!
+RSNNFND ;;4070000.174;;Reason for lodging not found.

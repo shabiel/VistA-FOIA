@@ -45,3 +45,5 @@ GETAMT(MASTYP) ;find active movement type
  F I=0:0 S I=$O(^DG(405.1,"AM",MASTYP,I)) Q:'I  I $D(^DG(405.1,+I,0)),$P(^DG(405.1,+I,0),"^",4) S DGFAC=I Q
  Q DGFAC
  ;
+HASMVT(DFN,DGPMT) ; Has movement?
+ Q $D(^DGPM("APTT"_DGPMT,DFN))

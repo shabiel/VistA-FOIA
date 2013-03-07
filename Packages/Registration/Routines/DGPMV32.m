@@ -1,13 +1,14 @@
-DGPMV32 ;ALB/MIR - CONTINUE TRANSFER A PATIENT OPTION ;1/10/2013
- ;;5.3;Registration;**418,260003**;Aug 13, 1993
- S DGPMTYP=$P(DGPMA,"^",18) I $S('DGPMTYP:1,'$D(^DG(405.2,+DGPMTYP,"E")):1,'^("E"):1,1:0) I '$P(DGPMA,"^",4)!'$P(DGPMA,"^",6) S DA=DGPMDA,DIK="^DGPM(" D ^DIK W !,"Incomplete Transfer...Deleted" K DIK S DGPMA="" G Q
- I $S($P(DGPMA,"^",6,7)=$P(DGPMP,"^",6,7):0,'DGPMABL:0,1:1) S DGPMND=DGPMA D AB ;if change in room-bed or ward and next movement is to absence, update subsequent absences
+DGPMV32 ;ALB/MIR - CONTINUE TRANSFER A PATIENT OPTION ;3/6/2013
+ ;;5.3;Registration;**418,260005**;Aug 13, 1993
+ S:$D(PAR("TYPE")) %=$$GETMVTT^DGPMAPI8(.MVTT,PAR("TYPE")),%=$$GETMASMT^DGPMAPI8(.MAS,MVTT("MAS"))
+ S DGPMTYP=+$G(MVTT("MAS")) I $S('DGPMTYP:1,'$G(MAS("ABS")):1,1:0) I '$G(PAR("TYPE"))!'$G(PAR("WARD")) W !,"Incomplete Transfer...Deleted" S DGQUIT=1 G Q
+ I $S(+$G(PAR("WARD"))_U_+$G(PAR("ROOMBED"))=+$G(OLD("WARD"))_U_+$G(OLD("ROOMBED")):0,'DGPMABL:0,1:1) S DGPMND=DGPMA D AB ;if change in room-bed or ward and next movement is to absence, update subsequent absences
 CONT S DGPMTYP="^"_DGPMTYP_"^" I "^13^44^"[DGPMTYP D ECA^DGPMV321 ;Edit Corresponding admission when TO ASIH or RESUME ASIH
  I DGPMTYP="^43^" D ASIHOF
  I "^14^45^"[DGPMTYP D UHD^DGPMV321 ;if FROM ASIH or CHANGE ASIH LOCATION (O.F.)
- I $D(^DG(405.1,+$P(DGPMA,"^",4),0)),'$P(^(0),"^",5) G Q
- S Y=DGPMDA D:'DGPMOUT SPEC^DGPMV36
-Q I DGPMA'=DGPMP W !,"Patient Transfer",$S('$D(^DGPM(+DGPMDA,0)):" Deleted.",'DGPMP:"red.",1:" Updated.") K ORQUIT
+ I 'MVTT("ASKSPEC") G Q
+ S Y=0 D SPEC^DGPMV36
+Q K ORQUIT
  Q
 AB ;update absences upon ward/room-bed change during admit or transfer patient options
  S DGI=$P(DGPMND,"^"),DIE="^DGPM(",DIC(0)="M" W !,"Updating subsequent Absences"
@@ -19,17 +20,17 @@ ABB ;absence checks
  S J=$S("^1^23^43^45^"[("^"_$P(DGJJ,"^",18)_"^"):1,1:0),DA=+DGJ,DR=".06////"_$P(DGPMND,"^",6)_$S(J:";.07////"_$P(DGPMND,"^",7),1:"") K DQ,DG
  S ^UTILITY("DGPM",$J,$P(DGJJ,"^",2),DA,"P")=DGJJ D ^DIE S ^UTILITY("DGPM",$J,$P(DGJJ,"^",2),DA,"A")=^DGPM(DA,0)
  Q
-DICS S DGX=$P(DGPM0,"^",4) I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+Y,"F",+DGX)):1,1:0) S DGER=1 Q
- S DGX=$P(DGPM2,"^",4) I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+DGX,"F",+Y)):1,1:0) S DGER=1 Q
- S DGX=$P(^DG(405.1,+Y,0),"^",3) I $P(DGPM0,"^",2)=1,$S('$D(^DG(405.2,+DGX,"E")):0,$P(^("E"),"^",2):0,1:1) S DGER=1 Q
- I $P(DGPM0,"^",15),(DGX=14),($P(DGPM0,"^",18)'=45) S DGER=1 Q
- I $D(^DGPM(DA,0)),"^1^2^3^"[("^"_$P(^DGPM(DA,0),"^",18)_"^"),(DGX=4) S DGER=1 Q
+DICS S DGX=+PMVT("TYPE") I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+Y,"F",+DGX)):1,1:0) S DGER=1 Q
+ S DGX=+$G(NMVT("TYPE")) I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+DGX,"F",+Y)):1,1:0) S DGER=1 Q
+ S DGX=$P(^DG(405.1,+Y,0),"^",3) I +PMVT("TTYPE")=1,$S('$D(^DG(405.2,+DGX,"E")):0,$P(^("E"),"^",2):0,1:1) S DGER=1 Q
+ I +$G(PMVT("ASIH")),(DGX=14),(+PMVT("MASTYPE")'=45) S DGER=1 Q
+ I $D(OLD),"^1^2^3^"[("^"_(+$G(OLD("MASTYPE")))_"^"),(DGX=4) S DGER=1 Q
  ;I "^13^43^44^45"[("^"_DGX_"^"),("^NH^D^"'[("^"_$S($D(^DIC(42,+$P(DGPMAN,"^",6),0)):$P(^(0),"^",3),1:"")_"^")) S DGER=1 Q
- I "^13^43^44^45^"[("^"_DGX_"^"),("^NH^D^"'[("^"_$S($D(^DIC(42,+$P(DGPMAN,"^",6),0)):$P(^(0),"^",3),1:"")_"^"))&($P(^(0),"^",17)'=1) S DGER=1 Q  ;p-418
+ I "^13^43^44^45^"[("^"_DGX_"^"),("^NH^D^"'[("^"_$S($D(^DIC(42,+ADM("WARD"),0)):$P(^(0),"^",3),1:"")_"^"))&($P(^(0),"^",17)'=1) S DGER=1 Q  ;p-418
  ;I DGX=14,("^NH^D^"'[("^"_$S($D(^DIC(42,+$P(DGPMAN,"^",6),0)):$P(^(0),"^",3),1:"")_"^")) S DGER=1 Q
- I DGX=14,("^NH^D^"'[("^"_$S($D(^DIC(42,+$P(DGPMAN,"^",6),0)):$P(^(0),"^",3),1:"")_"^"))&($P(^(0),"^",17)'=1) S DGER=1 Q  ;p-418
- I $P(DGPMP,"^",15),(DGX'=$P(DGPMP,"^",18)) S DGER=1 Q
- I DGX=44,($P(DGPM2,"^",18)=14) S DGER=1 Q
+ I DGX=14,("^NH^D^"'[("^"_$S($D(^DIC(42,+ADM("WARD"),0)):$P(^(0),"^",3),1:"")_"^"))&($P(^(0),"^",17)'=1) S DGER=1 Q  ;p-418
+ I $G(OLD("ASIH")),(DGX'=+$G(OLD("DISIFN"))) S DGER=1 Q
+ I DGX=44,(+$G(NMVT("MASTYPE"))=14) S DGER=1 Q
  S DGER=0 Q
 ASIHOF ;if TO ASIH (OTHER FACILITY) update pseudo discharge
  I DGPMN S DGPMTN=DGPMA,DGPMNI=DGPMCA D FINDLAST,ASIHOF^DGPMV321 Q
