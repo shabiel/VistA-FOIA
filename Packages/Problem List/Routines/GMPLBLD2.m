@@ -1,4 +1,4 @@
-GMPLBLD2 ; SLC/MKB,JFR -- Bld PL Selection Lists cont ; 04/12/12
+GMPLBLD2 ; SLC/MKB,JFR -- Bld PL Selection Lists cont ; 3/7/13
  ;;2.0;Problem List;**3,28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3991
@@ -16,46 +16,13 @@ NG1 S NEWGRP=$$GROUP("L") G:+NEWGRP'>0 NGQ G:+NEWGRP=+GMPLGRP NGQ
 NGQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
-GROUP(L) ;
- N X,LSTS,Y,LSTS,FILE,FIELDS
- S Y=-1 ;
- F  D  Q:Y'=0
- . K DIR,DTOUT,DUOUT,DIRUT
- . S DIR(0)="FAO",DIR("?")="^D CH1^GMPLBLD2",DIR("??")="^D CH2^GMPLBLD2"
- . D BLD^DIALOG(1250000.074,,,"DIR(""A"")")
- . D ^DIR
- . I $D(DIRUT) S Y=-1 Q
- . I X?.E1P.E S Y=0 D PRTERR Q
- . S %=$$GETCATS^GMPLAPI5(.LSTS,X)
- . S Y=$$SELLST(.LSTS,X)
- . I Y<0 S Y=0 Q
- . I Y=0,$G(L)="" D PRTERR Q
- . I Y=0,$L(X)>30!(X?.N)!($L(X)<3)!'(X'?1P.E) D PRTERR Q
- . I Y=0 D
- . . S FILE=$$EZBLD^DIALOG(1250000.512)
- . . S ADD=$$ASKADD(X,FILE) Q:ADD=0
- . . S %=$$NEWCAT^GMPLAPI1(.Y,X)
- S:Y<0 Y="^"
+GROUP(L) ; Lookup into Problem Selection Group file #125.11
+ N DIC,X,Y,DLAYGO ; L = "" or "L", if LAYGO is [not] allowed
+ S DIC="^GMPL(125.11,",DIC(0)="AEQMZ"_L
+ D BLD^DIALOG(1250000.074,,,"DIC(""A"")")
+ S:DIC(0)["L" DLAYGO=125.11
+ D ^DIC S:Y'>0 Y="^" S:Y'="^" Y=+Y_U_Y(0)
  Q Y
- ;
-CH1 ;
- N %,MSG,LSTS
- D EN^DDIOL($$EZBLD^DIALOG(1250000.075),,"?0")
- S %=$$GETCATS^GMPLAPI5(.LSTS)
- D PRINTALL(.LSTS,1)
- I $G(L)'="" D
- . D BLD^DIALOG(1250000.076,,,"MSG")
- . D EN^DDIOL(.MSG)
- Q
- ;
-CH2 ;
- N %,MSG,LSTS
- S %=$$GETCATS^GMPLAPI5(.LSTS)
- D PRINTALL(.LSTS,1)
- I $G(L)'="" D
- . D BLD^DIALOG(1250000.077,,,"MSG")
- . D EN^DDIOL(.MSG)
- Q
  ;
 NEWLST ; Change selection lists
  N NEWLST,RETURN,MSG D FULL^VALM1
@@ -70,52 +37,13 @@ NL1 S NEWLST=$$LIST("L") G:+NEWLST'>0 NLQ G:+NEWLST=+GMPLSLST NLQ
 NLQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
  Q
  ;
-LIST(L) ;
- N DIR,X,LSTS,Y,ADD,CLINIC,FILE,FIELDS
- S Y=-1 ;
- F  D  Q:Y'=0
- . K DIR,DTOUT,DUOUT,DIRUT
- . S DIR(0)="FAO",DIR("?")="^D LH1^GMPLBLD2",DIR("??")="^D LH2^GMPLBLD2"
- . D BLD^DIALOG(1250000.079,,,"DIR(""A"")")
- . D ^DIR
- . I $D(DIRUT) S Y=-1 Q
- . I X?.E1P.E S Y=0 D PRTERR Q
- . S %=$$GETLSTS^GMPLAPI5(.LSTS,X)
- . S Y=$$SELLST(.LSTS,X)
- . I Y<0 S Y=0 Q
- . I Y=0,$G(L)="" D PRTERR Q
- . I Y=0,$L(X)>30!(X?.N)!($L(X)<3)!'(X'?1P.E) D PRTERR Q
- . I Y=0 D
- . . S FILE=$$EZBLD^DIALOG(1250000.511)
- . . S ADD=$$ASKADD(X,FILE) Q:ADD=0
- . . S CLINIC=$$CLINIC^GMPLBLD3("   "_FILE_" ") S:CLINIC="^" CLINIC=""
- . . S %=$$NEWLST^GMPLAPI1(.Y,X,CLINIC)
- S:Y<0 Y="^"
+LIST(L) ; Lookup into Problem Selection List file #125
+ N DIC,X,Y,DLAYGO ; L="" or "L" if LAYGO [not] allowed
+ S DIC="^GMPL(125,",DIC(0)="AEQMZ"_L
+ D BLD^DIALOG(1250000.079,,,"DIC(""A"")")
+ S:DIC(0)["L" DLAYGO=125
+ D ^DIC S:Y'>0 Y="^" S:Y'="^" Y=+Y_U_Y(0)
  Q Y
- ;
-PRTERR ;
- D EN^DDIOL(" ??",,"?0")
- D EN^DDIOL("",,"!")
- Q
- ;
-LH1 ;DIR("?")
- N %,MSG,LSTS
- D EN^DDIOL($$EZBLD^DIALOG(1250000.080),,"?0")
- S %=$$GETLSTS^GMPLAPI5(.LSTS)
- D PRINTALL(.LSTS,1)
- I $G(L)'="" D
- . D BLD^DIALOG(1250000.081,,,"MSG")
- . D EN^DDIOL(.MSG)
- Q
- ;
-LH2 ;DIR("??")
- N %,MSG,LSTS
- S %=$$GETLSTS^GMPLAPI5(.LSTS)
- D PRINTALL(.LSTS,1)
- I $G(L)'="" D
- . D BLD^DIALOG(1250000.082,,,"MSG")
- . D EN^DDIOL(.MSG)
- Q
  ;
 SELLST(LSTS,X) ;
  N CNT,Y,MAXP,CLINE,SEL,OUT,RE,DIR,DTOUT
