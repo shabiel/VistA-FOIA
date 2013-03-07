@@ -1,4 +1,4 @@
-GMPLUTL2 ; SLC/MKB/KER -- PL Utilities (OE/TIU)             ; 09/13/12
+GMPLUTL2 ; SLC/MKB/KER -- PL Utilities (OE/TIU)             ; 03/07/13
  ;;2.0;Problem List;**10,18,21,26,35,260002**;Aug 25, 1994
  ; External References
  ;   DBIA   348  ^DPT(  file #2
@@ -153,7 +153,7 @@ REMOVE(GMPIFN,GMPROV,TEXT,PLY) ; -- Remove problem GMPIFN
  ;
 PARAM(GMPARAM) ; -- Returns parameter values from 125.99
  D GET^GMPLSITE(.GMPARAM)
- Q 1
+ Q
  ;
 VAF(DFN,SILENT) ; -- print PL VA Form chart copy
  ;
