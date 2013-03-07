@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 02/04/2013
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 3/7/13
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -149,7 +149,7 @@ GETPEND(RETURN,DFN) ; Get pending appointments
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,+DFN) Q:'% 0
  S CNT=""
- D GETPEND^SDMDAL2(.APP,+DFN,DT)
+ D GETPEND^SDMDAL2(.APP,+DFN,$P($$NOW^XLFDT(),"."))
  F  S CNT=$O(APP(CNT)) Q:CNT=""  D
  . S RETURN(CNT,"COLLATERAL VISIT")=APP(CNT,13)
  . S RETURN(CNT,"APPOINTMENT TYPE")=$$APTYNAME^SDMDAL2(APP(CNT,9.5))
@@ -301,9 +301,7 @@ PTFU(RETURN,DFN,SC)    ;Determine if this is a follow-up (return to clinic withi
  ;
 HASPEND(RETURN,DFN) ; Check if patient has panding appointments
  K RETURN S RETURN=0
- D HASPEND^SDMDAL2(.RETURN,+DFN,DT)
- S RETURN=1
- Q 1
+ Q $$HASPEND^SDMDAL2(.RETURN,+DFN,$P($$NOW^XLFDT(),"."))
  ;
 LSTSRT(RETURN) ;List scheduling request types
  K RETURN
