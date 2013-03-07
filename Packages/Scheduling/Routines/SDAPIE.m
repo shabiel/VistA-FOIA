@@ -1,4 +1,4 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider; 1/29/2013
+SDAPIE ;RGI/CBR - Scheduling Error provider; 3/7/13
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -75,3 +75,4 @@ TYPNFND ;;480000.096;;Appointment type not found.
 TYPINVD ;;480000.097;;Patient must have the eligibility code EMPLOYEE, COLLATERAL or SHARING AGREEMENT to choose those types of appointments.
 TYPINVSC ;;480000.098;;The 'SC Percent','Service Connected' and 'Primary Eligibility Codes' are OUT OF SYNC, Please CORRECT the problem.
 STYPNFND ;;480000.099;;Appointment subtype not found or inactive.
+APTNFND ;;480000.101;;Appointment not found.
