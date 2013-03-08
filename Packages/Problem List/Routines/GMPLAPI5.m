@@ -1,4 +1,4 @@
-GMPLAPI5 ; Build Problem Selection Lists ; 04/12/12
+GMPLAPI5 ; Build Problem Selection Lists ; 3/7/2013
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 ADDLOC(RETURN,GMPLLST,GMPLLOC) ; Add location to list
  S RETURN=0
@@ -26,10 +26,11 @@ GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
  S %=$$GETCATD^GMPLDAL1(.RETURN,GMPLGRP,$G(CODLEN))
  F  S PSEQ=$O(RETURN("GRP",+GROUP,PSEQ)) Q:PSEQ'>0  D
  . S ITEM=$G(RETURN("GRP",+GROUP,PSEQ))
+ . S FLAG=""
  . I $L($P(ITEM,U,2)) D
  .. I $$STATCHK^ICDAPIU($P(ITEM,U,2),DT) S FLAG=0  ; code is active
  .. E  S FLAG=1
- .. S RETURN("GRP",GROUP,PSEQ)=$P(ITEM,U,1,2)_"^"_FLAG_"^"_$P(ITEM,U,3)
+ . S RETURN("GRP",GROUP,PSEQ)=$P(ITEM,U,1,2)_"^"_FLAG_"^"_$P(ITEM,U,3)
  S RETURN=1
  Q 1
  ;
