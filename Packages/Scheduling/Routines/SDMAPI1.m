@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 3/7/13
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 3/8/13
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -6,9 +6,8 @@ CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  OUTPUT:  1 if no error or 0^error message
  N PSC,SSC,ND0,VAL,FLDS,%
  K RETURN S RETURN=0
- I '$G(CLN) D ERRX^SDAPIE(.RETURN,"CLNINV") Q 0
+ S %=$$CHKCLN^SDMAPI3(.RETURN,.CLN) Q:'% 0
  D GETCLN^SDMDAL1(.FLDS,+CLN,1,0,0)
- I '$D(FLDS) D ERRX^SDAPIE(.RETURN,"CLNNDFN") Q 0
  I $G(FLDS(2))'="C" Q 1     ;not a Clinic
  S %=$$SCREST(.RETURN,FLDS(8),"P")
  Q:'% %  Q:FLDS(2503)="" 1
@@ -44,11 +43,9 @@ SCREST(RETURN,SCIEN,TYP) ;check stop code restriction in file 40.7 for a clinic.
  ;
 GETCLN(RETURN,CLN) ; Get Clinic data
  ;  INPUT:   CLN = IEN of Clinic
- N DATA
- K RETURN S RETURN=0
- D GETCLN^SDMDAL1(.DATA,+$G(CLN),1,1,1)
- I '$D(DATA) D ERRX^SDAPIE(.RETURN,"CLNNFND") Q 0
- M RETURN=DATA
+ K RETURN
+ S %=$$CHKCLN^SDMAPI3(.RETURN,.CLN) Q:'% 0
+ D GETCLN^SDMDAL1(.RETURN,+CLN,1,1,1)
  S RETURN=1
  Q 1
  ;
@@ -76,7 +73,7 @@ CLNRGHT(RETURN,CLN) ; Verifies (DUZ) user access to Clinic
 CLNVSC(RETURN,SC) ; Verifies clinic stop code validation
  N DATA,TEXT
  K RETURN S RETURN=0
- S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
+ I +$G(SC)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SC") Q 0
  D GETCSC^SDMDAL1(.DATA,+SC)
  I $S('$D(DATA):1,'DATA(2):0,1:$G(DATA(2))'>DT) D  Q RETURN
  . S TEXT(1)=+SC
@@ -90,7 +87,7 @@ GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
- I +$G(SD)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
+ I +$G(SD)=0 S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
  D GETSCAP^SDMDAL1(.RETURN,+SC,+DFN,+SD)
  I $D(RETURN)>1 D
  . S NOD0=RETURN(0),CO=$G(RETURN("C"))
