@@ -106,6 +106,7 @@ MENU ; -- init variables and list array for GMPL LIST MENU list template
  ;    Expects GMPLSLST=selection list
  N RETURN,GRP,IND,IND1,MSG
  S IND=0,IND1=0
+ D EN^DDIOL($$EZBLD^DIALOG(1250000.623,$P(GMPLSLST,U,2)),,"!!")
  S %=$$GETLIST^GMPLAPI1(.RETURN,GMPLSLST,"")
  M ^TMP("GMPLMENU1",$J)=RETURN
  F  S IND=$O(^TMP("GMPLMENU1",$J,"GRP",IND)) Q:'IND  D
