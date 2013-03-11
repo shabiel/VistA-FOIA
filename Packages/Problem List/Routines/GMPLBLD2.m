@@ -1,4 +1,4 @@
-GMPLBLD2 ; SLC/MKB,JFR -- Bld PL Selection Lists cont ; 3/7/13
+GMPLBLD2 ; SLC/MKB,JFR -- Bld PL Selection Lists cont ;03/11/13
  ;;2.0;Problem List;**3,28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3991
@@ -133,7 +133,7 @@ CKSAVE() ; Save [changes] ??
  Q +Y
  ;
 SAVE ; Save changes to group/list
- N GMPLQT,LABEL,DA
+ N GMPLQT,LABEL,DA,MSG
  S GMPLQT=0
  I $D(GMPLGRP) D  I GMPLQT Q
  . N ITM,CODE,MSG
@@ -166,6 +166,7 @@ SAVE ; Save changes to group/list
  . S DIR(0)="E" D ^DIR
  . S VALMBCK="R",GMPLQT=1
  . Q
+ K MSG
  D BLD^DIALOG(1250000.094,,,"MSG")
  D EN^DDIOL(.MSG)
  N SOURCE,RETURN

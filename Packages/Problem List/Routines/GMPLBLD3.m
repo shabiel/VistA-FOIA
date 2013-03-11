@@ -1,4 +1,4 @@
-GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ; 3/7/13
+GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ;03/11/13
  ;;2.0;Problem List;**28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3991
@@ -98,7 +98,7 @@ DEL1 S DIR(0)="Y",DIR("B")="NO"
  D EN^DDIOL(.MSG)
  K RETURN
  S %=$$DELLST^GMPLAPI1(.RETURN,+GMPLSLST)
- D EN^DDIOL(".",,"")
+ D EN^DDIOL(".",,"?0")
  D EN^DDIOL($$EZBLD^DIALOG(1250000.115))
  Q
  ;
