@@ -23,7 +23,7 @@ DISPLAY ; display current values for problem in GMPFLD array
  S PROB=$P(GMPFLD(.05),U,2)
  I $L(PROB)'>68 S TEXT(1)=PROB,TEXT(2)=CMMT,TEXT=2
  I $L(PROB)>68 S:NTS PROB=PROB_" "_CMMT D WRAP^GMPLX(PROB,65,.TEXT)
-DIS1 D EN^DDIOL("","","!")
+DIS1 D EN^DDIOL("","","!!")
  D:'VALMCC EN^DDIOL($$REPEAT^XLFSTR("-",79),"","")
  D EN^DDIOL($$EZBLD^DIALOG(1250000.151,TEXT(1)))
  F I=2:1:TEXT D EN^DDIOL("           "_TEXT(I))
