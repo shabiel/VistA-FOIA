@@ -1,4 +1,4 @@
-GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ;3/7/13
+GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ;3/12/13
  ;;2.0;Problem List;**3,26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -107,7 +107,7 @@ CKDEAD(DATE) ; Dead patient ... continue?  Returns 1 if YES, 0 otherwise
  ;
 REQPROV() ; Returns requesting provider
  N DIR,X,Y
- I $D(GMPLUSER) S Y=DUZ_U_$$PROVNAME^GMPLEXT(DUZ) Q Y
+ I +$G(GMPLUSER) S Y=DUZ_U_$$PROVNAME^GMPLEXT(DUZ) Q Y
  D BLD^DIALOG(1250000.501,,,"DIR(""?"")")
  S DIR(0)="PA^200:AEQM",DIR("A")=$$EZBLD^DIALOG(1250000.508)
  S:$G(GMPROV) DIR("B")=$P(GMPROV,U,2) W ! D ^DIR
