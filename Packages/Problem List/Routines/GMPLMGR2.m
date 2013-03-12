@@ -1,4 +1,4 @@
-GMPLMGR2 ; SLC/MKB/KER/AJB -- Problem List VALM Utilities cont ; 09/14/12
+GMPLMGR2 ; SLC/MKB/KER/AJB -- Problem List VALM Utilities cont ;03/11/13
  ;;2.0;Problem List;**26,28,260002**;Aug 25, 1994
  ;
  ; External References
@@ -64,7 +64,7 @@ AUTO ; Print Problem List when Exiting Patient?
  N DIR,X,Y Q:'GMPARAM("PRT")  Q:'$D(GMPRINT)
  S DIR(0)="YA",DIR("A")=$$EZBLD^DIALOG(1250000.341),DIR("B")="YES"
  D BLD^DIALOG(1250000.342,,,"DIR(""?"")")
- D EN^DDIOL($C(7))
+ D EN^DDIOL($C(7),,"?0")
  D EN^DDIOL($$EZBLD^DIALOG(1250000.343),,"!!")
  D ^DIR I $D(DTOUT)!($D(DTOUT)) S GMPQUIT=1 Q
  Q:'Y  D VAF^GMPLPRNT,DEVICE^GMPLPRNT G:$D(GMPQUIT) AUTQ

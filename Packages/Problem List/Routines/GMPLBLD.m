@@ -1,4 +1,4 @@
-GMPLBLD ; SLC/MKB -- Build Problem Selection Lists ; 3/7/13
+GMPLBLD ; SLC/MKB -- Build Problem Selection Lists ;03/11/13
  ;;2.0;Problem List;**3,28,33,260002**;Aug 25, 1994
  ;
  ;This routine invokes IA #3991
@@ -25,12 +25,12 @@ INIT ; -- init variables and list array
  . S MSG(3)=""
  . D EN^DDIOL(.MSG)
  S GMPLMODE="E",VALMSG=$$MSG^GMPLX
- D EN^DDIOL($$EZBLD^DIALOG(1250000.040))
  D GETLIST,BUILD("^TMP(""GMPLIST"",$J)",GMPLMODE)
  Q
  ;
 GETLIST ; Build ^TMP("GMPLIST",$J,#)
  N RETURN K ^TMP("GMPLIST",$J)
+ D EN^DDIOL($$EZBLD^DIALOG(1250000.040))
  S %=$$GETLIST^GMPLAPI1(.RETURN,GMPLSLST,50)
  M ^TMP("GMPLIST",$J)=RETURN
  Q

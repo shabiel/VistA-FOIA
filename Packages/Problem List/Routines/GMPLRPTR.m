@@ -1,4 +1,4 @@
-GMPLRPTR ; SLC/MKB/AJB -- Problem List Report of Removed Problems ; 09/17/12
+GMPLRPTR ; SLC/MKB/AJB -- Problem List Report of Removed Problems ;03/11/13
  ;;2.0;Problem List;**28,260002**;Aug 25, 1994
 EN ; -- main entry point
  N %
@@ -28,7 +28,7 @@ DISPLAY ; -- show list on screen
  . I $Y>(IOSL-4) S:'$$CONTINUE GMPQUIT=1 Q:$D(GMPQUIT)  D HDR
  . ; added for Code Set Versioning
  . N GMPLBUF S GMPLBUF=$S(PROBLEM["#":3,1:4)
- . W !,NUM,?GMPLBUF,PROBLEM,?51,DATE,?60,PROV
+ . W !,NUM,?GMPLBUF,PROBLEM,?51,DATE,?60,$$NAME^GMPLX1(PROV)
  Q
  ;
 HDR ; -- header code
