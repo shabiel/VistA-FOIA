@@ -128,7 +128,7 @@ MAKE(SC,SD,DFN,LEN,SM,USR,OTHR,RQXRAY) ; Make clinic appointment
  Q
  ;
 CANCEL(SC,SD,DFN,CIFN) ; Kill clinic appointment
- ;S SDNODE=^SC(SC,"S",SD,1,CIFN,0)
+ S ^SC(SC,"S",SD,1,0)=$P(^SC(SC,"S",SD,1,0),U,3)-1
  N HSI,SB,SDDIF,SI,SL,SS,ST,STARTDAY,STR,I,S,X,Y,TLNK
  S ^SC("ARAD",SC,SD,DFN)="N"
  S TLNK=$P($G(^SC(SC,"S",SD,1,CIFN,"CONS")),U)
