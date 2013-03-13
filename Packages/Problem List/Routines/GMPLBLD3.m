@@ -100,6 +100,7 @@ DEL1 S DIR(0)="Y",DIR("B")="NO"
  S %=$$DELLST^GMPLAPI1(.RETURN,+GMPLSLST)
  D EN^DDIOL(".",,"?0")
  D EN^DDIOL($$EZBLD^DIALOG(1250000.115))
+ D EN^DDIOL("","","!")
  Q
  ;
 MENU ; -- init variables and list array for GMPL LIST MENU list template

@@ -28,7 +28,7 @@ DISPLAY ; -- show list on screen
  . I $Y>(IOSL-4) S:'$$CONTINUE GMPQUIT=1 Q:$D(GMPQUIT)  D HDR
  . ; added for Code Set Versioning
  . N GMPLBUF S GMPLBUF=$S(PROBLEM["#":3,1:4)
- . W !,NUM,?GMPLBUF,PROBLEM,?51,DATE,?60,$$NAME^GMPLX1(PROV)
+ . W !,NUM,?GMPLBUF,PROBLEM,?51,DATE,?60,$$FMTNAME^GMPLX1(PROV)
  Q
  ;
 HDR ; -- header code
