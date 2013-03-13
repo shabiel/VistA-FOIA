@@ -1,4 +1,4 @@
-GMPLX ; SLC/MKB/AJB -- Problem List Problem Utilities ;09/14/12
+GMPLX ; SLC/MKB/AJB -- Problem List Problem Utilities ;3/13/13
  ;;2.0;Problem List;**7,23,26,28,27,260002**;Aug 25, 1994
  ;
  ; External References
@@ -99,7 +99,7 @@ DUPLOK(IFN) ; Ask to Duplicate Problem
  D EN^DDIOL(.MSG)
  D EN^DDIOL("",,"!")
  S PROV=+PRB(1.05)
- D:PROV EN^DDIOL($$EZBLD^DIALOG(1250000.165,$P(PRB(1.05),U,2)_" ("_$P($$SERVICE^GMPLEXT(PROV),U,2)_")"),,"!?5")
+ D:PROV EN^DDIOL($$EZBLD^DIALOG(1250000.165,$P(PRB(1.05),U,2)_" ("_$P($$SERVICE^GMPLEXT(PROV),U,2)_")"),,"!?4")
  I $P(PRB(.12),U)="A" D EN^DDIOL($$EZBLD^DIALOG(1250000.152),,"!?8") S DATE=$P(PRB(.13),U)
  I $P(PRB(.12),U)="I" D EN^DDIOL($$EZBLD^DIALOG(1250000.493),,"!?5") S DATE=$P(PRB(1.07),U)
  D EN^DDIOL($S(DATE>0:$$FMTE^XLFDT(DATE),1:$$EZBLD^DIALOG(1250000.494)),,"?0")
