@@ -1,4 +1,4 @@
-GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ;03/11/13
+GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ;03/13/13
  ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -38,7 +38,7 @@ INIT ;   Build list from GMPFLD()
  ;   Line 1
  S LINE=$$EZBLD^DIALOG(1250000.196,TEXT(1))
  S ^TMP("GMPLEDIT",$J,LCNT,0)=LINE D HI(LCNT,1)
- I $D(GMPLUSER),GMPARAM("VER"),GMPFLD(1.02)="T" S LINE=$E(LINE,1,12)_"$"_$E(LINE,14,79),^TMP("GMPLEDIT",$J,LCNT,0)=LINE D HI(LCNT,13)
+ I +$G(GMPLUSER),GMPARAM("VER"),$P(GMPFLD(1.02),U)="T" S LINE=$E(LINE,1,12)_"$"_$E(LINE,14,79),^TMP("GMPLEDIT",$J,LCNT,0)=LINE D HI(LCNT,13)
  I TEXT>1 F I=2:1:TEXT S LCNT=LCNT+1,^TMP("GMPLEDIT",$J,LCNT,0)="              "_TEXT(I)
  S LCNT=LCNT+1,^TMP("GMPLEDIT",$J,LCNT,0)="   "
 IN1 ;   Line 2
