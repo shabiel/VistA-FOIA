@@ -1,4 +1,4 @@
-GMPL31P ;SLC/JEH -- Post Install Routine ;3/1/05  11:00
+GMPL31P ;SLC/JEH -- Post Install Routine ;3/13/13
  ;;2.0;Problem List;**31**;Aug 25, 1994
  ;
  ; This routine can be removed after installing patch 
@@ -17,7 +17,7 @@ EN ;ENTRY POINT
  F  S IEN=$O(^AUPNPROB(IEN)) Q:IEN=""  D
  .I $P($G(^AUPNPROB(IEN,0)),"^")["-1" D
  ..W !,IEN,?16,$P(^AUPNPROB(IEN,0),"^")
- ..S $P(^AUPNPROB(IEN,0),"^",1)=$P($$NOS^GMPLX,"^",1)
+ ..S $P(^AUPNPROB(IEN,0),"^",1)=$P($$NOS^GMPLEXT,"^",1)
  ..W ?36,$P(^AUPNPROB(IEN,0),"^",1)
  ..S ADJUSTED=ADJUSTED+1
  ..Q
@@ -48,7 +48,7 @@ AUDTCLN ;
  .; look at the 5th piece
  .I $P($G(^GMPL(125.8,IEN,0)),"^",5)["-1" D
  ..W !,IEN,?16,$P(^GMPL(125.8,IEN,0),"^",5)
- ..S $P(^GMPL(125.8,IEN,0),"^",5)=$P($$NOS^GMPLX,"^",1)
+ ..S $P(^GMPL(125.8,IEN,0),"^",5)=$P($$NOS^GMPLEXT,"^",1)
  ..W ?36,$P(^GMPL(125.8,IEN,0),"^",5)
  ..S:HIT=0 ADJUSTED=ADJUSTED+1,HIT=1
  ..;
@@ -61,7 +61,7 @@ AUDTCLN ;
  .; look at the 6th piece
  .I $P($G(^GMPL(125.8,IEN,0)),"^",6)["-1" D
  ..W !,IEN,?16,$P(^GMPL(125.8,IEN,0),"^",6)
- ..S $P(^GMPL(125.8,IEN,0),"^",6)=$P($$NOS^GMPLX,"^",1)
+ ..S $P(^GMPL(125.8,IEN,0),"^",6)=$P($$NOS^GMPLEXT,"^",1)
  ..W ?36,$P(^GMPL(125.8,IEN,0),"^",6)
  ..S:HIT=0 ADJUSTED=ADJUSTED+1,HIT=1
  ..;

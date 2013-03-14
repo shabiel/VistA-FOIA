@@ -1,4 +1,4 @@
-GMPL ; SLC/MKB/AJB -- Problem List Driver ; 09/21/12
+GMPL ; SLC/MKB/AJB -- Problem List Driver ;3/13/13
  ;;2.0;Problem List;**3,11,28,260002**;Aug 25, 1994
 EN ; -- main entry point for GMPL PROBLEM LIST
  S GMPLUSER=1
@@ -85,6 +85,7 @@ EDIT ; -- edit allowable fields of a problem
  . D EN^DDIOL(.MSG)
  I '$$LOCK^GMPLDAL(GMPIFN,0) D  H 2 G EDQ
  . S MSG(1)=$C(7)
+ . S MSG(1,"F")="?0"
  . S MSG(2)=$$LOCKED^GMPLX
  . S MSG(2,"F")="!!"
  . S MSG(3,"F")="!"
