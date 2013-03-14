@@ -1,4 +1,4 @@
-GMPL1 ; SLC/MKB/AJB -- Problem List actions ; 03/11/13
+GMPL1 ; SLC/MKB/AJB -- Problem List actions ; 03/14/13
  ;;2.0;Problem List;**3,20,28,260002**;Aug 25, 1994
  ; 10 MAR 2000 - MA - Added to the routine another user prompt
  ; to backup and refine Lexicon search if ICD code 799.9
@@ -101,8 +101,8 @@ VERIFY ; -- verify a transcribed problem, if parameter on
  S GMPSAVED=$$VERIFY^GMPLAPI2(.GMPERR,GMPIFN)
  D:GMPSAVED EN^DDIOL($$EZBLD^DIALOG(1250000.017))
  I 'GMPSAVED D  H 2
- . I $P($G(GMPERR(0)),U)="INACTICD" D EN^DDIOL($$EZBLD^DIALOG(1250000.629)) Q
- . I $P($G(GMPERR(0)),U)="PRBVRFD" D EN^DDIOL($$EZBLD^DIALOG(1250000.630)) Q
+ . I $P($G(GMPERR(0)),U)="INACTICD" D EN^DDIOL($$EZBLD^DIALOG(1250000.630)) Q
+ . I $P($G(GMPERR(0)),U)="PRBVRFD" D EN^DDIOL($$EZBLD^DIALOG(1250000.629)) Q
  . D EN^DDIOL($$ERRTXT^GMPLAPIE(.GMPERR))
  D EN^DDIOL("",,"!")
  Q
