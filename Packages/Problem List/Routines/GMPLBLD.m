@@ -1,4 +1,4 @@
-GMPLBLD ; SLC/MKB -- Build Problem Selection Lists ;03/11/13
+GMPLBLD ; SLC/MKB -- Build Problem Selection Lists ;03/14/13
  ;;2.0;Problem List;**3,28,33,260002**;Aug 25, 1994
  ;
  ;This routine invokes IA #3991
@@ -26,6 +26,7 @@ INIT ; -- init variables and list array
  . D EN^DDIOL(.MSG)
  S GMPLMODE="E",VALMSG=$$MSG^GMPLX
  D GETLIST,BUILD("^TMP(""GMPLIST"",$J)",GMPLMODE)
+ D LENGTH
  Q
  ;
 GETLIST ; Build ^TMP("GMPLIST",$J,#)
@@ -126,3 +127,12 @@ REMOVE ; Remove group
 RMQ S:'VALMCC VALMBCK="R" S VALMSG=$$MSG^GMPLX
  Q
  ;
+LENGTH ;SHORTEN THE ICD9'S DESCRIPTION TO FIT SCREEN
+ S LLCNT=0
+ F  S LLCNT=$O(^TMP("GMPLST",$J,LLCNT)) Q:LLCNT=""  Q:LLCNT'?1N.N  D
+ .; I '$D(^TMP("GMPLST",$J,LLCNT,O)) Q
+ . S ICD9VAR=^TMP("GMPLST",$J,LLCNT,0) I $L(ICD9VAR)>50 D
+ .. S ICD9VAR=$P(ICD9VAR,"(",1)
+ .. S ICD9VAR=$E(ICD9VAR,1,50)_" ("_$P(^TMP("GMPLST",$J,LLCNT,0),"(",2)
+ .. S ^TMP("GMPLST",$J,LLCNT,0)=ICD9VAR
+ Q
