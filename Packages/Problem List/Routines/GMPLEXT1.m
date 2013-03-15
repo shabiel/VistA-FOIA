@@ -1,4 +1,4 @@
-GMPLEXT1 ; RGI -- DATA ACCESS LAYER - DIRECT GLOBALS ACCESS ; 04/12/12
+GMPLEXT1 ; RGI -- DATA ACCESS LAYER - DIRECT GLOBALS ACCESS ; 3/15/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 GETUSRS(RETURN,SEARCH,START,NUMBER) ;
  S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
@@ -58,7 +58,7 @@ GETULST(USER) ; Get user assigned problem selection list
  ; RETURN - Passed by reference, List IFN^List name
  ; USER - User IFN
  N LST
- S LST=$P($G(^VA(200,DUZ,125)),U,2)
+ S LST=$P($G(^VA(200,USER,125)),U,2)
  S $P(LST,U,2)=$P($G(^GMPL(125,+LST,0)),U)
  Q LST
  ;
