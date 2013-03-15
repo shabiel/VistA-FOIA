@@ -28,7 +28,7 @@ RAT ;Display rated service connected disabilities patch SD*5.3*394
  . W !,"    "_SDRAT_"  ("_SDSER_" - "_$P(PAT("RATED DISABILITIES",NN,"DISABILITY %"),U,2)_"%)"
  . Q
  W !,"Primary Eligibility Code: "_$P(VAEL(1),"^",2)
- I $D(PAT("RATED DISABILITIES")) W !,"No Service Connected Disabilities Listed"
+ I $G(PAT("RATED DISABILITIES"))<1 W !,"No Service Connected Disabilities Listed"
  W !
  S SDELIG=$P($G(PAT("SERVICE CONNECTED?")),U,2),SDSCFLG=0
  IF SDELIG="" W !,"'SERVICE CONNECTED?' field is blank please update patient record." S SDSCFLG=1
