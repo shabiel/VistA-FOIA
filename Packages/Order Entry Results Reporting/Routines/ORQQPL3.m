@@ -1,4 +1,4 @@
-ORQQPL3 ; ALB/PDR/REV - Problem List RPCs ; 3/15/13
+ORQQPL3 ; ALB/PDR/REV - Problem List RPCs ; 3/18/13
  ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,148,173,243,280,260002**;Dec 17, 1997;Build 85
  ;
  ;---------------- LIST PATIENT PROBLEMS ------------------------
@@ -28,10 +28,11 @@ LIST(GMPL,GMPDFN,GMPSTAT)       ; -- Returns list of problems for patient GMPDFN
  ; This is virtually same as LIST^GMPLUTL2 except that it appends the
  ; condition - T)ranscribed or P)ermanent,location,loc type,provider, service.
  ;
- N GMPREV,GMPARAM
+ N GMPREV,GMPARAM,ORICD186
  Q:$G(GMPDFN)'>0
  D GET^GMPLSITE(.GMPARAM)
- S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,GMPSTAT,"","",GMPARAM("REV"),0)
+ S ORICD186=$$PATCH^XPDUTL("ICD*18.0*6")
+ S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,GMPSTAT,"","",GMPARAM("REV"),0,ORICD186)
  Q
  ;
  ;
@@ -39,8 +40,9 @@ LIST(GMPL,GMPDFN,GMPSTAT)       ; -- Returns list of problems for patient GMPDFN
  ;
 DELLIST(RETURN,GMPDFN) ; GET LIST OF DELETED PROBLEMS
  ; see GETPLIST^GMPLMGR1 and LIST^GMPUTL2
- K RETURN
- S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,"R","","",0,0)
+ K RETURN,ORICD186
+ S ORICD186=$$PATCH^XPDUTL("ICD*18.0*6")
+ S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,"R","","",0,0,ORICD186)
  F I=1:1:GMPL D
  . S $P(GMPL(I),"^",10)=$P($P(GMPL(I),"^",10),";")
  . S $P(GMPL(I),"^",12)=$P($P(GMPL(I),"^",12),";")
