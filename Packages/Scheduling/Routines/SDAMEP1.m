@@ -1,4 +1,4 @@
-SDAMEP1 ;ALB/CAW - Expanded Display (Appt. Data) ; 08/31/2012
+SDAMEP1 ;ALB/CAW - Expanded Display (Appt. Data) ; 3/18/13
  ;;5.3;Scheduling;**20,241,534,260003**;Aug 13, 1993;Build 8
  ;
 APDATA ; Appointment Data
@@ -111,5 +111,7 @@ INIT ; -- set up vars
  S %=$$GETPAPT^SDMAPI4(.APT,DFN,SDT)
  S %=$$GETCAPT^SDMAPI4(.CAPT,DFN,SDT)
  S %=$$GETOE^SDMAPI4(.SDOE,APT("OE","I"))
+ S CAPT("OVERBOOK")=$S($G(CAPT("OVERBOOK"))="":"NO",1:$G(CAPT("OVERBOOK")))
+ S APT("CVISIT")=$S($G(APT("CVISIT"))="":"NO",1:$G(APT("CVISIT")))
  S SDOE=APT("OE","I")
  Q
