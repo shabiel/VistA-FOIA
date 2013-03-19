@@ -72,15 +72,16 @@ APTYNAME(TYPE) ; Get appointment type name
  Q $$GET1^DIQ(409.1,TYPE_",",.01)
  ;
 GETAPTS(RETURN,DFN,SD) ; Get patient appointments
- N FILE,SFILES,APTS,TDT
+ N FILE,SFILES,APTS,TDT,SDT,EDT
  S FILE=2
  S SFILES("1900")="",SFILES("1900","N")="APT",SFILES("1900","F")="2.98"
  D GETREC^SDMDAL(.APTS,DFN,FILE,,.SFILES,1,1,1)
  I '$G(SD) M RETURN=APTS Q
  I $G(SD)>0&'$D(SD(0)) D  Q
  . I $D(APTS("APT",+SD)) M RETURN("APT",+SD)=APTS("APT",+SD) Q
- S TDT=$S(+SD(0)=1:$P(SD,"."),+SD(0)=0:$O(APTS("APT","")))
- F  S TDT=$O(APTS("APT",TDT)) Q:'$D(TDT)!(TDT="")  D
+ S (SDT,TDT)=$S(+SD(0)=1:$P(SD,"."),1:0)
+ S EDT=$S(+SD(0)=0:$P(SD,"."),1:9999999)
+ F  S TDT=$O(APTS("APT",TDT)) Q:TDT=""!(TDT>EDT)  D
  . M RETURN("APT",TDT)=APTS("APT",TDT)
  Q
  ;
