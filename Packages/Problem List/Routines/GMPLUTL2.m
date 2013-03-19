@@ -1,4 +1,4 @@
-GMPLUTL2 ; SLC/MKB/KER -- PL Utilities (OE/TIU)             ; 03/07/13
+GMPLUTL2 ; SLC/MKB/KER -- PL Utilities (OE/TIU)             ; 03/19/13
  ;;2.0;Problem List;**10,18,21,26,35,260002**;Aug 25, 1994
  ; External References
  ;   DBIA   348  ^DPT(  file #2
@@ -144,10 +144,12 @@ EDIT(DFN,LOC,GMPROV,GMPIFN) ; Interactive LMgr action to edit a problem
 REMOVE(GMPIFN,GMPROV,TEXT,PLY) ; -- Remove problem GMPIFN
  N GMPVAMC,CHANGE,VALID
  S GMPVAMC=+$G(DUZ(2)),PLY=-1,PLY(0)=""
- S %=$$VALID^GMPLAPI4(.VALID,GMPIFN)
- I 'VALID S PLY(0)="Invalid problem" Q
- I '$$PROVNAME^GMPLEXT(+$G(GMPROV),0) S PLY(0)="Invalid provider" Q
- S %=$$DELETE^GMPLAPI2(.PLY,GMPIFN,GMPROV,$G(TEXT))
+ S %=$$DELETE^GMPLAPI2(.PLY,$G(GMPIFN),$G(GMPROV),$G(TEXT))
+ I 'PLY D  Q
+ . N ERR
+ . S ERR=$P($G(PLY(0)),U)
+ . I (ERR="INVPARAM")!(ERR="PRBNFND") S PLY(0)="Invalid problem"
+ . I (ERR="PROVNFND") S PLY(0)="Invalid provider"
  S:PLY PLY=GMPIFN
  Q
  ;
