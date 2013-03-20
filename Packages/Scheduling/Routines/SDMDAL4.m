@@ -1,4 +1,4 @@
-SDMDAL4 ;RGI/CBR - APPOINTMENT API; 2/25/2013
+SDMDAL4 ;RGI/CBR - APPOINTMENT API; 3/20/13
  ;;5.3;scheduling;**260003**;08/13/93;
 GETOE(RETURN,SDOE) ; Get outpatient encounter
  N IND S IND=0
@@ -6,6 +6,9 @@ GETOE(RETURN,SDOE) ; Get outpatient encounter
  . S RETURN(IND)=$$GET1^DIQ(409.68,SDOE_",",IND,"I")
  S RETURN=1
  Q
+ ;
+OEEXST(SDOE) ; Outpatient encounter exists?
+ Q $D(^SCE(+$G(SDOE)))
  ;
 GETCHLD(RETURN,SDOE) ; Get children encounters
  N SDOEC,NOD

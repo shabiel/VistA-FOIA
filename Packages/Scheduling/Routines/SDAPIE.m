@@ -79,3 +79,4 @@ APTNFND ;;480000.101;;Appointment not found.
 SRTNFND ;;480000.115;;Scheduling request type not found.
 TSTAHAPT ;;480000.116;;PATIENT ALREADY HAS APPOINTMENT AT THAT TIME IN
 CNSNFND ;;480000.117;;Request/Consultation not found.
+OENFND ;;480000.118;;Outpatient encounter not found.
