@@ -1,7 +1,10 @@
-SDMEXT ;RGI/CBR - EXTERNAL API; 1/5/2013
+SDMEXT ;RGI/CBR - EXTERNAL API; 3/20/13
  ;;5.3;scheduling;**260003**;08/13/93
 CNSSTAT(IFN) ; Get consult status
  Q $P($G(^GMR(123,IFN,0)),U,12)
+ ;
+CNSEXST(IFN) ; Consult exists
+ Q $D(^GMR(123,+$G(IFN)))
  ;
 GETMOVDT(IFN) ; Get patient movement
  Q +$G(^DGPM(IFN,0))
