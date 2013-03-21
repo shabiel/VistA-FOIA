@@ -11,7 +11,7 @@ ERR(ERT,ERRNO,TEXT) ; Adds error to array
  Q
  ;
 ERRX(RETURN,ERRNO,TEXT) ; adds error to RETURN
- Q:'$D(RETURN)
+ ;Q:'$D(RETURN)
  Q:'$D(ERRNO)
  S TEXT=$G(TEXT)
  N I
@@ -45,3 +45,6 @@ ICDINACT ;;1250000.615;;Inactive ICD9 code. Edit the problem before adding comme
 CTGNFND ;;1250000.616;;Category not found
 CATUSED ;;1250000.617;;Category in use. Could not delete.
 INVREC ;;1250000.618;;Invalid record
+TERMNFND ;;1250000.631;;Lexicon term not found
+PATNFND ;;1250000.632;;Patient not found
+ICDNFND ;;1250000.633;;ICD9 code not found

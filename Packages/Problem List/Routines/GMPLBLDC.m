@@ -31,7 +31,7 @@ INIT ; -- init variables and list array
 GETLIST ; Build ^TMP("GMPLIST",$J,#) of problems
  K ^TMP("GMPLIST",$J)
  N RETURN
- S %=$$GETCAT^GMPLAPI1(.RETURN,GMPLGRP)
+ S %=$$GETCAT^GMPLAPI1(.RETURN,+GMPLGRP)
  M ^TMP("GMPLIST",$J)=RETURN
  Q
  ;
