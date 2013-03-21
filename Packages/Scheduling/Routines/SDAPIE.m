@@ -1,4 +1,4 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider; 3/20/13
+SDAPIE ;RGI/CBR - Scheduling Error provider; 3/21/13
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -80,3 +80,5 @@ SRTNFND ;;480000.115;;Scheduling request type not found.
 TSTAHAPT ;;480000.116;;PATIENT ALREADY HAS APPOINTMENT AT THAT TIME IN
 CNSNFND ;;480000.117;;Request/Consultation not found.
 OENFND ;;480000.118;;Outpatient encounter not found.
+TEAMNFND ;;480000.119;;Team not found.
+TMPONFND ;;480000.12;;Team position not found.
