@@ -82,3 +82,4 @@ CNSNFND ;;480000.117;;Request/Consultation not found.
 OENFND ;;480000.118;;Outpatient encounter not found.
 TEAMNFND ;;480000.119;;Team not found.
 TMPONFND ;;480000.12;;Team position not found.
+PATNAEAC ;;480000.105;;Patient is not actively enrolled in any clinics.
