@@ -17,7 +17,7 @@ HDR ; -- header code
 INIT ; -- init variables and list array
  N RETURN,MSG
  S GMPLGRP=$$GROUP^GMPLBLD2("L") I GMPLGRP="^" S VALMQUIT=1 Q
- I '$$LOCKCAT^GMPLAPI1(.RETURN,GMPLGRP) D  G INIT
+ I '$$LOCKCAT^GMPLAPI1(.RETURN,+GMPLGRP) D  G INIT
  . D EN^DDIOL($C(7))
  . D BLD^DIALOG(1250000.073,,,"MSG")
  . D EN^DDIOL(.MSG)
@@ -31,7 +31,7 @@ INIT ; -- init variables and list array
 GETLIST ; Build ^TMP("GMPLIST",$J,#) of problems
  K ^TMP("GMPLIST",$J)
  N RETURN
- S %=$$GETCAT^GMPLAPI1(.RETURN,GMPLGRP)
+ S %=$$GETCAT^GMPLAPI1(.RETURN,+GMPLGRP)
  M ^TMP("GMPLIST",$J)=RETURN
  Q
  ;
