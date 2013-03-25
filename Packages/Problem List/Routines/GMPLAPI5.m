@@ -139,7 +139,7 @@ GETCLIN(RETURN,SEARCH,START,NUMBER) ; Array of clinical locations
  ; SEARCH - string to search
  ; START - start of search
  ; NUMBER - max number of records
- S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
+ S:$D(SEARCH)=0 SEARCH=""
  S:'$G(NUMBER) NUMBER=""
  N RET,DL,IN
  S RETURN=0
