@@ -1,10 +1,15 @@
-GMPLCHK ; RGI/CBR -- Problem List Validators ;3/20/13
+GMPLCHK ; RGI/CBR -- Problem List Validators ;3/25/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 PRBIEN(RETURN,PARM,OPT) ;Validate problem ien
  I '$D(PARM),+$G(OPT) Q 1
  I '($G(PARM)?1.N) D ERRX^GMPLAPIE(.RETURN,"INVPARAM","GMPIFN") Q 0 ; Invalid parameter value
  I PARM'>0 D ERRX^GMPLAPIE(.RETURN,"INVPARAM","GMPIFN") Q 0 ; Invalid parameter value
  I '$$EXISTS^GMPLDAL(+PARM) D ERRX^GMPLAPIE(.RETURN,"PRBNFND") Q 0
+ Q 1
+ ;
+BOOL(RETURN,PARM,PNAME) ;Validate boolean fields
+ I $G(PARM)="" Q 1 ;"" defaults to false
+ I PARM'="0",PARM'="1" D ERRX^GMPLAPIE(.RETURN,"INVPARAM",$G(PNAME)) Q 0 
  Q 1
  ;
 NUM(RETURN,PARM,PNAME,OPT,DEC,LOW,HIGH) ;Validate numeric field
