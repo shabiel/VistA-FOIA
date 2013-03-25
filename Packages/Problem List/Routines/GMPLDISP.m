@@ -1,4 +1,4 @@
-GMPLDISP ; SLC/MKB -- Problem List detailed display ;03/12/13
+GMPLDISP ; SLC/MKB -- Problem List detailed display ;03/25/13
  ;;2.0;Problem List;**21,26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -27,7 +27,7 @@ EN ; Init Variables (need GMPLSEL,GMPLNO) and List Array
 PROB ; Display problem GMPIFN
  N LINE,STR,I,TEXT,NOTE,GMPL,X,Y,IDT,FAC,AIFN,SP,LCNT,NIFN,PARM
  G:'$G(GMPIFN) ERROR D CLEAN^VALM10
- S %=$$DETAILX^GMPLAPI2(.GMPL,GMPIFN,$G(GMPLMGR),+$G(GMPROV))
+ S %=$$DETAILX^GMPLAPI2(.GMPL,GMPIFN)
  S SP="",LCNT=1
  F I=1:1:GMPL("EXPOSURE") D
  . S SP=SP_GMPL("EXPOSURE",I)
