@@ -53,7 +53,7 @@ CATUSED(RETURN,GMPLGRP) ; Verify if category is used by a list
  ; Returns 0 if this category is not used by any list, 1 otherwise
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
- S RETURN=$$CATUSED^GMPLDAL1(GMPLGRP)
+ S RETURN=$S($$CATUSED^GMPLDAL1(GMPLGRP):1,1:0)
  Q 1
  ;
 DELCAT(RETURN,GMPLGRP) ; Delete category
