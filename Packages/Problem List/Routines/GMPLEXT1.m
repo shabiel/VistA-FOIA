@@ -30,20 +30,9 @@ GETASSUS(RETURN,GMPLST) ; Array of users assigned to specified list
  Q
  ;
 GETCLIN(RETURN,SEARCH,START,NUMBER) ;
- N RET,TYPE S DL="DILIST"
  S:$D(START)=0 START="" S:$D(SEARCH)=0 SEARCH=""
  S:'$G(NUMBER) NUMBER=""
- D LIST^DIC("44","",,,NUMBER,.START,SEARCH,,"","","RET")
- S RETURN(DL,0)="0^"_$S(NUMBER="":"*",1:NUMBER)_"^0^"
- S CNT=$P(RET(DL,0),"^",1),LIN=0
- F IND=1:1:CNT D
- . S ID=RET(DL,2,IND)
- . S TYPE=$P(^SC(ID,0),U,3)
- . I TYPE="C" D
- . . S LIN=LIN+1
- . . S RETURN(DL,2,LIN)=ID
- . . S RETURN(DL,1,LIN)=$P(^SC(ID,0),U,1)
- S RETURN(DL,0)=LIN_"^"_$S(NUMBER="":"*",1:NUMBER)_"^0^"
+ D LIST^DIC("44","",,,NUMBER,.START,SEARCH,,"I $P(^(0),U,3)=""C""","","RETURN")
  Q
  ;
 LSTUSED(GMPLLST) ;
