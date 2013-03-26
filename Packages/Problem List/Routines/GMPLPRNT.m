@@ -1,4 +1,4 @@
-GMPLPRNT ; SLC/MKB,KER -- Problem List prints/displays; 03/29/12
+GMPLPRNT ; SLC/MKB,KER -- Problem List prints/displays; 03/25/13
  ;;2.0;Problem List;**1,13,26,41,260002**;Aug 25, 1994
  ;
  ; External References
@@ -124,7 +124,7 @@ PRT ; Body of Problem List
  ;
 PROB(DA,NUM) ; Get Problem Text Line
  N GMPL,ONSET,DATE,TEXT,NOTES,J,RESOLVED,X,LINES,PROB,SCS,SP
- Q:'$$DETAILX^GMPLAPI2(.GMPL,DA,0,"",0)
+ Q:'$$DETAILX^GMPLAPI2(.GMPL,DA,0)
  S ONSET=GMPL("ONSET")
  S DATE=$P(GMPL("RECORDED"),U)
  S RESOLVED=GMPL("RESOLVED")

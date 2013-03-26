@@ -7,7 +7,7 @@ GMPLAPI7 ; RGI/VSL -- Problem List - REPORTS ;3/21/13
  ; Results stored as TARGET(PATIENT_NAME)=<# Active Problems>_"^"_<# Inactive Problems>
  ; Returns number of patients.
 PPROBCNT(TARGET) ;
- I $G(TARGET)="" Q 0
+ I $G(TARGET)="" Q -1
  Q $$PPROBCNT^GMPLDAL4(TARGET)
  ;
  ; Finds patients with specified active or inactive problems
@@ -17,8 +17,8 @@ PPROBCNT(TARGET) ;
  ;   STATUS: Problem status
 PPRBSPEC(TARGET,GMPTERM,GMPTEXT,STATUS) ;
  N RETURN
- I $G(TARGET)="" D ERRX^GMPLAPIE(.RETURN,"INVPARAM","TARGET") Q 0
- I '$$TERMIEN^GMPLCHK(.RETURN,.GMPTERM,1) Q 0
- I '$$CODESET^GMPLCHK(.RETURN,.STATUS,"STATUS","AI",1,1) Q 0
+ I $G(TARGET)="" Q -1
+ I '$$TERMIEN^GMPLCHK(.RETURN,.GMPTERM,1) Q -1
+ I '$$CODESET^GMPLCHK(.RETURN,.STATUS,"STATUS","AI",1,1) Q -1
  Q $$PPRBSPEC^GMPLDAL4(TARGET,.GMPTERM,.GMPTEXT,.STATUS)
  ;

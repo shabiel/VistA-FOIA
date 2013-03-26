@@ -1,4 +1,4 @@
-GMPLDALF ; RGI -- DATA ACCESS LAYER - FILEMAN CALLS ; 03/27/12
+GMPLDALF ; RGI -- DATA ACCESS LAYER - FILEMAN CALLS ; 03/25/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 DETAIL(GMPIFN,GMPFLD,ERT) ; Return problem details
  ;                
@@ -12,7 +12,8 @@ DETAIL(GMPIFN,GMPFLD,ERT) ; Return problem details
  Q:'$D(GMPBUF(PROBLEM,GMPIFN_",")) 0
  S I=""
  F  S I=$O(GMPBUF(PROBLEM,GMPIFN_",",I)) Q:I=""  D
- . S GMPFLD(I)=GMPBUF(PROBLEM,GMPIFN_",",I,"I")_U_GMPBUF(PROBLEM,GMPIFN_",",I,"E")
+ . I GMPBUF(PROBLEM,GMPIFN_",",I,"I")="" S GMPFLD(I)=""
+ . E  S GMPFLD(I)=GMPBUF(PROBLEM,GMPIFN_",",I,"I")_U_GMPBUF(PROBLEM,GMPIFN_",",I,"E")
  Q 1
  ;
 VERIFIED(GMPIFN) ; True if problem already verified
