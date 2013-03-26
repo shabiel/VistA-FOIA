@@ -1,4 +1,4 @@
-GMPLAPIE ; RGI -- Problem List Error provider; 03/20/12
+GMPLAPIE ; RGI -- Problem List Error provider; 03/26/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 ERR(ERT,ERRNO,TEXT) ; Adds error to array
  Q:$G(ERRNO)=""
@@ -48,3 +48,4 @@ INVREC ;;1250000.618;;Invalid record
 TERMNFND ;;1250000.631;;Lexicon term not found
 PATNFND ;;1250000.632;;Patient not found
 ICDNFND ;;1250000.633;;ICD9 code not found
+NOTENFND ;;1250000.634;;Note not found
