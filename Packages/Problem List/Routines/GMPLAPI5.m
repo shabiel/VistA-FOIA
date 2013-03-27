@@ -50,7 +50,6 @@ GETLSTS(RETURN,SEARCH,START,NUMBER) ; Array of problem selection lists
  S RETURN(0)=RET("DILIST",0)
  S DL="DILIST"
  F IN=1:1:$P(RETURN(0),U,1) D
- . S RETURN(IN)=""
  . I $D(RET(DL,1,IN))>0 D
  . . S RETURN(IN,"ID")=RET(DL,2,IN)
  . . S RETURN(IN,"NAME")=RET(DL,1,IN)
@@ -80,7 +79,6 @@ GETCATS(RETURN,SEARCH,START,NUMBER) ; Array of problem category
  S DL="DILIST"
  F IN=1:1:$P(RETURN(0),U,1) D
  . Q:$D(RET(DL,1,IN))'>0
- . S RETURN(IN)=""
  . S RETURN(IN,"ID")=RET(DL,2,IN)
  . S RETURN(IN,"NAME")=RET(DL,1,IN)
  S RETURN=1
