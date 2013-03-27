@@ -9,7 +9,7 @@ PRBIEN(RETURN,PARM,OPT) ;Validate problem ien
  ;
 BOOL(RETURN,PARM,PNAME) ;Validate boolean fields
  I $G(PARM)="" Q 1 ;"" defaults to false
- I PARM'="0",PARM'="1" D ERRX^GMPLAPIE(.RETURN,"INVPARAM",$G(PNAME)) Q 0 
+ I PARM'="0",PARM'="1" D ERRX^GMPLAPIE(.RETURN,"INVPARAM",$G(PNAME)) Q 0
  Q 1
  ;
 NUM(RETURN,PARM,PNAME,OPT,DEC,LOW,HIGH) ;Validate numeric field
