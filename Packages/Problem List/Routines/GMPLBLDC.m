@@ -1,4 +1,4 @@
-GMPLBLDC ; SLC/MKB -- Build Problem Selection Categories ;3/7/13
+GMPLBLDC ; SLC/MKB -- Build Problem Selection Categories ;3/27/13
  ;;2.0;Problem List;**3,7,28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3991
@@ -9,7 +9,7 @@ EN ; -- main entry point for GMPL SELECTION GROUP BUILD
  ;
 HDR ; -- header code
  N NAME,NUM,DATE S NUM=+^TMP("GMPLST",$J,0)_" "_$S(+^TMP("GMPLST",$J,0)'=1:$$EZBLD^DIALOG(1250000.055),1:$$EZBLD^DIALOG(1250000.057))
- S DATE=$$EZBLD^DIALOG(1250000.038)_^TMP("GMPLIST",$J,"CAT","MODIFIED")
+ S DATE=$$EZBLD^DIALOG(1250000.038)_$P(^TMP("GMPLIST",$J,"CAT","MODIFIED"),U,2)
  S VALMHDR(1)=DATE_$J(NUM,79-$L(DATE))
  S NAME=^TMP("GMPLIST",$J,"CAT","NAME"),VALMHDR(2)=$J(NAME,$L(NAME)\2+41)
  Q
