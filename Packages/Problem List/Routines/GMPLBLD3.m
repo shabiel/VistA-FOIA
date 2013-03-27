@@ -1,4 +1,4 @@
-GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ;03/11/13
+GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ;03/27/13
  ;;2.0;Problem List;**28,260002**;Aug 25, 1994
  ;
  ; This routine invokes IA #3991
@@ -24,13 +24,13 @@ ASQ S VALMBCK="R",VALMSG=$$MSG^GMPLX
 ASGCLIN(GMPLSLST) ;
  N CLIN,RETURN,LST
  S %=$$GETLIST^GMPLAPI1(.LST,+GMPLSLST,0,1)
- S CLIN=$$CLINIC(,$G(LST("LST","CLINIC")))
+ S CLIN=$$CLINIC(,$P($G(LST("LST","CLINIC")),U,2))
  I +$G(CLIN)>0 S %=$$ADDLOC^GMPLAPI5(.RETURN,GMPLSLST,CLIN)
  Q
  ;
 CLINIC(PREFIX,SUFIX) ;
  N X,Y
- S:$G(SUFIX)'="" DIC("B")=$G(LST("LST","CLINIC"))
+ S:$G(SUFIX)'="" DIC("B")=SUFIX
  S DIC("S")="I $P(^(0),U,3)=""C"""
  S DIC="^SC(",DIC(0)="AEQM",DIC("A")=$G(PREFIX)_$$EZBLD^DIALOG(1250000.104)
  D ^DIC
