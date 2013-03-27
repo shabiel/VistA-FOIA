@@ -156,6 +156,7 @@ SAVLST(RETURN,GMPLLST,SOURCE) ; Save changes to existing list
  S DA=0,INV=1 ; check SOURCE param
  F  S DA=$O(SOURCE(DA)) Q:+DA'>0  D 
  . Q:INV=0
+ . I DA'?.N.1"N" S INV=0 Q
  . I $L($G(SOURCE(DA)))'>0 S INV=0 Q
  . I +DA=DA D  Q  ; new link
  . . I $L($$GETLSTGR^GMPLDAL1(DA))'>0 S INV=0 Q
