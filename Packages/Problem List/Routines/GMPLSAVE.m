@@ -9,7 +9,7 @@ GMPLSAVE ; SLC/MKB/KER -- Save Problem List data ; 03/12/13
  ;
 EN ; Save Changes made to Existing Problem
  N GMPERR
- S GMPSAVED=$$UPDATE^GMPLAPI2(.GMPERR,GMPIFN,.GMPORIG,.GMPFLD,$G(GMPLUSER),+$G(GMPROV))
+ S GMPSAVED=$$UPDATE^GMPLAPI2(.GMPERR,GMPIFN,.GMPFLD,$G(GMPLUSER),+$G(GMPROV))
  Q
  ;
 NEW ; Save Collected Values in new Problem Entry

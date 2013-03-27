@@ -50,3 +50,4 @@ PATNFND ;;1250000.632;;Patient not found
 ICDNFND ;;1250000.633;;ICD9 code not found
 NOTENFND ;;1250000.634;;Note not found
 ITEMNFND ;;1250000.635;;Item not found
+SVCNFND ;;1250000.636;;Service not found

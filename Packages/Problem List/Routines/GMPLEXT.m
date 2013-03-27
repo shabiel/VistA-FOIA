@@ -33,6 +33,9 @@ PROVNARR(X,CL) ; Returns IFN ^ Text of Narrative (#9999999.27)
  . I Y>0,CL>1 S ^AUTNPOV(+Y,757)=CL
  Q $P(Y,U,1,2)
  ;
+NARREXST(IEN) ;Provider narrative exists?
+ Q $D(^AUTNPOV(IEN))>0
+ ;
 LSTTEXT(GMPLSLST) ; Returns list name
  Q $P($G(^GMPL(125,+GMPLSLST,0)),U)
  ;
