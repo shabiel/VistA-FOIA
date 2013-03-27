@@ -1,4 +1,4 @@
-GMPLCHK ; RGI/CBR -- Problem List Validators ;3/25/13
+GMPLCHK ; RGI/CBR -- Problem List Validators ;3/27/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 PRBIEN(RETURN,PARM,OPT) ;Validate problem ien
  I '$D(PARM),+$G(OPT) Q 1
@@ -107,7 +107,7 @@ TERMIEN(RETURN,PARM,PNAME,OPT) ;Lexicon term
  S PNAME=$G(PNAME,"TERM")
  I '($G(PARM)?1.N) D ERRX^GMPLAPIE(.RETURN,"INVPARAM",PNAME) Q 0 ; Invalid parameter value
  I PARM'>0 D ERRX^GMPLAPIE(.RETURN,"INVPARAM",PNAME) Q 0 ; Invalid parameter value
- I '$$TERMEXST^GMPLDAL(PARM) D ERRX^GMPLAPIE(.RETURN,"TERMNFND") Q 0
+ I $$CONTEXT^GMPLEXT(PARM)="" D ERRX^GMPLAPIE(.RETURN,"TERMNFND") Q 0
  Q 1
  ;
 ICDCODE(RETURN,PARM,PNAME,OPT) ;ICD9 code (make sure it is active too)
