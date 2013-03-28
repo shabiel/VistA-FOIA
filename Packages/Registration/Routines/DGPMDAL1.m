@@ -189,6 +189,14 @@ LSTAPMV(MVTS,MFN,FLDS) ; Get corresponding admission movements
  . M MVTS(ID)=MVT
  Q
  ;
+GETPVTS(DFN,AFN,DGDT) ; Get previous TS movement.
+ N X,Y,D
+ S D=9999999.9999999-DGDT
+ S D=$O(^DGPM("ATS",DFN,AFN,D))
+ I D S TS=$O(^DGPM("ATS",DFN,AFN,D,""))
+ I TS S X=$O(^DGPM("ATS",DFN,AFN,D,TS,""))
+ Q X
+ ;
 DELMVT(MFN) ; Delete movement
  N DA,DIK
  S DA=MFN,DIK="^DGPM(" D ^DIK

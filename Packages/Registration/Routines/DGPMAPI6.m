@@ -100,7 +100,7 @@ EVT(DFN,IFN,MODE) ; Event
  Q 1
  ;
 ADD(RETURN,PARAM) ; Add ralated physical movement
- N %,PM6,MFN,DIAG
+ N %,PM6,MFN,DIAG,PTS
  S PM6(.01)=+PARAM("DATE") ; admission date
  D ADDMVMTX^DGPMDAL1(.RETURN,.PM6)
  S MFN=+RETURN
@@ -115,6 +115,10 @@ ADD(RETURN,PARAM) ; Add ralated physical movement
  K PM6
  S PM6(.04)=42
  S:+$G(PARAM("PRYMPHY")) PM6(.08)=+PARAM("PRYMPHY")  ; primary physician
+ I $G(PARAM("DGPMPC")) D
+ . S PTS=$$GETPVTS^DGPMDAL1(+PARAM("PATIENT"),+PARAM("ADMIFN"),+PARAM("DATE"))
+ . D GETMVT^DGPMDAL1(.PTS,PTS)
+ . S PARAM("FTSPEC")=PTS(.09,"I")
  S PM6(.09)=+PARAM("FTSPEC")  ; facility treating specialty
  S PM6(.19)=+PARAM("ATNDPHY")  ; attending physician
  D UPDMVT^DGPMDAL1(.RETURN,.PM6,MFN)

@@ -39,7 +39,7 @@ ADDADM(RETURN,PARAM) ; Add admission
  S IFN1=+RETURN
  ;Add PTF
  S PTF(.01)=DFN,PTF(2)=+PARAM("DATE")
- S PTF(11)=1,PTF(6)=0,PTF(77)=0
+ S PTF(11)=1,PTF(6)=0 ;,PTF(77)=0
  S PTF(20.1)=$S($G(PARAM("ELIGIB")):PARAM("ELIGIB"),1:0) ; eligibility
  S:+$G(PARAM("ADMSRC"))>0 PTF(20)=+$G(PARAM("ADMSRC"))
  D ADDPTF^DGPMDAL1(.RPTF,.PTF)
@@ -55,7 +55,7 @@ ADDADM(RETURN,PARAM) ; Add admission
  S PM1(.06)=+PARAM("WARD")  ; ward
  S:+$G(PARAM("ROOMBED"))>0 PM1(.07)=+$G(PARAM("ROOMBED"))  ; roombed
  S PM1(.1)=PARAM("SHDIAG")  ; short diagnosis
- S:+$G(PARAM("ADMSCC"))>0 PM1(.11)=+$G(PARAM("ADMSCC"))  ; admitted for sc condition
+ S SCC=$G(PARAM("ADMSCC")),PM1(.11)=$S(SCC:1,SCC=0:0,1:"")  ; admitted for sc condition
  S PM1(.12)=+PARAM("ADMREG")  ; admitting regulation
  S PM1(.25)=$S(+$G(PARAM("SCADM"))>0:1,1:0)  ; scheduled admission
  S PM1(41)=+$G(PARAM("FDEXC"))  ; facility directory exclusion
