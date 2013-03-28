@@ -1,4 +1,4 @@
-DGPMV21 ;ALB/MRL/MIR - PASS/FAIL MOVEMENT DATE; 3/4/2013
+DGPMV21 ;ALB/MRL/MIR - PASS/FAIL MOVEMENT DATE; 3/28/2013
  ;;5.3;Registration;**40,95,131,260005**;Aug 13, 1993
  I $S('$D(DGPMY):1,DGPMY?7N:0,DGPMY'?7N1".".N:1,1:0) S DGPME="DATE EITHER NOT PASSED OR NOT IN EXPECTED VA FILEMANAGER FORMAT" G Q
  I $S('$D(DGPMT):1,'DGPMT:1,1:0) S DGPME="TRANSACTION TYPE IS NOT DEFINED" G Q
@@ -6,7 +6,7 @@ DGPMV21 ;ALB/MRL/MIR - PASS/FAIL MOVEMENT DATE; 3/4/2013
  G CONT:("^4^5^"[("^"_DGPMT_"^"))!DGPMN D PTF I $D(DGPME),DGPME="***" Q
 CONT Q:'DGPMN  D CHK I $D(DGPME) G Q
  I DGPM1X Q  ;Don't ask to add a new one if discharge or check-out
-ADD S Y=DGPMY X ^DD("DD")
+ADD S Y=DGPMY,%=Y X ^DD("DD")
 ADD1 W !!,"SURE YOU WANT TO ADD '",Y,"' AS A NEW ",DGPMUC," DATE" S:"^1^4^"'[("^"_DGPMT_"^") %=1 D YN^DICN Q:%=1  I '% W !?4,"Answer YES if you wish to add this new entry otherwise answer NO!" G ADD1
  S DGPME="NOTHING ADDED" G Q
  ;
@@ -29,7 +29,7 @@ CHKO ;Check new date/time for consistency with other movements
  Q
  ;
  ;
-PTF S PTF=+ADM("PTF") I $S('PTF:1,'$D(^DGPT(PTF,0)):1,1:0) D NOPTF Q
+PTF S PTF=+$G(ADM("PTF")) I $S('PTF:1,'$D(^DGPT(PTF,0)):1,1:0) D NOPTF Q
  I $D(^DGP(45.84,PTF)) S DGPME="***" W !,"PTF record is closed for this admission...cannot edit" G Q
  Q
  ;

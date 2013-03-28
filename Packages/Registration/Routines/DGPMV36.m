@@ -1,4 +1,4 @@
-DGPMV36 ;ALB/MIR - TREATING SPECIALTY TRANSFER, CONTINUED ; 3/4/2013
+DGPMV36 ;ALB/MIR - TREATING SPECIALTY TRANSFER, CONTINUED ; 3/28/13
  ;;5.3;Registration;**260005**;Aug 13, 1993
  ;
  ;I '$P(DGPMA,"^",9) S DGPMA="",DIK="^DGPM(",DA=DGPMDA D ^DIK K DIK W !,"Incomplete Treating Specialty Transfer...Deleted"
@@ -22,9 +22,9 @@ SPEC ; -- entry point to add/edit specialty mvt when adding/editing
  ;    Variable: DGPMPHY = physical mvt IFN ; DGPMPHY0 = 0th node
  ;              DGPMSP  = specialty mvt IFN
  ;
- N DIAG S DIAG(1)=$G(PAR("SHDIAG")) M:$D(OLD("DIAG")) DIAG=OLD("DIAG")
+ N DIAG  S:$D(OLD("DIAG"))'>1 OLD("DIAG",1)=$G(PAR("SHDIAG"))
+ S Y=+$P(Y,"^",2)
  D ASK:'Y G SPECQ:'Y D ^DGPMX6
- M PAR("DIAG")=DIAG
 SPECQ K DGPMPHY,DGPMPHY0,DGPMSP Q
  ;
 ASK ; -- ask user if they want to make a special mvt also

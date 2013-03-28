@@ -1,4 +1,4 @@
-DGPMV1 ;ALB/MRL/MIR/JAN - PATIENT MOVEMENT, CONT.; 3/4/2013
+DGPMV1 ;ALB/MRL/MIR/JAN - PATIENT MOVEMENT, CONT.; 3/28/2013
  ;;5.3;Registration;**59,358,260005**;Aug 13, 1993
  K VAIP S VAIP("D")="L",VAIP("L")=""
  G:'$D(DFN)#2 Q
@@ -15,9 +15,11 @@ C S DGPM2X=0 ;were DGPMVI variables set 2 times?
  I "^1^2^6"[("^"_+$G(LMVT("TYPE"))_"^")&("^4^5^"[("^"_DGPMT_"^"))!(+$G(LMVT("TYPE"))=3&(DGPMT=5)) D LODGER^DGPMV10 S DGPM2X=1
  I +$G(LMVT("TYPE"))=4&("^1^2^3^6^"[("^"_DGPMT_"^"))!(+$G(LMVT("TYPE"))=5&(DGPMT=3)) K VAIP S VAIP("D")="L" D INP^DGPMV10 S DGPM2X=1
  ;lock added to block 2 ppl from moving same patient at same time; abr
-LOCK ;L +^DGPM("C",DFN):0 I '$T D  Q
- ;.W !!,"    ** This patient's inpatient or lodger activity is being **",!,"    ** edited by another employee.  Please try again later. **",!
- D ^DGPMV2 Q ;L -^DGPM("C",DFN) Q  ;continue with movement entry
+LOCK ;
+ S %=$$LOCKMVT^DGPMAPI9(.RE,DFN) I 'RE D  Q
+ . N TXT D BLD^DIALOG(4070000.027,,,"TXT")
+ . D EN^DDIOL(.TXT)
+ D ^DGPMV2 D ULOCKMVT^DGPMAPI9(DFN) Q ;continue with movement entry
 Q D KVAR^VADPT K DGPM2X,DGPMIFN,DGPMDCD,DGPMVI,DGPMY,DIE,DR,I,J,X,X1,Z Q
 M D 10^VADPT S X=$O(^UTILITY("VAEN",$J,0)) D EN S X=$O(^UTILITY("VASD",$J,0)) D AP K I,X W ! D C Q  ;display enrollments,appointments --> continue
  ;
