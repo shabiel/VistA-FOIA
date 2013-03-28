@@ -69,7 +69,7 @@ REMOVE ; -- remove problem
  . S:$D(TEXT) DIR("B")=TEXT
  . S DIR("?")="Enter up to 60 characters of additional text to be appended to this problem"
  . W ! D ^DIR I $D(DTOUT)!($D(DUOUT)) S QUIT=1 Q
- . S TEXT=Y S %=$$DELETE^GMPLAPI2(.ORY,IFN,ORPROV,TEXT)
+ . S TEXT=Y S %=$$DELETE^GMPLAPI2(.ORY,IFN,+ORPROV,TEXT)
  . I ORY'>0 W !?5,"ERROR - "_ORY(0) H 1 Q
  . W !?5,"... removed" H 1 S OREBUILD=1
  Q
