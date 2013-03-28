@@ -15,7 +15,7 @@ ERRX(RETURN,ERRNO,TEXT) ; adds error to RETURN
  Q:'$D(ERRNO)
  S TEXT=$G(TEXT)
  N I
- F I=0:1 Q:$O(RETURN(I))=""
+ F I=0:1 Q:$O(RETURN(I))'>0
  S RETURN(I)=ERRNO_U_$$EZBLD^DIALOG($P($T(@ERRNO),";;",2))_TEXT
  Q
  ;
