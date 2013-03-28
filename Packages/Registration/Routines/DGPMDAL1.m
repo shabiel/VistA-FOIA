@@ -1,4 +1,4 @@
-DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 3/4/2013
+DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 3/28/2013
  ;;5.3;Registration;**260005**;
 ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  N FLD,IENS,FDA
@@ -93,12 +93,12 @@ SETAEVT(MFN,RFN,PA) ; Sets admission prior/after event
  S:'$D(^UTILITY("DGPM",$J,1,MFN,"P")) ^UTILITY("DGPM",$J,1,MFN,"P")=""
  Q
  ;
-SETREVT(RFN,PA) ;
- S ^UTILITY("DGPM",$J,6,RFN,PA)=$G(^DGPM(RFN,0))
+SETREVT(RFN,PA,DEF) ;
+ S ^UTILITY("DGPM",$J,6,RFN,PA)=$S($D(DEF):DEF,1:$G(^DGPM(RFN,0)))
  S:'$D(^UTILITY("DGPM",$J,6,RFN,"P")) ^UTILITY("DGPM",$J,6,RFN,"P")=""
- S ^UTILITY("DGPM",$J,6,RFN,"DX"_PA)=$P($G(^DGPM(RFN,"DX",0)),U,3,4)_$G(^DGPM(RFN,"DX",1,0))
+ S ^UTILITY("DGPM",$J,6,RFN,"DX"_PA)=$S($D(DEF):DEF,1:$P($G(^DGPM(RFN,"DX",0)),U,3,4)_$G(^DGPM(RFN,"DX",1,0)))
  S:'$D(^UTILITY("DGPM",$J,6,RFN,"DXP")) ^UTILITY("DGPM",$J,6,RFN,"DXP")=""
- S ^UTILITY("DGPM",$J,6,RFN,"PTF"_PA)=$G(^DGPM(RFN,"PTF"))
+ S ^UTILITY("DGPM",$J,6,RFN,"PTF"_PA)=$S($D(DEF):DEF,1:$G(^DGPM(RFN,"PTF")))
  S:'$D(^UTILITY("DGPM",$J,6,RFN,"PTFP")) ^UTILITY("DGPM",$J,6,RFN,"PTFP")=""
  Q
 SETTEVT(MFN,RFN,PA) ; Sets transfer prior/after event
@@ -115,6 +115,7 @@ SETDLEVT(AFN) ; Sets delete prior/after event
  N I,TYPE S I=0
  F  S I=$O(^DGPM("CA",AFN,I)) Q:I=""  D
  . S TYPE=$P(^DGPM(I,0),U,2)
+ . I TYPE=6 D SETREVT(I,"P"),SETREVT(I,"A","")
  . S ^UTILITY("DGPM",$J,TYPE,I,"P")=$G(^DGPM(AFN,0))
  . S ^UTILITY("DGPM",$J,TYPE,I,"A")=""
  Q
@@ -171,7 +172,7 @@ GETPTF(DATA,MFN,FLDS) ; Get ptf record
  Q
  ;
 LSTCA(MVTS,MFN,FLDS) ; Get corresponding admission movements
- N I S I=0
+ N I S I=0 K MVTS
  I '$D(FLDS) S FLDS=".02;.03"
  F  S I=$O(^DGPM("CA",MFN,I)) Q:I=""  D
  . K MVT D GETMVT(.MVT,I,FLDS)
@@ -179,7 +180,7 @@ LSTCA(MVTS,MFN,FLDS) ; Get corresponding admission movements
  Q
  ;
 LSTAPMV(MVTS,MFN,FLDS) ; Get corresponding admission movements
- N I,DFN,ID,MVT S I=0
+ N I,DFN,ID,MVT S I=0 K MVTS
  I '$D(FLDS) S FLDS=".02;.03"
  S DFN=$P(^DGPM(MFN,0),U,3)
  F  S I=$O(^DGPM("APMV",DFN,MFN,I)) Q:I=""  D
