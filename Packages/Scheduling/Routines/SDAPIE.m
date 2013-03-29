@@ -1,8 +1,8 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider; 3/21/13
+SDAPIE ;RGI/CBR - Scheduling Error provider; 3/29/13
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
- Q:'$D(RETURN)
+ ;Q:'$D(RETURN)
  Q:'$D(ERRNO)
  S:$G(LVL)="" LVL=1
  N I S I=0
