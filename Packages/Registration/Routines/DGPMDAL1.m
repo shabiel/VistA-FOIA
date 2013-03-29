@@ -1,4 +1,4 @@
-DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 3/28/2013
+DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 3/29/2013
  ;;5.3;Registration;**260005**;
 ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  N FLD,IENS,FDA
@@ -65,6 +65,7 @@ UPDPAT(RETURN,DATA,IFN) ; Update patient
 UPDDIAG(RETURN,DATA,PM) ; Update patient movement diagnostic
  N I S I=0
  K ^DGPM(PM,"DX")
+ Q:'$D(DATA)
  S ^DGPM(PM,"DX",0)="^^0^0^"_$P($$NOW^XLFDT(),".")_"^^^"
  F  S I=$O(DATA(I)) Q:'I  D
  . S $P(^DGPM(PM,"DX",0),U,3)=$P(^DGPM(PM,"DX",0),U,3)+1

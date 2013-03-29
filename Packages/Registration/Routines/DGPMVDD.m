@@ -1,4 +1,4 @@
-DGPMVDD ;ALB/MIR - MISCELLANEOUS DD CALLS FROM FILE 405 AND 405.1 ; 3/4/2013
+DGPMVDD ;ALB/MIR - MISCELLANEOUS DD CALLS FROM FILE 405 AND 405.1 ; 3/29/13
  ;;5.3;Registration;**418,593,260005**;Aug 13, 1993
 W ;called from input transform for ward location
  I '$D(DGPMT) K X,DIC Q
@@ -58,7 +58,9 @@ TROCWB ;check if ward still has available beds
  S I=0 F DGB=0:1 S I=$O(^DG(405.4,"W",DGZ6,I)) Q:I'>0  I $D(^DGPM("ARM",I)) S DGOCC=DGOCC+1
  ;
 ABSRET ;check absence return date for consistency with movement type
- S DGPMX=^DGPM(DA,0),DGPMTYP=$P(DGPMX,"^",18),DGPMRD=X
+ N MVTT
+ S %=$$GETMVTT^DGPMAPI8(.MVTT,+PAR("TYPE"))
+ S DGPMX=+PAR("DATE"),DGPMTYP=MVTT("MAS"),DGPMRD=X
  I DGPMTYP=1 S X1=$P(+DGPMX,".",1),X2=4 D C^%DTC I DGPMRD>X K X W !,"Must be within 4 days"
  I DGPMTYP=2 S X1=$P(+DGPMX,".",1),X2=5 D C^%DTC I DGPMRD<X K X W !,"Must be more than 4 days"
  I $D(X) S X1=$P(+DGPMX,".",1),X2=30 D C^%DTC I DGPMRD>X K X W !,"Must be within 30 days of transfer"

@@ -1,25 +1,26 @@
-DGPMV10 ;ALB/MRL/MIR - PATIENT MOVEMENT, CONT.; 11 APR 89 ; 4/15/03 5:48pm
+DGPMV10 ;ALB/MRL/MIR - PATIENT MOVEMENT, CONT.; 11 APR 89 ; 3/29/13
  ;;5.3;Registration;**84,498,509,683,719**;Aug 13, 1993
 CS ;Current Status
  ;first print primary care team/practitioner/attending
  D PCMM^SCRPU4(DFN,DT)
  S X=$S('DGPMT:1,DGPMT<4:2,DGPMT>5:2,1:3) ;DGPMT=0 if from pt inq (DGRPD)
- I '$D(^DGPM("C",DFN)) W !!,"Status      : PATIENT HAS NO INPATIENT OR LODGER ACTIVITY IN THE COMPUTER",*7 D CS2 Q
- S A=$S("^3^5^"[("^"_+DGPMVI(2)_"^"):0,1:+DGPMVI(2)) W !!,"Status      : ",$S('A:"IN",1:""),"ACTIVE ",$S("^4^5^"[("^"_+DGPMVI(2)_"^"):"LODGER",1:"INPATIENT")
- G CS1:'A W "-" S X=+DGPMVI(4) I X=1 W "on PASS" G CS1
+ S %=$$GETLASTM^DGPMAPI8(.LMVT,DFN)
+ I $D(LMVT)'>1 W !!,"Status      : PATIENT HAS NO INPATIENT OR LODGER ACTIVITY IN THE COMPUTER",*7 D CS2 Q
+ S A=$S("^3^5^"[("^"_+LMVT("TYPE")_"^"):0,1:+LMVT("TYPE")) W !!,"Status      : ",$S('A:"IN",1:""),"ACTIVE ",$S("^4^5^"[("^"_+LMVT("TYPE")_"^"):"LODGER",1:"INPATIENT")
+ G CS1:'A W "-" S X=+LMVT("MASTYPE") I X=1 W "on PASS" G CS1
  I "^2^3^25^26^"[("^"_X_"^") W "on ",$S("^2^26^"[X:"A",1:"U"),"A" G CS1
  I "^13^43^44^45^"[("^"_X_"^") W "ASIH" G CS1
  I X=6 W "OTHER FAC" G CS1
  W "on WARD"
-CS1 I +DGPMVI(2)=3,$D(^DGPM(+DGPMVI(17),0)) W ?39,"Discharge Type : ",$S($D(^DG(405.1,+$P(^(0),"^",4),0)):$P(^(0),"^",1),1:"UNKNOWN")
- I "^3^4^5^"'[("^"_+DGPMVI(2)_"^"),$D(^DPT(DFN,"DAC")),($P(^("DAC"),"^",1)="S") W "  (Seriously ill)"
- W ! I +DGPMVI(19,1) W "Patient chose not to be included in the Facility Directory for this admission"
- W !,$S("^4^5^"'[("^"_+DGPMVI(2)_"^"):"Admitted    ",1:"Checked-in  "),": "_$P(DGPMVI(13,1),"^",2)
- W ?39,$S("^4^5^"[("^"_+DGPMVI(2)_"^"):"Checked-out",+DGPMVI(2)=3:"Discharged ",1:"Transferred"),"    : ",$S("^1^4^"'[("^"_+DGPMVI(2)_"^"):$P(DGPMVI(3),"^",2),$P(DGPMVI(3),"^",2)'=$P(DGPMVI(13,1),"^",2):$P(DGPMVI(3),"^",2),1:"")
- W !,"Ward        : ",$E($P(DGPMVI(5),"^",2),1,24),?39,"Room-Bed       : ",$E($P(DGPMVI(6),"^",2),1,21) I "^4^5^"'[("^"_+DGPMVI(2)_"^") W !,"Provider    : ",$E($P(DGPMVI(7),"^",2),1,26),?39,"Specialty      : ",$E($P(DGPMVI(8),"^",2),1,21)
- W !,"Attending   : ",$E($P(DGPMVI(18),"^",2),1,26)
+CS1 I +LMVT("TYPE")=3,+LMVT("DISIFN") W ?39,"Discharge Type : ",$S($L(LMVT("DISTYPE")):LMVT("DISTYPE"),1:"UNKNOWN")
+ I "^3^4^5^"'[("^"_+LMVT("TYPE")_"^"),($P(LMVT("SERILL"),U)="S") W "  (Seriously ill)"
+ W ! I +LMVT("FDEXC") W "Patient chose not to be included in the Facility Directory for this admission"
+ W !,$S("^4^5^"'[("^"_+LMVT("TYPE")_"^"):"Admitted    ",1:"Checked-in  "),": "_$P(LMVT("ADMDT"),"^",2)
+ W ?39,$S("^4^5^"[("^"_+LMVT("TYPE")_"^"):"Checked-out",+LMVT("TYPE")=3:"Discharged ",1:"Transferred"),"    : ",$S("^1^4^"'[("^"_+LMVT("TYPE")_"^"):$P(LMVT("DATE"),"^",2),$P(LMVT("DATE"),"^",2)'=$P(LMVT("ADMDT"),"^",2):$P(LMVT("DATE"),"^",2),1:"")
+ W !,"Ward        : ",$E($P(LMVT("WARD"),"^",2),1,24),?39,"Room-Bed       : ",$E($P(LMVT("ROOMBED"),"^",2),1,21) I "^4^5^"'[("^"_+LMVT("TYPE")_"^") W !,"Provider    : ",$E($P(LMVT("PRYMPHY"),"^",2),1,26),?39,"Specialty      : ",$E($P(LMVT("FTSPEC"),"^",2),1,21)
+ W !,"Attending   : ",$E($P(LMVT("ATNDPHY"),"^",2),1,26)
  D CS2
- S DGPMIFN=DGPMVI(13) I +DGPMVI(2)'=4&(+DGPMVI(2)'=5) D ^DGPMLOS W !!,"Admission LOS: ",+$P(X,"^",5),"  Absence days: ",+$P(X,"^",2),"  Pass Days: ",+$P(X,"^",3),"  ASIH days: ",+$P(X,"^",4)
+ S DGPMIFN=LMVT("ADMIFN") I +LMVT("TYPE")'=4&(+LMVT("TYPE")'=5) D ^DGPMLOS W !!,"Admission LOS: ",+$P(X,"^",5),"  Absence days: ",+$P(X,"^",2),"  Pass Days: ",+$P(X,"^",3),"  ASIH days: ",+$P(X,"^",4)
  K A,C,I,J,X
  Q
  ;
