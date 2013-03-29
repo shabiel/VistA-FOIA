@@ -1,4 +1,4 @@
-SDMDAL2 ;RGI/VSL - APPOINTMENT API; 3/7/13
+SDMDAL2 ;RGI/VSL - APPOINTMENT API; 3/29/13
  ;;5.3;scheduling;**260003**;08/13/93;
 FRSTAVBL(RETURN,SC) ; Get first available date
  S RETURN=$O(^SC(+SC,"T",0))
@@ -7,6 +7,7 @@ FRSTAVBL(RETURN,SC) ; Get first available date
  ;
 SLOTS(RETURN,SC) ; Get available slots
  M RETURN=^SC(+SC,"ST")
+ S RETURN(0)=$P($G(^SC(+SC,"SL")),U,3)
  Q
  ;
 SCEXST(RETURN,CSC) ; Returns Outpatient Classification Stop Code Exception status
@@ -53,7 +54,7 @@ HASPEND(RETURN,PAT,SDT) ; Return 1 if patient has pending appointment
  S RETURN=0
  I '$D(^DPT(+$G(PAT),0)) D ERRX^SDAPIE(.RETURN,"PATNFND") Q RETURN
  S:$O(^DPT(PAT,"S",SDT)) RETURN=1
- Q RETURN
+ Q 1
  ;
 GETPEND(RETURN,PAT,SDT) ; Get pending appointments
  N Y,AP
