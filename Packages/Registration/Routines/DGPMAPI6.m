@@ -97,7 +97,7 @@ FTS(RETURN,PARAM) ; Add facility treating movement/provider change
  Q 1
 EVT(DFN,IFN,MODE) ; Event
  D MVTEVT^DGPMAPI7(DFN,6,IFN,.MODE)
- Q 1
+ Q
  ;
 ADD(RETURN,PARAM) ; Add ralated physical movement
  N %,PM6,MFN,DIAG,PTS

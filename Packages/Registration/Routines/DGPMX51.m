@@ -1,4 +1,5 @@
 DGPMX51 ; ;3/4/2013
+ ;;5.3;Registration;**260005**;
  D DE G BEGIN
 DE S DIE="^DGPM(",DIC=DIE,DP=405,DL=1,DIEL=0,DU="" K DG,DE,DB Q:'$D(OLD)
  S %=$P($G(OLD("TYPE")),U) S:%]"" DE(1)=%
@@ -49,7 +50,7 @@ BEGIN S DNM="DGPMX51",DQ=1
  S DU="DG(405.1,"
  G RE
 C1 G C1S:$D(DE(1))[0 K DB S X=DE(1),DIC=DIE
- K DIV S DIV=X,D0=DA,DIV(0)=D0 S Y(1)=$S($D(^DGPM(D0,0)):^(0),1:"") S X=$P(Y(1),U,18),X=X S DIU=X K Y S X="" S DIH=$S($D(^DGPM(DIV(0),0)):^(0),1:""),DIV=X S $P(^(0),U,18)=DIV,DIH=405,DIG=.18 D ^DICR:$N(^DD(DIH,DIG,1,0))>0
+ K DIV S DIV=X,D0=DA,DIV(0)=D0 S Y(1)=$S($D(^DGPM(D0,0)):^(0),1:"") S X=$P(Y(1),U,18),X=X S DIU=X K Y S X="" S DIH=$S($D(^DGPM(DIV(0),0)):^(0),1:""),DIV=X S $P(^(0),U,18)=DIV,DIH=405,DIG=.18 D ^DICR:$O(^DD(DIH,DIG,1,0))>0
 C1S S X="" Q:DG(DQ)=X  K DB S X=DG(DQ),DIC=DIE
  K DIV S DIV=X,D0=DA,DIV(0)=D0 S Y(1)=$S($D(^DGPM(D0,0)):^(0),1:"") S X=$P(Y(1),U,18),X=X S DIU=X K Y X ^DD(405,.04,1,1,1.1) X ^DD(405,.04,1,1,1.4)
  Q

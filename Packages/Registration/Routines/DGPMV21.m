@@ -10,7 +10,7 @@ ADD S Y=DGPMY,%=Y X ^DD("DD")
 ADD1 W !!,"SURE YOU WANT TO ADD '",Y,"' AS A NEW ",DGPMUC," DATE" S:"^1^4^"'[("^"_DGPMT_"^") %=1 D YN^DICN Q:%=1  I '% W !?4,"Answer YES if you wish to add this new entry otherwise answer NO!" G ADD1
  S DGPME="NOTHING ADDED" G Q
  ;
-CHK
+CHK ;
  S PAR("DATE")=DGPMY,PAR("ADMIFN")=DGPMCA,PAR("PATIENT")=DFN
  S CHK="S %=$$CHKDT^DGPMAPI"_DGPMT_"(.RE,.PAR)" X CHK I RE=0 S DGPME=$P(RE(0),U,2) Q
  Q

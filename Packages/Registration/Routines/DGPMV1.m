@@ -25,7 +25,7 @@ LOCK ;
  S %=$$LOCKMVT^DGPMAPI9(.RE,DFN) I 'RE D  Q
  . N TXT D BLD^DIALOG(4070000.027,,,"TXT")
  . D EN^DDIOL(.TXT)
- D ^DGPMV2 D ULOCKMVT^DGPMAPI9(DFN) Q ;continue with movement entry
+ D ^DGPMV2 D ULOCKMVT^DGPMAPI9(DFN) Q  ;continue with movement entry
 Q D KVAR^VADPT K DGPM2X,DGPMIFN,DGPMDCD,DGPMVI,DGPMY,DIE,DR,I,J,X,X1,Z Q
 M D 10^VADPT S X=$O(^UTILITY("VAEN",$J,0)) D EN S X=$O(^UTILITY("VASD",$J,0)) D AP K I,X W ! D C Q  ;display enrollments,appointments --> continue
  ;
