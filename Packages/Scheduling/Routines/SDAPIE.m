@@ -83,3 +83,4 @@ OENFND ;;480000.118;;Outpatient encounter not found.
 TEAMNFND ;;480000.119;;Team not found.
 TMPONFND ;;480000.12;;Team position not found.
 PATNAEAC ;;480000.105;;Patient is not actively enrolled in any clinics.
+WLNFND ;;480000.121;;Wait List entry not found
