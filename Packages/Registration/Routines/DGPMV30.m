@@ -1,9 +1,9 @@
 DGPMV30 ;ALB/MIR - EDITS FOR DATE/TIME ;12 NOV 89 @8
- ;;5.3;Registration;**95,131**;Aug 13, 1993
+ ;;5.3;Registration;**95,131,260005**;Aug 13, 1993
 CHK ;Check new date/time for consistency with other movements
  S CHK="S %=$$CHKUDT^DGPMAPI"_DGPMT_"(.RE,DGPMDA,DGPMY)" X CHK I RE=0 S DGPME=$P(RE(0),U,2) Q
  Q
-CHKo ;Check new date/time for consistency with other movements
+CHK0 ;Check new date/time for consistency with other movements
  I DGPMT=6,$P(^DGPM(DGPMDA,0),U,14)=$P(^DGPM(DGPMDA,0),U,24),+Y'=+^DGPM(DGPMCA,0) S DGPME="Cannot change date/time for treating specialty associated with admission." Q
  I $D(^DGPM("APRD",DFN,+Y))!$D(^DGPM("APTT6",DFN,+Y))!$D(^DGPM("APTT4",DFN,+Y))!$D(^DGPM("APTT5",DFN,+Y)) S DGPME="There is already a movement at that date/time entered for this patient" Q
  S X1=$O(^DGPM("APRD",DFN,+DGPMP+.0000005)) I X1 S X=$O(^DGPM("APRD",DFN,X1,0)) I X,$D(^DGPM(+X,0)) S Z=^(0),X=$P(Z,"^",2) I Y>Z D WR S DGPME=" "_DGPMUC_" must be before next movement." Q

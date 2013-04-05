@@ -1,4 +1,5 @@
 DGPMX43 ; ;3/28/2013
+ ;;5.3;Registration;**260005**;
  D DE G BEGIN
 DE S DIE="^DGPM(",DIC=DIE,DP=405,DL=1,DIEL=0,DU="" K DG,DE,DB Q:'$D(OLD)
  S %=$P($G(OLD("FCTY")),U) S:%]"" DE(1)=%
