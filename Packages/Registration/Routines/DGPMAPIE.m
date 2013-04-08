@@ -1,4 +1,4 @@
-DGPMAPIE ;RGI/VSL - Registration Error provider; 3/28/2013
+DGPMAPIE ;RGI/VSL - Registration Error provider; 4/8/13
  ;;5.3;Registration;**260005**;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -72,3 +72,4 @@ LDGPINP ;;4070000.173;;Patient is an inpatient...you can not add a lodger moveme
 RSNNFND ;;4070000.174;;Reason for lodging not found.
 RPMNFND ;;4070000.034;;Related physical movement not found
 CANDRPM ;;4070000.035;;You are not allowed to delete a specialty transfer that is assoicated with the initial admission movement.
+LDGPALD ;;4070000.175;;Patient is already a lodger

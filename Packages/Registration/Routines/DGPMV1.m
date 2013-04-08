@@ -1,4 +1,4 @@
-DGPMV1 ;ALB/MRL/MIR/JAN - PATIENT MOVEMENT, CONT.; 3/29/2013
+DGPMV1 ;ALB/MRL/MIR/JAN - PATIENT MOVEMENT, CONT.; 4/8/13
  ;;5.3;Registration;**59,358,260005**;Aug 13, 1993
  K VAIP S VAIP("D")="L",VAIP("L")=""
  G:'$D(DFN)#2 Q
@@ -24,7 +24,7 @@ C S DGPM2X=0 ;were DGPMVI variables set 2 times?
 LOCK ;
  S %=$$LOCKMVT^DGPMAPI9(.RE,DFN) I 'RE D  Q
  . N TXT D BLD^DIALOG(4070000.027,,,"TXT")
- . D EN^DDIOL(.TXT)
+ . S TXT(1,"F")="!!" D EN^DDIOL(.TXT),EN^DDIOL(" ")
  D ^DGPMV2 D ULOCKMVT^DGPMAPI9(DFN) Q  ;continue with movement entry
 Q D KVAR^VADPT K DGPM2X,DGPMIFN,DGPMDCD,DGPMVI,DGPMY,DIE,DR,I,J,X,X1,Z Q
 M D 10^VADPT S X=$O(^UTILITY("VAEN",$J,0)) D EN S X=$O(^UTILITY("VASD",$J,0)) D AP K I,X W ! D C Q  ;display enrollments,appointments --> continue
