@@ -1,4 +1,4 @@
-DGPMAPI5 ;RGI/VSL - CHECK-OUT PATIENT API; 4/8/13
+DGPMAPI5 ;RGI/VSL - CHECK-OUT PATIENT API; 4/9/13
  ;;5.3;Registration;**260005**;
 CHKDT(RETURN,PARAM,TYPE,MAS,ADM) ; Check lodger check-out date
  N %,TXT,TT,DIS
@@ -105,7 +105,6 @@ CHKUDT(RETURN,COFN,DGDT,OLD,NEW) ; Check lodger date update
  . I $$TIMEUSD^DGPMDAL2(+OLD(.03,"I"),+DGDT) D  Q
  . . S RETURN=0 D ERRX^DGPMAPIE(.RETURN,"TIMEUSD")
  . S NEW("DATE")=+DGDT
- S DATE=$S($D(NEW("DATE")):+NEW("DATE"),1:+OLD(.01,"I"))
  S RETURN=1
  Q 1
  ;
@@ -113,6 +112,7 @@ CHKUPD(RETURN,PARAM,COFN,OLD,NEW) ; Check lodger update
  N %,DATE,DISP K RETURN S RETURN=1
  ; transfer date
  S %=$$CHKUDT(.RETURN,COFN,$G(PARAM("DATE")),.OLD,.NEW) Q:'RETURN 0
+ S DATE=$S($D(NEW("DATE")):+NEW("DATE"),1:+OLD(.01,"I"))
  ; type of movement
  I $G(PARAM("TYPE"))'="",+$G(OLD(.04,"I"))'=+$G(PARAM("TYPE")) D  Q:'RETURN 0
  . S %=$$CHKCOTYP(.RETURN,+$G(PARAM("TYPE")),+OLD(.03,"I"),+PARAM("DATE")) Q:'%
