@@ -1,4 +1,4 @@
-SDMDAL ;RGI/VSL - FILE ACCESS DAL; 11/09/2012
+SDMDAL ;RGI/VSL - FILE ACCESS DAL; 4/10/13
  ;;5.3;scheduling;**260003**;08/13/93
 GETREC(RETURN,IFN,FILE,FLDS,SFILES,INT,EXT,REZ) ; Get one record and specified subfiles from a file
  N STRF,FLD,FLAG,C,SFILE,IFLD,REC,SFLDN
@@ -13,9 +13,12 @@ GETREC(RETURN,IFN,FILE,FLDS,SFILES,INT,EXT,REZ) ; Get one record and specified s
  S:$G(REZ) FLAG=FLAG_"R" ;Resolves field numbers to field names
  D GETS^DIQ(FILE,IFN,STRF,FLAG,"REC")
  F  S FLD=$O(REC(FILE,""_IFN_",",FLD)) Q:FLD=""  D
+ . I $E(FLD)="*" Q
  . S:FLAG=""!(FLAG="R") RETURN(FLD)=REC(FILE,""_IFN_",",FLD)
  . S:FLAG["I" RETURN(FLD)=REC(FILE,""_IFN_",",FLD,"I")
- . S:FLAG["E" RETURN(FLD)=$S($L($G(RETURN(FLD)))>0:RETURN(FLD)_U,1:"")_REC(FILE,""_IFN_",",FLD,"E")
+ . I FLAG["E" D
+ . . I RETURN(FLD)=REC(FILE,""_IFN_",",FLD,"E") Q
+ . . S RETURN(FLD)=$S($L($G(RETURN(FLD)))>0:RETURN(FLD)_U,1:"")_REC(FILE,""_IFN_",",FLD,"E")
  S SFILE=""
  F  S SFILE=$O(SFILES(SFILE)) Q:SFILE=""  D
  . S SFLDN=$S(FLAG["R":SFILES(SFILE,"N"),1:SFILE)
