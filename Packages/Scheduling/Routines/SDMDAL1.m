@@ -128,7 +128,8 @@ MAKE(SC,SD,DFN,LEN,SM,USR,OTHR,RQXRAY) ; Make clinic appointment
  Q
  ;
 CANCEL(SC,SD,DFN,CIFN) ; Kill clinic appointment
- S ^SC(SC,"S",SD,1,0)=$P(^SC(SC,"S",SD,1,0),U,3)-1
+ S X=$P(^SC(SC,"S",SD,1,0),U,3),X=$S(X-1=0:"",1:X-1),$P(^SC(SC,"S",SD,1,0),U,3)=X
+ S X=$P(^SC(SC,"S",SD,1,0),U,4),X=$S(X-1=0:"",1:X-1),$P(^SC(SC,"S",SD,1,0),U,4)=X
  N HSI,SB,SDDIF,SI,SL,SS,ST,STARTDAY,STR,I,S,X,Y,TLNK
  S ^SC("ARAD",SC,SD,DFN)="N"
  S TLNK=$P($G(^SC(SC,"S",SD,1,CIFN,"CONS")),U)
