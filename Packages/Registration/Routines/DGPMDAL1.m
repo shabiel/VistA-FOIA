@@ -1,4 +1,4 @@
-DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 3/29/2013
+DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 4/8/13
  ;;5.3;Registration;**260005**;
 ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  N FLD,IENS,FDA
@@ -11,11 +11,14 @@ ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  Q
  ;
 ADDMVMTX(RETURN,PARAMS) ; Add new patient movement
- N X,Y,DD,DO,DIC
- S DIC="^DGPM(",DIC(0)="L",X=PARAMS(.01)
+ N X,Y,DD,DO,DIC,DGIDX
+ S (DIK,DIC)="^DGPM(",DIC(0)="L",X=PARAMS(.01)
  K DD,DO
- D FILE^DICN
- S RETURN=Y
+ D FILE^DICN S DA=+Y
+ I PARAMS(.02)=1!(PARAMS(.02)=4) S PARAMS(.14)=+Y
+ D UPDMVT^DGPMDAL1(.RETURN,.PARAMS,+Y)
+ D IX1^DIK
+ S RETURN=DA
  Q
  ;
 ADDPTF(RETURN,PARAMS) ; Add PTF
@@ -127,9 +130,10 @@ LOCKMVT(DFN) ; Lock patient movements
 ULOCKMVT(DFN) ; Unlock patient movements
  L -^DGPM("C",DFN)
  Q
-GETLASTM(RETURN,DFN,DGDT) ; Get last patient movement
+GETLASTM(RETURN,DFN,DGDT,ADT) ; Get last patient movement
  N NOWI,VAX,VAIP,DGPMVI,NOW
- S NOWI=DGDT,NOW=DGDT,VAIP("D")="L",VAIP("L")=""
+ S NOWI=DGDT,NOW=DGDT,VAIP("D")="L"
+ S:'$G(ADT) VAIP("L")=""
  D INP^DGPMV10
  M RETURN=DGPMVI
  Q
@@ -199,7 +203,7 @@ GETPVTS(DFN,AFN,DGDT) ; Get previous TS movement.
  Q X
  ;
 DELMVT(MFN) ; Delete movement
- N DA,DIK
+ N DA,DIK,DGIDX
  S DA=MFN,DIK="^DGPM(" D ^DIK
  Q
 DELPTF(PTF) ; Delete PTF

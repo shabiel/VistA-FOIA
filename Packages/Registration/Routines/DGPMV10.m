@@ -1,4 +1,4 @@
-DGPMV10 ;ALB/MRL/MIR - PATIENT MOVEMENT, CONT.; 11 APR 89 ; 3/29/13
+DGPMV10 ;ALB/MRL/MIR - PATIENT MOVEMENT, CONT.; 4/8/13
  ;;5.3;Registration;**84,498,509,683,719,260005**;Aug 13, 1993
 CS ;Current Status
  ;first print primary care team/practitioner/attending
@@ -22,8 +22,8 @@ CS1 I +LMVT("TYPE")=3,+LMVT("DISIFN") W ?39,"Discharge Type : ",$S($L(LMVT("DIST
  W ?39,$S("^4^5^"[("^"_+LMVTTY_"^"):"Checked-out",+LMVTTY=3:"Discharged ",1:"Transferred"),"    : ",$S("^1^4^"'[("^"_+LMVTTY_"^"):$P(LMVTDT,"^",2),$P(LMVTDT,"^",2)'=$P(LMVT("ADMDT"),"^",2):$P(LMVTDT,"^",2),1:"")
  W !,"Ward        : ",$E($P(LMVT("WARD"),"^",2),1,24)
  W ?39,"Room-Bed       : ",$E($P(LMVT("ROOMBED"),"^",2),1,21)
- I "^4^5^"'[("^"_+LMVTTY_"^") W !,"Provider    : ",$E($P(LMVT("PRYMPHY"),"^",2),1,26)
- W ?39,"Specialty      : ",$E($P(LMVT("FTSPEC"),"^",2),1,21)
+ I "^4^5^"'[("^"_+LMVTTY_"^") W !,"Provider    : ",$E($P(LMVT("PRYMPHY"),"^",2),1,26) D
+ . W ?39,"Specialty      : ",$E($P(LMVT("FTSPEC"),"^",2),1,21)
  W !,"Attending   : ",$E($P(LMVT("ATNDPHY"),"^",2),1,26)
  D CS2
  S DGPMIFN=LMVT("ADMIFN") I +LMVT("TYPE")'=4&(+LMVT("TYPE")'=5) D ^DGPMLOS W !!,"Admission LOS: ",+$P(X,"^",5),"  Absence days: ",+$P(X,"^",2),"  Pass Days: ",+$P(X,"^",3),"  ASIH days: ",+$P(X,"^",4)
