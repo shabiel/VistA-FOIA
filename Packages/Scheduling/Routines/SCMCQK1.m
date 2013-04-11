@@ -1,4 +1,4 @@
-SCMCQK1 ;ALBOI/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge;1/14/2013
+SCMCQK1 ;ALBOI/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge;4/11/2013
  ;;5.3;Scheduling;**148,177,231,264,436,297,446,524,535,260003**;AUG 13, 1993;Build 3
  ;
  ;04/25/2006 SD*5.3*446 INTER-FACILITY TRANSFER
@@ -194,10 +194,10 @@ POSITION(SCTP) ;return position name
  Q $P(POS("POSITION"),U,2)
 TEAMNM(SCTM) ;return team name
  N TEAM S %=$$GETEAM^SCTMAPI1(.TEAM,SCTM)
- Q $P(TEAM("NAME"),U,2)
+ Q TEAM("NAME")
 CLINIC(SCCL) ;return clinic name
  N CLN S %=$$GETCLN^SDMAPI1(.CLN,SCCL)
- Q $P(CLN("NAME"),U,2)
+ Q CLN("NAME")
 YESNO() ;
  N DIR,X,Y
  S DIR(0)="Y",DIR("B")="YES"

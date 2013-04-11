@@ -1,4 +1,4 @@
-SCMCQK2 ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 1/14/2013
+SCMCQK2 ;ALB/REW - Single Pt Tm/Pt Tm Pos Assign and Discharge ; 4/11/2013
  ;;5.3;Scheduling;**297,260003**;AUG 13, 1993
  ;
 DSPL ;
@@ -155,10 +155,10 @@ POSITION(SCTP) ;return position name
  Q $P(POS("POSITION"),U,2)
 TEAMNM(SCTM) ;return team name
  N TEAM S %=$$GETEAM^SCTMAPI1(.TEAM,SCTM)
- Q $P(TEAM("NAME"),U,2)
+ Q TEAM("NAME")
 CLINIC(SCCL) ;return clinic name
  N CLN S %=$$GETCLN^SDMAPI1(.CLN,SCCL)
- Q $P(CLN("NAME"),U,2)
+ Q CLN("NAME")
 YESNO() ;
  N DIR,X,Y
  S DIR(0)="Y",DIR("B")="YES"

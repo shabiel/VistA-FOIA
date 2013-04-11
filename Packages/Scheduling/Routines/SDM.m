@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 3/28/2013
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 4/11/2013
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -40,7 +40,7 @@ EN1 ;
 EN K SDMLT1 W:$P(VAEL(9),U,2)]"" !!,?15,"MEANS TEST STATUS: ",$P(VAEL(9),U,2),!
  ; *** sck, mt blocking removed
  ;S X="EASMTCHK" X ^%ZOSF("TEST") I $T,$$MT^EASMTCHK(DFN,+$G(SDAPTYP),"M") S SDAMERR="" Q
- I $G(PAT("REMARKS"))]"" W !?3,*7,$P(PAT("REMARKS"),U,2)
+ I $G(PAT("REMARKS"))]"" W !?3,*7,PAT("REMARKS")
  N SADM,SADMDT S SADMDT(0)=DT
  S %=$$LSTSADM^SDMEXT(.SADM,DFN,.SADMDT,0)
  I +$G(SADM(0))>0 S Y=$P($G(SADM(1,"DATE")),U,1),TXT(1)=$$FMTE^XLFDT(Y) W !,$$EZBLD^DIALOG(480000.003,.TXT)

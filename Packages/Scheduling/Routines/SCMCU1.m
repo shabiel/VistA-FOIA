@@ -1,4 +1,4 @@
-SCMCU1 ;ALB/CMM - Team Information Display ;1/14/2013
+SCMCU1 ;ALB/CMM - Team Information Display ;4/11/2013
  ;;5.3;Scheduling;**41,177,260003**;AUG 13, 1993
  ;
  ;action on Appointment Management
@@ -33,7 +33,7 @@ INIT ;gather team data
 HDR ;header code
  N PTNAME,PAT
  S %=$$GETPAT^SDMAPI3(.PAT,TDFN,1)
- S PTNAME=$P(PAT("NAME"),U,1)
+ S PTNAME=PAT("NAME")
  S VALMHDR(2)="Patient: "_PTNAME_"     SSN: "_$P(PAT("SOCIAL SECURITY NUMBER"),U,1)
  S VALMPGE=1 ;start at page 1
  Q
