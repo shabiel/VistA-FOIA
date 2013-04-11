@@ -1,4 +1,4 @@
-SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 1/25/2012
+SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 4/11/13
  ;;5.3;Scheduling;**1,20,27,66,132,260003**;08/13/93
  ;
 CO(SDCOACT,SDCOACTD) ;Check Out Classification, Provider and Diagnosis
@@ -97,20 +97,16 @@ DEL ;Entry point for SDAM DELETE CHECK OUT protocol
  .I $D(^TMP("SDAMIDX",$J,SDCOAP)) K SDAT S SDAT=^(SDCOAP) D
  ..W !!,^TMP("SDAM",$J,+SDAT,0)
  ..S DFN=+$P(SDAT,"^",2),SDT=+$P(SDAT,"^",3),SDCL=+$P(SDAT,"^",4)
+ ..S %=$$SETCO^SDMAPI4(.SDOE,.DFN,.SDT,.OE,.SC,.SDDA)
  ..S %=$$CHKDCO^SDMAPI4(.RETURN,DFN,SDT)
- ..S DEQ=0
- ..I RETURN>0 D  Q:DEQ=1
- ...I '$$ASK S DEQ=1 Q
- ...S %=$$SETCO^SDMAPI4(.SDOE,.DFN,.SDT,.OE,.SC,.SDDA)
- ...S X=$$DELVFILE^PXAPI("ALL",OE(.05),"","","",1)
- ...W !!,">>> Deleting check out information..."
- ...W !?3,"...deleting check out date/time"
- ...S %=$$DELCOL^SDMAPI3(.RETURN,+DFN,+SDT,+SC,SDDA,+SDOE,.OE)
- ...S SDOE=$$GETAPT^SDMAPI4(+DFN,+SDT,+SC)
- ...W !,">>> done."
- ..E  W !!,$P(RETURN(0),U,2)
- ..D PAUSE^VALM1
+ ..I 'RETURN,$P(RETURN(0),U)="APTDCOD" D EN^DDIOL($P(RETURN(0),U,2),,"!!") D PAUSE^VALM1 Q
+ ..I '$$ASK Q
+ ..N SDATA,SDELHDL
+ ..IF '$$EDITOK^SDCO3(SDOE,1) Q
+ ..S SDELHDL=$$HANDLE^SDAMEVT(1)
+ ..D EN^SDCODEL(SDOE,1,SDELHDL),PAUSE^VALM1
  ..D BLD^SDAM
+ ..S SDOE=$$GETAPT^SDMAPI4(+DFN,+SDT,+SDCL)
  S VALMBCK="R"
  K SDAT
 DELQ Q
