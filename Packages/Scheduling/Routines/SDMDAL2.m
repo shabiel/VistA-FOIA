@@ -1,4 +1,4 @@
-SDMDAL2 ;RGI/VSL - APPOINTMENT API; 3/29/13
+SDMDAL2 ;RGI/VSL - APPOINTMENT API; 4/12/13
  ;;5.3;scheduling;**260003**;08/13/93;
 FRSTAVBL(RETURN,SC) ; Get first available date
  S RETURN=$O(^SC(+SC,"T",0))
@@ -80,8 +80,8 @@ GETAPTS(RETURN,DFN,SD) ; Get patient appointments
  I '$G(SD) M RETURN=APTS Q
  I $G(SD)>0&'$D(SD(0)) D  Q
  . I $D(APTS("APT",+SD)) M RETURN("APT",+SD)=APTS("APT",+SD) Q
- S (SDT,TDT)=$S(+SD(0)=1:$P(SD,"."),1:0)
- S EDT=$S(+SD(0)=0:$P(SD,"."),1:9999999)
+ S (SDT,TDT)=$S(+SD(0)=1:+SD,1:0)
+ S EDT=$S(+SD(0)=0:SD,1:9999999)
  F  S TDT=$O(APTS("APT",TDT)) Q:TDT=""!(TDT>EDT)  D
  . M RETURN("APT",TDT)=APTS("APT",TDT)
  Q
