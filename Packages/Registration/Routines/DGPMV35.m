@@ -1,4 +1,4 @@
-DGPMV35 ;ALB/MIR - CHECK-OUT LODGERS ; 3/4/2013
+DGPMV35 ;ALB/MIR - CHECK-OUT LODGERS ; 4/15/13
  ;;5.3;Registration;**111,260005**;Aug 13, 1993
  ;
  ;I 'PAR("TYPE") W !,"Incomplete Check-Out Movement" S DIK="^DGPM(",DA=DGPMDA D ^DIK W "   deleted" S DGPMA="" G Q
@@ -13,6 +13,6 @@ REAS ;called from enter/edit reasons for lodging option
  I '$P(Y,"^",3) S DR=.01,DA=+Y D ^DIE I '$D(Y) G REAS
 REASQ K DA,DIC,DIE,DLAYGO,DR,X,Y Q
  Q
-DICS S DGX=+ADM("TYPE") I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+Y,"F",+DGX)):1,1:0) S DGER=1 Q
+DICS S DGX=+$G(ADM("TYPE")) I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+Y,"F",+DGX)):1,1:0) S DGER=1 Q
  S DGER=0
  Q

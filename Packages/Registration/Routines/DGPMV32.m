@@ -1,4 +1,4 @@
-DGPMV32 ;ALB/MIR - CONTINUE TRANSFER A PATIENT OPTION ;3/28/2013
+DGPMV32 ;ALB/MIR - CONTINUE TRANSFER A PATIENT OPTION ;4/15/13
  ;;5.3;Registration;**418,260005**;Aug 13, 1993
  S:$D(PAR("TYPE")) %=$$GETMVTT^DGPMAPI8(.MVTT,PAR("TYPE")),%=$$GETMASMT^DGPMAPI8(.MAS,MVTT("MAS"))
  S DGPMTYP=+$G(MVTT("MAS")) I $S('DGPMTYP:1,'$G(MAS("ABS")):1,1:0) I '$G(PAR("TYPE"))!'$G(PAR("WARD")) W !,"Incomplete Transfer...Deleted" S DGQUIT=1 G Q
@@ -24,9 +24,10 @@ DICS S DGX=+$G(PMVT("TYPE")) I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+Y,"F",
  S DGX=+$G(NMVT("TYPE")) I $S('$D(^DG(405.1,+DGX,0)):0,'$D(^DG(405.1,+DGX,"F",+Y)):1,1:0) S DGER=1 Q
  S DGX=$P(^DG(405.1,+Y,0),"^",3) I +$G(PMVT("TTYPE"))=1,$S('$D(^DG(405.2,+DGX,"E")):0,$P(^("E"),"^",2):0,1:1) S DGER=1 Q
  I +$G(PMVT("ASIH")),(DGX=14),(+PMVT("MASTYPE")'=45) S DGER=1 Q
+ I '+$G(ADM("WARD")) S DGER=1 Q
  I $D(OLD),"^1^2^3^"[("^"_(+$G(OLD("MASTYPE")))_"^"),(DGX=4) S DGER=1 Q
  ;I "^13^43^44^45"[("^"_DGX_"^"),("^NH^D^"'[("^"_$S($D(^DIC(42,+$P(DGPMAN,"^",6),0)):$P(^(0),"^",3),1:"")_"^")) S DGER=1 Q
- I "^13^43^44^45^"[("^"_DGX_"^"),("^NH^D^"'[("^"_$S($D(^DIC(42,+ADM("WARD"),0)):$P(^(0),"^",3),1:"")_"^"))&($P(^(0),"^",17)'=1) S DGER=1 Q  ;p-418
+ I "^13^43^44^45^"[("^"_DGX_"^"),("^NH^D^"'[("^"_$S($D(^DIC(42,+$G(ADM("WARD")),0)):$P(^(0),"^",3),1:"")_"^"))&($P(^(0),"^",17)'=1) S DGER=1 Q  ;p-418
  ;I DGX=14,("^NH^D^"'[("^"_$S($D(^DIC(42,+$P(DGPMAN,"^",6),0)):$P(^(0),"^",3),1:"")_"^")) S DGER=1 Q
  I DGX=14,("^NH^D^"'[("^"_$S($D(^DIC(42,+$G(ADM("WARD")),0)):$P(^(0),"^",3),1:"")_"^"))&($P(^(0),"^",17)'=1) S DGER=1 Q  ;p-418
  I $G(OLD("ASIH")),(DGX'=+$G(OLD("DISIFN"))) S DGER=1 Q
