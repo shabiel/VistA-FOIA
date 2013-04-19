@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 4/12/13
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 4/19/13
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -172,7 +172,7 @@ GETPEND(RETURN,DFN) ; Get pending appointments
 GETAPTS(RETURN,DFN,SD) ; Get patient appointments
  N %,TXT,CA,IN K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
- S RETURN=0 
+ S RETURN=0
  I '$$DTIME^SDCHK(.RETURN,.SD,"SD",1) Q 0
  I $G(SD(0))'="",$S($G(SD(0))=0:0,$G(SD(0))=1:0,1:1) S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD(0)") Q 0
  D GETAPTS^SDMDAL2(.RETURN,+DFN,.SD)
