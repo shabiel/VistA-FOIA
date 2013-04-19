@@ -43,7 +43,7 @@ SCREST(RETURN,SCIEN,TYP) ;check stop code restriction in file 40.7 for a clinic.
  ;
 GETCLN(RETURN,SC) ; Get Clinic data
  ;  INPUT:   SC = IEN of Clinic
- K RETURN
+ N % K RETURN
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
  D GETCLN^SDMDAL1(.RETURN,+SC,1,1,1)
  S RETURN=1
@@ -102,7 +102,7 @@ GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  Q 1
  ;
 SLOTS(RETURN,SC) ; Get available slots
- K RETURN
+ N % K RETURN
  S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
  D SLOTS^SDMDAL2(.RETURN,+SC)
@@ -191,7 +191,7 @@ LSTCRSNS(RETURN,SEARCH,START,NUMBER) ; Return cancelation reasons.
  Q RETURN
  ;
 FRSTAVBL(RETURN,SC) ; Get first available date
- K RETURN S RETURN=0
+ N % K RETURN S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
  D FRSTAVBL^SDMDAL2(.RETURN,+SC)
  Q 1
@@ -293,7 +293,7 @@ PTFU(RETURN,DFN,SC)    ;Determine if this is a follow-up (return to clinic withi
  ;Input: SC=clinic ifn
  ;Output: '1' if seen within 24 months, '0' otherwise
  ;
- K RETURN S RETURN=0
+ N % K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
  S RETURN=0
@@ -314,7 +314,7 @@ PTFU(RETURN,DFN,SC)    ;Determine if this is a follow-up (return to clinic withi
  Q SDY
  ;
 HASPEND(RETURN,DFN) ; Check if patient has panding appointments
- K RETURN
+ N % K RETURN
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
  Q $$HASPEND^SDMDAL2(.RETURN,+DFN,$$DT^XLFDT())
  ;

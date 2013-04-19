@@ -1,4 +1,4 @@
-SDMAPI5 ;RGI/VSL - APPOINTMENT API; 4/15/13
+SDMAPI5 ;RGI/VSL - APPOINTMENT API; 4/19/13
  ;;5.3;scheduling;**260003**;08/13/93;
 CHKTYPE(RETURN,DFN,TYPE) ; Check appointment type
  N PAT,ERR,ELIG,ATYP
@@ -31,7 +31,7 @@ CHKSTYP(RETURN,TYPE,STYP) ; Check appointment subtype
  Q 1
  ;
 CHKSRT(RETURN,SRT) ; Check scheduling request type
- N LST,I,DL
+ N LST,I,DL,%
  K RETURN S RETURN=0
  I $G(SRT)="" D ERRX^SDAPIE(.RETURN,"INVPARAM","SRT") Q 0
  S %=$$LSTSRT^SDMAPI1(.LST)
@@ -41,7 +41,7 @@ CHKSRT(RETURN,SRT) ; Check scheduling request type
  Q 1
  ;
 CHKLABS(RETURN,SD,CLN,TEST,DFN) ; Check tests date
- N APT,SD1
+ N APT,SD1,%
  K RETURN S RETURN=0
  I $G(@TEST)="" S RETURN=1 Q 1
  I +$G(@TEST)'>0 D ERRX^SDAPIE(.RETURN,"INVPARAM",$G(TEST)) Q 0
