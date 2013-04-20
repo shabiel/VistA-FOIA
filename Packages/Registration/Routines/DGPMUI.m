@@ -1,4 +1,4 @@
-DGPMUI ;RGI/VSL - ADT UI Utils; 2/20/2013
+DGPMUI ;RGI/VSL - ADT UI Utils; 4/19/2013
  ;;5.3;Registration;**260005**;
 SELPAT(DGPMT,DGPMPC) ; Select patient
  N DIC,DLAYGO,X,Y
@@ -9,3 +9,11 @@ SELPAT(DGPMT,DGPMPC) ; Select patient
  S:"^1^4^"'[("^"_DGPMT_"^") DIC("S")="I $D(^DGPM($S(DGPMT'=5:""APTT1"",1:""APTT4""),+Y))"
  D ^DIC
  Q Y
+ASK(PRMT,HELP,DEFAULT,TXT) ;
+ N % S %=0
+ F  Q:%  D
+ . D:$D(%) EN^DDIOL($$EZBLD^DIALOG(HELP))
+ . D EN^DDIOL($$EZBLD^DIALOG(PRMT,.TXT))
+ . S %=$S($D(DEFAULT):DEFAULT,1:3) D YN^DICN
+ Q %
+ ;

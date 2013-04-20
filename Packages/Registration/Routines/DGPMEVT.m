@@ -1,5 +1,5 @@
-DGPMEVT ;ALB/RMO - MAS MOVEMENT EVENT DRIVER; 26 DEC 89 ; 2/2/04 3:18pm
- ;;5.3;Registration;**61,574**;Aug 13, 1993
+DGPMEVT ;ALB/RMO - MAS MOVEMENT EVENT DRIVER; 4/19/13
+ ;;5.3;Registration;**61,574,260005**;Aug 13, 1993
  ;
  ;Required Variables:
  ;         DFN      = Patient's IFN
@@ -16,6 +16,7 @@ DGPMEVT ;ALB/RMO - MAS MOVEMENT EVENT DRIVER; 26 DEC 89 ; 2/2/04 3:18pm
  ; **************************************************************
  N OROLD D INP^VADPT S X=$O(^ORD(101,"B","DGPM MOVEMENT EVENTS",0))_";ORD(101,"
  I $P(X,";",1)="" D ERR K VAIN Q
+ S:$G(QUE) ZTQUEUED=1
  D EN1^XQOR K VAIN,X
  Q
  ;

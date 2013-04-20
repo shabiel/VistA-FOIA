@@ -1,4 +1,4 @@
-DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 4/8/13
+DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 4/19/13
  ;;5.3;Registration;**260005**;
 ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  N FLD,IENS,FDA
@@ -11,7 +11,7 @@ ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  Q
  ;
 ADDMVMTX(RETURN,PARAMS) ; Add new patient movement
- N X,Y,DD,DO,DIC,DGIDX
+ N X,Y,DD,DO,DIC,DGIDX,DA,DIK
  S (DIK,DIC)="^DGPM(",DIC(0)="L",X=PARAMS(.01)
  K DD,DO
  D FILE^DICN S DA=+Y
@@ -22,7 +22,7 @@ ADDMVMTX(RETURN,PARAMS) ; Add new patient movement
  Q
  ;
 ADDPTF(RETURN,PARAMS) ; Add PTF
- N DFN,DGPTDATA S DFN=PARAMS(.01)
+ N DFN,DGPTDATA,DD,DIC,DO,X,Y S DFN=PARAMS(.01)
  S DGPTDATA=U_PARAMS(2),DIC="^DGPT(",DIC("DR")="[DG PTF CREATE PTF ENTRY]"
  S DIC(0)="FLZ",X=DFN K DD,DO D FILE^DICN
  S RETURN=+Y
@@ -159,7 +159,7 @@ GETRPHY(MFN) ; Get related physical movement
  Q $O(^DGPM("APHY",MFN,0))
  ;
 GETRPM(DATA,MFN,FLDS) ; Get related physical movement
- N TMP,ERR
+ N TMP,ERR,IFN
  S IFN=0,IFN=$O(^DGPM("APHY",MFN,IFN))
  Q:IFN'>0
  I '$D(FLDS) S FLDS="*"
@@ -177,7 +177,7 @@ GETPTF(DATA,MFN,FLDS) ; Get ptf record
  Q
  ;
 LSTCA(MVTS,MFN,FLDS) ; Get corresponding admission movements
- N I S I=0 K MVTS
+ N I,MVT S I=0 K MVTS
  I '$D(FLDS) S FLDS=".02;.03"
  F  S I=$O(^DGPM("CA",MFN,I)) Q:I=""  D
  . K MVT D GETMVT(.MVT,I,FLDS)
@@ -195,7 +195,7 @@ LSTAPMV(MVTS,MFN,FLDS) ; Get corresponding admission movements
  Q
  ;
 GETPVTS(DFN,AFN,DGDT) ; Get previous TS movement.
- N X,Y,D
+ N X,Y,D,TS
  S D=9999999.9999999-DGDT
  S D=$O(^DGPM("ATS",DFN,AFN,D))
  I D S TS=$O(^DGPM("ATS",DFN,AFN,D,""))
