@@ -1,4 +1,4 @@
-DGPMEVT ;ALB/RMO - MAS MOVEMENT EVENT DRIVER; 4/19/13
+DGPMEVT ;ALB/RMO - MAS MOVEMENT EVENT DRIVER; 4/23/13
  ;;5.3;Registration;**61,574,260005**;Aug 13, 1993
  ;
  ;Required Variables:
@@ -16,7 +16,6 @@ DGPMEVT ;ALB/RMO - MAS MOVEMENT EVENT DRIVER; 4/19/13
  ; **************************************************************
  N OROLD D INP^VADPT S X=$O(^ORD(101,"B","DGPM MOVEMENT EVENTS",0))_";ORD(101,"
  I $P(X,";",1)="" D ERR K VAIN Q
- S:$G(QUE) ZTQUEUED=1
  D EN1^XQOR K VAIN,X
  Q
  ;
