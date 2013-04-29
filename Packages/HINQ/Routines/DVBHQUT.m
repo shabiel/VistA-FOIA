@@ -1,11 +1,11 @@
-DVBHQUT ;ISC-ALBANY/PKE-stuff entry in suspense file 20 JUN 85  3:50 pm ; 9/4/87  14:43 ;
- ;;V4.0;HINQ;**12**;03/25/92 
+DVBHQUT ;ISC-ALBANY/PKE-stuff entry in suspense file 20 JUN 85  3:50 pm ; 4/29/13
+ ;;V4.0;HINQ;**12,260005**;03/25/92 
  S DVBNOWRT=""
 EN Q:'$D(DUZ)  Q:DUZ<1  D:'$D(DT) DT^DICRW I 1
  I $D(DFN),+DFN S U="^",DVBP="" D BYPASS^DVBHIQD I 1
  E  Q
 EN1 Q:'$D(^DPT(DFN,0))
- I '$D(DVBZ) W *7,!,"No HINQ string created entry not entered." Q
+ I '$D(DVBZ) W:'$G(DGQUIET) *7,!,"No HINQ string created entry not entered." Q
  S %=$P($H,",",2),Z=DT_(%\60#60/100+(%\3600)+(%#60/10000)/100)
  L +^DVB(395.5,DFN) S ^DVB(395.5,"D",DUZ,DFN,DUZ)=""
  I $D(^DVB(395.5,DFN,0)) D ENT2 I 1
