@@ -1,8 +1,7 @@
-SDMDAL2 ;RGI/VSL - APPOINTMENT API; 4/12/13
+SDMDAL2 ;RGI/VSL - APPOINTMENT API; 5/13/13
  ;;5.3;scheduling;**260003**;08/13/93;
 FRSTAVBL(RETURN,SC) ; Get first available date
  S RETURN=$O(^SC(+SC,"T",0))
- S RETURN=$O(^(0))
  Q
  ;
 SLOTS(RETURN,SC) ; Get available slots
@@ -59,7 +58,7 @@ HASPEND(RETURN,PAT,SDT) ; Return 1 if patient has pending appointment
 GETPEND(RETURN,PAT,SDT) ; Get pending appointments
  N Y,AP
  F Y=SDT:0 S Y=$O(^DPT(PAT,"S",Y)) Q:Y'>0  D
- . S AP=^(Y,0)
+ . S AP=^DPT(PAT,"S",Y,0)
  . I "I"[$P(AP,U,2) D
  . . S RETURN(Y,.01)=$P(AP,U,1)
  . . S RETURN(Y,13)=$P(AP,U,11)
@@ -91,7 +90,7 @@ GETDAPTS(RETURN,DFN,SD) ; Get all appointments in the day
  S RETURN=0
  S IND=$P(SD,".")
  F  S IND=$O(^DPT(DFN,"S",IND)) Q:IND=""!($P(IND,".")>$P(SD,"."))  D
- . S NOD=^(IND,0)
+ . S NOD=^DPT(DFN,"S",IND,0)
  . S RETURN(IND,1)=$P(NOD,U,1)
  . S RETURN(IND,2)=$P(NOD,U,2)
  S RETURN=1

@@ -1,4 +1,4 @@
-SDMDAL4 ;RGI/CBR - APPOINTMENT API; 4/12/13
+SDMDAL4 ;RGI/CBR - APPOINTMENT API; 5/13/13
  ;;5.3;scheduling;**260003**;08/13/93;
 GETOE(RETURN,SDOE) ; Get outpatient encounter
  N IND S IND=0
@@ -59,7 +59,7 @@ DELCLS(SDOE) ;Delete Classification
  N DA,DIK,SDI,SDFL
  S SDFL=409.42
  S DIK="^SDD("_SDFL_",",SDI=0
- F SDI=0:0 S SDI=$O(^SDD(SDFL,"AO",SDOE,SDI)) Q:'SDI  S DA=+$O(^(SDI,0)) D ^DIK
+ F SDI=0:0 S SDI=$O(^SDD(SDFL,"AO",SDOE,SDI)) Q:'SDI  S DA=+$O(^SDD(SDFL,"AO",SDOE,SDI,0)) D ^DIK
  Q
  ;
 HASCLS(SDOE) ;Has Classifications

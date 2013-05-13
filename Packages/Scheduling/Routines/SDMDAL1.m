@@ -1,4 +1,4 @@
-SDMDAL1 ;RGI/CBR - APPOINTMENT API; 4/19/13
+SDMDAL1 ;RGI/CBR - APPOINTMENT API; 5/13/13
  ;;5.3;scheduling;**260003**;08/13/93;
 GETCLN(RETURN,CLN,INT,EXT,REZ) ; Get clinic detail
  N FILE,SFILES,FLDS
@@ -141,7 +141,7 @@ CANCEL(SC,SD,DFN,CIFN) ; Kill clinic appointment
  S SL=^SC(SC,"SL"),X=$P(SL,U,3),STARTDAY=$S($L(X):X,1:8),SB=STARTDAY-1/100,X=$P(SL,U,6),HSI=$S(X:X,1:4),SI=$S(X="":4,X<3:4,X:X,1:4),STR="#@!$* XXWVUTSRQPONMLKJIHGFEDCBA0123456789jklmnopqrstuvwxyz",SDDIF=$S(HSI<3:8/HSI,1:2) K Y
  S S=^SC(SC,"ST",SD\1,1),Y=SD#1-SB*100,ST=Y#1*SI\.6+(Y\1*SI),SS=SL*HSI/60
  I Y'<1 F I=ST+ST:SDDIF S Y=$E(STR,$F(STR,$E(S,I+1))) Q:Y=""  S S=$E(S,1,I)_Y_$E(S,I+2,999),SS=SS-1 Q:SS'>0
- S ^(1)=S
+ S ^SC(SC,"ST",SD\1,1)=S
  Q
  ;
 COVERB(SC,SD,IFN) ; Kill first overbook appointment
@@ -164,8 +164,8 @@ GETDAYA(RETURN,SC,SD) ; Get all day appointments
  . S %=0
  . F  S %=$O(^SC(SC,"S",D,1,%)) Q:%'>0  D
  . . Q:'$D(^SC(SC,"S",D,1,%,0))
- . . S RETURN(%,"STATUS")=$P(^(0),U,9)
- . . S RETURN(%,"OB")=$D(^("OB"))
+ . . S RETURN(%,"STATUS")=$P(^SC(SC,"S",D,1,%,0),U,9)
+ . . S RETURN(%,"OB")=$D(^SC(SC,"S",D,1,%,"OB"))
  Q
  ;
 LSTCAPTS(RETURN,SC,SDBEG,SDEND) ; 
@@ -175,7 +175,7 @@ LSTCAPTS(RETURN,SC,SDBEG,SDEND) ;
  . F SDDA=0:0 S SDDA=$O(^SC(SC,"S",SDT,1,SDDA)) Q:'SDDA  D
  . . S CNSTLNK=$P($G(^SC(SC,"S",SDT,1,SDDA,"CONS")),U)
  . . Q:'$D(^SC(SC,"S",SDT,1,SDDA,0))
- . . S APT=^(0)
+ . . S APT=^SC(SC,"S",SDT,1,SDDA,0)
  . . S CNT=CNT+1
  . . S SDATA=^DPT(+APT,"S",SDT,0)
  . . S RETURN(CNT,"CONS")=$G(CNSTLNK)
@@ -191,7 +191,7 @@ LSTPAPTS(RETURN,DFN,SDBEG,SDEND) ; Get patient appointments
  N SDT,CNT,SDDA,SC,CN,CNPAT,SDATA,CNSTLNK
  S CNT=0
  F SDT=SDBEG:0 S SDT=$O(^DPT(DFN,"S",SDT)) Q:'SDT!($P(SDT,".",1)>SDEND)  D
- . Q:'$D(^(SDT,0))
+ . Q:'$D(^DPT(+DFN,"S",SDT,0))
  . S CNT=CNT+1
  . S SDATA=^DPT(+DFN,"S",SDT,0)
  . S SC=+SDATA
