@@ -12,7 +12,7 @@ SLOTS(RETURN,SC) ; Get available slots
  ;
 SCEXST(RETURN,CSC) ; Returns Outpatient Classification Stop Code Exception status
  N FILE,STOPN,IENACT,FLDS,FS S RETURN=0
- S STOPN=$$GET1^DIQ(40.7,+CSC_",",1) Q:STOPN="" 0
+ S STOPN=$$GET1^DIQ(40.7,+CSC_",",1) Q:STOPN=""
  S IENACT=""
  S IENACT=$O(^SD(409.45,"B",STOPN,IENACT))
  S FILE="409.45"
