@@ -1,4 +1,4 @@
-SDCODEL ;ALB/RMO,ESW - Delete - Check Out; 4/11/13
+SDCODEL ;ALB/RMO,ESW - Delete - Check Out; 5/14/13
  ;;5.3;Scheduling;**20,27,44,97,105,110,132,257,260003**;Aug 13, 1993
  ;
 EN(SDOE,SDMOD,SDELHDL,SDELSRC) ;Delete Check Out
@@ -11,7 +11,7 @@ EN(SDOE,SDMOD,SDELHDL,SDELSRC) ;Delete Check Out
  S %=$$SETCO^SDMAPI4(.SDOE,.DFN,.SDT,.OE,.SC,.SDDA)
  ;
  ; -- ok to delete?
- IF '$$EDITOK^SDCO3(SDOE,SDMOD) G ENQ
+ IF '$$EDITOK^SDCO3(SDOE,.SDMOD) G ENQ
  ;
  IF $G(SDELSRC)'="PCE" S X=$$DELVFILE^PXAPI("ALL",OE(.05),"","","",1)
  S SDVFLG=1
@@ -22,7 +22,7 @@ EN(SDOE,SDMOD,SDELHDL,SDELSRC) ;Delete Check Out
  I $G(SDMOD) W !!,">>> Deleting check out information..."
  ;
  ; -- delete child data for appts, dispos and stop code addition
- I "^1^2^3^"[("^"_OE(.08)_"^") D DELCHLD(SDOE,SDMOD) ;SD/257
+ I "^1^2^3^"[("^"_OE(.08)_"^") D DELCHLD(SDOE,.SDMOD) ;SD/257
  ;
  ; -- delete SDOE pointers and co d/t
  I OE(.08)=1 D
@@ -39,7 +39,7 @@ EN(SDOE,SDMOD,SDELHDL,SDELSRC) ;Delete Check Out
  I 'OE(.06),$$HASCLS^SDMDAL4(+SDOE) D
  . I $G(SDMOD) W !?3,"...deleting classifications"
  . D DELCLS^SDMDAL4(+SDOE)
- D DELOE(+SDOE,.OE,SDMOD)
+ D DELOE(+SDOE,.OE,.SDMOD)
  ;
  I $G(SDMOD) W !,">>> done."
  ;
@@ -60,7 +60,7 @@ DELOE(SDOE,OE,SDMOD) ; Delete Outpatient Encounter
  I '$D(OE) D
  . S OE(.05)="",OE(.01)="",OE(.08)=""
  . D GETOE^SDMDAL4(.OE,+SDOE)
- I '$$EDITOK^SDCO3(SDOE,SDMOD) Q
+ I '$$EDITOK^SDCO3(SDOE,.SDMOD) Q
  D DELOE^SDMDAL4(+SDOE)
  S X=$$KILL^VSITKIL(OE(.05))
  Q
@@ -70,6 +70,6 @@ DELCHLD(SDOEP,SDMOD) ;Delete Children
  S SDOEC=0
  D GETCHLD^SDMDAL4(.CHLD,SDOEP)
  F  S SDOEC=$O(CHLD(SDOEC)) Q:'SDOEC  D
- . D DELOE(SDOEC)
+ . D DELOE(SDOEC,,.SDMOD)
  Q
  ;
