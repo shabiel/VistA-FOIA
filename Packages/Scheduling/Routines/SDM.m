@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 4/11/2013
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 5/14/13
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -56,7 +56,7 @@ PEND S %=""
  .S CN=1
  . F XIN=DT:0 S XIN=$O(PEND(XIN)) Q:XIN'>0  D
  . . S LXE=PEND(XIN,"LAB")_U_PEND(XIN,"XRAY")_U_PEND(XIN,"EKG")
- . . X:(($Y+4)>IOSL) "D OUT^SDUTL X SDXY"
+ . . X:(($Y+4)>IOSL) "D OUT^SDUTL X SDXY" Q:$G(SDEND)
  . . F SDJ=1,2,3 D
  . . . I $P(LXE,U,SDJ)]"" S Y=$P(LXE,U,SDJ) W:$X>9 ! W ?10,"*" D DT^SDM0 W ?32,$S(SDJ=1:"LAB",SDJ=2:"XRAY",3:"EKG")
  . . W:$X>9 ! W CN,".",?4,$$FMTE^XLFDT(XIN) W ?23
