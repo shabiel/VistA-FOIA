@@ -1,16 +1,26 @@
 GMPLAPI4 ; RGI/CBR -- Problem List API - LIST ;3/27/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
-LIST(RETURN,GMPDFN,GMPSTAT,GMPROV,GMPVIEW,GMPREV,GMPIDX) ;
- ; RETURN - By reference. Array of problems
- ;   RETURN = Total number of problems
- ;   RETURN(0) = No of problems returned (filtered)
- ;   RETURN(I) = Problem data: ifn^problem...
- ; GMPDFN - Patient IFN
- ; GMPSTAT - Status. Any combination of A,I,R (Active,Inactive,Removed). Default=A
- ; GMPREV - 1=Reversed. Default=0
- ; GMPROV - Filter by PROVIDER
- ; GMPVIEW - Filter. S/vamc1/vamc2/.../ or C/...
- ; GMPIDX - Create "B" index. Default=0
+LIST(RETURN,GMPDFN,GMPSTAT,GMPROV,GMPVIEW,GMPREV,GMPIDX) ;returns a filtered list of patient problems
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;       RETURN(0)=number of problems returned
+ ;       RETURN(#)=problem_IEN^status^problem^ICD9^onset^last_modified^sc^exposures^condition^
+ ;                 location^loc_type^provider^service^priority^has_comments^
+ ;                 date_recorded^sc_condition^icd_inactive
+ ;   GMPDFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   GMPSTAT [Optional,String] Status of problems to be returned. Can be any combination of (A)ctive, (I)nactive and (R)emoved.
+ ;                             Default: A = returns active problems only
+ ;   GMPROV [Optional,Numeric] Provider IEN (pointer to file 200). If present, the problems returned will be filtered by this provider.
+ ;                             Default - return all problems
+ ;   GMPVIEW [Optional,String] Filter by service location or clinic. Format "S/facility_ien/facility_ien/." or "C/clinic_ien/clinic_ien/.".
+ ;                             If facility IEN's are not passed, returns inpatient problems when GMPVIEW="S" or outpatient ones when it is set to "C".
+ ;                             Default - returns all problems.
+ ;   GMPREV [Optional,Boolean] Reversed order. The problems will be sorted in reversed order of recorded date.
+ ;   GMPIDX [Optional,Boolean] Create "B" index. If set to 1 will append a "B" index to the output array.
+ ;                             RETURN("B",ien#)=#. Default - 0
+ ;Output:
+ ;  1=Success,0=Failure
  N PLIST,RVAL
  K RETURN
  I '$$GETPLIST(.PLIST,.GMPDFN,.GMPSTAT,.GMPREV,.GMPROV,.GMPVIEW,.GMPIDX) Q 0
@@ -19,7 +29,28 @@ LIST(RETURN,GMPDFN,GMPSTAT,GMPROV,GMPVIEW,GMPREV,GMPIDX) ;
  S RETURN=$G(PLIST)
  Q RVAL
  ;
-GETPLIST(RETURN,GMPDFN,GMPSTAT,GMPREV,GMPROV,GMPVIEW,GMPIDX) ; lists problem ifn's
+GETPLIST(RETURN,GMPDFN,GMPSTAT,GMPREV,GMPROV,GMPVIEW,GMPIDX) ; lists problem ien's
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;      RETURN=Total number of patient's problems that would be returned if GMPROV and GMPVIEW were not specified.
+ ;             Depends on GMPSTAT value:if GMPSTAT="A", RETURN will be set to the number of patient's active problems,
+ ;             if GMPSTAT="I" will be set to the number of patient's inactive problems, etc.
+ ;      RETURN(0)=number of problems returned
+ ;      RETURN(#)=IEN #
+ ;   GMPDFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   GMPSTAT [Optional,String] Status of problems to be returned. Can be any combination of (A)ctive, (I)nactive and (R)emoved.
+ ;                             Default: "AI" - returns both active and inactive problems (but not removed ones).
+ ;   GMPREV [Optional,Boolean] Reversed order. The problems will be sorted in reversed order of recorded date.
+ ;   GMPROV [Optional,Numeric] Responsible provider IEN (pointer to file 200). If passed, the problems returned will be filtered by this provider.
+ ;                             Default: "" - return all problems
+ ;   GMPVIEW [Optional,String] Filter by service location (inpatient problems) or clinic (outpatient problems).
+ ;                             Format: "S/facility_ien/facility_ien/./" or "C/clinic_ien/clinic_ien/./".
+ ;                             Note: the string should end in a forward slash. Default: "" - returns all problems.
+ ;   GMPIDX [Optional,Boolean] Create "B" index. If set to 1 will append a "B" index to the output array.
+ ;                             RETURN("B",problem_ien)=#. Default - 0
+ ;Output:
+ ;  1=Success,0=Failure
  N TOTAL
  S RETURN=0
  I '$$PATIEN^GMPLCHK(.RETURN,.GMPDFN) Q 0
@@ -39,6 +70,20 @@ GETPLIST(RETURN,GMPDFN,GMPSTAT,GMPREV,GMPROV,GMPVIEW,GMPIDX) ; lists problem ifn
  Q 1
  ;
 BUILDLST(RETURN,GMPLIST) ; Same as LIST but returns only problems passed in GMPLIST
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;       RETURN(0)=number of problems returned
+ ;       RETURN(#)=problem_IEN^status^problem^ICD9^onset^last_modified^sc^exposures^condition^
+ ;                 location^loc_type^provider^service^priority^has_comments^
+ ;                 date_recorded^sc_condition^icd_inactive
+ ;  .GMPLIST [Required,Array] List of problem IENs in the following format:
+ ;       GMPLIST(0)=number of records
+ ;       GMPLIST(1)=problem_IEN 1
+ ;       .
+ ;       GMPLIST(n)=problem_IEN n
+ ;Output:
+ ;  1=Success,0=Failure
  N I,GMPL,IFN,INACT,ST,ICD,ONSET,LASTMOD,SC,SP,LOC,LT,PROV,SERV,CNT
  N PRIO,HASCMT,DTREC,AO,IR,ENV,HNC,MST,CV,SHD,SCCOND,TOTAL,X,ORICD186
  S RETURN=0
@@ -96,13 +141,35 @@ FLDNAME(RETURN) ;
  F I=1:1:$L(FIELDS,"^") S RETURN($P(FIELDS,"^",I))=$P(NAMES,"^",I)
  Q 1
  ;
-LASTMOD(RETURN,GMPIFN) ; last modified date
+LASTMOD(RETURN,GMPIFN) ; last modified date for a problem
+ ;Input:
+ ;  .RETURN [Required,DateTime] Set to last modified date
+ ;                              Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  S RETURN=$$LASTMOD^GMPLDAL3(GMPIFN)
  Q 1
  ;
-DEFAULT(RETURN,GMPROB,GMPICD,GMPTERM,GMPROV,GMPCLIN,GMPELIG) ;
+DEFAULT(RETURN,GMPROB,GMPICD,GMPTERM,GMPROV,GMPCLIN,GMPELIG) ;Return default values for new problems
+ ;Input:
+ ;  .RETURN [Required,Array] An array passed by reference that will be initialized with the default values. 
+ ;                           It has the same structure as GMPFLD array described in NEW^GMPLAPI2
+ ;                           Set to Error description if the call fails
+ ;   GMPROB [Required,String] Provider narrative
+ ;   GMPICD [Required,String] The ICD9 code associated to this problem
+ ;   GMPTERM [Required,Numeric] Lexicon term IEN (pointer to file 757.01)
+ ;   GMPROV [Optional,Numeric] Provider IEN (pointer to file 200)
+ ;   GMPCLIN [Optional, Numeric] Clinic IEN (pointer to file 44)
+ ;   GMPELIG [Optional,Array] An array of eligibilities for the environmental exposures. If any of the following nodes are defined it will set the corresponding entry to 1:
+ ;      GMPELIG("SC")=service connected
+ ;      GMPELIG("AO")=agent orange
+ ;      GMPELIG("IR")=ionizing radiation
+ ;      GMPELIG("EC")=environment contaminants
+ ;Output:
+ ;  1=Success,0=Failure
  I '+$$STATCHK^ICDAPIU(GMPICD,DT) D ERRX^GMPLAPIE(.RETURN,"INACTICD") Q 0
  S RETURN(.01)=$$ICD9KEY^GMPLEXT(GMPICD)_U_GMPICD
  S:'RETURN(.01) RETURN(.01)=$$NOS^GMPLEXT ; cannot resolve code
@@ -127,7 +194,13 @@ DEFAULT(RETURN,GMPROB,GMPICD,GMPTERM,GMPROV,GMPCLIN,GMPELIG) ;
  S RETURN(10,0)=0
  Q 1
  ;
-UNDELETE(RETURN,GMPIFN) ; -- replace problem on patient's list
+UNDELETE(RETURN,GMPIFN) ; Undeletes problem
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set 1 if the call succeeded
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  N DELETED,%
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -138,6 +211,12 @@ UNDELETE(RETURN,GMPIFN) ; -- replace problem on patient's list
  Q 1
  ;
 DIAG(RETURN,GMPIFN) ; Returns ICD diagnosis: pointer_to_icd_file^icd
+ ;Input:
+ ;  .RETURN [Required,String]  Set to ICD code in the following format: pointer_to_icd_file^icd_code
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  N ICD,DET,%
  S RETURN=""
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -148,6 +227,12 @@ DIAG(RETURN,GMPIFN) ; Returns ICD diagnosis: pointer_to_icd_file^icd
  Q 1
  ;
 PROBNARR(RETURN,GMPIFN) ; Returns Provider Narrative
+ ;Input:
+ ;  .RETURN [Required,String] Set to provider_narrative_ien^problem_narrative
+ ;                            Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  N PRB,DET,%
  S RETURN=""
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -160,23 +245,40 @@ PRBCNT(RETURN) ;Return number of entries in PROBLEM LIST.
  S RETURN=$$PRBCNT^GMPLDAL3()
  Q 1
  ;
-VALID(RETURN,GMPIFN) ;RETURN=1 if problem IFN is valid
+VALID(RETURN,GMPIFN) ;RETURN=1 if problem IEN is valid
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if PROBLEM file contains GMPIFN
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  S RETURN=$$EXISTS^GMPLDAL(GMPIFN)
  Q 1
  ;
-PATIENT(RETURN,GMPIFN) ; Returns patient IFN given problem IFN
+PATIENT(RETURN,GMPIFN) ; Returns patient IEN given problem IEN
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to patient IEN (pointer to file 2)
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  N VALID,%,DET
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
- ;S %=$$VALID(.VALID,GMPIFN)
- ;Q:'VALID 1
  S %=$$DETAIL^GMPLAPI2(.DET,GMPIFN)
  S RETURN=+DET(.02)
  Q 1
  ;
 REPLACE(RETURN,GMPIFN,NEWDIAG) ; Replace ICD diagnosis code
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set 1 if the call succeeded
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   NEWDIAG [Required,Numeric] ICD9 code IEN (pointer to file 80)
+ ;Output:
+ ;  1=Success,0=Failure
  N OLDDIAG,%
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -190,7 +292,14 @@ REPLACE(RETURN,GMPIFN,NEWDIAG) ; Replace ICD diagnosis code
  Q 1
  ;
 HASPRBS(RETURN,GMPDFN,GMPSTAT) ; Returns 1 if patient DFN has problems with status GMPSTAT
- ; GMPSTAT=A/I/AI; Default: AI
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if patient file contains problems with status GMPSTAT
+ ;                             Set to Error description if the call fails
+ ;   GMPDFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   GMPSTAT [Optional,String] Problem status: Any combination of (A)ctive and (I)nactive.
+ ;                             Default: AI = both active and inactive.
+ ;Output:
+ ;  1=Success,0=Failure
  S GMPSTAT=$G(GMPSTAT,"AI")
  S RETURN=0
  I '$$PATIEN^GMPLCHK(.RETURN,.GMPDFN) Q 0

@@ -1,6 +1,13 @@
-GMPLAPI5 ; Build Problem Selection Lists ; 3/25/13
+GMPLAPI5 ; Build Problem Selection Lists ; 5/15/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 ADDLOC(RETURN,GMPLLST,GMPLLOC) ; Add location to list
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
+ ;   GMPLLOC [Required,Numeric] Clinic location IEN (pointer to file 44)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
  I '$$SCIEN^GMPLCHK(.RETURN,.GMPLLOC,"GMPLLOC") Q 0
@@ -10,12 +17,14 @@ ADDLOC(RETURN,GMPLLST,GMPLLOC) ; Add location to list
  Q 1
  ;
 GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
- ; Input
- ;  GMPLGRP: Category IEN
- ;  RETURN: Root of the target local or global.
- ;  CODLEN: MaxLength of the problem name
- ; Result:
- ;  RETURN("GRP",Category_IEN,# Sequence)=Problem name^Problem code^Inactive flag
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("GRP",category_IEN,#)=problem_name^ICD9_code^inactive_flag^lexicon_term_IEN(757.01)
+ ;   GMPLGRP [Required,Numeric] Problem category IEN
+ ;   CODLEN [Optional,Numeric] A number that specifies the maximum length of the returned problem text
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
  I '$$NUM^GMPLCHK(.RETURN,.CODLEN,"CODLEN",1,0,1) Q 0
@@ -32,14 +41,18 @@ GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
  S RETURN=1
  Q 1
  ;
-GETLSTS(RETURN,SEARCH,START,NUMBER) ; Array of problem selection lists
- ; RETURN - Passed by reference, array of problem selection lists
- ;  RETURN(0) = Number of lists
- ;  RETURN(I,"ID") = list IFN
- ;  RETURN(I,"NAME") = list name
- ; SEARCH - string to search
- ; START - start of search
- ; NUMBER - max number of records
+GETLSTS(RETURN,SEARCH,START,NUMBER) ; Get lists
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN(0)=number_of_entries_found^maximum_requested^any_more?
+ ;      RETURN(#,"ID")=problem selection list IEN
+ ;      RETURN(#,"NAME")=problem selection list name
+ ;   SEARCH [Optional,String] Partial match restriction.
+ ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
+ ;   NUMBER [Optional,Numeric] Number of entries to return.
+ ;Output:
+ ;  1=Success,0=Failure
  N RET,DL,IN
  S RETURN=0
  I '$$NUM^GMPLCHK(.RETURN,.NUMBER,"NUMBER",1,0,1) Q 0
@@ -61,14 +74,18 @@ GETLSTS(RETURN,SEARCH,START,NUMBER) ; Array of problem selection lists
  S RETURN=1
  Q 1
  ;
-GETCATS(RETURN,SEARCH,START,NUMBER) ; Array of problem category
- ; RETURN - Passed by reference, array of problem category
- ;  RETURN(0) = Number of categories
- ;  RETURN(I,"ID") = category IFN
- ;  RETURN(I,"NAME") = category name
- ; SEARCH - string to search
- ; START - start of search
- ; NUMBER - max number of records
+GETCATS(RETURN,SEARCH,START,NUMBER) ; Get categories
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN(0)=number_of_entries_found^maximum_requested^any_more?
+ ;      RETURN(#,"ID")=problem category IEN
+ ;      RETURN(#,"NAME")=problem category name
+ ;   SEARCH [Optional,String] Partial match restriction.
+ ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
+ ;   NUMBER [Optional,Numeric] Number of entries to return.
+ ;Output:
+ ;  1=Success,0=Failure
  N RET,DL,IN
  S RETURN=0
  I '$$NUM^GMPLCHK(.RETURN,.NUMBER,"NUMBER",1,0,1) Q 0
@@ -115,11 +132,15 @@ BUILDUSR(RETURN,RET) ;
  Q
  ;
 GETASUSR(RETURN,GMPLLST)  ; Array of users assigned to specified list
- ; RETURN - Passed by reference, array of users
- ;  RETURN(0) = Number of users
- ;  RETURN(I,"ID") = user IFN
- ;  RETURN(I,"NAME") = user name
- ; GMPLST - problem list IFN
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN(0)=number of currently assigned users
+ ;      RETURN(#,"ID")=user IEN (pointer to file 200)
+ ;      RETURN(#,"NAME")=user name
+ ;   GMPLLST [Required,Numeric] The problem selection list IEN.
+ ;Output:
+ ;  1=Success,0=Failure
  N RET
  S RETURN=0
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0

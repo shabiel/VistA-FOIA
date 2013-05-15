@@ -1,12 +1,17 @@
-GMPLAPI2 ; RGI/CBR Problem List API - NEW,DELETE,VERIFY,VIEW DETAILED INFO,ADD NOTE ;3/26/13
+GMPLAPI2 ; RGI/CBR Problem List API - NEW,DELETE,VERIFY,VIEW DETAILED INFO,ADD NOTE ;5/14/13
  ;;2.0;Problem List;**260002**;Aug 25,1994
 NEW(RETURN,GMPDFN,GMPROV,GMPFLD,GMPLUSER) ; Save Collected Values in new Problem Entry
- ; Input
- ;  RETURN (R)  Passed by reference. Returns GMPIFN. On fail RETURN(1)=error message
- ;  GMPDFN (R)   
- ;  GMPROV (R)  
- ;  GMPFLD (R)  
- ; Output: 1=SUCCESS,0=FAIL
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new problem IFN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPDFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   GMPROV [Required,Numeric] Provider IEN (pointer to file 200)
+ ;  .GMPFLD [Required,Array] Array passed by reference that holds the new data.
+ ;                           It should be in the internal format (GMPFLD(field#)=value)
+ ;   GMPLUSER [Optional,Boolean] User is a provider (Problem List User) or a clerk (transcriptionist).
+ ;                               If GMPLUSER is 0, then new problems entered will be flagged as transcribed.
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PATIEN^GMPLCHK(.RETURN,.GMPDFN) Q 0
  I '$$PROVIEN^GMPLCHK(.RETURN,.GMPROV) Q 0
@@ -29,10 +34,16 @@ NEW(RETURN,GMPDFN,GMPROV,GMPFLD,GMPLUSER) ; Save Collected Values in new Problem
  Q 1
  ;
 UPDATE(RETURN,GMPIFN,GMPFLD,GMPLUSER,GMPROV) ; Save Changes made to Existing Problem
- ; GMPIFN
- ; GMPFLD
- ; GMPLUSER
- ; GMPROV
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the save succeeded, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;  .GMPFLD [Required,Array] Array of modified values. See NEW^GMPLAPI2 for format.
+ ;   GMPLUSER [Optional,Boolean] User is a provider (Problem List User) or a clerk (transcriptionist).
+ ;                               If GMPLUSER is 0, then new problems entered will be flagged as transcribed.
+ ;   GMPROV [Required,Numeric] Provider IEN 
+ ;Output:
+ ;  1=Success,0=Failure
  N I,TEXT,OLDTEXT,NOTES,GMPSAVED,%,GMPORIG
  S RETURN=-1
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -55,9 +66,14 @@ UPDATE(RETURN,GMPIFN,GMPFLD,GMPLUSER,GMPROV) ; Save Changes made to Existing Pro
  Q GMPSAVED
  ;
 DELETE(RETURN,GMPIFN,GMPROV,REASON) ; DELETE A PROBLEM
- ; Input   GMPIFN   IEN of PROBLEM file
- ;         GMPROV   pointer to NEW PERSON file
- ;         REASON   comment
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 0 if the delete failed, 1 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   GMPROV [Required,Numeric] Provider IEN (pointer to file 200)
+ ;   REASON [Optional,String] Comment describing the reason for deleting this problem.
+ ;Output:
+ ;  1=Success,0=Failure
  N DELETED,%,VALID
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -68,7 +84,15 @@ DELETE(RETURN,GMPIFN,GMPROV,REASON) ; DELETE A PROBLEM
  S RETURN=$$DELETE^GMPLDAL(GMPIFN,GMPROV,"RETURN")
  Q RETURN
  ;
-DETAIL(RETURN,GMPIFN,GMPROV) ; 
+DETAIL(RETURN,GMPIFN,GMPROV) ; Get detailed problem info
+ ;Input:
+ ;  .RETURN [Required,Array]   Array passed by reference that will receive the data. 
+ ;                             The output format is RETURN(field#)=internal_format^external_format
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   GMPROV [Optional,Numeric] Provider IEN (pointer to file 200). The comments returned will be filtered by this provider.
+ ;Output:
+ ;  1=Success,0=Failure
  N DIC,DIQ,DR,I,CNT,EXT,FOUND,NOTES
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -90,37 +114,32 @@ DETAIL(RETURN,GMPIFN,GMPROV) ;
  Q 1
  ;
 DETAILX(RETURN,GMPIFN,GMPMULTI) ; Returns Formatted Detailed Data for Problem
- ;                
- ; Input   GMPIFN  Pointer to Problem file #9000011
- ;         GMPMULTI Multi divisional
- ; Output  RETURN Array, passed by reference
- ;         RETURN("DATA NAME") = External Format of Value
- ;
- ;         RETURN("DIAGNOSIS")  ICD Code
- ;         RETURN("PATIENT")    Patient Name
- ;         RETURN("MODIFIED")   Date Last Modified
- ;         RETURN("NARRATIVE")  Provider Narrative 
- ;         RETURN("ENTERED")    Date Entered ^ Entered by
- ;         RETURN("STATUS")     Status
- ;         RETURN("PRIORITY")   Priority Acute/Chronic
- ;         RETURN("ONSET")      Date of Onset
- ;         RETURN("PROVIDER")   Responsible Provider
- ;         RETURN("RECORDED")   Date Recorded ^ Recorded by
- ;         RETURN("CLINIC")     Hospital Location
- ;         RETURN("SC")         Service Connected SC/NSC/""
- ;
- ;         RETURN("EXPOSURE") = #
- ;         RETURN("EXPOSURE",X)="AGENT ORANGE"
- ;         RETURN("EXPOSURE",X)="RADIATION"
- ;         RETURN("EXPOSURE",X)="ENV CONTAMINANTS"
- ;         RETURN("EXPOSURE",X)="HEAD AND/OR NECK CANCER"
- ;         RETURN("EXPOSURE",X)="MILITARY SEXUAL TRAUMA"
- ;         RETURN("EXPOSURE",X)="COMBAT VET"
- ;         RETURN("EXPOSURE",X)="SHAD"
- ;
- ;         RETURN("COMMENT") = #
- ;         RETURN("COMMENT",CNT) = Date ^ Author ^ Text of Note
- ;              
+ ;Input:
+ ;  .RETURN [Required,Array]   Array passed by reference that will receive the data. 
+ ;                             Set to Error description if the call fails
+ ;        RETURN("DIAGNOSIS") [String] ICD Code
+ ;        RETURN("PATIENT") [String] Patient Name
+ ;        RETURN("MODIFIED") [DateTime] Date Last Modified
+ ;        RETURN("NARRATIVE") [String] Provider Narrative
+ ;        RETURN("ENTERED") [String] Date Entered ^ Entered by
+ ;        RETURN("STATUS") [String] Status
+ ;        RETURN("PRIORITY") [String] Priority Acute/Chronic
+ ;        RETURN("ONSET") [DateTime] Date of Onset
+ ;        RETURN("PROVIDER") [String] Responsible Provider
+ ;        RETURN("RECORDED") [String] Date Recorded ^ Recorded by
+ ;        RETURN("CLINIC") [String] Hospital Location
+ ;        RETURN("SC") [String] Service Connected (SC/NSC/"")
+ ;        RETURN("EXPOSURE") [Numeric] Number of exposure factors returned
+ ;        RETURN("EXPOSURE",#) [String] One of the following options: "AGENT ORANGE", "RADIATION", "ENV CONTAMINANTS",
+ ;                                      "HEAD AND/OR NECK CANCER", "MILITARY SEXUAL TRAUMA", "COMBAT VET", "SHAD"
+ ;        RETURN("COMMENT") [Numeric] Number of comments
+ ;        RETURN("COMMENT",#) [String] date_note_added^author_name^note_narrative
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   GMPMULTI [Optional,Boolean] Multidivisional.If it is set to 1 all comments will be returned.
+ ;                               If it is set to 0 only comments originating from the current users's institution (defined by DUZ(2)) will be returned.
+ ;                               Default: 1 - all comments will be returned
+ ;Output:
+ ;  1=Success,0=Failure
  N GMPFLD,GMPLP,X,I,CNT,NOTES
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -164,10 +183,12 @@ DETAILX(RETURN,GMPIFN,GMPMULTI) ; Returns Formatted Detailed Data for Problem
  Q 1
  ;
 VERIFY(RETURN,GMPIFN) ; Verify a transcribed problem
- ;
- ; Input   GMPIFN  Pointer to Problem file #9000011
- ;
- ; Output 
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the save succeeded, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  N INACTV
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -180,6 +201,16 @@ VERIFY(RETURN,GMPIFN) ; Verify a transcribed problem
  Q 1
  ;
 DUPL(RETURN,GMPDFN,TERM,TEXT,GMPBOTH) ; Check's for Duplicate Entries
+ ;Input:
+ ;  .RETURN [Required,Numeric] If duplicate problem is found this will be set to its IEN, 0 otherwise
+ ;                             Set to Error description if the call fails
+ ;   GMPDFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   TERM [Required,Numeric] Problem id. Pointer to the EXPRESSIONS file # 757.01
+ ;   TEXT [Optional,String] Provider narrative to look for.
+ ;   GMPBOTH [Optional,Boolean] 1 = Both Lexicon term (TERM) and provider narrative (TEXT) should match in order to flag a duplicate.
+ ;                              Default: 0 = Either TERM or TEXT will flag a duplicate entry.
+ ;Output:
+ ;  1=Success,0=Failure
  N IFN,DUPTERM,DUPTEXT,PLIST,TOTAL,I,DET,%,TMPL
  S RETURN=0,TEXT=$$UP^XLFSTR($G(TEXT))
  I '$$PATIEN^GMPLCHK(.RETURN,.GMPDFN) Q 0
@@ -200,14 +231,13 @@ DUPL(RETURN,GMPDFN,TERM,TEXT,GMPBOTH) ; Check's for Duplicate Entries
  Q 1
  ;
 CODESTS(RETURN,GMPIFN,ADATE) ;check status of code associated with a problem
- ; Input:
- ;    GMPIFN  = pointer to the PROBLEM (#9000011) file
- ;    ADATE = FM date on which to check the status of ICD9 code  (opt.) 
- ;
- ; Output:
- ;   1  = ACTIVE on the date passed or current date if not passed
- ;   0  = INACTIVE on the date passed or current date if not passed
- ;
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the code is active on the date passed in ADATE, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   ADATE  [Optional,DateTime] The date on which to check the status of ICD9 code. Default is current date.
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  I '$$DTIME^GMPLCHK(.RETURN,.ADATE,1) Q 0
@@ -217,30 +247,63 @@ CODESTS(RETURN,GMPIFN,ADATE) ;check status of code associated with a problem
  Q RETURN
  ;
 DELETED(RETURN,GMPIFN) ; RETURN=1 if problem is deleted
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the problem is deleted, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  S RETURN=$$DELETED^GMPLDAL(GMPIFN)
  Q 1
  ;
 VERIFIED(RETURN,GMPIFN) ; RETURN=1 if problem is not transcribed
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the problem is verified, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  S RETURN=$$VERIFIED^GMPLDAL(GMPIFN)
  Q 1
  ;
 ACTIVE(RETURN,GMPIFN) ; RETURN=1 if problem is ACTIVE
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the problem is active, 0 otherwise
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  S RETURN=$$ACTIVE^GMPLDAL(GMPIFN)
  Q 1
  ;
 ONSET(RETURN,GMPIFN) ; Returns the date of onset
+ ;Input:
+ ;  .RETURN [Required,DateTime] Set to the onset date.
+ ;                              Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  S RETURN=$$ONSET^GMPLDAL(GMPIFN)
  Q 1
  ;
 INACTV(RETURN,GMPIFN,GMPROV,NOTE,RESOLVED) ; Inactivate problem
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 0 if the inactivation failed, 1 otherwise.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   GMPROV [Required,Numeric] Provider IEN (pointer to file 200)
+ ;   NOTE [Optional,String] Comment describing the reason for inactivating this problem.
+ ;   RESOLVED [Optional,DateTime] Resolved date.
+ ;Output:
+ ;  1=Success,0=Failure
  N DA,DR,DIE,DELETED,ACTIVE,%,CHNGE
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0

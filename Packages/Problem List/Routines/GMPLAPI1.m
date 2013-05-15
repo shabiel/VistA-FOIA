@@ -1,10 +1,14 @@
-GMPLAPI1 ;RGI/VSL -- Build Problem Selection Lists ; 3/27/13
+GMPLAPI1 ;RGI/VSL -- Build Problem Selection Lists ; 5/15/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 NEWLST(RETURN,GMPLLST,GMPLLOC) ; Add new Problem Selection List
- ; Input
- ;  GMPLLST  Problem Selection List name
- ;  GMPLLOC  Location IEN
- ; Output:  IEN of Problem Selection List  
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new problem selection list IEN if the call succeeds, 0 otherwise
+ ;                             Set to Error description if the call fails
+ ;   GMPLLST [Required,String] The problem selection list name. List name must be 3-30 characters,
+ ;                             not numeric or starting with punctuation
+ ;   GMPLLOC [Optional,Numeric] IEN of location which will be assigned to the new problem selection list
+ ;Output:
+ ;  1=Success,0=Failure  
  N LOCERR,%
  S RETURN=0
  I '$$LSTNAME^GMPLCHK(.RETURN,.GMPLLST,"GMPLLST") Q 0
@@ -17,8 +21,12 @@ NEWLST(RETURN,GMPLLST,GMPLLOC) ; Add new Problem Selection List
  Q 1
  ;
 DELLST(RETURN,GMPLLST) ; Delete Problem Selection List
- ; Input
- ;  GMPLLST  Problem Selection List IEN
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$LSTUSED(.RETURN,.GMPLLST) Q 0
  I RETURN>0 D  Q 0
@@ -30,14 +38,26 @@ DELLST(RETURN,GMPLLST) ; Delete Problem Selection List
  Q 1
  ;
 LSTUSED(RETURN,GMPLLST) ; Return number of users assigned to this list
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the number of users this list is assigned to.
+ ;                             Set to Error description if the call fails
+ ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
  S RETURN=$$LSTUSED^GMPLEXT1(GMPLLST)
  Q 1
  ;
 NEWCAT(RETURN,GMPLGRP,DUPLIC) ; Add new Category
- ; Input
- ;  GMPLGRP  Category name
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new problem category IEN if the call succeeds, 0 otherwise
+ ;                             Set to Error description if the call fails
+ ;   GMPLGRP [Required,String] The problem category name.
+ ;                             Category name must be 3-30 characters, not numeric or starting with punctuation
+ ;   DUPLIC [Optional,Boolean] Allow duplicate category names or not. Default: duplicate names are not allowed.
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN S RETURN=0
  I '$$LSTNAME^GMPLCHK(.RETURN,.GMPLGRP,"GMPLGRP") Q 0
  I '$$BOOL^GMPLCHK(.RETURN,.DUPLIC,"DUPLIC") Q 0
@@ -50,13 +70,24 @@ NEWCAT(RETURN,GMPLGRP,DUPLIC) ; Add new Category
  Q 1
  ;
 CATUSED(RETURN,GMPLGRP) ; Verify if category is used by a list
- ; Returns 0 if this category is not used by any list, 1 otherwise
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if problem category is used by at least one list
+ ;                             Set to Error description if the call fails
+ ;   GMPLGRP [Required,Numeric] Problem category IEN (pointer to file 125.11)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
  S RETURN=$S($$CATUSED^GMPLDAL1(GMPLGRP):1,1:0)
  Q 1
  ;
 DELCAT(RETURN,GMPLGRP) ; Delete category
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   GMPLGRP [Required,Numeric] Problem category IEN (pointer to file 125.11)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$CATUSED(.RETURN,GMPLGRP) Q 0
  I RETURN D  Q 0
@@ -65,47 +96,61 @@ DELCAT(RETURN,GMPLGRP) ; Delete category
  S RETURN=$$DELCAT^GMPLDAL1(GMPLGRP)
  Q 1
  ;
-LOCKLST(RETURN,GMPLLST) ; Lock speciefied list
- ; Returns 0 if list is already locked by another process, 1 otherwise
+LOCKLST(RETURN,GMPLLST) ; Lock specified list
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
  S RETURN=$$LOCKLST^GMPLDAL1(GMPLLST)
  Q RETURN
  ;
 UNLKLST(GMPLLST) ; Unlock specified list
- ;
+ ;Input:
+ ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
  I '+$G(GMPLLST) Q
  D UNLCKLST^GMPLDAL1(+GMPLLST)
  Q
  ;
-LOCKCAT(RETURN,GMPLGRP) ; Lock speciefied category
- ; Returns 0 if category is already locked by another process, 1 otherwise
+LOCKCAT(RETURN,GMPLGRP) ; Lock specified category
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   GMPLGRP [Required,Numeric] Problem category IEN (pointer to file 125.11)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
  S RETURN=$$LOCKCAT^GMPLDAL1(GMPLGRP)
  Q RETURN
  ;
 UNLKCAT(GMPLGRP) ; Unlock specified category
- ;
- I '+$G(GMPLGRP) Q
+ ;Input:
+ ;   GMPLGRP [Required,Numeric] Problem category IEN (pointer to file 125.11) I '+$G(GMPLGRP) Q
  D UNLCKCAT^GMPLDAL1(GMPLGRP)
  Q
  ;
 GETLIST(RETURN,GMPLLST,CODLEN,MINIM) ; Return Problem Selection list details
- ; Input
- ;  GMPLLST: Problem Selection list IEN
- ;  RETURN: Root of the target local or global.
- ;  CODLEN: MaxLength of the problem name
- ; Result:
- ;  RETURN("LST","NAME") - Selection List name
- ;  RETURN("LST","MODIFIED") - Date last modified
- ;  RETURN("LST","CLINIC") - Assigned Clinic
- ;  RETURN(0) - Number of categories
- ;  RETURN(List_Content_IEN)= seq ^ group ^ subhdr ^ probs
- ;  RETURN("GRP",Category_IEN)=List_Content_IEN
- ;  RETURN("SEQ",# Sequence)=List_Content_IEN
- ;  RETURN("GRP",Category_IEN,# Sequence)=Problem name^Problem code^Inactive flag 
- ;   (1 for inactive code, 0 for active)
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("LST","CLINIC")=clinic_IEN^clinic_name
+ ;      RETURN("LST","NAME") = name
+ ;      RETURN("LST","MODIFIED")= date last modified in internal^external format, if the list is new this parameter will be valued: ^<new list>
+ ;      RETURN(0) - number of categories
+ ;      RETURN(selection_list_IEN)=sequence#^category_IEN^subheader^show_problems_flag
+ ;      RETURN("GRP", category_IEN)=selection_list_IEN
+ ;      RETURN("SEQ",sequence#)=selection_list_IEN
+ ;      RETURN("GRP", category_IEN,#)=problem_name^ICD9_code^inactive_flag (1 for inactive code, 0 for active)
+ ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
+ ;   CODLEN [Optional,Numeric] A number that specifies the maxim length of the returned problem text
+ ;   MINIM [Optional,Boolean] When set to 1 will return minimal information (problem selection list name,
+ ;                            date last modified and clinic), otherwise returns full info. Default: 0
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
  I '$$NUM^GMPLCHK(.RETURN,.CODLEN,"CODLEN",1,0,1) Q 0
@@ -123,14 +168,18 @@ GETLIST(RETURN,GMPLLST,CODLEN,MINIM) ; Return Problem Selection list details
  Q 1
  ;
 GETCAT(RETURN,GMPLGRP) ; Return category details
- ; Input
- ;  GMPLGRP: Problem Selection list IEN
- ;  RETURN: Root of the target local or global.
- ; Result:
- ;  RETURN(Problem_IEN)=Sequence^Poiter_to_Problem(757.01)^Display_text^ICD_Code
- ;  RETURN(Problem_IEN,"CODE")=ICD_Code^Inactive_flag
- ;  RETURN("SEQ",Sequence #)=Problem_IEN
- ;  RETURN("PROB",Poiter_to_Problem(757.01))=Problem_IEN
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN(problem_IEN)=sequence#^lexicon_term_IEN(757.01)^display_text^ICD9_code
+ ;      RETURN(problem_IEN, "CODE")=ICD9_code^inactive_flag
+ ;      RETURN("CAT","MODIFIED")=date last modified in internal^external format
+ ;      RETURN("CAT","NAME")=category name
+ ;      RETURN("SEQ",sequence#)=problem_IEN
+ ;      RETURN("PROB",lexicon_term_IEN(757.01))=problem_IEN
+ ;   GMPLGRP [Required,Numeric] Problem category IEN (pointer to file 125.11)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
  N MODIF,SEQ,IFN,PROB,CNT,CODE,CAT,FLAG,%
@@ -149,6 +198,17 @@ GETCAT(RETURN,GMPLGRP) ; Return category details
  Q 1
  ;
 SAVLST(RETURN,GMPLLST,SOURCE) ; Save changes to existing list
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
+ ;   SOURCE [Required,Array] A collection of problem categories that will be assigned to the selection list.
+ ;      SOURCE(n)=sequence#^category_IEN^subheader^show_problems_flag
+ ;          'n' can have one of the following values:
+ ;            - problem selection list contents IEN (from file 125.1) - in this case the corresponding entry will be updated or, will be removed if SOURCE(n)="@"
+ ;            - a sequence number followed by 'N' (e.g. 1N,2N etc.) - in this case a new problem entry will be added to this category
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
  I $D(SOURCE)<10 D ERRX^GMPLAPIE(.RETURN,"INVPARAM","SOURCE") Q 0
@@ -171,6 +231,17 @@ SAVLST(RETURN,GMPLLST,SOURCE) ; Save changes to existing list
  Q 1
  ;
 SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   GMPLGRP [Required,Numeric] The category IEN (pointer to file 125.11)
+ ;   SOURCE [Required,Array] A collection of problems that will be assigned to the problem category
+ ;      SOURCE(n)=sequence^ lexicon_term_IEN ^display_text^ICD9_code
+ ;          'n' can have one of the following values:
+ ;            - problem_IEN (from file 125.12) - in this case the corresponding entry will be updated or, will be removed if SOURCE(n)="@"
+ ;            - a sequence number followed by 'N' (e.g. 1N,2N etc.) - in this case a new problem entry will be added to this category
+ ;Output:
+ ;  1=Success,0=Failure
  N IDX,SRCERR,SEQ,TERM,CODE
  K RETURN
  S RETURN=0

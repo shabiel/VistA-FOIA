@@ -1,10 +1,15 @@
-GMPLAPI3 ; RGI/CBR -- Problem List API - NEW,UPDATE NOTES ; 3/26/13
+GMPLAPI3 ; RGI/CBR -- Problem List API - NEW,UPDATE NOTES ; 5/15/13
  ;;2.0;Problem List;**260002**;Aug 24, 1994
 NEWNOTE(RETURN,GMPIFN,GMPROV,NOTES) ; Creates New Note Entries for Problem
- ; GMPIFN  Pointer to Problem
- ; GMPROV  Current Provider
- ; GMPVAMC Facility
- ; NOTES   Array of notes
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the call succeeded.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   GMPROV [Required,Numeric] Provider IEN (pointer to file 200)
+ ;  .NOTES [Required,Array] Array passed by reference that holds comment lines.
+ ;                          It should be in the following format: NOTES(#)=comment
+ ;Output:
+ ;  1=Success,0=Failure
  N HDR,LAST,TOTAL,I,FAC,NIFN,DELETED,ICDACTV,GMPVAMC,NOTEOK
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -27,11 +32,16 @@ NEWNOTE(RETURN,GMPIFN,GMPROV,NOTES) ; Creates New Note Entries for Problem
  S RETURN=1
  Q RETURN
  ;
-UPDNOTE(RETURN,GMPIFN,NEWNOTE,GMPROV) ;
- ; GMPIFN
- ; OLDNOTE
- ; NEWNOTE = Note IFN ^ Facility ^ Text
- ; GMPROV
+UPDNOTE(RETURN,GMPIFN,NEWNOTE,GMPROV) ; Replace existing note
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the call succeeded.
+ ;                             Set to Error description if the call fails
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   NEWNOTE [Required,String] New comment formatted as: note_IEN^facility_IEN^Text
+ ;                             If Text is empty the comment will be deleted.
+ ;   GMPROV [Required,Numeric] Provider IEN (pointer to file 200)
+ ;Output:
+ ;  1=Success,0=Failure
  N NIFN,FAC,TEXT,OLDTEXT
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
@@ -51,7 +61,19 @@ UPDNOTE(RETURN,GMPIFN,NEWNOTE,GMPROV) ;
  Q 1
  ;
 NOTES(RETURN,GMPIFN,GMPACT,GMPFMT) ; Return comments for a problem - MULTI-DIVISIONAL
- ; GMPACT - Active only
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;                           The output format depends on the value of GMPFMT
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   GMPACT [Optional,Boolean] Active. If set to 1 only active comments will be returned. Default: 1
+ ;   GMPFMT [Optional,Numeric] Format. Controls the output format. Default: 1. The following values are allowed:
+ ;      1 -- RETURN(#)=note_narrative
+ ;      2 -- RETURN(#)=date_note_added^author^note_narrative (external format)
+ ;      3 -- RETURN(#)=note_nmbr^facility^note_narrative^status^date_note_added^author  (internal format)
+ ;      4 -- RETURN(facility,note_nmbr)=note_nmbr^^note_narrative^status^date_note_added^author  (internal format)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0

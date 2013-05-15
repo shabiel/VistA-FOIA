@@ -1,12 +1,23 @@
-GMPLHIST ; SLC/MKB/KER -- Problem List Historical data ; 09/13/12
+GMPLHIST ; SLC/MKB/KER -- Problem List Historical data ; 5/15/13
  ;;2.0;Problem List;**7,26,,31,35,260002**;Aug 25, 1994
  ;
  ; External References
  ;   DBIA 10060  ^VA(200
  ;            
 AUDET(RETURN,AIFN) ; Returns the audit entry details
- ; RETURN
- ; AIFN - Audit entry IFN
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the audit entry details (external format)
+ ;                           Set to Error description if the call fails
+ ;      RETURN("DATE") date modified
+ ;      RETURN("FLD") modified_field_id^modified_field_name (ex. .12^STATUS)
+ ;      RETURN("NEW") new value
+ ;      RETURN("OLD") old value
+ ;      RETURN("PROV") provider name
+ ;      RETURN("OLDDATE") old note date (this subscript is returned only when field is 1101^NOTE)
+ ;      RETURN("OLDNOTE") old note text (this subscript is returned only when field is 1101^NOTE)
+ ;   AIFN [Required,Numeric] Audit entry IEN (pointer to file 125.8)
+ ;Output:
+ ;  1=Success,0=Failure
  N NODE,DATE,FLD,PROV,OLD,NEW,ROOT,CHNGE,REASON,LCNT,AUDIT,%
  S %=$$GETADATA^GMPLDAL2(.AUDIT,AIFN)
  Q:$D(AUDIT(0))'>0 0
@@ -46,9 +57,14 @@ AUDET(RETURN,AIFN) ; Returns the audit entry details
  Q 1
  ;           
 GETHIST(RETURN,GMPIFN) ; Returns all audit entries of the problem
- ; RETURN - By reference, problem history
- ;  RETURN(I)=Audit IFN
- ; GMIFN - Problem IFN
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the list of audit entry IENs
+ ;                           Set to Error description if the call fails
+ ;      RETURN [Boolean] 1 if the call succeeded, 0 otherwise
+ ;      RETURN(#) [Numeric] Audit entry IEN (file 125.8)
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;Output:
+ ;  1=Success,0=Failure
  N VALID,%
  S RETURN=0
  S %=$$VALID^GMPLAPI4(.VALID,GMPIFN)
@@ -58,14 +74,18 @@ GETHIST(RETURN,GMPIFN) ; Returns all audit entries of the problem
  Q 1
  ;
 GETAUDIT(RETURN,GMPIFN,FIELD,VALUE) ; Returns all audit data of the problem
- ; (optional problem history can be filtered by modified field and his current value)
- ; RETURN - passed by reference
- ;  RETURN(I,0) - audit trail
- ; GMPIFN - Problem IFN
- ; Optional:
- ; FIELD - If is specified, will returns changes only made at this field
- ; VALUE - If both FIELD and VALUE is specified, will returns changes made at FIELD
- ;   and having current value equals with VALUE
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the audit data (internal format)
+ ;                           Set to Error description if the call fails
+ ;      RETURN = number of audit entries returned
+ ;      RETURN(#,0) audit data: field_number^field_name^date_modified^who_modified^old_value^
+ ;                              new_value^reason_for_change^requesting_provider
+ ;      RETURN(#,1) old problem entry (the entire problem entry as it existed before change)
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   FIELD [Optional,Numeric] If specified, the function will return audit data for this field change only
+ ;   VALUE [Optional,Numeric] If specified along with FIELD the function will return only changes made to that field having the new value of VALUE. 
+ ;Output:
+ ;  1=Success,0=Failure
  N IDT,PROB,RET,VALID,%
  S RETURN=0
  S %=$$VALID^GMPLAPI4(.VALID,GMPIFN)
@@ -81,20 +101,25 @@ GETAUDIT(RETURN,GMPIFN,FIELD,VALUE) ; Returns all audit data of the problem
  Q
  ;
 AUDITX(RETURN,GMPIFN,FIELD,VALUE) ; Returns all audit data of the problem
- ; RETURN - passed by reference
- ;  RETURN(I,"FIELD") - Modified field (Field no^Field name)
- ;  RETURN(I,"MODIFIED") - Date modified
- ;  RETURN(I,"MODIFIEDBY") - Who modified the problem (Provider name)
- ;  RETURN(I,"OLD") - Old value of the field
- ;  RETURN(I,"NEW") - New value of the field
- ;  RETURN(I,"REASON") - Reason for change
- ;  RETURN(I,"REQUESTINGBY") - Who requested the change
- ;  RETURN(I,"OLDPROBLEM") - Note details, if a note was changed
- ; GMPIFN - Problem IFN
- ; Optional:
- ; FIELD - If is specified, will returns changes only made at this field
- ; VALUE - If both FIELD and VALUE is specified, will returns changes made at FIELD
- ;   and having current value equals with VALUE
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the audit entry details (external format)
+ ;                           Set to Error description if the call fails
+ ;      RETURN = number of audit entries returned
+ ;      RETURN(#,"FIELD") changed field id^changed field name (ex. .12^STATUS)
+ ;      RETURN(#,"MODIFIED") modified date
+ ;      RETURN(#,"MODIFIEDBY") user who modified the problem (provider name)
+ ;      RETURN(#,"NEW") new value
+ ;      RETURN(#,"OLD") old value
+ ;      RETURN(#,"OLDPROBLEM") the entire problem entry (internal format) as it existed before it was changed
+ ;                            (this subscript is returned only if the changed field is 1101^NOTE)
+ ;      RETURN(#,"REASON") reason for change
+ ;      RETURN(#,"REQUESTINGBY") requesting provider
+ ;   GMPIFN [Required,Numeric] Problem IEN (pointer to file 9000011)
+ ;   FIELD [Optional,Numeric] If specified, the function will return audit data for this field change only
+ ;   VALUE [Optional,Numeric] If specified along with FIELD the function will return only changes made to that field
+ ;                            having the new value of VALUE. 
+ ;Output:
+ ;  1=Success,0=Failure
  N IDT,FLD,CNT,RET,%,VALID
  S CNT=0,RETURN=CNT,IDT=0
  S %=$$VALID^GMPLAPI4(.VALID,GMPIFN)
