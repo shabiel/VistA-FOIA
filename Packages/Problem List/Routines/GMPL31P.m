@@ -1,5 +1,5 @@
-GMPL31P ;SLC/JEH -- Post Install Routine ;3/13/13
- ;;2.0;Problem List;**31**;Aug 25, 1994
+GMPL31P ;SLC/JEH -- Post Install Routine ;5/15/13
+ ;;2.0;Problem List;**31,260002**;Aug 25, 1994
  ;
  ; This routine can be removed after installing patch 
  ; GMPL*2*31 or kept and used as IRM tool
