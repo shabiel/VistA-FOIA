@@ -33,19 +33,23 @@ GETLSTS(RETURN,SEARCH,START,NUMBER) ;
  . D LIST^DIC(FILE,"",FIELDS,"",NUMBER,.START,SEARCH,"C","","","RETURN")
  Q
  ;
-LOCKLST(GMPLLST) ; Lock the list
+LOCKLST(RETURN,GMPLLST) ; Lock the list
+ S RETURN=0
  L +^GMPL(125,+GMPLLST,0):1
- I '$T D ERRX^GMPLAPIE(.RETURN,"FILELOCK") Q 0
- Q 1
+ I '$T D ERRX^GMPLAPIE(.RETURN,"FILELOCK") Q
+ S RETURN=1
+ Q
  ;
 UNLCKLST(GMPLLST) ; Unlock the list
  L -^GMPL(125,+GMPLLST,0)
  Q
  ;
 LOCKCAT(GMPLCAT) ; Lock the category
+ S RETURN=0
  L +^GMPL(125.11,+GMPLCAT,0):1
- I '$T D ERRX^GMPLAPIE(.RETURN,"FILELOCK") Q 0
- Q 1
+ I '$T D ERRX^GMPLAPIE(.RETURN,"FILELOCK") Q
+ S RETURN=1
+ Q
  ;
 UNLCKCAT(GMPLCAT) ; Unlock the category
  L -^GMPL(125.11,+GMPLCAT,0)
@@ -81,7 +85,7 @@ FINDM(FILENO,TEXT) ; Lookup
  ; Output:
  ;  0   - if no exact matches are found
  ;  IEN - if a single match is found
- ;N LST 
+ N LST
  D FIND^DIC(FILENO,,,"MX",TEXT,,,,,"LST")
  Q +LST("DILIST",0)
  ;
@@ -154,7 +158,7 @@ GETCAT(RETURN,GMPLGRP) ; Return category details
  ;
 SAVLST(RETURN,GMPLLST,SOURCE,DATE) ; Save changes to existing list
  S RETURN=0
- N DIK,DIE,DR,ITEM,TMPLST,DA,DT
+ N DIK,DIE,DR,ITEM,TMPLST,DA,DT,I
  S DIE="^GMPL(125,",DA=+GMPLLST,DR=".02////"_DATE D ^DIE ; set modified date
  S DA=0
  F  S DA=$O(SOURCE(DA)) Q:+DA'>0  D
@@ -174,7 +178,7 @@ SAVLST(RETURN,GMPLLST,SOURCE,DATE) ; Save changes to existing list
  ;
 SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
  S RETURN=0
- N DIK,DIE,DR,ITEM,TMPITEM,DA
+ N DIK,DIE,DR,ITEM,TMPITEM,DA,I
  ;to do check SOURCE
  S DIE="^GMPL(125.11,",DA=+GMPLGRP,DR="1////"_DT D ^DIE ; set modified date
  S DA=0
@@ -246,7 +250,7 @@ GETLSTC(RETURN,LIST) ; get all categories in list
 ALLPROB(RETURN) ;
  N PROB,CAT,LIST,CNT
  S PROB=0,CNT=0
- F  S PROB=$O(^GMPL(125.12,PROB)) Q:'PROB  I $L($P(^(PROB,0),U,5)) D
+ F  S PROB=$O(^GMPL(125.12,PROB)) Q:'PROB  I $L($P(^GMPL(125.12,PROB,0),U,5)) D
  . N PROB0,PROBTX,APIDATA,PROBCAT,ACTDT
  . S CNT=CNT+1
  . S PROB0=^GMPL(125.12,PROB,0)

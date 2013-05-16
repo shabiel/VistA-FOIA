@@ -1,5 +1,5 @@
 GMPLCODE ; SLC/MKB/AJB -- Problem List ICD Code Utilities ; 09/14/12
- ;;2.0;Problem List;**260002**;Aug 25, 1994
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994
 EN ; -- main entry point for GMPL CODE LIST
  K GMPLUSER
  D EN^VALM("GMPL CODE LIST")

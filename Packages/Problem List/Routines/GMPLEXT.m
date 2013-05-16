@@ -42,7 +42,7 @@ LSTTEXT(GMPLSLST) ; Returns list name
 USERLST(GMPCLIN) ; Returns user list or clinic's
  N GMPLSLST
  S GMPLSLST=$P($G(^VA(200,DUZ,125)),U,2)
- I 'GMPLSLST,$G(GMPCLIN),$D(^GMPL(125,"C",+GMPCLIN)) S GMPLSLST=$O(^(+GMPCLIN,0)) ; if user has no list but clinic does, use clinic list
+ I 'GMPLSLST,$G(GMPCLIN),$D(^GMPL(125,"C",+GMPCLIN)) S GMPLSLST=$O(^GMPL(125,"C",+GMPCLIN,0)) ; if user has no list but clinic does, use clinic list
  Q GMPLSLST
  ;
 UPUSRLST(PRIVW,SELLIST) ;Update user list

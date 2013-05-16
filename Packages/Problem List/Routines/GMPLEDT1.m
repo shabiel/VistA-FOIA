@@ -1,5 +1,5 @@
-GMPLEDT1 ; SLC/MKB/KER/AJB -- Edit Problem List fields ; 04/21/2003
- ;;2.0;Problem List;**17,20,26,28,35**;Aug 25, 1994;Build 26
+GMPLEDT1 ; SLC/MKB/KER/AJB -- Edit Problem List fields ; 5/15/13
+ ;;2.0;Problem List;**17,20,26,28,35,260002**;Aug 25, 1994;Build 26
  ;
  ; External References
  ;   DBIA 10006  ^DIC
