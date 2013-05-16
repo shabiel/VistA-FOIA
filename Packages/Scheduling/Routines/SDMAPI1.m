@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 4/19/13
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 5/16/13
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -193,7 +193,8 @@ LSTCRSNS(RETURN,SEARCH,START,NUMBER) ; Return cancelation reasons.
 FRSTAVBL(RETURN,SC) ; Get first available date
  N % K RETURN S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
- D FRSTAVBL^SDMDAL2(.RETURN,+SC)
+ F I=0:1:6 S SD=$$FMADD^XLFDT($$DT^XLFDT(),I),%=$$SETST^SDMAPI5(.RETURN,+SC,SD) Q:RETURN
+ D FRSTAVBL^SDMDAL2(.RETURN,+SC,$$FMADD^XLFDT($$DT^XLFDT(),,,,-1))
  Q 1
  ;
 LSTCAPTS(RETURN,SC,SDBEG,SDEND,STAT) ; Returns clinic appointments filtered by date and status
