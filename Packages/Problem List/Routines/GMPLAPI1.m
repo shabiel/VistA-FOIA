@@ -9,7 +9,7 @@ NEWLST(RETURN,GMPLLST,GMPLLOC) ; Add new Problem Selection List
  ;   GMPLLOC [Optional,Numeric] IEN of location which will be assigned to the new problem selection list
  ;Output:
  ;  1=Success,0=Failure  
- N LOCERR,%
+ N LOCERR,%,NEWLST
  S RETURN=0
  I '$$LSTNAME^GMPLCHK(.RETURN,.GMPLLST,"GMPLLST") Q 0
  I '$$SCIEN^GMPLCHK(.RETURN,.GMPLLOC,"GMPLLOC",1) Q 0
@@ -105,7 +105,7 @@ LOCKLST(RETURN,GMPLLST) ; Lock specified list
  ;  1=Success,0=Failure
  S RETURN=0
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
- S RETURN=$$LOCKLST^GMPLDAL1(GMPLLST)
+ D LOCKLST^GMPLDAL1(.RETURN,GMPLLST)
  Q RETURN
  ;
 UNLKLST(GMPLLST) ; Unlock specified list
@@ -124,7 +124,7 @@ LOCKCAT(RETURN,GMPLGRP) ; Lock specified category
  ;  1=Success,0=Failure
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
- S RETURN=$$LOCKCAT^GMPLDAL1(GMPLGRP)
+ D LOCKCAT^GMPLDAL1(.RETURN,GMPLGRP)
  Q RETURN
  ;
 UNLKCAT(GMPLGRP) ; Unlock specified category
@@ -242,7 +242,7 @@ SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
  ;            - a sequence number followed by 'N' (e.g. 1N,2N etc.) - in this case a new problem entry will be added to this category
  ;Output:
  ;  1=Success,0=Failure
- N IDX,SRCERR,SEQ,TERM,CODE
+ N IDX,SRCERR,SEQ,TERM,CODE,%
  K RETURN
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0

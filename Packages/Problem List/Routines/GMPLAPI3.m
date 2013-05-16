@@ -10,7 +10,7 @@ NEWNOTE(RETURN,GMPIFN,GMPROV,NOTES) ; Creates New Note Entries for Problem
  ;                          It should be in the following format: NOTES(#)=comment
  ;Output:
  ;  1=Success,0=Failure
- N HDR,LAST,TOTAL,I,FAC,NIFN,DELETED,ICDACTV,GMPVAMC,NOTEOK
+ N HDR,LAST,TOTAL,I,FAC,NIFN,DELETED,ICDACTV,GMPVAMC,NOTEOK,%
  S RETURN=0
  I '$$PRBIEN^GMPLCHK(.RETURN,.GMPIFN) Q 0
  I '$$PROVIEN^GMPLCHK(.RETURN,.GMPROV) Q 0

@@ -34,7 +34,7 @@ VALGRP(RETURN,GMPLGRP) ; check all problems in the category for inactive codes
  ;   GMPLGRP [Required,Numeric] Problem selection category IEN.
  ;Output:
  ;  1=Success,0=Failure
- N RET,PIFN,GMPLVALC
+ N RET,PIFN,GMPLVALC,%
  S RETURN=0,PIFN=0,GMPLVALC=1
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
  S %=$$GETGRPP^GMPLDAL1(.RET,GMPLGRP)
@@ -51,7 +51,7 @@ VALLIST(RETURN,GMPLLST) ;check all categories in list for probs w/ inactive code
  ;   GMPLLST [Required,Numeric] Problem selection list IEN (pointer to file 125)
  ;Output:
  ;  1=Success,0=Failure
- N RET,CIFN,GMPLVALC
+ N RET,CIFN,GMPLVALC,%
  S CIFN=0
  S RETURN=0,GMPLVALC=1
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
@@ -118,7 +118,7 @@ REMUSR(RETURN,GMPLLST,GMPLUSER) ; Remove Problem Selection List from users
  ;
 USERLST(RETURN,GMPLLST,GMPLUSER,ACTION) ; Add/Remove Problem Selection List from users
  I '$$LSTIEN^GMPLCHK(.RETURN,.GMPLLST) Q 0
- N EXISTS,GMPLI,UE,RET,USR,CNT
+ N EXISTS,GMPLI,UE,RET,USR,CNT,%
  S UE=0,RET=0
  I '$$VALLIST^GMPLAPI6(.RET,+GMPLLST) D ERRX^GMPLAPIE(.RETURN,"INACTICD") Q 0
  I $G(GMPLUSER)="" D ERRX^GMPLAPIE(.RETURN,"INVPARAM","GMPLUSER") Q 0

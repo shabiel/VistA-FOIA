@@ -25,6 +25,7 @@ GETCATD(RETURN,GMPLGRP,CODLEN) ; Return Category details
  ;   CODLEN [Optional,Numeric] A number that specifies the maximum length of the returned problem text
  ;Output:
  ;  1=Success,0=Failure
+ N %
  S RETURN=0
  I '$$CTGIEN^GMPLCHK(.RETURN,.GMPLGRP) Q 0
  I '$$NUM^GMPLCHK(.RETURN,.CODLEN,"CODLEN",1,0,1) Q 0
@@ -112,6 +113,7 @@ GETUSRS(RETURN,SEARCH,START,NUMBER) ; Array of users
  ; SEARCH - string to search
  ; START - start of search
  ; NUMBER - max number of records
+ N RET
  S:'$D(SEARCH) SEARCH=""
  S:'$G(NUMBER) NUMBER=""
  D GETUSRS^GMPLEXT1(.RET,SEARCH,.START,NUMBER)
