@@ -42,7 +42,13 @@ SCREST(RETURN,SCIEN,TYP) ;check stop code restriction in file 40.7 for a clinic.
  Q 1
  ;
 GETCLN(RETURN,SC) ; Get Clinic data
- ;  INPUT:   SC = IEN of Clinic
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;      RETURN(field_name)=internal^external
+ ;   SC [Required,Numeric] Clinic IEN (pointer to File 44)
+ ;Output:
+ ;  1=Success,0=Failure
  N % K RETURN
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
  D GETCLN^SDMDAL1(.RETURN,+SC,1,1,1)
@@ -50,6 +56,17 @@ GETCLN(RETURN,SC) ; Get Clinic data
  Q 1
  ;
 LSTCLNS(RETURN,SEARCH,START,NUMBER) ; Return clinics filtered by name.
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;      RETURN [Boolean] 1=success, 0=failure
+ ;      RETURN(#,"ID") [Numeric] Clinic IEN
+ ;      RETURN(#,"NAME") [String] Clinic name
+ ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
+ ;  .START [Optional,String] The clinic name from which to begin the list.
+ ;   NUMBER [Optional,Numeric] Number of entries to return. Default: All entries
+ ;Output:
+ ;  1=Success,0=Failure
  N LST K RETURN S RETURN=0
  D LSTCLNS^SDMDAL1(.LST,$G(SEARCH),.START,$G(NUMBER))
  D BLDLST^SDMAPI(.RETURN,.LST)
@@ -83,6 +100,22 @@ CLNVSC(RETURN,SC) ; Verifies clinic stop code validation
  Q RETURN
  ;
 GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN [Boolean] Set to 1 if the the call succeeded
+ ;    RETURN("CHECKIN") [DateTime] Check in date
+ ;    RETURN("CHECKOUT") [DateTime] Check out date
+ ;    RETURN("CONSULT") [Numeric] Consult associated with this appointment (pointer to REQUEST/CONSULTATION FILE <#123>)
+ ;    RETURN("DATE") [DateTime] Date appointment made
+ ;    RETURN("IFN") [Numeric]Clinic appointment IEN
+ ;    RETURN("LENGTH") [Numeric] Appontment length (minutes)
+ ;    RETURN("USER") [Numeric]Data entry clerk IEN
+ ;   SC [Required,Numeric] Clinic IEN
+ ;   DFN [Required,Numeric] Patient IEN
+ ;   SD [Required,DateTime] Appointment date/time
+ ;Output:
+ ;  1=Success,0=Failure
  N NOD0,CO,%
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
@@ -102,6 +135,15 @@ GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  Q 1
  ;
 SLOTS(RETURN,SC) ; Get available slots
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;      RETURN [Boolean] 1=success,0=failure
+ ;      RETURN(0) [Numeric] Hour, clinic display begins (this is the starting point of each line in the availability pattern)
+ ;      RETURN(DATE,1) [String] Availability string
+ ;   SC [Required,Numeric] Clinic IEN (pointer to File 44)
+ ;Output:
+ ;  1=Success,0=Failure
  N % K RETURN
  S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
@@ -120,6 +162,17 @@ SCEXST(RETURN,CSC) ; Get Stop Cod Exception status
  Q RETURN
  ;
 LSTAPPT(RETURN,SEARCH,START,NUMBER) ; Lists appointment types
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN(0) – [String] # of entries found^maximum requested^any more?^flags
+ ;    RETURN(#,"ID") – [Numeric] Appointment type IEN
+ ;    RETURN(#,"NAME") – [String] Appointment type name
+ ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
+ ;   START [Optional,String] The appointment type name from which to begin the list. Default: ""
+ ;   NUMBER [Optional,Numeric] Number of entries to return. Default: All entries
+ ;Output:
+ ;  1=Success,0=Failure
  N RET,DL,IN
  S:'$D(START) START="" S:'$D(SEARCH) SEARCH=""
  S:'$G(NUMBER) NUMBER=""
@@ -134,6 +187,15 @@ LSTAPPT(RETURN,SEARCH,START,NUMBER) ; Lists appointment types
  Q 1
  ;
 GETAPPT(RETURN,TYPE) ; Returns Appointment Type detail
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN("NAME") – [String] Appointment type name
+ ;    RETURN("NUMBER") – [Numeric] Appointment type IEN
+ ;    RETURN("SYNONIM") – [String] Appointment type synonim
+ ;   TYPE [Required,Numeric] Appointment type IEN (File 409.1)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN S RETURN=0
  I +$G(TYPE)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","TYPE") Q 0
  I '$$TYPEXST^SDMDAL3(+TYPE) D ERRX^SDAPIE(.RETURN,"TYPNFND") Q 0
@@ -141,7 +203,20 @@ GETAPPT(RETURN,TYPE) ; Returns Appointment Type detail
  S RETURN=1
  Q 1
  ;
-GETELIG(RETURN,ELIG) ; Returns Eligibility Code detail 
+GETELIG(RETURN,ELIG) ; Returns Eligibility Code detail
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN("ABBREVIATION") [String] Eligibility Code abbreviation
+ ;    RETURN("MAS ELIGIBILITY CODE") [Numeric]
+ ;    RETURN("NAME") [String] Eligibility Code name
+ ;    RETURN("PRINT NAME") [String] Eligibility Code print name
+ ;    RETURN("TYPE") [String] Eligibility Code type (N:NON VETERAN,Y:VETERAN)
+ ;    RETURN("VA CODE NUMBER") [Numeric] VA Code Number
+ ;    RETURN("INACTIVE") [Boolean] Eligibility Code status
+ ;   ELIG [Required,Numeric] Eligibility code IEN
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN S RETURN=0
  I +$G(ELIG)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","ELIG") Q 0
  D GETELIG^SDMDAL2(.RETURN,ELIG,1,1,1)
@@ -149,6 +224,21 @@ GETELIG(RETURN,ELIG) ; Returns Eligibility Code detail
  Q 1
  ;
 GETPEND(RETURN,DFN) ; Get pending appointments
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN [Numeric] Number of entries returned
+ ;      RETURN(APPTDT,"APPOINTMENT TYPE") - [Numeric] Type of appointment
+ ;      RETURN(APPTDT,"CLINIC") - [Numeric] Clinic
+ ;      RETURN(APPTDT,"COLLATERAL VISIT") - [Boolean] Collateral visit
+ ;      RETURN(APPTDT,"CONSULT LINK") - [Numeric]
+ ;      RETURN(APPTDT,"EKG DATE/TIME") - [DateTime]
+ ;      RETURN(APPTDT,"LAB DATE/TIME") - [DateTime]
+ ;      RETURN(APPTDT,"LENGTH OF APP'T") - [Numeric] Length of appointment
+ ;      RETURN(APPTDT,"X-RAY DATE/TIME") - [DateTime]
+ ;   DFN [Required,Numeric] Patient IEN (pointer to File 2)
+ ;Output:
+ ;  1=Success,0=Failure
  N CNT,SCAP,APP,CLN,%,TOT
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
@@ -170,6 +260,16 @@ GETPEND(RETURN,DFN) ; Get pending appointments
  Q 1
  ;
 GETAPTS(RETURN,DFN,SD) ; Get patient appointments
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("APT",date,field_name)=internal^external
+ ;   DFN [Required,Numeric] Patient IEN (pointer to File 2)
+ ;   SD [Optional,DateTime] - if not set returns all patient appointments.
+ ;      - If SD is set to a valid date-time returns the corresponding appointment.
+ ;      - If SD(0) is set (0/1) returns patient appointments before/after specified date (SD).
+ ;Output:
+ ;  1=Success,0=Failure
  N %,TXT,CA,IN K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
  S RETURN=0
@@ -182,6 +282,17 @@ GETAPTS(RETURN,DFN,SD) ; Get patient appointments
  Q 1
  ;
 LSTCRSNS(RETURN,SEARCH,START,NUMBER) ; Return cancelation reasons.
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN(0) – [String] # of entries found^maximum requested^any more?^flags
+ ;    RETURN(#,"ID") – [Numeric] Cancellation reason IEN
+ ;    RETURN(#,"NAME") – [String] Cancellation reason name
+ ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
+ ;   START [Optional,String] The appointment type name from which to begin the list. Default: ""
+ ;   NUMBER [Optional,Numeric] Number of entries to return. Default: All entries
+ ;Output:
+ ;  1=Success,0=Failure
  N LST
  M LST=RETURN
  D LSTCRSNS^SDMDAL2(.LST,$$UP^XLFSTR($G(SEARCH)),.START,$G(NUMBER))
@@ -191,6 +302,12 @@ LSTCRSNS(RETURN,SEARCH,START,NUMBER) ; Return cancelation reasons.
  Q RETURN
  ;
 FRSTAVBL(RETURN,SC) ; Get first available date
+ ;Input:
+ ;  .RETURN [Required,DateTime] Passed by reference, set to the first available date.
+ ;                              Set to Error description if the call fails
+ ;   SC [Required,Numeric] Clinic IEN (pointer to File 44)
+ ;Output:
+ ;  1=Success,0=Failure
  N % K RETURN S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
  F I=0:1:6 S SD=$$FMADD^XLFDT($$DT^XLFDT(),I),%=$$SETST^SDMAPI5(.RETURN,+SC,SD) Q:RETURN
@@ -315,23 +432,50 @@ PTFU(RETURN,DFN,SC)    ;Determine if this is a follow-up (return to clinic withi
  Q SDY
  ;
 HASPEND(RETURN,DFN) ; Check if patient has panding appointments
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the patient has pending appointments
+ ;                             Set to Error description if the call fails
+ ;   DFN [Required,Numeric] Patient IEN (pointer to File 2)
+ ;Output:
+ ;  1=Success,0=Failure
  N % K RETURN
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
  Q $$HASPEND^SDMDAL2(.RETURN,+DFN,$$DT^XLFDT())
  ;
 LSTSRT(RETURN) ;List scheduling request types
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN(0) – [Numeric] # of entries found
+ ;    RETURN(#) – [String] code^display_name
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN
  S RETURN=1
  D LSTSCOD^SDMDAL(2.98,25,.RETURN)
  Q 1
  ;
 LSTAPPST(RETURN) ;List appointment statuses
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN(0) – [Numeric] # of entries found
+ ;    RETURN(#) – [String] code^display_name
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN
  S RETURN=1
  D LSTSCOD^SDMDAL(2.98,3,.RETURN)
  Q 1
  ;
 LSTHLTP(RETURN) ;List hospital location types
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN(0) – [Numeric] # of entries found
+ ;    RETURN(#) – [String] code^display_name
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN
  S RETURN=1
  D LSTSCOD^SDMDAL(44,2,.RETURN)

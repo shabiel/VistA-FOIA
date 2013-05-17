@@ -1,4 +1,4 @@
-SDMAPI3 ;RGI/VSL - APPOINTMENT API; 4/19/13
+SDMAPI3 ;RGI/VSL - APPOINTMENT API; 5/16/13
  ;;5.3;scheduling;**260003**;08/13/93;
 LSTPATS(RETURN,SEARCH,START,NUMBER) ; Get patients by name
  N RET,DL,IN,DG
@@ -92,6 +92,19 @@ CHKDISCH(RETURN,DFN,SD,SC,RSN,OENS) ; Check discharge
  Q RETURN
  ;
 DISCH(RETURN,DFN,SD,SC,RSN) ; Discharge from clinic
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the discharge succeeded.
+ ;                             Set to Error description if the call fails
+ ;  .ENS [Optional,Array]
+ ;    ENS(clinic_ien,"IEN") [Numeric] Enrollment IEN
+ ;    ENS(clinic_ien,"EN",#,"DISCHARGE") [DateTime] Date of discharge
+ ;    ENS(clinic_ien,"EN",#,"REASON") [String] Reason for discharge
+ ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   SD [Required,DateTime] Discharge date
+ ;   SC [Optional,Numeric] Enrollment clinic IEN (pointer to file 44)
+ ;   RSN [Optional,String] Reason for discharge
+ ;Output:
+ ;  1=Success,0=Failure
  N OENS,IND,NENS,%
  K RETURN S RETURN=0
  S %=$$CHKDISCH(.RETURN,.DFN,.SD,.SC,.RSN,.OENS)
@@ -108,6 +121,23 @@ DISCH(RETURN,DFN,SD,SC,RSN) ; Discharge from clinic
  Q 1
  ;
 GETPENRL(RETURN,DFN,SC,STAT) ; Get patient enrollments filtered by status
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN [Boolean] Set to 1 if the the call succeeded
+ ;    RETURN(clinic_ien,"EN",#,"DISCHARGE") [DateTime] Date of discharge
+ ;    RETURN(clinic_ien,"EN",#,"ENROLLMENT") [DateTime] Date of enrollment
+ ;    RETURN(clinic_ien,"EN",#,"OA") [String]Outpatient/Ambulatory (O: outpatient, A: ambulatory care)
+ ;    RETURN(clinic_ien,"EN",#,"REASON") [String] Reason for discharge
+ ;    RETURN(clinic_ien,"EN",#,"REVIEW") [DateTime] Review date
+ ;    RETURN(clinic_ien,"IFN") [Numeric] Enrollment IEN
+ ;    RETURN(clinic_ien,"NAME") [String] Enrollment clinic name
+ ;    RETURN(clinic_ien,"STATUS") [String] Enrollment status (I: inactive)
+ ;   DFN [Required,Numeric] Patient IEN
+ ;   SC [Optional,Numeric] Clinic IEN
+ ;   STAT [Optional,String] Status (0: both active and inactive, 1: active only)
+ ;Output:
+ ;  1=Success,0=Failure
  N ENS,EN,IND,CLN,SSC,%
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0

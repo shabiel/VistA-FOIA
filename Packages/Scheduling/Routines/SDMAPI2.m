@@ -1,4 +1,4 @@
-SDMAPI2 ;RGI/VSL - APPOINTMENT API; 5/13/13
+SDMAPI2 ;RGI/VSL - APPOINTMENT API; 5/15/13
  ;;5.3;scheduling;**260003**;08/13/93
 CHKAPP(RETURN,SC,DFN,SD,LEN,LVL) ; Check make appointment
  N PAT,CLN,VAL,PATT,HOL,TXT,X,X1,X2,APT,CAPT,FRSTA,SDEDT,SDSOH,%
@@ -86,6 +86,18 @@ CHKAPTU(RETURN,SC,DFN,SD,CLN,PAT,UNS) ; Check make unscheduled appointment
  Q 1
  ;
 MAKEUS(RETURN,DFN,SC,SD,TYP,STYP,CIO) ; Make unscheduled appointment
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the update succeeded
+ ;                            Set to Error description if the call fails
+ ;                            Error format: RETURN(0) - [String] error_code^text^level (1 for error, 2 for warning, 3 for warning)
+ ;  DFN [Required,Numeric] Patient IEN (pointer to File 2)
+ ;  SC [Required,Numeric] Clinic IEN (pointer to File 44)
+ ;  SD [Optional,DateTime] Appointment date/time. Defaults to now.
+ ;  TYP [Required,Numeric] Purpose of visit visit (drawn from the Appointment Types list - see $$LSTAPPT^SDMAPI1)
+ ;  STYP [Optional,Numeric] Sub-category associated with this appointment (one of the codes returned by LSTSBCTG^DGSAAPI)
+ ;  CIO [Optional,String] 'CI'=check-in appointment, 'CO'=check-out appointment
+ ;Output:
+ ; 1=Success,0=Failure 
  N SCAP,STAT,%,TYPE,S,CLN,SM,TXT
  K RETURN S RETURN=0
  S:$D(TYP) TYPE=+TYP S:$G(SD)="" SD=$$NOW^XLFDT()
@@ -94,7 +106,7 @@ MAKEUS(RETURN,DFN,SC,SD,TYP,STYP,CIO) ; Make unscheduled appointment
  S %=$$CHKTYPE^SDMAPI5(.RETURN,+DFN,.TYP) Q:'% 0
  S %=$$CHKSTYP^SDMAPI5(.RETURN,$G(TYP),.STYP) Q:'% 0
  I +SD>$$FMADD^XLFDT(DT,1) S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
- S SD=+$E(SD,1,12)
+ S SD=$J(SD,2,4)
  S STAT=$$INP^SDAM2(+DFN,+SD)
  D GETCLN^SDMDAL1(.CLN,+SC,1)
  D MAKE^SDMDAL3(+DFN,+SD,+SC,+TYPE,+$G(STYP),STAT,4,DUZ,DT,"W",0)
@@ -111,6 +123,34 @@ MAKEUS(RETURN,DFN,SC,SD,TYP,STYP,CIO) ; Make unscheduled appointment
  Q 1
  ;
 MAKE(RETURN,DFN,SC,SD,TYPE,STYP,LEN,SRT,OTHR,CIO,LAB,XRAY,EKG,RQXRAY,CONS,LVL) ; Make appointment
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the update succeeded
+ ;                            Set to Error description if the call fails
+ ;                            Error format: RETURN(0) - [String] error_code^text^level (1 for error, 2 for warning, 3 for warning)
+ ;  DFN [Required,Numeric] Patient IEN
+ ;  SC [Required,Numeric] Clinic IEN
+ ;  SD [Required,DateTime] Appointment date/time
+ ;  TYPE [Required,Numeric] Purpose of visit (drawn from the Appointment Types list - see $$LSTAPPT^SDMAPI1)
+ ;  STYP [Optional,Numeric] Sub-category associated with this appointment (one of the codes returned by LSTSBCTG^DGSAAPI)
+ ;  LEN [Required,Numeric] Appointment length in minutes.
+ ;  SRT [Required,String] Scheduling request type (one of the codes returned by LSTSRT^SDMAPI1)
+ ;  OTHR [Optional,String] Any other tests ordered in association with the appointment
+ ;  CIO [Optional,String] If set to "CI" the appointment will be checked-in.
+ ;  LAB [Optional,DateTime] If this patient is scheduled for laboratory tests in conjunction with this appointment, 
+ ;                          set LAB to the date/time the patient should report.
+ ;  XRAY [Optional,DateTime] If this patient is scheduled for x-ray in conjunction with this appointment,
+ ;                           set XRAY to the date/time the patient should report.
+ ;  EKG [Optional,DateTime] If this patient is scheduled for EKG in conjunction with this appointment,
+ ;                          set EKG to the date/time the patient should.
+ ;  RQXRAY [Optional,Boolean] Set to 1 if x-ray films are required for this appointment.
+ ;  CONS [Optional,Numeric] Consult associated with this appointment (pointer to Request/Consultation file).
+ ;  LVL [Optional,Numeric]
+ ;   - Forces appointment creation if it is set to 1 (ignores all warnings described below)
+ ;   - If set to 2 will return an error if there are no open slots
+ ;   - If set to anything higher that 2 or left undefined, will return an error if the patient has an active appointment at the same time,
+ ;     or on the same day, or a canceled appointment on same time, or if there are no open slots.
+ ;Output:
+ ; 1=Success,0=Failure  
  N CLN,%,TYP,APT,I,STAT,TXT
  S:'$G(LVL) LVL=7
  K RETURN S RETURN=1
@@ -120,7 +160,7 @@ MAKE(RETURN,DFN,SC,SD,TYPE,STYP,LEN,SRT,OTHR,CIO,LAB,XRAY,EKG,RQXRAY,CONS,LVL) ;
  S %=$$CHKSRT^SDMAPI5(.RETURN,.SRT) Q:'RETURN 0
  S %=$$CHKCONS^SDMAPI5(.RETURN,.CONS) Q:'RETURN 0
  D GETCLN^SDMDAL1(.CLN,+SC,1)
- F I=$G(LAB),$G(XRAY),$G(EKG) S:I]"" %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,I,DFN) Q:'RETURN
+ F I="LAB","XRAY","EKG" S:$G(@I)]"" %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,I,DFN) Q:'RETURN
  Q:'RETURN 0
  I +$G(LEN)>0,$G(CLN(1913))'="V",$G(CLN(1912))'=+LEN S RETURN=0,TXT(1)="LEN" D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT) Q 0
  S:$D(TYPE) TYP=+TYPE
@@ -170,6 +210,18 @@ CHKRSN(RETURN,RSN,TYPE) ; Check cancellation reason
  S RETURN=1
  Q 1
 CANCEL(RETURN,DFN,SC,SD,TYP,RSN,RMK,APC) ; Cancel appointment
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the update succeeded
+ ;                            Set to Error description if the call fails
+ ;                            Error format: RETURN(0) - [String] error_code^text^level (1 for error, 2 for warning, 3 for warning)
+ ;  DFN [Required,Numeric] Patient IEN
+ ;  SC [Required,Numeric] Clinic IEN
+ ;  SD [Required,DateTime] Appointment date
+ ;  TYP [Required,String] Status (one of the codes returned by LSTAPPST^SDMAPI1)
+ ;  RSN [Required,Numeric] Cancellation reason (one of the codes returned by LSTCRSNS^SDMAPI1)
+ ;  RMK [Optional,String] Remarks
+ ;Output:
+ ; 1=Success,0=Failure 
  N CDATE,CDT,ERR,ODT,OIFN,OUSR,%,CAPT,CIFN
  K RETURN S RETURN=0
  I $G(TYP)=0!($G(TYP)'["C") D ERRX^SDAPIE(.RETURN,"INVPARAM","TYP") Q 0
@@ -195,6 +247,16 @@ CANCEL(RETURN,DFN,SC,SD,TYP,RSN,RMK,APC) ; Cancel appointment
  Q RETURN
  ;
 CHECKIN(RETURN,DFN,SD,SC,CIDT) ; Check in appointment
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the check in succeeded
+ ;                            Set to Error description if the call fails
+ ;                            Error format: RETURN(0) - [String] error_code^text^level (1 for error, 2 for warning, 3 for warning)
+ ;  DFN [Required,Numeric] Patient IEN (pointer to File 2)
+ ;  SD [Required,DateTime] Appointment date/time
+ ;  SC [Required,Numeric] Clinic IEN (pointer to File 44)
+ ;  CIDT [Optional,DateTime] Date and time the patient was checked in for the appointment
+ ;Output:
+ ; 1=Success,0=Failure 
  N CAPT,CI,%,CIFN,CD,APT0
  K RETURN S RETURN=0 S CI=DT
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
@@ -223,6 +285,19 @@ CHECKIN(RETURN,DFN,SD,SC,CIDT) ; Check in appointment
  Q 1
  ;
 NOSHOW(RETURN,DFN,SC,SD,LVL) ; No-show appointment
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the update succeeded
+ ;                            Set to Error description if the call fails
+ ;                            Error format: RETURN(0) - [String] error_code^text^level (1 for error, 2 for warning, 3 for warning)
+ ;  DFN [Required,Numeric] Patient IEN (pointer to File 2)
+ ;  SC [Required,Numeric] Clinic IEN (pointer to File 44)
+ ;  SD [Required,DateTime] Appointment date/time
+ ;  LVL [Optional,Numeric]
+ ;   - If set to 1, unconditionally marks the appointment as no show
+ ;   - If set to anything else than 1 or left undefined will return an error if any of the checks failed
+ ;     (for instance if the appointment was already marked as no show).
+ ;Output:
+ ; 1=Success,0=Failure 
  N APT0,STATUS,APTSTAT,AUTO,CNSTLNK,NSDA,NSDIE,%,CAPT,CIFN
  K RETURN S RETURN=0
  S:'$D(LVL) LVL=7

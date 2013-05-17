@@ -1,6 +1,20 @@
-SDMAPI4 ;RGI/VSL - APPOINTMENT API; 4/19/13
+SDMAPI4 ;RGI/VSL - APPOINTMENT API; 5/15/13
  ;;5.3;scheduling;**260003**;08/13/93;
 CHECKO(RETURN,DFN,SD,SC,CDT) ; Check out
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the check-out succeeded
+ ;                            Set to Error description if the call fails
+ ;                            Error format: RETURN(0) - [String] error_code^text^level (1 for error, 2 for warning, 3 for warning)
+ ;    RETURN("COD") - [DateTime] Checked out date/time
+ ;    RETURN("COVISIT") - [Boolean] Collateral visit (1=this patient has been seen as a collateral for another patient)
+ ;    RETURN("LOCATION") - [Numeric] Encounter location (pointer to file 44)
+ ;    RETURN("SDOE") - [Numeric] Pointer to the corresponding outpatient encounter (file 409.68)
+ ;    RETURN("VISIT") - [Numeric] Visit file entry (pointer to file 9000010)
+ ;  DFN [Required,Numeric] Patient IEN
+ ;  SD [Required,DateTime] Appointment date/time
+ ;  SC [Required,Numeric] Clinic IEN
+ ;Output:
+ ; 1=Success,0=Failure 
  N CAPT,OE,APT0,CD,%,STATUS,APT0
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
@@ -106,6 +120,15 @@ DELCOPC(RETURN,SDOE,SDELHDL,SDELSRC) ; Delete check out (PCE)
  Q 1
  ;
 DELCOSD(RETURN,DFN,SD) ; Delete check out (SD)
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the check-out succeeded
+ ;                            Set to Error description if the call fails
+ ;                            Error format: RETURN(0) - [String] error_code^text^level (1 for error, 2 for warning, 3 for warning)
+ ;    RETURN("OE") [Numeric]Pointer to the corresponding outpatient encounter (file 409.68)
+ ;  DFN [Required,Numeric] Patient IEN
+ ;  SD [Required,DateTime] Appointment date/time
+ ;Output:
+ ; 1=Success,0=Failure
  N %,SDELHDL,APT0
  K RETURN S RETURN=0
  I '$$CANDELCO^SDMAPI4(.RETURN) Q 0
@@ -194,6 +217,18 @@ GETCAPT(RETURN,DFN,SD) ; Get clinic appointment
  Q 1
  ;
 GETOE(RETURN,SDOE) ; Get outpatient encounter
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN [Boolean] Set to 1 if the the call succeeded
+ ;    RETURN("CLINIC") [Numeric]Clinic IEN
+ ;    RETURN("DATE") [DateTime]Encounter date/time
+ ;    RETURN("PATIENT") [Numeric]Patient IEN
+ ;    RETURN("SCODE") [Numeric] Clinic stop code
+ ;    RETURN("VISIT") [Numeric] Visit IEN
+ ;   SDOE [Required,Numeric] Outpatient encounter IEN
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN S RETURN=0
  I +$G(SDOE)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SDOE") Q 0
  I '$$OEEXST^SDMDAL4(+SDOE) D ERRX^SDAPIE(.RETURN,"OENFND") Q 0
