@@ -1,4 +1,4 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider; 3/29/13
+SDAPIE ;RGI/CBR - Scheduling Error provider; 5/20/13
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -48,7 +48,8 @@ APTOVBK ;;480000.064;;OVERBOOK!
 APTOVOS ;;480000.065;;THAT TIME IS NOT WITHIN SCHEDULED PERIOD!
 APTOAPD ;;480000.066;;ONLY ^$TXT1^ OVERBOOK^$TXT2^ PER DAY!!
 APTCBCP ;;480000.067;;CAN'T BOOK WITHIN A CANCELLED TIME PERIOD
-APTNOST ;;480000.068;;You don't have permission to overbook a time slot.
+APTSDOB ;;480000.068;;You don't have permission to overbook a time slot.
+APTNOST ;;480000.122;;NO OPEN SLOTS THEN
 APTEXOB ;;480000.069;;WILL EXCEED MAXIMUM ALLOWABLE OVERBOOKS,
 APTLOCK ;;480000.07;;Another user is editing this record.  Trying again.
 APTCINV ;;480000.071;;*** Note: Clinic is scheduled to be inactivated on ^$TXT1^$TXT2^
