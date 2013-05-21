@@ -1,4 +1,4 @@
-SDMAPI3 ;RGI/VSL - APPOINTMENT API; 5/20/13
+SDMAPI3 ;RGI/VSL - APPOINTMENT API; 5/21/13
  ;;5.3;scheduling;**260003**;08/13/93;
 LSTPATS(RETURN,SEARCH,START,NUMBER) ; Get patients by name
  N RET,DL,IN,DG
@@ -297,7 +297,7 @@ DECAVA(CLN,SC,SD,LEN,PATT,OUT) ; Decrease availability
  I SM<7 S %=$F(S,"[",SS-1) S:'%!(CLN(1917)<3) %=999 I $F(S,"]",SS)'<%!(SDDIF=2&$E(S,ST+ST+1,SS-1)["[") S SM=7
  I ST+ST>$L(S),$L(S)<80 S S=S_" "
  S SDNOT=1   ;SD*5.3*490 naked Do added below
- F I=ST+ST:SDDIF:SS-SDDIF S ST=$E(S,I+1) S:ST="" ST=" ",OUT=1 S Y=$E(STR,$F(STR,ST)-2) S:S["CAN"!(ST="X"&($D(AV(1)))) CAN=1 Q:CAN  S:Y'?1NL&(SM<6) SM=6 S ST=$E(S,I+2,999) D  S:ST="" ST=" " S S=$E(S,1,I)_Y_ST
+ F I=ST+ST:SDDIF:SS-SDDIF S ST=$E(S,I+1) S:ST="" ST=" ",OUT=(I<0) S Y=$E(STR,$F(STR,ST)-2) S:S["CAN"!(ST="X"&($D(AV(1)))) CAN=1 Q:CAN  S:Y'?1NL&(SM<6) SM=6 S ST=$E(S,I+2,999) D  S:ST="" ST=" " S S=$E(S,1,I)_Y_ST
  .Q:ST'=""
  .Q:+LEN'>CLN(1912)
  .S ST="   "

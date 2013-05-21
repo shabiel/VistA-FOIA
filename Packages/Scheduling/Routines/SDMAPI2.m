@@ -1,4 +1,4 @@
-SDMAPI2 ;RGI/VSL - APPOINTMENT API; 5/15/13
+SDMAPI2 ;RGI/VSL - APPOINTMENT API; 5/21/13
  ;;5.3;scheduling;**260003**;08/13/93
 CHKAPP(RETURN,SC,DFN,SD,LEN,LVL) ; Check make appointment
  N PAT,CLN,VAL,PATT,HOL,TXT,X,X1,X2,APT,CAPT,FRSTA,SDEDT,SDSOH,%
@@ -43,7 +43,11 @@ CHKAPP(RETURN,SC,DFN,SD,LEN,LVL) ; Check make appointment
  . K APT N IDX S IDX=""
  . D GETDAPTS^SDMDAL2(.APT,+DFN,$P(SD,"."))
  . F  S IDX=$O(APT(IDX)) Q:IDX=""  I APT(IDX,2)'["C"  D  Q
- . . K TXT S TXT(1)="(AT "_$E(IDX_0,9,10)_":"_$E(IDX_"000",11,12)_")"
+ . . K TXT S TXT(1)="(AT "_$E(IDX_0,9,10)_":"_$E(IDX_"000",11,12)
+ . . I $P(APT(IDX,1),U)'=+SC D
+ . . . N CLNT D GETCLN^SDMDAL1(.CLNT,+$P(APT(IDX,1),U),1)
+ . . . S TXT(1)=TXT(1)_" IN "_CLNT(.01)
+ . . S TXT(1)=TXT(1)_")"
  . . S RETURN=0 D ERRX^SDAPIE(.RETURN,"APTPHSD",.TXT,3)
  Q:RETURN=0 0
  ;check if patient has an canceled appointment on the same time
@@ -106,7 +110,7 @@ MAKEUS(RETURN,DFN,SC,SD,TYP,STYP,CIO) ; Make unscheduled appointment
  S %=$$CHKTYPE^SDMAPI5(.RETURN,+DFN,.TYP) Q:'% 0
  S %=$$CHKSTYP^SDMAPI5(.RETURN,$G(TYP),.STYP) Q:'% 0
  I +SD>$$FMADD^XLFDT(DT,1) S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
- S SD=$J(SD,2,4)
+ S SD=+$E(SD,1,12)
  S STAT=$$INP^SDAM2(+DFN,+SD)
  D GETCLN^SDMDAL1(.CLN,+SC,1)
  D MAKE^SDMDAL3(+DFN,+SD,+SC,+TYPE,+$G(STYP),STAT,4,DUZ,DT,"W",0)
@@ -133,7 +137,7 @@ MAKE(RETURN,DFN,SC,SD,TYPE,STYP,LEN,SRT,OTHR,CIO,LAB,XRAY,EKG,RQXRAY,CONS,LVL) ;
  ;  TYPE [Required,Numeric] Purpose of visit (drawn from the Appointment Types list - see $$LSTAPPT^SDMAPI1)
  ;  STYP [Optional,Numeric] Sub-category associated with this appointment (one of the codes returned by LSTSBCTG^DGSAAPI)
  ;  LEN [Required,Numeric] Appointment length in minutes.
- ;  SRT [Required,String] Scheduling request type (one of the codes returned by LSTSRT^SDMAPI1)
+ ;  SRT [Optional,String] Scheduling request type (one of the codes returned by LSTSRT^SDMAPI1)
  ;  OTHR [Optional,String] Any other tests ordered in association with the appointment
  ;  CIO [Optional,String] If set to "CI" the appointment will be checked-in.
  ;  LAB [Optional,DateTime] If this patient is scheduled for laboratory tests in conjunction with this appointment, 
@@ -160,7 +164,7 @@ MAKE(RETURN,DFN,SC,SD,TYPE,STYP,LEN,SRT,OTHR,CIO,LAB,XRAY,EKG,RQXRAY,CONS,LVL) ;
  S %=$$CHKSRT^SDMAPI5(.RETURN,.SRT) Q:'RETURN 0
  S %=$$CHKCONS^SDMAPI5(.RETURN,.CONS) Q:'RETURN 0
  D GETCLN^SDMDAL1(.CLN,+SC,1)
- F I="LAB","XRAY","EKG" S:$G(@I)]"" %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,I,DFN) Q:'RETURN
+ F I=$G(LAB),$G(XRAY),$G(EKG) S:I]"" %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,I,DFN) Q:'RETURN
  Q:'RETURN 0
  I +$G(LEN)>0,$G(CLN(1913))'="V",$G(CLN(1912))'=+LEN S RETURN=0,TXT(1)="LEN" D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT) Q 0
  S:$D(TYPE) TYP=+TYPE
