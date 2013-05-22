@@ -1,4 +1,4 @@
-DGPMV20 ;ALB/MIR - DISPLAY DATES FOR SELECTION ; 4/25/13
+DGPMV20 ;ALB/MIR - DISPLAY DATES FOR SELECTION ; 5/22/13
  ;;5.3;Registration;**40,260005**;Aug 13, 1993
  W !!,"CHOOSE FROM:" S I=0 F  S I=$O(MVTS(I)) Q:'I  D WR
  Q
@@ -10,8 +10,8 @@ W1 W ?50,"TO:  ",$E($P(MVTS(I,"WARD"),"^",2),1,17) I MVTS(I,"ROOMBED") W " [",$E
  I +MVTS(I,"MASTYPE")=9 W !?23,"FROM:  ",$P(MVTS(I,"FCTY"),"^",2)
  Q
 W2 Q:"^25^26^"[("^"_+MVTS(I,"MASTYPE")_"^")
- I "^43^45^"[("^"_+MVTS(I,"FTSPEC")_"^") W ?50,"TO:  ",$E($P(MVTS(I,"FCTY"),"^",2),1,18) Q
- I "^1^2^3^"[("^"_+MVTS(I,"FTSPEC")_"^") W ?50,"RETURN:  " S Y=+MVTS(I,"RABSDT") X ^DD("DD") W Y Q
+ I "^43^45^"[("^"_+MVTS(I,"MASTYPE")_"^") W ?50,"TO:  ",$E($P(MVTS(I,"FCTY"),"^",2),1,18) Q
+ I "^1^2^3^"[("^"_+MVTS(I,"MASTYPE")_"^") W ?50,"RETURN:  " S Y=+MVTS(I,"RABSDT") X ^DD("DD") W Y Q
  W ?50,"TO:  ",$E($P(MVTS(I,"WARD"),"^",2),1,17) I +MVTS(I,"ROOMBED") W " [",$E($P(MVTS(I,"ROOMBED"),"^",2),1,10),"]"
  Q
 W3 I +MVTS(I,"MASTYPE")=10 W ?50,"TO:  ",$E($P(MVTS(I,"FCTY"),"^",1),1,18)
