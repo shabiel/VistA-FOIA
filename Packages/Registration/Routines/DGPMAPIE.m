@@ -73,3 +73,4 @@ RSNNFND ;;4070000.174;;Reason for lodging not found.
 RPMNFND ;;4070000.034;;Related physical movement not found
 CANDRPM ;;4070000.035;;You are not allowed to delete a specialty transfer that is assoicated with the initial admission movement.
 LDGPALD ;;4070000.175;;Patient is already a lodger
+TRACEAT ;;4070000.176;;Cannot edit ASIH transfers
