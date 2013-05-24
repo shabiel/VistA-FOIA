@@ -1,4 +1,4 @@
-DGPMAPI9 ;RGI/VSL - PATIENT MOVEMENT API; 4/19/13
+DGPMAPI9 ;RGI/VSL - PATIENT MOVEMENT API; 5/24/13
  ;;5.3;Registration;**260005**;
 LOCKMVT(RETURN,DFN) ; Lock movement
  N % K RETURN S RETURN=0
@@ -11,15 +11,37 @@ ULOCKMVT(DFN) ; Unlock patient movements
  D ULOCKMVT^DGPMDAL1(+DFN)
  Q
 ABS(RETURN,PARAM,LMVT) ; Absence transfer
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new transfer IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;    If movement type is: FROM UNAUTHORIZED ABSENCE, FROM AUTHORIZED ABSENCE or FROM AUTH. ABSENCE OF 96 HOURS OR LESS:
+ ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
+ ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to file 45.7)
+ ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
+ ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
+ ;    If movement type is: AUTHORIZED ABSENCE, UNAUTHORIZED ABSENCE or AUTH ABSENCE 96 HOURS OR LESS:
+ ;      PARAM("RABSDT") [Optional,DateTime] Absence return date
+ ;Output:
+ ;  1=Success,0=Failure
  N TFN
  S PARAM("WARD")=$G(LMVT("WARD"))
  S PARAM("ADMIFN")=$G(LMVT("ADMIFN"))
  S TFN=$$ADDTRA^DGPMAPI2(.RETURN,.PARAM)
  D SETTEVT^DGPMDAL1(TFN,,"A")
  S RETURN=+TFN
- Q TFN
+ Q 1
  ;
 ASIHOF(RETURN,PARAM) ; ASIH (Other facility) transfer
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new transfer IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("FCTY") [Required,Numeric] Transfer facility (pointer to file 4)
+ ;Output:
+ ;  1=Success,0=Failure
  N %,TFN,LMVT
  S %=$$GETLASTM^DGPMAPI8(.LMVT,+PARAM("PATIENT"))
  S PARAM("WARD")=+$G(LMVT("WARD"))
@@ -27,7 +49,7 @@ ASIHOF(RETURN,PARAM) ; ASIH (Other facility) transfer
  S %=$$ASHODIS(.RETURN,.PARAM)
  D SETTEVT^DGPMDAL1(TFN,,"A")
  S RETURN=TFN
- Q TFN
+ Q 1
  ;
 ASHODIS(RETURN,PARAM) ;
  N %,DIS M DIS=PARAM

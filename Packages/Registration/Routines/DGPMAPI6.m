@@ -1,4 +1,4 @@
-DGPMAPI6 ;RGI/VSL - FACILITY TRATING SPECIALTY API; 5/13/13
+DGPMAPI6 ;RGI/VSL - FACILITY TRATING SPECIALTY API; 5/24/13
  ;;5.3;Registration;**260005**;
 CHKADD(RETURN,PARAM,PC) ; 
  N % K RETURN S RETURN=1
@@ -60,9 +60,34 @@ CHKUDT(RETURN,MFN,DGDT,OLD,NEW) ; Check date
  Q 1
  ;
 UPDPC(RETURN,PARAM,MFN) ; Update provider change
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Optional,Array] Array passed by reference that holds the new data.
+ ;      PARAM("DATE") [Optional,DateTime] Provider change date
+ ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
+ ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
+ ;   MFN [Required,Numeric] Provider change movement IEN to update (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  Q $$UPDFTS1(.RETURN,.PARAM,.MFN,1)
  ;
-UPDFTS(RETURN,PARAM,MFN) ; Update facility treating specialty
+UPDFTS(RETURN,PARAM,MFN) ; Update facility treating movement
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Optional,Array] Array passed by reference that holds the new data.
+ ;      PARAM("DATE") [Optional,DateTime] Facility treating movement date
+ ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to file 45.7)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
+ ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
+ ;   MFN [Required,Numeric] Facility treating movement IEN to update (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  Q $$UPDFTS1(.RETURN,.PARAM,.MFN)
  ;
 UPDFTS1(RETURN,PARAM,MFN,PC) ; Update specialty transfer
@@ -99,10 +124,35 @@ CHKDT(RETURN,PARAM)
  N %
  S %=$$CHKDT^DGPMAPI2(.RETURN,.PARAM) Q:'RETURN 0
  Q 1
-PROVCH(RETURN,PARAM) ; Add provider change
+PROVCH(RETURN,PARAM) ; Provider change
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new provider change movement IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("ADMIFN") [Required,Numeric] Admission associated IEN (pointer to file 405)
+ ;      PARAM("DATE") [Required,DateTime] Provider change date
+ ;      PARAM("ATNDPHY") [Required,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
+ ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
+ ;Output:
+ ;  1=Success,0=Failure
  Q $$FTS1(.RETURN,.PARAM,1)
  ;
-FTS(RETURN,PARAM) ; Add facility treating movement
+FTS(RETURN,PARAM) ; Facility treating movement
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new facility treating movement IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("ADMIFN") [Required,Numeric] Admission associated IEN (pointer to file 405)
+ ;      PARAM("DATE") [Required,DateTime] Facility treating movement date
+ ;      PARAM("ATNDPHY") [Required,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("FTSPEC") [Required,Numeric] Facility treating specialty IEN (pointer to file 45.7)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
+ ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
+ ;Output:
+ ;  1=Success,0=Failure
  Q $$FTS1(.RETURN,.PARAM)
  ;
 FTS1(RETURN,PARAM,PC) ; Add specialty transfer
@@ -151,6 +201,25 @@ ADD(RETURN,PARAM,PC,QUIET) ; Add ralated physical movement
  Q 1
  ;
 ASIH(RETURN,PARAM,TFN) ; ASIH transfer
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new transfer IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to file 42)
+ ;      PARAM("FTSPEC") [Required,Numeric] Facility treating specialty IEN (pointer to file 45.7)
+ ;      PARAM("ATNDPHY") [Required,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("ADMREG") [Required,Numeric] Admitting regulation IEN (pointer to file 43.4)
+ ;      PARAM("FDEXC") [Required,Boolean] Patient wants to be excluded or not from Facility Directory.
+ ;                                        If it is set to 1 the patient will be excluded from Facility Directory.
+ ;      PARAM("SHDIAG") [Required,String] A brief description of the diagnosis (3-30 chars) 
+ ;      PARAM("ADMSCC") [Optional,Boolean] Set to 1 if patient is admitted for service connected condition. Default: 0
+ ;      PARAM("ADMSRC") [Optional,Numeric] Source of admission IEN (pointer to file 45.1)
+ ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
+ ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
+ ;Output:
+ ;  1=Success,0=Failure
  N %,AFN,NADM,TRA,DIS,FTS,FTSFN,DFN,DMFN
  D SETAEVT^DGPMDAL1(+PARAM("ADMIFN"),,"P")
  S:'$G(TFN) TFN=$$ADDTRA^DGPMAPI2(.RETURN,.PARAM)
@@ -188,6 +257,12 @@ CANDEL(RETURN,MFN,MVT) ; facility treating movement
  Q 1
  ;
 DELFTS(RETURN,MFN) ; Delete facility treating movement
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   MFN [Required,Numeric] Facility treating movement IEN to delete (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  N %,MVT,DFN
  K RETURN S RETURN=0
  S %=$$CANDEL(.RETURN,+MFN,.MVT) Q:'RETURN 0

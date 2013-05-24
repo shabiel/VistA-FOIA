@@ -1,4 +1,4 @@
-DGPMAPI2 ;RGI/VSL - TRANSFER PATIENT API; 5/23/13
+DGPMAPI2 ;RGI/VSL - TRANSFER PATIENT API; 5/24/13
  ;;5.3;Registration;**260005**;
 CHKDT(RETURN,PARAM) ; Check transfer date
  N %,TXT,ADM,DSH K RETURN S RETURN=1
@@ -37,6 +37,21 @@ CHKADD(RETURN,PARAM,TYPE,MAS,LMVT) ; Check transfer parameters
  S RETURN=1
  Q 1
 TRANSF1(RETURN,PARAM,TYPE,MAS,LMVT) ; Transfer patient
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new transfer IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to file 42)
+ ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
+ ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to file 45.7)
+ ;                                         Required if PARAM("ATNDPHY") is set
+ ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to file 200)
+ ;                                         Required if PARAM("FTSPEC") is set
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
+ ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
+ ;Output:
+ ;  1=Success,0=Failure
  N %,TFN,MVT6
  I TYPE=25!(TYPE=26) S PARAM("WARD")=+LMVT("WARD")
  S TFN=$$ADDTRA(.RETURN,.PARAM)
@@ -68,6 +83,22 @@ ADDTRA(RETURN,PARAM) ; Add patient transfer
  Q IFN2
  ;
 TRANSF(RETURN,PARAM) ; Transfer patient
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new transfer IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("ADMIFN") [Required,Numeric] Admission associated IEN (pointer to file 405)
+ ;      PARAM("DATE") [Required,DateTime] Transfer date
+ ;      PARAM("TYPE") [Required,Numeric] Transfer type IEN (pointer to file 405.1)
+ ;        If MAS movement type of the transfer type is:
+ ;          - INTERWARD TRANSFER see TRANSF1^DGPMAPI2,
+ ;          - TO ASIH see ASIH^DGPMAPI6,
+ ;          - TO ASIH (OTHER FACILITY) or CHANGE ASIH LOCATION (OTHER FACILITY) see ASIHOF^DGPMAPI9,
+ ;          - AUTHORIZED ABSENCE, UNAUTHORIZED ABSENCE, AUTH ABSENCE 96 HOURS OR LESS, FROM UNAUTHORIZED ABSENCE
+ ;            FROM AUTHORIZED ABSENCE or FROM AUTH. ABSENCE OF 96 HOURS OR LESS see ABS^DGPMAPI9,
+ ;        for a detailed parameters description.
+ ;Output:
+ ;  1=Success,0=Failure
  N %,MAS,TYPE,DFN,LMVT,DGIDX
  K RETURN S RETURN=0
  S %=$$CHKADD(.RETURN,.PARAM,.TYPE,.MAS,.LMVT) Q:'RETURN 0
@@ -164,6 +195,23 @@ CHKUPD(RETURN,PARAM,TFN,OLD,NEW,MAS) ; Check transfer parameters
  Q 1
  ;
 UPDTRA(RETURN,PARAM,TFN) ; Update transfer
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new transfer IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("DATE") [Optional,DateTime] Transfer date
+ ;      PARAM("TYPE") [Optional,Numeric] Transfer type IEN (pointer to file 405.1)
+ ;        If MAS movement type of the transfer type is:
+ ;          - INTERWARD TRANSFER see TRANSF1^DGPMAPI2,
+ ;          - TO ASIH see ASIH^DGPMAPI6,
+ ;          - TO ASIH (OTHER FACILITY) or CHANGE ASIH LOCATION (OTHER FACILITY) see ASIHOF^DGPMAPI9,
+ ;          - AUTHORIZED ABSENCE, UNAUTHORIZED ABSENCE, AUTH ABSENCE 96 HOURS OR LESS, FROM UNAUTHORIZED ABSENCE
+ ;            FROM AUTHORIZED ABSENCE or FROM AUTH. ABSENCE OF 96 HOURS OR LESS see ABS^DGPMAPI9,
+ ;        for a detailed description of the parameters **.
+ ;        ** If PARAM("TYPE") has the same value with the transfer type of the old transfer all the parameters are optional.
+ ;   TFN [Required,Numeric] Transfer IEN to update (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  N %,OLD,NEW,DFN,MAS
  K RETURN S RETURN=0
  S %=$$CHKUPD(.RETURN,.PARAM,.TFN,.OLD,.NEW,.MAS)
@@ -225,6 +273,12 @@ CANDEL(RETURN,TFN,TRA,PMVT,NMVT) ; Can delete transfer?
  Q 1
  ;
 DELTRA(RETURN,TFN) ; Delete transfer
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   TFN [Required,Numeric] Transfer IEN to delete (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  N TRA,PMVT,NMVT,DFN,%
  K RETURN S RETURN=0
  S %=$$CANDEL(.RETURN,+TFN,.TRA,.PMVT,.NMVT) Q:'RETURN 0

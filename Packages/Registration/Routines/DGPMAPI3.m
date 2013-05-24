@@ -1,4 +1,4 @@
-DGPMAPI3 ;RGI/VSL - DISCHARGE PATIENT API; 5/22/13
+DGPMAPI3 ;RGI/VSL - DISCHARGE PATIENT API; 5/24/13
  ;;5.3;Registration;**260005**;
 CHKDT(RETURN,PARAM,TYPE,MAS,ADM) ; Check discharge date
  N %,TXT,TT,DIS,LMVT
@@ -51,6 +51,18 @@ CHKDTYP(RETURN,TYPE,DFN,DATE) ; Check discharge type
  Q 1
  ;
 DISCH(RETURN,PARAM) ; Discharge patient
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to the new discharge IEN, 0 otherwise.
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
+ ;      PARAM("ADMIFN") [Required,Numeric] Admission associated IEN (pointer to file 405)
+ ;      PARAM("DATE") [Required,DateTime] Discharge date
+ ;      PARAM("TYPE") [Required,Numeric] Discharge type IEN (pointer to file 405.1)
+ ;      The following parameter are used only with CONTINUED ASIH (OTHER FACILITY) movement type or
+ ;        if movement type have the field "ask specialty at movement" set to 1:
+ ;        PARAM("FCTY")	[Required,Numeric] Transfer facility (pointer to file 4)
+ ;Output:
+ ;  1=Success,0=Failure
  N %,MAS,TYPE,ADM,DFN,LMVT
  K RETURN S RETURN=0
  S %=$$CHKADD(.RETURN,.PARAM,.TYPE,.MAS,.ADM) Q:'RETURN 0
@@ -164,6 +176,15 @@ CHKUPD(RETURN,PARAM,DMFN,OLD,NEW) ; Check discharge parameters
  Q 1
  ;
 UPDDSCH(RETURN,PARAM,DMFN) ; Update discharge
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;  .PARAM [Optional,Array] Array passed by reference that holds the new data.
+ ;      PARAM("DATE") [Optional,DateTime] Discharge date
+ ;      PARAM("TYPE") [Optional,Numeric] Discharge type IEN (pointer to file 405.1)
+ ;   DMFN [Required,Numeric] Discharge IEN to update (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  N %,OLD,NEW,DFN
  K RETURN S RETURN=0
  S %=$$CHKUPD(.RETURN,.PARAM,.DMFN,.OLD,.NEW)
@@ -207,6 +228,12 @@ CANDEL(RETURN,DMFN,DCH) ; Can delete discharge?
  Q 1
  ;
 DELDSCH(RETURN,DMFN) ; Delete discharge
+ ;Input:
+ ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   DMFN [Required,Numeric] Discharge IEN to delete (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  N %,DCH,DFN
  K RETURN S RETURN=0
  S %=$$CANDEL(.RETURN,+DMFN,.DCH) Q:'RETURN 0

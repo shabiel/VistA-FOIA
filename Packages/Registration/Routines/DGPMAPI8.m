@@ -1,6 +1,30 @@
-DGPMAPI8 ;RGI/VSL - PATIENT MOVEMENT API; 5/14/13
+DGPMAPI8 ;RGI/VSL - PATIENT MOVEMENT API; 5/24/13
  ;;5.3;Registration;**260005**;
 GETLASTM(RETURN,DFN,DGDT,ADT) ; Get last patient movement
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("MFN") [Numeric] last movement IEN (pointer to file 405)
+ ;      RETURN("MTYPE") [String] movement_type_IEN^movement_type_name (pointer to file 405.1)
+ ;      RETURN("TYPE") [Numeric] transaction type IEN (pointer to file 405.3)
+ ;      RETURN("DATE") [DateTime] last movement date
+ ;      RETURN("MASTYPE") [Numeric] MAS movement type IEN (pointer to file 405.2)
+ ;      RETURN("WARD") [Numeric] ward IEN (pointer to file 42)
+ ;      RETURN("ROOMBED") [Numeric] bed IEN (pointer to file 405.4)
+ ;      RETURN("PRYMPHY") [Numeric] primary physician IEN (pointer to file 200)
+ ;      RETURN("FTSPEC") [Numeric] facility treating specialty IEN (pointer to file 45.7)
+ ;      RETURN("ADMIFN") [Numeric] related admission IEN (pointer to file 405)
+ ;      RETURN("ADMDT") [DateTime] related admission date (pointer to file 405)
+ ;      RETURN("DISIFN") [Numeric] related discharge IEN (pointer to file 405)
+ ;      RETURN("DISDT") [DateTime] related discharge date (pointer to file 405)
+ ;      RETURN("DISTYPE") [String] discharge type IEN (pointer to file 405.1)
+ ;      RETURN("ATNDPHY") [Numeric] attending physician IEN (pointer to file 200)
+ ;      RETURN("FDEXC") [Boolean] facility directory exclusion
+ ;      RETURN("SERILL") [String] patient_condition_code^patient_condition_name
+ ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   DGDT [Optional,DateTime] Get last movement on specified date. Default is current date.
+ ;Output:
+ ;  1=Success,0=Failure
  N %,DGDT1,LMVT,MVT,FLDS,ADM,RPM,PAT
  K RETURN S RETURN=0
  S %=$$CHKPAT^DGPMAPI8(.RETURN,$G(DFN),"DFN") Q:'RETURN 0
@@ -71,6 +95,38 @@ GETPAT(RETURN,DFN) ; Get patient
  Q 1
  ;
 GETADM(RETURN,AFN) ; Get admission
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("DATE") [String] admission_date_internal^admission_date_external
+ ;      RETURN("TTYPE") [String] transaction_type_IEN^transaction_type_name (pointer to file 405.3)
+ ;      RETURN("PATIENT") [String] patient_IEN^patient_name (pointer to file 2)
+ ;      RETURN("TYPE") [String] admission_type_IEN^admission_type_name (pointer to file 405.1)
+ ;      RETURN("FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to file 4)
+ ;      RETURN("WARD") [String] ward_IEN^ward_name (pointer to file 42)
+ ;      RETURN("ROOMBED") [String] bed_IEN^bed_name (pointer to file 405.4)
+ ;      RETURN("SHDIAG") [String] diagnosis
+ ;      RETURN("ADMSCC") [String] admitted_for_sc_condition_code^admitted_for_sc_condition_name
+ ;      RETURN("ADMREG") [String] admitting_regulation_IEN^admitting_regulation_name (pointer to file 43.4)
+ ;      RETURN("DISCH") [String] related_discharge_IEN^discharge_date_external (pointer to file 405)
+ ;      RETURN("MASTYPE") [String] MAS_movement_type_IEN^MAS_movement_type_name (pointer to file 405.2)
+ ;      RETURN("ASIHTRA") [String] related_ASIH_transfer_IEN^transfer_date_external (pointer to file 405)
+ ;      RETURN("LDGRSN") [String] reason_for_lodging_IEN^reason_for_lodging_name (pointer to file 406.41)
+ ;      RETURN("LDGCOMM") [String] lodging comments
+ ;      RETURN("LDGDISP") [String] lodging_disposition_code^lodging_disposition_name
+ ;      RETURN("FDEXC") [String] facility_directory_exclusion_code^facility_directory_exclusion_name
+ ;      RETURN("PRYMPHY") [String] primary_physician_IEN^primary_physician_name (pointer to file 200)
+ ;      RETURN("FTSPEC") [String] facility_treating_specialty_IEN^facility_treating_specialty_name (pointer to file 45.7)
+ ;      RETURN("ATNDPHY") [String] attending_physician_IEN^attending_physician_name (pointer to file 200)
+ ;      RETURN("SERILL") [String] patient_condition_code^patient_condition_name
+ ;      RETURN("ADMSRC") [String] source_of_admission_IEN^source_of_admission_name (pointer to file 45.1)
+ ;      RETURN("ELIGIB") [String] admitting_eligibility_IEN^admitting_eligibility_name (pointer to file 8)
+ ;      RETURN("ADMCAT") [String] admitting_category_IEN^admitting_category_name (pointer to file 35.2)
+ ;      RETURN("DIAG",#) [Array] Array of detailed diagnosis description.
+ ;         RETURN("DIAG",n) [String] diagnosis description
+ ;   AFN [Required,Numeric] Admission IEN (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,MVT,RPHY,RPHYMVT,DIAG,PTF,PAT,TXT
  S FLDS=".01;.02;.03;.04;.05;.06;.07;.1;.11;.12;.17;.18;.21;30.01;30.02;30.03;41;.16;54"
  S NAMES="DATE;TTYPE;PATIENT;TYPE;FCTY;WARD;ROOMBED;SHDIAG;ADMSCC;ADMREG;DISCH;MASTYPE;ASIHTRA;LDGRSN;LDGCOMM;LDGDISP;FDEXC;PTF;ADMCAT"
@@ -95,6 +151,22 @@ GETADM(RETURN,AFN) ; Get admission
  Q 1
  ;
 GETTRA(RETURN,TFN) ; Get transfer
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("DATE") [String] transfer_date_internal^transfer_date_external
+ ;      RETURN("TTYPE") [String] transaction_type_IEN^transaction_type_name (pointer to file 405.3)
+ ;      RETURN("PATIENT") [String] patient_IEN^patient_name (pointer to file 2)
+ ;      RETURN("TYPE") [String] transfer_type_IEN^transfer_type_name (pointer to file 405.1)
+ ;      RETURN("FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to file 4)
+ ;      RETURN("WARD") [String] ward_IEN^ward_name (pointer to file 42)
+ ;      RETURN("ROOMBED") [String] bed_IEN^bed_name (pointer to file 405.4)
+ ;      RETURN("RABSDT") [String] absence_return_date_internal^absence_return_date_date_external
+ ;      RETURN("ADMIFN") [String] related_admission_IEN^admission_date_external (pointer to file 405)
+ ;      RETURN("MASTYPE") [String] MAS_movement_type_IEN^MAS_movement_type_name (pointer to file 405.2)
+ ;   TFN [Required,Numeric] Transfer IEN (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,MVT,RPHY,RPHYMVT,DIAG,PAT,TXT
  S FLDS=".01;.02;.03;.04;.05;.06;.07;.13;.14;.18;"
  S NAMES="DATE;TTYPE;PATIENT;TYPE;FCTY;WARD;ROOMBED;RABSDT;ADMIFN;MASTYPE;"
@@ -116,6 +188,30 @@ GETTRA(RETURN,TFN) ; Get transfer
  Q 1
  ;
 GETMVT(RETURN,MFN) ; Get movement
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("DATE") [String] movement_date_internal^movement_date_external
+ ;      RETURN("TTYPE") [String] transaction_type_IEN^transaction_type_name (pointer to file 405.3)
+ ;      RETURN("PATIENT") [String] patient_IEN^patient_name (pointer to file 2)
+ ;      RETURN("TYPE") [String] movement_type_IEN^movement_type_name (pointer to file 405.1)
+ ;      RETURN("FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to file 4)
+ ;      RETURN("WARD") [String] ward_IEN^ward_name (pointer to file 42)
+ ;      RETURN("ROOMBED") [String] bed_IEN^bed_name (pointer to file 405.4)
+ ;      RETURN("PRYMPHY") [String] primary_physician_IEN^primary_physician_name (pointer to file 200)
+ ;      RETURN("FTSPEC") [String] facility_treating_specialty_IEN^facility_treating_specialty_name (pointer to file 45.7)
+ ;      RETURN("SHDIAG") [String] diagnosis
+ ;      RETURN("ADMIFN") [String] related_admission_IEN^admission_date_external (pointer to file 405)
+ ;      RETURN("DISCH") [String] related_discharge_IEN^discharge_date_external (pointer to file 405)
+ ;      RETURN("MASTYPE") [String] MAS_movement_type_IEN^MAS_movement_type_name (pointer to file 405.2)
+ ;      RETURN("ATNDPHY") [String] attending_physician_IEN^attending_physician_name (pointer to file 200)
+ ;      RETURN("RPM") [String] related_physical_movement_IEN^related_physical_movement_date_external (pointer to file 405)
+ ;      RETURN("LDGRSN") [String] reason_for_lodging_IEN^reason_for_lodging_name (pointer to file 406.41)
+ ;      RETURN("LDGCOMM") [String] lodging comments
+ ;      RETURN("LDGDISP") [String] lodging_disposition_code^lodging_disposition_name
+ ;   MFN [Required,Numeric] Movement IEN (pointer to file 405)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,MVT,RPHY,RPHYMVT,DIAG,TXT
  S FLDS=".01;.02;.03;.04;.05;.06;.07;.08;.09;.1;.14;.17;.18;.19;.24;30.01;30.02;30.03;"
  S NAMES="DATE;TTYPE;PATIENT;TYPE;FCTY;WARD;ROOMBED;PRYMPHY;FTSPEC;"
@@ -130,6 +226,17 @@ GETMVT(RETURN,MFN) ; Get movement
  Q 1
  ;
 GETMVTT(RETURN,IFN) ; Get movement type
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("NAME") [String] movement type name
+ ;      RETURN("TTYPE") [Numeric] transaction type IEN (pointer to file 405.3)
+ ;      RETURN("MAS") [Numeric] MAS movement type IEN (pointer to file 405.2)
+ ;      RETURN("STAT") [Boolean] movement type status
+ ;      RETURN("ASKSPEC") [Boolean] ask specialty at movement
+ ;   IFN [Required,Numeric] Movement type IEN (pointer to file 405.1)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,MVT,RPHY,RPHYMVT,TXT
  S FLDS=".01;.02;.03;.04;.05;.07;"
  S NAMES="NAME;TTYPE;MAS;STAT;ASKSPEC;PNAME"
@@ -152,6 +259,19 @@ GETPSRV(RETURN,IFN) ; Get period of service
  Q 1
  ;
 GETMASMT(RETURN,IFN) ; Get MAS movement type
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("NAME") [String] MAS movement type name
+ ;      RETURN("TTYPE") [Numeric] transaction type IEN (pointer to file 405.3)
+ ;      RETURN("ASKSPEC") [Boolean] ask specialty at movement?
+ ;      RETURN("ASKFTY") [Boolean] ask facility at movement?
+ ;      RETURN("ABS") [Boolean] is this movement an absence?
+ ;      RETURN("CFADM") [Boolean] can movement follow admission?
+ ;      RETURN("ASIH") [Boolean] ASIH movement?
+ ;   IFN [Required,Numeric] MAS movement type IEN (pointer to file 405.2)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,MVT,TXT
  S FLDS=".01;.02;.05;.06;50.01;50.02;50.03;"
  S NAMES="NAME;TTYPE;ASKSPEC;ASKFTY;ABS;CFADM;ASIH"
