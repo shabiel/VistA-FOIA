@@ -1,4 +1,4 @@
-DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 4/19/13
+DGPMDAL1 ;RGI/VSL - PATIENT MOVEMENT DAL; 5/27/13
  ;;5.3;Registration;**260005**;
 ADDMVMT(RETURN,PARAMS) ; Add new patient movement
  N FLD,IENS,FDA
@@ -57,24 +57,17 @@ UPDSCADM(RETURN,DATA,IFN) ; Update scheduled admission
  S RETURN=1
  Q
  ;
-UPDPAT(RETURN,DATA,IFN) ; Update patient
- N IENS,I,FDA S I=0
- S IENS=IFN_","
- F  S I=$O(DATA(I)) Q:I=""  D
- . S FDA(2,IENS,I)=DATA(I)
- D FILE^DIE("","FDA","RETURN")
- Q
- ;
 UPDDIAG(RETURN,DATA,PM) ; Update patient movement diagnostic
- N I S I=0
+ N I,CNT S I=0,CNT=0
  K ^DGPM(PM,"DX")
  Q:'$D(DATA)
  S ^DGPM(PM,"DX",0)="^^0^0^"_$P($$NOW^XLFDT(),".")_"^^^"
  F  S I=$O(DATA(I)) Q:'I  D
+ . S CNT=CNT+1
  . S $P(^DGPM(PM,"DX",0),U,3)=$P(^DGPM(PM,"DX",0),U,3)+1
  . S $P(^DGPM(PM,"DX",0),U,4)=$P(^DGPM(PM,"DX",0),U,4)+1
- . S ^DGPM(PM,"DX",I,0)=DATA(I)
- S RETURN=$P(^DGPM(PM,"DX",0),3,4)_$G(DATA(1))
+ . S ^DGPM(PM,"DX",CNT,0)=DATA(I)
+ S RETURN=$P(^DGPM(PM,"DX",0),3,4)_$G(^DGPM(PM,"DX",1,0))
  Q
  ;
 GETMVT0(MFN) ;
@@ -157,16 +150,6 @@ GETAPRD(DATA,DFN,DGDT,FLDS) ; Get next movement
  ;
 GETRPHY(MFN) ; Get related physical movement
  Q $O(^DGPM("APHY",MFN,0))
- ;
-GETRPM(DATA,MFN,FLDS) ; Get related physical movement
- N TMP,ERR,IFN
- S IFN=0,IFN=$O(^DGPM("APHY",MFN,IFN))
- Q:IFN'>0
- I '$D(FLDS) S FLDS="*"
- D GETS^DIQ(405,IFN,FLDS,"IE","TMP","ERR")
- I $D(ERR) S DATA=0 M DATA=ERR Q
- S DATA=1 M DATA=TMP(405,IFN_",")
- Q
  ;
 GETPTF(DATA,MFN,FLDS) ; Get ptf record
  N TMP,ERR

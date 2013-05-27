@@ -1,4 +1,4 @@
-DGPMAPIE ;RGI/VSL - Registration Error provider; 4/8/13
+DGPMAPIE ;RGI/VSL - Registration Error provider; 5/27/13
  ;;5.3;Registration;**260005**;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -10,9 +10,6 @@ ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  S RETURN(I)=ERRNO_U_$$EZBLD^DIALOG($P($T(@ERRNO),";;",2),.TEXT)_U_LVL
  Q
  ;
-ERRTXT(RETURN) ;
- Q $P($G(RETURN(0)),U,2)
- ; 
 ERRTABLE ; Error table
 INVPARM ;;4070000.078;;Invalid parameter
 WRDINACT ;;4070000.079;;Ward is inactive.

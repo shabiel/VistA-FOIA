@@ -1,4 +1,4 @@
-DGPMDAL2 ;RGI/VSL - PATIENT MOVEMENT DAL; 4/19/13
+DGPMDAL2 ;RGI/VSL - PATIENT MOVEMENT DAL; 5/27/13
  ;;5.3;Registration;**260005**;
 GETFCTY(DATA,IFN,FLDS) ; Get transfer facility
  N TMP,ERR
@@ -115,15 +115,6 @@ LSTPMVT(RETURN,DFN,TYPE,FLDS,AFN) ; Return patient movements.
  S:'$D(FLDS) FLDS="@;.01;.03IE;.06;.07;.17I"
  S SCR="I $P(^(0),U,3)=DFN,$P(^(0),U,2)=TYPE"_$S($D(AFN):",$P(^(0),U,14)=AFN",1:"")
  D LIST^DIC(405,"",FLDS,"",,,,"B",.SCR,"","RETURN","E")
- Q
- ;
-LSTDIAG(RETURN) ; Return movements diagnosis.
- N ID,I,D S I=0
- F  S I=$O(RETURN(I)) Q:I=""  D
- . N DIAG
- . S ID=RETURN(I,"ID")
- . D GETDIAG(.DIAG,ID)
- . M RETURN(I)=DIAG
  Q
  ;
 GETDIAG(RETURN,MFN) ; Return movement diagnosis.

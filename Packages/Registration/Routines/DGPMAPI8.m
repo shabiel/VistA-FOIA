@@ -1,4 +1,4 @@
-DGPMAPI8 ;RGI/VSL - PATIENT MOVEMENT API; 5/24/13
+DGPMAPI8 ;RGI/VSL - PATIENT MOVEMENT API; 5/27/13
  ;;5.3;Registration;**260005**;
 GETLASTM(RETURN,DFN,DGDT,ADT) ; Get last patient movement
  ;Input:
@@ -85,9 +85,26 @@ GETNMVT(RETURN,AFN,DGDT,MFN) ; Get next movement
  S RETURN=1
  Q 1
 GETPAT(RETURN,DFN) ; Get patient
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("NAME") [String] patient name
+ ;      RETURN("SEX") [String] patient sex code (M:MALE, F:FEMALE)
+ ;      RETURN("DOB") [DateTime] date of birth
+ ;      RETURN("MSTAT") [Numeric] marital status IEN (pointer to file 11)
+ ;      RETURN("MEANST") [Numeric] current means test status IEN (pointer to file 408.32)
+ ;      RETURN("DTHDT") [DateTime] date of death
+ ;      RETURN("ELIG") [Numeric] primary eligibility code IEN (pointer to file 8)
+ ;      RETURN("ESTAT") [String] eligibility status code (P:PENDING VERIFICATION, R:PENDING RE-VERIFICATION, V:VERIFIED)
+ ;      RETURN("POFSRV") [Numeric] period of service IEN (pointer to file 21)
+ ;      RETURN("SRILL") [String] condition code (S:SERIOUSLY ILL)
+ ;      RETURN("WARD") [String] ward location name
+ ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,PAT,%
- S FLDS=".01;.02;.03;.05;.06;.08;.14;.351;.361;.3611;.323;401.3;.1"
- S NAMES="NAME;SEX;DOB;MSTAT;RACE;RELIG;MEANST;DTHDT;ELIG;ESTAT;POFSRV;SRILL;WARD"
+ S FLDS=".01;.02;.03;.05;.14;.351;.361;.3611;.323;401.3;.1"
+ S NAMES="NAME;SEX;DOB;MSTAT;MEANST;DTHDT;ELIG;ESTAT;POFSRV;SRILL;WARD"
  S %=$$CHKPAT^DGPMAPI8(.RETURN,$G(DFN),"DFN") Q:'RETURN 0
  D GETPAT^DGPMDAL2(.PAT,+DFN,FLDS)
  D BUILD(.RETURN,.PAT,FLDS,NAMES)
@@ -248,6 +265,17 @@ GETMVTT(RETURN,IFN) ; Get movement type
  Q 1
  ;
 GETPSRV(RETURN,IFN) ; Get period of service
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("NAME") [String] period of service name
+ ;      RETURN("ABV") [String] period of service abbreviation
+ ;      RETURN("CODE") [String] period of service code
+ ;      RETURN("BEGDT") [DateTime] period of service begining date
+ ;      RETURN("ENDDT") [DateTime] period of service ending date
+ ;   IFN [Required,Numeric] period of service IEN (pointer to file 21)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,MVT,RPHY,RPHYMVT,TXT
  S FLDS=".01;.02;.03;.04;.05;"
  S NAMES="NAME;ABV;CODE;BEGDT;ENDDT"
@@ -288,17 +316,6 @@ BUILD(RETURN,REC,FLDS,NAMES) ;
  . S NAME=$$FLDNAME^SDMUTL(FLDS,NAMES,IND)
  . S RETURN(NAME)=REC(IND,"I")_$S(REC(IND,"I")=REC(IND,"E"):"",1:U_REC(IND,"E"))
  Q
-ISDOM(RETURN,DFN,DGDT) ; Is patient on dom?
- K RETURN N VAINDT,VADMVT,DGDOM,DGDOM1
- S:$D(DGDT) VAINDT=DGDT
- S DFN=+DFN,DGDT=+DGDT
- D DOM^DGMTR
- S RETURN=$G(DGDOM)
- Q 1
- ;
-HASMVT(DFN,DGPMT) ; Has movement?
- Q $$HASMVT^DGPMDAL3(+$G(DFN),+$G(DGPMT))
- ;
 CHKWARD(RETURN,WARD,DATE) ; Check ward
  N TMP,TXT K RETURN S RETURN=0
  I $G(WARD)="" S TXT(1)="PARAM('WARD')" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
@@ -362,11 +379,25 @@ CHKREG(RETURN,PARAM,DFN,MAS) ;
  Q 1
  ;
 GETWARD(RETURN,IFN) ; Get ward
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN("NAME") [String] ward name
+ ;      RETURN("BED") [String] bedsection of this ward
+ ;      RETURN("SERVICE") [String] ward service code (M:MEDICINE, S:SURGERY, P:PSYCHIATRY, NH:NHCU, 
+ ;                                 NE:NEUROLOGY, I:INTERMEDIATE MED, R:REHAB MEDICINE, SCI:SPINAL CORD INJURY,
+ ;                                 D:DOMICILIARY, B:BLIND REHAB, NC:NON-COUNT)
+ ;      RETURN("SRILL") [Boolean] seriously ill (1:INCLUDE ON SERIOUSLY ILL LIST)
+ ;      RETURN("SPCTY") [Numeric] specialty IEN (pointer to file 42.4)
+ ;   IFN [Required,Numeric] Ward IEN (pointer to file 42)
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN N IND,NAME,FLDS,NAMES,WARD
  S FLDS=".01;.02;.03;.09;.017;"
  S NAMES="NAME;BED;SERVICE;SRILL;SPCTY"
+ I '$G(IFN) S RETURN=0 D ERRX^DGPMAPIE(.RETURN,"INVPARM","IFN") Q 0
  D GETWARD^DGPMDAL2(.WARD,+$G(IFN),FLDS)
- I WARD=0 M RETURN=WARD S RETURN=0 D ERRX^DGPMAPIE(.RETURN,"MVTTNFND") Q 0
+ I WARD=0 M RETURN=WARD S RETURN=0 D ERRX^DGPMAPIE(.RETURN,"WRDNFND") Q 0
  D BUILD(.RETURN,.WARD,FLDS,NAMES)
  S RETURN=1
  Q 1
