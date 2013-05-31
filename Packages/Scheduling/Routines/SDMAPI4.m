@@ -1,4 +1,4 @@
-SDMAPI4 ;RGI/VSL - APPOINTMENT API; 5/15/13
+SDMAPI4 ;RGI/VSL - APPOINTMENT API; 5/31/13
  ;;5.3;scheduling;**260003**;08/13/93;
 CHECKO(RETURN,DFN,SD,SC,CDT) ; Check out
  ;Input:
@@ -107,18 +107,6 @@ CHKDCO(RETURN,DFN,SD) ; Check delete check out
  S RETURN=1
  Q 1
  ;
-DELCOPC(RETURN,SDOE,SDELHDL,SDELSRC) ; Delete check out (PCE)
- N SC,OE,SDDA,SDEVTF,X,%,SD,DFN
- K RETURN S RETURN=0
- S %=$$SETCO(.SDOE,.DFN,.SD,.OE,.SC,.SDDA)
- I $G(SDELSRC)'="PCE" S X=$$DELVFILE^PXAPI("ALL",OE(.05),"","","")
- I '$$NEW^SDPCE(+SD) D ERRX^SDAPIE(.RETURN,"APTDCOO") Q 0
- I '$G(SDELHDL) N SDATA,SDELHDL S SDEVTF=1 D EVT^SDCOU1(+SDOE,"BEFORE",.SDELHDL,.SDATA)
- S %=$$DELCOL^SDMAPI3(.RETURN,+DFN,+SD,+SC,SDDA,+SDOE,.OE)
- I $G(SDEVTF) D EVT^SDCOU1(+SDOE,"AFTER",.SDELHDL,.SDATA)
- S RETURN=1
- Q 1
- ;
 DELCOSD(RETURN,DFN,SD) ; Delete check out (SD)
  ;Input:
  ; .RETURN [Required,Boolean] Set to 1 if the check-out succeeded
@@ -162,27 +150,6 @@ SETCO(SDOE,DFN,SD,OE,SC,SDDA) ; Set Check out params
  S SDDA=$S('$G(CAPT("IFN")):OE(.09),1:$G(CAPT("IFN")))
  Q 1
  ;
-LSTDAYAP(RETURN,DFN) ; List all day active appointment
- N DAP,PAP,CAP,PFLDS,CFLDS,AP,FLD,NM,PNMS,CNMS,TXT,%
- K RETURN S RETURN=0
- S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
- S PFLDS=".01;3",CFLDS=".01;222;333;444"
- S PNMS="CLINIC;STATUS",CNMS="PATIENT;CIFN;IFN;444"
- D GETDAPTS^SDMDAL2(.DAP,+DFN,$$DT^XLFDT())
- S AP=0
- F  S AP=$O(DAP(AP)) Q:AP=""  D
- . I DAP(AP,2)["C"!(DAP(AP,2)["N")!(DAP(AP,2)="NT") Q
- . D GETPAPT^SDMDAL4(.PAP,+DFN,AP,PFLDS)
- . F FLD=0:0 S FLD=$O(PAP(FLD)) Q:'FLD  D
- . . S NM=$$FLDNAME^SDMUTL(PFLDS,PNMS,FLD)
- . . S RETURN(AP,NM)=PAP(FLD,"I")_U_PAP(FLD,"E")
- . D GETCAPT^SDMDAL4(.CAP,+DFN,AP,CFLDS)
- . F FLD=0:0 S FLD=$O(CAP(FLD)) Q:'FLD  D
- . . S NM=$$FLDNAME^SDMUTL(CFLDS,CNMS,FLD)
- . . S RETURN(AP,"C",NM)=CAP(FLD)
- S RETURN=1
- Q 1
- ;
 GETPAPT(RETURN,DFN,SD) ; Get patient appointment
  N IND,NAME,FLDS,NAMES,APT,%
  K RETURN S RETURN=0
@@ -194,8 +161,7 @@ GETPAPT(RETURN,DFN,SD) ; Get patient appointment
  D GETPAPT^SDMDAL4(.APT,+DFN,+SD)
  F IND=0:0 S IND=$O(APT(IND)) Q:IND=""  D
  . S NAME=$$FLDNAME^SDMUTL(FLDS,NAMES,IND)
- . S RETURN(NAME)=APT(IND,"E")
- . S RETURN(NAME,"I")=APT(IND,"I")
+ . S RETURN(NAME)=APT(IND,"I")_$S($G(APT(IND,"E"))=$G(APT(IND,"I")):"",1:U_$G(APT(IND,"E")))
  S RETURN=1
  Q 1
  ;
@@ -203,16 +169,16 @@ GETCAPT(RETURN,DFN,SD) ; Get clinic appointment
  N IND,NAME,FLDS,NAMES,CAPT,%
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
- S FLDS=".01;1;3;7;8;9;10;30;309;302;303;304;306;222;333;444"
+ S FLDS=".01;1;3;7;8;9;10;30;309;302;303;304;306;222;333;444;555"
  S NAMES="PATIENT;LENGTH;OTHER;ENTRY;MADEDT;OVERBOOK;RQXRAY;EVISIT;CIDT;"
- S NAMES=NAMES_"CIUSER;CODT;COUSER;COENTER;222;333;RQXRAY"
+ S NAMES=NAMES_"CIUSER;CODT;COUSER;COENTER;222;333;RQXRAY;CONSULT"
  I +$G(SD)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
  D GETCAPT^SDMDAL4(.CAPT,+DFN,+SD,FLDS)
  I '$D(CAPT) S RETURN=0 D ERRX^SDAPIE(.RETURN,"APTNFND") Q 0
  F IND=0:0 S IND=$O(CAPT(IND)) Q:IND=""  D
  . S NAME=$$FLDNAME^SDMUTL(FLDS,NAMES,IND) Q:NAME=""
- . S RETURN(NAME)=CAPT(IND)
- S RETURN("STATUS")=$$STATUS^SDAM1(+DFN,+SD,CAPT(222),CAPT(333))
+ . S RETURN(NAME)=CAPT(IND,"I")_$S($G(CAPT(IND,"E"))=$G(CAPT(IND,"I")):"",1:U_$G(CAPT(IND,"E")))
+ S RETURN("STATUS")=$$STATUS^SDAM1(+DFN,+SD,CAPT(222,"I"),CAPT(333,"I"))
  S RETURN=1
  Q 1
  ;
@@ -245,24 +211,70 @@ GETOE(RETURN,SDOE) ; Get outpatient encounter
  Q 1
  ;
 GETPAT(RETURN,DFN) ; Get patient
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN [Boolean] Set to 1 if the the call succeeded
+ ;    RETURN("NAME") [String] Patient name
+ ;    RETURN("SEX") [String] Patient sex code. One of: M^MALE, F^FEMALE
+ ;    RETURN("BIRTH") [DateTime] Birth date
+ ;    RETURN("MSTATUS") [String] Marital status (pointer to file 11) (I^E)
+ ;    RETURN("RELIG") [String] Religious preference  (pointer to file 13) (I^E)
+ ;    RETURN("SSN") [String] Social security number
+ ;    RETURN("DTODTH") [DateTime] Date of death
+ ;    RETURN("REMARKS") [String] Short remarks
+ ;    RETURN("PELIG") [String] Primary eligibility code (pointer to file 8) (I^E)
+ ;    RETURN("PSERV") [String] Period of service (pointer to file 21) (I^E)
+ ;    RETURN("PHONE") [String] Phone number (residence)
+ ;    RETURN("ADD1") [String] Street address line 1
+ ;    RETURN("CELL") [String] Phone number (cellular)
+ ;    RETURN("ADD2") [String] Street address line 2
+ ;    RETURN("PAGER") [String] Pager number
+ ;    RETURN("COUNTRY") [Numeric] Contry
+ ;    RETURN("ZIP") [Numeric] ZIP code
+ ;    RETURN("CITY") [String] City
+ ;    RETURN("STATE") [String] State (pointer to file 5) (I^E)
+ ;    RETURN("EMAIL") [String] Email address
+ ;    RETURN("EXPOI") [String] Radiation exposure. One of: Y^YES, N^NO., U^UNKNOWN
+ ;    RETURN("POWSTAT") [String] POW status. One of: Y^YES, N^NO., U^UNKNOWN
+ ;    RETURN("AGENTO") [String] Agent orange exposure. One of: Y^YES, N^NO., U^UNKNOWN
+ ;    RETURN("AGENTOL") [String] Agent orange exposure location. One of: K^KOREAN DMZ, V^VIETNAM
+ ;    RETURN("SASIA") [String] Environmental contaminants. One of: Y^YES, N^NO., U^UNKNOWN
+ ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;Output:
+ ;  1=Success,0=Failure
  N IND,NAME,FLDS,NAMES,PAT,%
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
- S FLDS=".01;.02;.03;.05;.08;.361;.323;.131;.111;.134;.112;.135;.1173;.1112;"
- S FLDS=FLDS_".114;.115;.1172;.1171;.133;.32103;.525;.32102;.3213;.32115;.322013"
- S NAMES="PATIENT;SEX;BIRTH;MSTATUS;RELIG;PELIG;PSERV;PHONE;ADD1;"
+ S FLDS=".01;.02;.03;.05;.08;.09;.351;.091;.361;.323;.131;.111;.134;.112;.135;.117;.116;"
+ S FLDS=FLDS_".114;.115;.1172;.1171;.133;.32103;.525;.32102;.3213;.32115;.322013;"
+ S NAMES="NAME;SEX;BIRTH;MSTATUS;RELIG;SSN;DTODTH;REMARKS;PELIG;PSERV;PHONE;ADD1;"
  S NAMES=NAMES_"CELL;ADD2;PAGER;COUNTRY;ZIP;CITY;STATE;PCODE;PROVINCE;"
  S NAMES=NAMES_"EMAIL;EXPOI;POWSTAT;AGENTO;AGENTOL;PROJ;SASIA"
- D GETPAT^SDMDAL4(.PAT,+DFN)
+ D GETPAT^SDMDAL4(.PAT,+DFN,FLDS)
  F IND=0:0 S IND=$O(PAT(IND)) Q:IND=""  D
  . S NAME=$$FLDNAME^SDMUTL(FLDS,NAMES,IND) Q:NAME=""
- . S RETURN(NAME)=PAT(IND,"E")
- . S RETURN(NAME,"I")=PAT(IND,"I")
+ . S RETURN(NAME)=PAT(IND,"I")_$S($G(PAT(IND,"E"))=$G(PAT(IND,"I")):"",1:U_PAT(IND,"E"))
  S RETURN=1
  Q 1
  ;
-GETCHLD(RETURN,SDOE) ; Get children encounters
+GETCHLD(RETURN,SDOE) ; Get children outpatient encounters
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN [Boolean] Set to 1 if the the call succeeded
+ ;    RETURN(#,"ID") [Numeric] Child outpatient encounter IEN
+ ;    RETURN(#,"CLINIC") [Numeric] Clinic IEN
+ ;    RETURN(#,"DATE") [DateTime] Encounter date/time
+ ;    RETURN(#,"PATIENT") [Numeric] Patient IEN
+ ;    RETURN(#,"SCODE") [Numeric] Clinic stop code
+ ;    RETURN(#,"VISIT") [Numeric] Visit IEN
+ ;   SDOE [Required,Numeric] Outpatient encounter IEN
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN S RETURN=0
+ I '$G(SDOE) S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SDOE") Q 0
+ I '$$OEEXST^SDMDAL4(+SDOE) D ERRX^SDAPIE(.RETURN,"OENFND") Q 0
  D GETCHLD^SDMDAL4(.RETURN,+SDOE)
  S RETURN=1
  Q 1
@@ -275,36 +287,57 @@ CANDELCO(RETURN) ; Check if user can delete check out data
  S RETURN=1
  Q 1
  ;
-DELCODT(RETURN,SDOE) ;Delete Check Out Process Completion Date
- K RETURN S RETURN=0
- D DELCODT^SDMDAL4(.RETURN,+SDOE)
- S RETURN=1
- Q 1
- ;
 ADDTSTS(RETURN,DFN,SD,LAB,XRAY,EKG) ; Append tests to pending appointment
- N DATA,ERR,%
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the update succeeded
+ ;                            Set to Error description if the call fails
+ ;  DFN [Required,Numeric] Patient IEN
+ ;  SD [Required,DateTime] Appointment date/time
+ ;  LAB [Optional,DateTime] If this patient is scheduled for laboratory tests in conjunction with this appointment, 
+ ;                          set LAB to the time the patient should report.
+ ;  XRAY [Optional,DateTime] If this patient is scheduled for x-ray in conjunction with this appointment,
+ ;                           set XRAY to the time the patient should report.
+ ;  EKG [Optional,DateTime] If this patient is scheduled for EKG in conjunction with this appointment,
+ ;                          set EKG to the time the patient should.
+ ;Output:
+ ; 1=Success,0=Failure  
+ N DATA,ERR,%,I
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
- I +$G(SD)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
+ I '$$DTIME^SDCHK(.RETURN,.SD,"SD") S RETURN=0 Q 0
+ S %=$$CHKLABS^SDMAPI5(.RETURN,SD,,$G(LAB),DFN,"LAB") Q:'RETURN 0
+ S %=$$CHKLABS^SDMAPI5(.RETURN,SD,,$G(XRAY),DFN,"XRAY") Q:'RETURN 0
+ S %=$$CHKLABS^SDMAPI5(.RETURN,SD,,$G(EKG),DFN,"EKG") Q:'RETURN 0
+ Q:'RETURN 0
  S %=$$ISOECO^SDMAPI4(.ERR,+DFN,+SD,"add")
  I ERR=1 M RETURN=ERR S RETURN=0 Q 0
- S:$D(LAB) DATA(5)=+LAB
- S:$D(XRAY) DATA(6)=+XRAY
- S:$D(EKG) DATA(7)=+EKG
+ S:$D(LAB) DATA(5)=$P(SD,".")_"."_+$P(LAB,".",2)
+ S:$D(XRAY) DATA(6)=$P(SD,".")_"."_+$P(XRAY,".",2)
+ S:$D(EKG) DATA(7)=$P(SD,".")_"."_+$P(EKG,".",2)
  D UPDPAPT^SDMDAL4(.DATA,+DFN,+SD)
  S RETURN=1
  Q 1
  ;
 DELTSTS(RETURN,DFN,SD,LAB,XRAY,EKG) ; Delete tests from pending appointment
- N DATA,ERR,%
+ ;Input:
+ ; .RETURN [Required,Boolean] Set to 1 if the update succeeded
+ ;                            Set to Error description if the call fails
+ ;  DFN [Required,Numeric] Patient IEN
+ ;  SD [Required,DateTime] Appointment date/time
+ ;  LAB [Optional,Boolean] If is set to 1 LAB date/time will be removed.
+ ;  XRAY [Optional,Boolean] If is set to 1 XRAY date/time will be removed.
+ ;  EKG [Optional,Boolean] If is set to 1 EKG date/time will be removed.
+ ;Output:
+ ; 1=Success,0=Failure  
+ N DATA,ERR,%,I
  K RETURN
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
- I +$G(SD)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
+ I '$$DTIME^SDCHK(.RETURN,.SD,"SD") S RETURN=0 Q 0
  S %=$$ISOECO^SDMAPI4(.ERR,+DFN,+SD,"delete")
  I ERR=1 M RETURN=ERR S RETURN=0 Q 0
- S:$D(LAB) DATA(5)="@"
- S:$D(XRAY) DATA(6)="@"
- S:$D(EKG) DATA(7)="@"
+ S:+$G(LAB)=1 DATA(5)="@"
+ S:+$G(XRAY)=1 DATA(6)="@"
+ S:+$G(EKG)=1 DATA(7)="@"
  D UPDPAPT^SDMDAL4(.DATA,+DFN,+SD)
  S RETURN=1
  Q 1
@@ -328,8 +361,15 @@ ISOECO(RETURN,DFN,SD,OP) ; Is outpatient encounter checked out?
  Q 1
  ;
 GETHOL(RETURN,SD) ; Get holiday
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN [Boolean] Set to 1 if the specified date is a holiday, 0 otherwise.
+ ;    RETURN(SD) [String] Set to date^holiday name if date is a holiday.
+ ;   SD [Required,Date] The date checked if is a holiday
+ ;Output:
+ ;  1=Success,0=Failure
  K RETURN S RETURN=0
- I +$G(SD)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SD") Q 0
+ I '$$DTIME^SDCHK(.RETURN,.SD,"SD") Q 0
  D GETHOL^SDMDAL1(.RETURN,+$P(SD,"."))
- S RETURN=1
  Q 1

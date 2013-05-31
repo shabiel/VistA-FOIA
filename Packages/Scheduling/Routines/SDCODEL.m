@@ -1,4 +1,4 @@
-SDCODEL ;ALB/RMO,ESW - Delete - Check Out; 5/14/13
+SDCODEL ;ALB/RMO,ESW - Delete - Check Out; 5/31/13
  ;;5.3;Scheduling;**20,27,44,97,105,110,132,257,260003**;Aug 13, 1993
  ;
 EN(SDOE,SDMOD,SDELHDL,SDELSRC) ;Delete Check Out
@@ -53,7 +53,7 @@ ENQ Q
 COMDT(SDOE,SDMOD) ;Delete Check Out Process Completion Date
  N RETURN
  I $G(SDMOD) W !?3,"...deleting check out process completion date"
- S %=$$DELCODT^SDMAPI4(.RETURN,SDOE)
+ S DA=SDOE,DIE="^SCE(",DR=".07///@" D ^DIE
  Q
 DELOE(SDOE,OE,SDMOD) ; Delete Outpatient Encounter
  N X

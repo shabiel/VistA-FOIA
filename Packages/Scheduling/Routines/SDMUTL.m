@@ -1,4 +1,4 @@
-SDMUTL ;RGI/CBR - UI UTILS; 1/14/2013
+SDMUTL ;RGI/CBR - UI UTILS; 5/31/13
  ;;5.3;scheduling;**260003**;08/13/93;
 FLDNAME(FLDS,NAMES,FLD)    ; Returns field name for display
  N NAME,I,J,S
@@ -7,11 +7,4 @@ FLDNAME(FLDS,NAMES,FLD)    ; Returns field name for display
  Q:J'>0 NAME
  S NAME=$P(NAMES,S,J)
  Q NAME
- ;
-READ(TYPE,PROMPT,DEFAULT,HELP) ; Calls reader, returns response
- N DIR,DA,X,Y
- S DIR(0)=TYPE,DIR("A")=PROMPT I $D(DEFAULT) S DIR("B")=DEFAULT
- I $D(HELP) S DIR("?")=HELP
- D ^DIR
- Q Y
  ;

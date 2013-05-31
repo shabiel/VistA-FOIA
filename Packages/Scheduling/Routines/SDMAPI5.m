@@ -1,4 +1,4 @@
-SDMAPI5 ;RGI/VSL - APPOINTMENT API; 5/21/13
+SDMAPI5 ;RGI/VSL - APPOINTMENT API; 5/31/13
  ;;5.3;scheduling;**260003**;08/13/93;
 CHKTYPE(RETURN,DFN,TYPE) ; Check appointment type
  N PAT,ERR,ELIG,ATYP
@@ -40,14 +40,15 @@ CHKSRT(RETURN,SRT) ; Check scheduling request type
  I 'RETURN D ERRX^SDAPIE(.RETURN,"SRTNFND") Q 0
  Q 1
  ;
-CHKLABS(RETURN,SD,CLN,TEST,DFN) ; Check tests date
+CHKLABS(RETURN,SD,CLN,TEST,DFN,PNAME) ; Check tests date
  N APT,SD1,%
  K RETURN S RETURN=0
  I $G(TEST)="" S RETURN=1 Q 1
- I +$G(TEST)'>0 D ERRX^SDAPIE(.RETURN,"INVPARAM",$G(TEST)) Q 0
+ I '$G(TEST) D ERRX^SDAPIE(.RETURN,"INVPARAM",$G(PNAME)) Q 0
+ I '$$DTIME^SDCHK(.RETURN,$P(SD,".")_"."_+$P(TEST,".",2),$G(PNAME)) S RETURN=0 Q 0
  S SD1=+$G(TEST)
- I SD1=SD D ERRX^SDAPIE(.RETURN,"TSTAHAPT",CLN(.01)) Q 0
  S %=$$GETAPTS^SDMAPI1(.APT,DFN,SD1)
+ I +SD1=+SD D ERRX^SDAPIE(.RETURN,"TSTAHAPT",$S($D(CLN(.01)):CLN(.01),1:$P(APT("APT",SD1,"CLINIC"),U,2))) Q 0
  I $D(APT("APT",SD1)),("I"[$P($G(APT("APT",SD1,"STATUS")),U,1)) D  Q 0
  . D ERRX^SDAPIE(.RETURN,"TSTAHAPT",$P(APT("APT",SD1,"CLINIC"),U,2))
  S RETURN=1
@@ -62,9 +63,23 @@ CHKCONS(RETURN,CONS) ; Check request/consultation
  S RETURN=1
  Q 1
  ;
-LSTASTYP(RETURN,SEARCH,START,NUMBER,TYPE) ; List appointment subtypes
- N LST,FLDS
- M LST=RETURN
+LSTASTYP(RETURN,SEARCH,START,NUMBER,TYPE) ; List appointment type sub-categories
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;    RETURN(0) [String] # of entries found
+ ;    RETURN(#,ID) [Numeric] Sharing agreement sub-category IEN (pointer to file 35.2)
+ ;    RETURN(#,NAME) [String] Sharing agreement sub-category name
+ ;    RETURN(#,STATUS) [Boolean] Sharing agreement category status
+ ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
+ ;   START [Optional,String] The appointment type sub-category name from which to begin the list. Default: ""
+ ;   NUMBER [Optional,Numeric] Number of entries to return. Default: All entries
+ ;   TYPE [Required,Numeric] Appointment type IEN (pointer to file 409.1)
+ ;Output:
+ ;  1=Success,0=Failure
+ N LST,FLDS,APPT K RETURN S RETURN=0
+ I '+$G(TYPE) D ERRX^SDAPIE(.RETURN,"INVPARAM","TYPE") Q 0
+ I '$$TYPEXST^SDMDAL3(+TYPE) D ERRX^SDAPIE(.RETURN,"TYPNFND") Q 0
  D LSTASTYP^SDMDAL2(.LST,$$UP^XLFSTR($G(SEARCH)),.START,$G(NUMBER),+$G(TYPE))
  K RETURN
  S FLDS(.02)="NAME",FLDS(.03)="STATUS"
@@ -113,7 +128,7 @@ GETCAPT(RETURN,DFN,SD) ; Get clinic appointment
  . S RETURN(NAME)=CAPT(IND,"I")_U_CAPT(IND,"E")
  . S:RETURN(NAME)=U RETURN(NAME)=""
  . S:$P(RETURN(NAME),U)=$P(RETURN(NAME),U,2) RETURN(NAME)=$P(RETURN(NAME),U)
- S RETURN("RQXRAY")=CAPT(444)
- S RETURN("CSTATUS")=$$STATUS^SDAM1(+DFN,+SD,CAPT(222),CAPT(333))
+ S RETURN("RQXRAY")=CAPT(444,"I")
+ S RETURN("CSTATUS")=$$STATUS^SDAM1(+DFN,+SD,CAPT(222,"I"),CAPT(333,"I"))
  Q 1
  ;

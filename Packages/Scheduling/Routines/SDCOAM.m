@@ -1,4 +1,4 @@
-SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 4/11/13
+SDCOAM ;ALB/RMO - Appt Mgmt Actions - Check Out; 5/31/13
  ;;5.3;Scheduling;**1,20,27,66,132,260003**;08/13/93
  ;
 CO(SDCOACT,SDCOACTD) ;Check Out Classification, Provider and Diagnosis
@@ -12,12 +12,11 @@ CO(SDCOACT,SDCOACTD) ;Check Out Classification, Provider and Diagnosis
  .I $D(^TMP("SDAMIDX",$J,SDCOAP)) K SDAT S SDAT=^(SDCOAP) D
  ..W !!,^TMP("SDAM",$J,+SDAT,0)
  ..S DFN=+$P(SDAT,"^",2),SDT=+$P(SDAT,"^",3),SDCL=+$P(SDAT,"^",4)
- ..N PAPT,CAPT
- ..S %=$$GETSCAP^SDMAPI1(.CAPT,SDCL,DFN,SDT)
- ..S SDDA=$G(CAPT("IFN"))
- ..S %=$$GETPAPT^SDMAPI4(.PAPT,DFN,SDT)
- ..S SDOE=$G(PAPT("OE","I"))
- ..I 'SDOE!('$G(CAPT("CHECKOUT"))) W !!,*7,">>> "_$$EZBLD^DIALOG(480000.029),SDCOACTD,"." D PAUSE^VALM1 Q
+ ..N APT
+ ..S %=$$GETAPT^SDMAPI1(.APT,DFN,SDT)
+ ..S SDDA=$G(APT(333))
+ ..S SDOE=+$G(APT("OE"))
+ ..I 'SDOE!('$G(APT("CODT"))) W !!,*7,">>> "_$$EZBLD^DIALOG(480000.029),SDCOACTD,"." D PAUSE^VALM1 Q
  ..D ACT(SDCOACT,SDOE,DFN,SDT,SDCL,SDDA,+SDAT)
  S VALMBCK="R"
  K SDAT

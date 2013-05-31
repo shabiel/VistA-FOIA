@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 5/16/13
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 5/31/13
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -87,35 +87,7 @@ CLNRGHT(RETURN,CLN) ; Verifies (DUZ) user access to Clinic
  S RETURN=1
  Q 1
  ;
-CLNVSC(RETURN,SC) ; Verifies clinic stop code validation
- N DATA,TEXT
- K RETURN S RETURN=0
- I +$G(SC)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","SC") Q 0
- D GETCSC^SDMDAL1(.DATA,+SC)
- I $S('$D(DATA):1,'DATA(2):0,1:$G(DATA(2))'>DT) D  Q RETURN
- . S TEXT(1)=+SC
- . D ERRX^SDAPIE(.RETURN,"CLNSCIN",.TEXT)
- . S RETURN=0
- S RETURN=1
- Q RETURN
- ;
 GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
- ;Input:
- ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
- ;                           Set to Error description if the call fails
- ;    RETURN [Boolean] Set to 1 if the the call succeeded
- ;    RETURN("CHECKIN") [DateTime] Check in date
- ;    RETURN("CHECKOUT") [DateTime] Check out date
- ;    RETURN("CONSULT") [Numeric] Consult associated with this appointment (pointer to REQUEST/CONSULTATION FILE <#123>)
- ;    RETURN("DATE") [DateTime] Date appointment made
- ;    RETURN("IFN") [Numeric]Clinic appointment IEN
- ;    RETURN("LENGTH") [Numeric] Appontment length (minutes)
- ;    RETURN("USER") [Numeric]Data entry clerk IEN
- ;   SC [Required,Numeric] Clinic IEN
- ;   DFN [Required,Numeric] Patient IEN
- ;   SD [Required,DateTime] Appointment date/time
- ;Output:
- ;  1=Success,0=Failure
  N NOD0,CO,%
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
@@ -131,6 +103,63 @@ GETSCAP(RETURN,SC,DFN,SD) ; Get clinic appointment
  . S RETURN("CHECKIN")=$P(CO,U,1)
  . S RETURN("LENGTH")=$P(NOD0,U,2)
  . S RETURN("CONSULT")=$P($G(RETURN("CONS")),U)
+ S RETURN=1
+ Q 1
+ ;
+GETAPT(RETURN,DFN,SD) ; Get appointment
+ S FLDS=".01;1;3;9;10;30;309;302;303;304;306;222;333;444;555"
+ S NAMES="PATIENT;LENGTH;OTHER;OVERBOOK;RQXRAY;EVISIT;CIDT;"
+ S NAMES=NAMES_"CIUSER;CODT;COUSER;COENTER;222;333;RQXRAY;CONSULT"
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;		RETURN [Boolean] Set to 1 if the the call succeeded, 0 otherwise
+ ;		RETURN("CLINIC") [String] Clinic (pointer to file 44) (I^E)
+ ;		RETURN("STATUS") [String] Appointment status (I^E)
+ ;		RETURN("LABDT")	[String] The date/time the patient should report for LAB tests (I^E)
+ ;		RETURN("XRAYDT") [String] The date/time the patient should report for XRAY tests (I^E)
+ ;		RETURN("EKGDT") [String] The date/time the patient should report for EKG tests (I^E)
+ ;		RETURN("PURPOSE") [String] One of: 1^C&P, 2^10-10, 3^SCHEDULED VISIT, 4^UNSCHED. VISIT
+ ;		RETURN("ARBK") [String] Auto-rebooked appt. date/time (I^E)
+ ;		RETURN("CVISIT") [String] Collateral visit flag. Empty or 1^YES 
+ ;		RETURN("NOSHOWBY") [String] The date/time the no-show was cancelled (I^E)
+ ;		RETURN("NOSHOWDT") [String] The user who cancelled the no-show (pointer to file 200) (I^E)
+ ;		RETURN("CREASON") [String] Cancellation reason (pointer to file 409.2) (I^E)
+ ;		RETURN("TYPE") [String] Type of appointment (pointer file 409.1) (I^E)
+ ;		RETURN("CREMARKS") [String] Cancellation remarks
+ ;		RETURN("ENTRY") [String] User who made appointment (pointer to file 200) (I^E)
+ ;		RETURN("MADEDT") [String] The date the appointment was entered into the scheduling system (I^E)
+ ;		RETURN("OE") [String] Outpatient encounter created from this appointment (pointer to file 409.68) (I^E)
+ ;		RETURN("RTYPE") [String] One of: N^'NEXT AVAILABLE' APPT., C^OTHER THAN 'NEXT AVA.' (CLINICIAN REQ.),
+ ;                               P^OTHER THAN 'NEXT AVA.' (PATIENT REQ.), W^WALKIN APPT., M^MULTIPLE APPT. BOOKING,
+ ;                               A^AUTO REBOOK, O^OTHER THAN 'NEXT AVA.' APPT.
+ ;		RETURN("NEXTA") [String] One of: 0^NOT INDICATED TO BE A 'NEXT AVA.' APPT., 1^'NEXT AVA.' APPT. INDICATED BY USER,
+ ;                               2^'NEXT AVA.' APPT. INDICATED BY CALCULATION, 3^'NEXT AVA.' APPT. INDICATED BY USER & CALCULATION
+ ;		RETURN("DDATE") [String] Desired date of appointment (I^E)
+ ;		RETURN("FVISIT") [String] One of: 0^NO, 1^YES
+ ;		RETURN("PATIENT") [String] Patient (pointer to file 2) (I^E)
+ ;		RETURN("LENGTH") [Numeric]Appointment length (minutes)
+ ;		RETURN("OTHER") [String] Other observations
+ ;		RETURN("OVERBOOK") [String] O^OVERBOOK if this appointment was an overbook, empty otherwise
+ ;		RETURN("RQXRAY") [String] Y^YES if prior x-ray results are required to be sent to clinic, empty otherwise
+ ;		RETURN("EVISIT") [String] Eligibility of visit (pointer to file 8) (I^E)
+ ;		RETURN("CIDT") [String] Check in date (I^E)
+ ;		RETURN("CIUSER") [String] Check in user (pointer to file 200) (I^E)
+ ;		RETURN("CODT") [String] Check out date (I^E)
+ ;		RETURN("COUSER") [String] Check out user (pointer to file 200) (I^E)
+ ;		RETURN("COENTER") [String] Date and time that the check out was entered (I^E)
+ ;		RETURN("CONSULT") [Numeric] Consult associated with this appointment (pointer to REQUEST/CONSULTATION FILE <#123>)
+ ;   DFN [Required,Numeric] Patient IEN
+ ;   SD [Required,DateTime] Appointment date/time
+ ;Output:
+ ;  1=Success,0=Failure
+ N NOD0,CO,%,PAPT,CAPT
+ K RETURN S RETURN=0
+ S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
+ I '$$DTIME^SDCHK(.RETURN,.SD,"SD") S RETURN=0 Q 0
+ S %=$$GETPAPT^SDMAPI4(.PAPT,+DFN,+SD)
+ S %=$$GETCAPT^SDMAPI4(.CAPT,+DFN,+SD)
+ M RETURN=PAPT,RETURN=CAPT
  S RETURN=1
  Q 1
  ;
@@ -150,16 +179,6 @@ SLOTS(RETURN,SC) ; Get available slots
  D SLOTS^SDMDAL2(.RETURN,+SC)
  S RETURN=1
  Q 1
- ;
-SCEXST(RETURN,CSC) ; Get Stop Cod Exception status
- N RET,LAST
- K RETURN S RETURN=0
- I +$G(CSC)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","CSC") Q 0
- D SCEXST^SDMDAL2(.RET,CSC)
- S RETURN=RET
- I RET>0 S LAST=99999999999,LAST=$O(RET("EFFECTIVE DATE",LAST),-1) D
- . M RETURN=RET("EFFECTIVE DATE",LAST)
- Q RETURN
  ;
 LSTAPPT(RETURN,SEARCH,START,NUMBER) ; Lists appointment types
  ;Input:
@@ -314,12 +333,54 @@ FRSTAVBL(RETURN,SC) ; Get first available date
  D FRSTAVBL^SDMDAL2(.RETURN,+SC,$$FMADD^XLFDT($$DT^XLFDT(),,,,-1))
  Q 1
  ;
+LSTAGRP(RETURN) ; Returns appointment groups
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;      RETURN [Boolean] 1=success, 0=failure
+ ;      RETURN(#,"ID") [Numeric] Appointment group IEN
+ ;      RETURN(#,"NAME") [String] Appointment group name
+ ;      RETURN(#,"TITLE") [String] Appointment group title
+ ;Output:
+ ;  1=Success,0=Failure
+ N LST,FLDS K RETURN S RETURN=0
+ D LSTAGRP^SDMDAL1(.LST)
+ S FLDS(.02)="TITLE"
+ D BLDLST^SDMAPI(.RETURN,.LST,.FLDS)
+ S RETURN=1
+ Q 1
+ ;
 LSTCAPTS(RETURN,SC,SDBEG,SDEND,STAT) ; Returns clinic appointments filtered by date and status
- N APTS,FAPTS,GROUPS,%
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;      RETURN [Boolean] 1=success, 0=failure
+ ;      RETURN(#,"BID") [Numeric] Last 4 digits of the patient SSN
+ ;      RETURN(#,"CIDT") [DateTime] Check-in date (internal format)
+ ;      RETURN(#,"CLINIC") [String] Clinic (pointer to file 44) (I^E)
+ ;      RETURN(#,"CODT") [DateTime] Check-out date (internal format)
+ ;      RETURN(#,"DATE") [DateTime] Appointment date (internal format)
+ ;      RETURN(#,"EKG") [DateTime] EKG tests date/time (internal format)
+ ;      RETURN(#,"LAB") [DateTime] LAB tests date/time (internal format)
+ ;      RETURN(#,"LEN") [Numeric] Appointment length (minutes)
+ ;      RETURN(#,"OE") [Numeric] Outpatient encounter IEN (pointer to file 409.68)
+ ;      RETURN(#,"PATIENT") [String] Patient (pointer to file 2) (I^E)
+ ;      RETURN(#,"STAT") [String] appt status ifn ^ status name ^ print status ^
+ ;                        check in d/t ^ check out d/t ^ adm mvt ifn
+ ;      RETURN(#,"XRAY") [DateTime] XRAY tests date/time (internal format)
+ ;   SC [Required,Numeric] Clinic IEN (pointer to file 44)
+ ;   SDBEG [Required,DateTime] Start date
+ ;   SDEND [Required,DateTime] End date
+ ;   STAT [Required,Numeric] Appointment group IEN (pointer to file 409.62)
+ ;Output:
+ ;  1=Success,0=Failure
+ N APTS,FAPTS,GROUPS,%,GRP
  K RETURN S RETURN=0
  S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
- I $G(STAT)="" D ERRX^SDAPIE(.RETURN,"INVPARAM","STAT") Q 0
- D GROUP^SDAM($P(STAT,U),.GROUPS)
+ S:$G(STAT)="" STAT=6
+ S GRP=$$GETGRP^SDMDAL1($G(STAT))
+ I GRP="" S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","STAT") Q 0
+ D GROUP^SDAM($P(GRP,U),.GROUPS)
  S:'$D(SDBEG) SDBEG=1 S:'$D(SDEND) SDEND=99999999
  D LSTCAPTS^SDMDAL1(.APTS,+SC,+SDBEG,+SDEND)
  D BLDAPTS(.RETURN,.APTS,+SC,,.GROUPS)
@@ -327,11 +388,23 @@ LSTCAPTS(RETURN,SC,SDBEG,SDEND,STAT) ; Returns clinic appointments filtered by d
  Q 1
  ;
 LSTPAPTS(RETURN,DFN,SDBEG,SDEND,STAT) ; Returns patient appointments filtered by date and status
- N APTS,FAPTS,GROUPS,%
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
+ ;                           Set to Error description if the call fails
+ ;      See LSTCAPTS^SDMAPI1 for detailed RETURN format
+ ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   SDBEG [Required,DateTime] Start date
+ ;   SDEND [Required,DateTime] End date
+ ;   STAT [Required,Numeric] Appointment group IEN (pointer to file 409.62)
+ ;Output:
+ ;  1=Success,0=Failure
+ N APTS,FAPTS,GROUPS,%,GRP
  K RETURN S RETURN=0
  S %=$$CHKPAT^SDMAPI3(.RETURN,.DFN) Q:'% 0
- I $G(STAT)="" D ERRX^SDAPIE(.RETURN,"INVPARAM","STAT") Q 0
- D GROUP^SDAM($P(STAT,U),.GROUPS)
+ S:$G(STAT)="" STAT=6
+ S GRP=$$GETGRP^SDMDAL1($G(STAT))
+ I GRP="" S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","STAT") Q 0
+ D GROUP^SDAM($P(GRP,U),.GROUPS)
  S:'$D(SDBEG) SDBEG=DT S:'$D(SDEND) SDEND=99999999
  D LSTPAPTS^SDMDAL1(.APTS,+DFN,+SDBEG,+SDEND)
  D BLDAPTS(.RETURN,.APTS,,+DFN,.GROUPS)
@@ -351,27 +424,27 @@ BLDAPTS(RETURN,APTS,SSC,SDFN,GROUPS) ; Build appointment list
  . S SDDA=APTS(IND,"SDDA")
  . S CDATA=$G(APTS(IND,"CDATA"))
  . S SDSTAT=$$STATUS^SDAM1(DFN,SD,SC,SDATA,$S($D(SDDA):SDDA,1:""))
+ . F  S SDSTAT=$P(SDSTAT,";")_U_$P(SDSTAT,";",2,99)  Q:SDSTAT'[";"
  . Q:'$$CHK^SDAM1(DFN,SD,SC,,.GROUPS,SDSTAT)
  . Q:$G(SSC)&(($P(CDATA,U,9)="C")!($P(SDATA,U,2)["C")&($G(SC)))
  . S CNT=CNT+1
  . D 2^VADPT
  . S RETURN(CNT,"BID")=VA("BID")
- . S RETURN(CNT,"NAME")=VADM(1)
  . D GETPAPT^SDMDAL4(.PAPT,DFN,SD)
  . S RETURN(CNT,"GAF")=$$GAFREQ(DFN,SC,$P(SDATA,U,11))
- . S RETURN(CNT,"SD")=SD
+ . S RETURN(CNT,"DATE")=SD
  . S RETURN(CNT,"STAT")=SDSTAT
  . S RETURN(CNT,"STATI")=PAPT(3,"I")
  . S RETURN(CNT,"OE")=PAPT(21,"I")
- . S RETURN(CNT,"DFN")=DFN
+ . S RETURN(CNT,"PATIENT")=DFN_U_VADM(1)
  . S RETURN(CNT,"LAB")=$P(SDATA,U,3)
  . S RETURN(CNT,"XRAY")=$P(SDATA,U,4)
  . S RETURN(CNT,"EKG")=$P(SDATA,U,5)
- . S RETURN(CNT,"SC")=SC
  . D GETCAPT^SDMDAL4(.CAPT,DFN,SD)
  . S RETURN(CNT,"LEN")=$G(CAPT(1))
- . S RETURN(CNT,"CLINIC")=PAPT(.01,"E")
- . S RETURN(CNT,"SDDA")=APTS(IND,"SDDA")
+ . S RETURN(CNT,"CIDT")=$G(CAPT(309,"I"))
+ . S RETURN(CNT,"CODT")=$G(CAPT(303,"I"))
+ . S RETURN(CNT,"CLINIC")=SC_U_PAPT(.01,"E")
  . S:$G(APTS(IND,"CONS"))>0 RETURN(CNT,"CSTAT")=$$CNSSTAT^SDMEXT(APTS(IND,"CONS"))
  S RETURN=1
  Q
@@ -383,12 +456,26 @@ GAFREQ(DFN,SC,CVSIT) ;
  . S SDGAF=$$NEWGAF^SDUTL2(+DFN),SDGAFST=$P(SDGAF,"^") Q
  Q 0
  ;
-GETCSC(RETURN,SC) ; Get clinic stop code
- N CLN,%
+GETCSC(RETURN,CSC) ; Get clinic stop code
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the patient has pending appointments
+ ;                             Set to Error description if the call fails
+ ;      RETURN("ID") [Numeric] Clinic stop code IEN (pointer to file 40.7)
+ ;      RETURN("NAME") [String] Clinic stop code name
+ ;      RETURN("AMIS") [Numeric] AMIS reporting stop code
+ ;      RETURN("IDT") [DateTime] Inactive date
+ ;   CSC [Required,Numeric] Clinic stop code IEN (pointer to File 40.7)
+ ;Output:
+ ;  1=Success,0=Failure
+ N %,CS
  K RETURN S RETURN=0
- S %=$$CHKCLN^SDMAPI3(.RETURN,.SC) Q:'% 0
- D GETCLN^SDMDAL1(.CLN,+SC,1)
- D GETCSC^SDMDAL1(.RETURN,$G(CLN(8)))
+ I '$G(CSC) D ERRX^SDAPIE(.RETURN,"INVPARAM","CSC") Q 0
+ D GETCSC^SDMDAL1(.CS,+CSC)
+ I '$D(CS) S TEXT(1)=+CSC D ERRX^SDAPIE(.RETURN,"CLNSCIN",.TEXT) Q 0
+ S RETURN("ID")=+CSC
+ S RETURN("NAME")=CS(.01)
+ S RETURN("AMIS")=CS(1)
+ S RETURN("IDT")=CS(2)
  S RETURN=1
  Q 1
  ;

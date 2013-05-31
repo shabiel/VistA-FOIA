@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 5/14/13
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 5/31/13
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -31,8 +31,8 @@ EN1 ;
  K PAR("PRMPT")
  I '$D(ORACTION),'$D(SDFN) S Y=$$SELPAT^SDMUI(.PAR) S:+Y=0 X="" S DFN=+Y G:+Y<0 END:$D(SDCLN),^SDM0:X[U,SDM
  S:$D(SDFN) DFN=SDFN
- S %=$$GETPAT^SDMAPI3(.PAT,DFN,1)
- I $D(PAT("DATE OF DEATH")),PAT("DATE OF DEATH")]"" W !?10,*7,$$EZBLD^DIALOG(480000.1) S:$D(SDFN) SDAMERR="" G END:$D(SDFN),SDM
+ S %=$$GETPAT^SDMAPI4(.PAT,DFN)
+ I $D(PAT("DODTH")),PAT("DODTH")]"" W !?10,*7,$$EZBLD^DIALOG(480000.1) S:$D(SDFN) SDAMERR="" G END:$D(SDFN),SDM
  D ^SDM4 I $S('$D(COLLAT):1,COLLAT=7:1,1:0) G:$D(SDCLN) END G SDM
  ;-- get sub-category for appointment type
  S SDXSCAT=$$SUB^DGSAUTL(SDAPTYP,2,"")
@@ -66,19 +66,19 @@ PEND S %=""
  . . W:$G(PEND(XIN,"CONSULT LINK"))>0 " Consult Appt."
  . . S CN=CN+1
  ;Prompt for ETHNICITY if no value on file
- I '$O(PAT("ETHNICITY INFORMATION","")) D
+ I '$O(^DPT(+DFN,.06,0)) D
  .S DA=DFN,DR="6ETHNICITY",DIE="^DPT("
  .S DR(2,2.06)=".01ETHNICITY"
  .D ^DIE K DR
  ;Prompt for RACE if no value on file
- I '$O(PAT("RACE INFORMATION","")) D
+ I '$O(^DPT(DFN,.02,0)) D
  .S DA=DFN,DR="2RACE",DIE="^DPT("
  .S DR(2,2.02)=".01RACE"
  .D ^DIE K DR
- I $S('$D(PAT("STREET ADDRESS [LINE 1]")):1,PAT("STREET ADDRESS [LINE 1]")="":1,1:0) N FLG S FLG(1)=1 D EN^DGREGAED(DFN,.FLG)
+ I $S('$D(^DPT(DFN,.11)):1,$P(^(.11),U)="":1,1:0) N FLG S FLG(1)=1 D EN^DGREGAED(DFN,.FLG)
  Q:$D(SDXXX)
 E S Y=CLN("PRINCIPAL CLINIC")
- S SDW="" I $L(PAT("WARD LOCATION"))>0 S SDW=$P(PAT("WARD LOCATION"),U,2) W !,"NOTE - PATIENT IS NOW IN WARD "_SDW
+ S SDW="" I $D(^DPT(DFN,.1)) S SDW=^(.1) W !,"NOTE - PATIENT IS NOW IN WARD "_SDW
  Q:$D(SDXXX)
 EN2 F X=0:0 S X=$O(^DPT(DFN,"DE",X)) Q:'$D(^(+X,0))  I ^(0)-SC=0!'(^(0)-Y) F XX=0:0 S XX=$O(^DPT(DFN,"DE",X,1,XX)) Q:XX<1  S SDDIS=$P(^(XX,0),U,3) I 'SDDIS D:'$D(SDMULT) A^SDCNSLT G ^SDM0
  I '$D(^SC(+Y,0)) S Y=+SC

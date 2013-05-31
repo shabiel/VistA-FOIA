@@ -1,4 +1,4 @@
-SDAMWI1 ;ALB/MJK - Walk-Ins (cont.) ; 09/27/2012
+SDAMWI1 ;ALB/MJK - Walk-Ins (cont.) ; 5/31/13
  ;;5.3;Scheduling;**94,167,206,168,544,260003**;Aug 13, 1993;Build 11
  ;
 MAKE(DFN,SDCL,SDT,TYP,STYP) ; -- set globals for appt
@@ -10,8 +10,8 @@ MAKE(DFN,SDCL,SDT,TYP,STYP) ; -- set globals for appt
  S SD=SDT D EN1^SDM3
  S %=$$MAKEUS^SDMAPI2(.RETURN,DFN,SC,SDT,TYP,STYP)
  D CHIO^SDAMEVT(SDT,DFN,SC)
- S %=$$GETSCAP^SDMAPI1(.APT,SC,DFN,SDT)
- S SDDA=$G(APT("IFN"))
+ S %=$$GETAPT^SDMAPI1(.APT,DFN,SDT)
+ S SDDA=$G(APT(333))
  D RT,DUAL,ROUT(DFN)
  Q 1
  ;

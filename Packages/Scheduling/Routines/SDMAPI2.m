@@ -1,4 +1,4 @@
-SDMAPI2 ;RGI/VSL - APPOINTMENT API; 5/21/13
+SDMAPI2 ;RGI/VSL - APPOINTMENT API; 5/31/13
  ;;5.3;scheduling;**260003**;08/13/93
 CHKAPP(RETURN,SC,DFN,SD,LEN,LVL) ; Check make appointment
  N PAT,CLN,VAL,PATT,HOL,TXT,X,X1,X2,APT,CAPT,FRSTA,SDEDT,SDSOH,%
@@ -41,7 +41,7 @@ CHKAPP(RETURN,SC,DFN,SD,LEN,LVL) ; Check make appointment
  ;check if patient has an active appointment on the same day
  I +LVL>2 D
  . K APT N IDX S IDX=""
- . D GETDAPTS^SDMDAL2(.APT,+DFN,$P(SD,"."))
+ . D GETPAPTS^SDMDAL2(.APT,+DFN,$P(SD,"."),$$FMADD^XLFDT($P(SD,"."),1))
  . F  S IDX=$O(APT(IDX)) Q:IDX=""  I APT(IDX,2)'["C"  D  Q
  . . K TXT S TXT(1)="(AT "_$E(IDX_0,9,10)_":"_$E(IDX_"000",11,12)
  . . I $P(APT(IDX,1),U)'=+SC D
@@ -98,7 +98,7 @@ MAKEUS(RETURN,DFN,SC,SD,TYP,STYP,CIO) ; Make unscheduled appointment
  ;  SC [Required,Numeric] Clinic IEN (pointer to File 44)
  ;  SD [Optional,DateTime] Appointment date/time. Defaults to now.
  ;  TYP [Required,Numeric] Purpose of visit visit (drawn from the Appointment Types list - see $$LSTAPPT^SDMAPI1)
- ;  STYP [Optional,Numeric] Sub-category associated with this appointment (one of the codes returned by LSTSBCTG^DGSAAPI)
+ ;  STYP [Optional,Numeric] Sub-category associated with this appointment (one of the codes returned by LSTASTYP^SDMAPI5)
  ;  CIO [Optional,String] 'CI'=check-in appointment, 'CO'=check-out appointment
  ;Output:
  ; 1=Success,0=Failure 
@@ -135,7 +135,7 @@ MAKE(RETURN,DFN,SC,SD,TYPE,STYP,LEN,SRT,OTHR,CIO,LAB,XRAY,EKG,RQXRAY,CONS,LVL) ;
  ;  SC [Required,Numeric] Clinic IEN
  ;  SD [Required,DateTime] Appointment date/time
  ;  TYPE [Required,Numeric] Purpose of visit (drawn from the Appointment Types list - see $$LSTAPPT^SDMAPI1)
- ;  STYP [Optional,Numeric] Sub-category associated with this appointment (one of the codes returned by LSTSBCTG^DGSAAPI)
+ ;  STYP [Optional,Numeric] Sub-category associated with this appointment (one of the codes returned by LSTASTYP^SDMAPI5)
  ;  LEN [Required,Numeric] Appointment length in minutes.
  ;  SRT [Optional,String] Scheduling request type (one of the codes returned by LSTSRT^SDMAPI1)
  ;  OTHR [Optional,String] Any other tests ordered in association with the appointment
@@ -164,7 +164,9 @@ MAKE(RETURN,DFN,SC,SD,TYPE,STYP,LEN,SRT,OTHR,CIO,LAB,XRAY,EKG,RQXRAY,CONS,LVL) ;
  S %=$$CHKSRT^SDMAPI5(.RETURN,.SRT) Q:'RETURN 0
  S %=$$CHKCONS^SDMAPI5(.RETURN,.CONS) Q:'RETURN 0
  D GETCLN^SDMDAL1(.CLN,+SC,1)
- F I=$G(LAB),$G(XRAY),$G(EKG) S:I]"" %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,I,DFN) Q:'RETURN
+ S %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,$G(LAB),DFN,"LAB") Q:'RETURN 0
+ S %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,$G(XRAY),DFN,"XRAY") Q:'RETURN 0
+ S %=$$CHKLABS^SDMAPI5(.RETURN,SD,.CLN,$G(EKG),DFN,"EKG") Q:'RETURN 0
  Q:'RETURN 0
  I +$G(LEN)>0,$G(CLN(1913))'="V",$G(CLN(1912))'=+LEN S RETURN=0,TXT(1)="LEN" D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT) Q 0
  S:$D(TYPE) TYP=+TYPE
@@ -192,7 +194,8 @@ MAKE(RETURN,DFN,SC,SD,TYPE,STYP,LEN,SRT,OTHR,CIO,LAB,XRAY,EKG,RQXRAY,CONS,LVL) ;
  S %=$$GETSCAP^SDMAPI1(.SCAP,+SC,+DFN,+SD)
  I $G(CONS)>0 S DATA(688)=CONS
  D UPDCAPT^SDMDAL4(.DATA,+SC,+SD,$G(SCAP("IFN")))
- S:$G(CONS)>0 %=$$EDITCS^SDCAPI1(.RETURN,CONS,+SD,.OTHR,$G(CLN("NAME"))) ;SD/478
+ S:$G(CONS)>0&($G(SRT)'="A") %=$$EDITCS^SDCAPI1(.RETURN,CONS,+SD,.OTHR,$G(CLN("NAME"))) ;SD/478
+ S:$G(CONS)>0&($G(SRT)="A") %=$$AUTOREB^SDCAPI1(+SC,+SD,CONS,$G(SCAP("IFN")))
  S %=$$CIO(.RETURN,+DFN,+SD,+SC,.CIO)
  D MAKE^SDAMEVT(+DFN,+SD,+SC,$G(SCAP("IFN")),2)
  S RETURN=1
@@ -241,7 +244,7 @@ CANCEL(RETURN,DFN,SC,SD,TYP,RSN,RMK,APC) ; Cancel appointment
  N SDATA,SDCPHDL
  S SDCPHDL=$$HANDLE^SDAMEVT(1)
  D BEFORE^SDAMEVT(.SDATA,+DFN,+SD,+SC,CIFN,SDCPHDL)
- S CDT=$J($$NOW^XLFDT(),4,2)
+ S CDT=+$E($$NOW^XLFDT(),1,12)
  D CANCEL^SDMDAL3(.ERR,+DFN,+SD,TYP,+RSN,$G(RMK),CDT,DUZ,OUSR,ODT,.APC)
  S OIFN=$$COVERB^SDMDAL1(+SC,+SD,CIFN)
  S %=$$CANCEL^SDCAPI1(RETURN,CAPT("CONSULT"),+SC,+SD,CIFN,$G(RMK),TYP)
@@ -316,7 +319,7 @@ NOSHOW(RETURN,DFN,SC,SD,LVL) ; No-show appointment
  N SDATA
  D BEFORE^SDAMEVT(.SDATA,+DFN,+SD,+SC,CIFN,SDNSHDL)
  I APTSTAT=""!(APTSTAT="NT") D
- . S FDA(3)="N",FDA(14)=DUZ,FDA(15)=$$NOW^XLFDT()
+ . S FDA(3)="N",FDA(14)=DUZ,FDA(15)=+$E($$NOW^XLFDT(),1,12)
  E  D
  . S FDA(3)="@",FDA(14)="@",FDA(15)="@"
  D UPDPAPT^SDMDAL4(.FDA,+DFN,+SD)

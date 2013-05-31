@@ -1,4 +1,4 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider; 5/20/13
+SDAPIE ;RGI/CBR - Scheduling Error provider; 5/31/13
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -11,9 +11,6 @@ ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  S RETURN(I)=ERRNO_U_$$EZBLD^DIALOG($P($T(@ERRNO),";;",2),.TEXT)_U_LVL
  Q
  ;
-ERRTXT(RETURN) ;
- Q $P($G(RETURN(0)),U,2)
- ; 
 ERRTABLE ; Error table
 INVPARAM ;;480000.035;;Invalid parameter value - ^$TXT1^.
 CLNINV ;;480000.036;;Invalid Clinic.

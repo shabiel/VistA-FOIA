@@ -1,6 +1,12 @@
 SDWLAPI1 ;RGI/CBR - WAIT LIST API; 3/29/13
  ;;5.3;scheduling;**260003**;08/13/93
-LOCK(RETURN,IEN) ;LOCK ^SDWL GLOBAL
+LOCK(RETURN,IEN) ; Lock specified wait list
+ ;Input:
+ ;  .RETURN [Required,Boolean] Set to 1 if the operation succeeds
+ ;                             Set to Error description if the call fails
+ ;   IEN [Required,Numeric] Wait list IEN (pointer to file 409.3)
+ ;Output:
+ ;  1=Success,0=Failure
  S RETURN=0
  I '+$G(IEN) D  Q 0
  . D ERRX^SDAPIE(.RETURN,"INVPARAM","IEN")
@@ -9,7 +15,9 @@ LOCK(RETURN,IEN) ;LOCK ^SDWL GLOBAL
  D ERRX^SDAPIE(.RETURN,"FILELOCK")
  Q 0
  ;
-UNLOCK(IEN) ;
+UNLOCK(IEN) ; Unlock specified wait list
+ ;Input:
+ ;   IEN [Required,Numeric] Wait list IEN (pointer to file 409.3)
  Q:'+$G(IEN) 0
  Q $$UNLOCK^SDWLDAL(IEN)
  ;

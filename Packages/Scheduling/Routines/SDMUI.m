@@ -1,4 +1,4 @@
-SDMUI ;RGI/VSL - UI UTILS; 01/24/2013
+SDMUI ;RGI/VSL - UI UTILS; 5/31/13
  ;;5.3;scheduling;**260003**;08/13/93;
 SELPAT(PARAM) ; Select patient
  N Y,DIC
@@ -32,14 +32,6 @@ SELPCTM(PARAM) ; Select PC team
  D ^DIC
  Q Y
  ;
-SELTEAM(PARAM) ; Select team
- N Y,DIC
- S DIC="^SCTM(404.51,"
- S DIC(0)="AEMQZ"
- S DIC("S")="IF $$ACTTM^SCMCTMU(Y,DT) I $$NEW^SCMCQK2()"
- D ^DIC
- Q Y
- ;
 SELPOSCP(PARAM) ; Select position current practitioner
  N Y,DIC
  S DIC("W")="N SCP1 S SCP1=$G(^SCTM(404.52,Y,0)) W ""    ["",$P($G(^VA(200,+$P(SCP1,U,3),0)),U,1),""]"""
@@ -58,3 +50,10 @@ SELPOSN(PARAM) ; Select position name
  S DIC(0)="AEMQZ"
  D ^DIC
  Q Y
+READ(TYPE,PROMPT,DEFAULT,HELP) ; Calls reader, returns response
+ N DIR,DA,X,Y
+ S DIR(0)=TYPE,DIR("A")=PROMPT I $D(DEFAULT) S DIR("B")=DEFAULT
+ I $D(HELP) S DIR("?")=HELP
+ D ^DIR
+ Q Y
+ ;

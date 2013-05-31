@@ -1,5 +1,5 @@
-SDM4 ;ALB/BOK - MAKE APPOINTMENT ; 10/08/2012  ; Compiled April 9, 2007 14:26:51
- ;;5.3;Scheduling;**263,273,327,394,417,496,260003**;Aug 13, 1993;Build 11
+SDM4 ;ALB/BOK - MAKE APPOINTMENT ; 12 APR 1988 1100  ; Compiled April 9, 2007 14:26:51
+ ;;5.3;Scheduling;**263,273,327,394,417,496**;Aug 13, 1993;Build 11
  ;
  ;09/15/2002 $N FUNCTION REMOVED AND REPLACED WITH $O - IOFO - BAY PINES - TEH
  ;
@@ -14,23 +14,23 @@ TYPE ;
  D SC
 RAT ;Display rated service connected disabilities patch SD*5.3*394
  D 2^VADPT
- I '$D(PAT) S %=$$GETPAT^SDMAPI3(.PAT,DFN,1)
  W !!,"PATIENT'S SERVICE CONNECTION AND RATED DISABILITIES:"
- IF $P($G(PAT("SERVICE CONNECTED?")),U,2)="YES"&($P(VAEL(3),"^",2)'="") D
+ IF $$GET1^DIQ(2,DFN_",",.301,"E")="YES"&($P(VAEL(3),"^",2)'="") D
  .W !,"SC Percent: "_$P(VAEL(3),"^",2)_"%"
- IF $P($G(PAT("SERVICE CONNECTED?")),U,2)="NO"&($P(VAEL(3),"^",2)="") D
+ IF $$GET1^DIQ(2,DFN_",",.301,"E")="NO"&($P(VAEL(3),"^",2)="") D
  .W !,"Service Connected: No"
  ;Rated Disabilities
  N SDSER,SDRAT,SDPER,SDREC,NN,NUM,ANS,SDELIG,SDATD,SDSCFLG S (ANS,NN,NUM)=0
- F  S NN=$O(PAT("RATED DISABILITIES",NN)) Q:'NN  D
- . S SDRAT="" S SDRAT=$P(PAT("RATED DISABILITIES",NN,"RATED DISABILITIES (VA)"),U,2)
- . S SDSER="" S SDSER=$S(+PAT("RATED DISABILITIES",NN,"SERVICE CONNECTED")="1":"SC",1:"NSC")
- . W !,"    "_SDRAT_"  ("_SDSER_" - "_$P(PAT("RATED DISABILITIES",NN,"DISABILITY %"),U,2)_"%)"
- . Q
+ F  S NN=$O(^DPT(DFN,.372,NN)) Q:'NN  D
+ .S SDREC=$G(^DPT(DFN,.372,NN,0)) IF SDREC'="" D
+ ..S SDRAT="" S NUM=$P($G(SDREC),"^",1) IF NUM>0 S SDRAT=$$GET1^DIQ(31,NUM_",",.01)
+ ..S SDSER="" S SDSER=$S($P(SDREC,"^",3)="1":"SC",1:"NSC")
+ ..W !,"    "_SDRAT_"  ("_SDSER_" - "_$P(SDREC,"^",2)_"%)"
+ ..Q
  W !,"Primary Eligibility Code: "_$P(VAEL(1),"^",2)
- I $G(PAT("RATED DISABILITIES"))<1 W !,"No Service Connected Disabilities Listed"
+ IF $P($G(^DPT(DFN,.372,0)),"^",4)<1 W !,"No Service Connected Disabilities Listed"
  W !
- S SDELIG=$P($G(PAT("SERVICE CONNECTED?")),U,2),SDSCFLG=0
+ S SDELIG=$$GET1^DIQ(2,DFN_",",.301,"E"),SDSCFLG=0
  IF SDELIG="" W !,"'SERVICE CONNECTED?' field is blank please update patient record." S SDSCFLG=1
  IF $P(VAEL(1),U,2)="" W !,"'PRIMARY ELIGIBILITY CODE' field is blank please update patient record." S SDSCFLG=1
  IF SDELIG="NO",($P(VAEL(3),U,2)>0)!($P(VAEL(1),U,2)="SC LESS THAN 50%")!($P(VAEL(1),U,2)="SERVICE CONNECTED 50% to 100%")!($P(VAEL(1),U,2)="") D
@@ -81,7 +81,7 @@ ELIG S SDALLE="",SDEMP=$P(VAEL(1),U,2) W !,"THIS PATIENT HAS OTHER ENTITLED ELIG
  F SDOEL=0:0 S SDOEL=$O(VAEL(1,SDOEL)) Q:SDOEL=""  I $P(VAEL(1,SDOEL),U,2)=SDEMP S SDEMP=SDOEL_"^"_SDEMP Q
  Q
 SC ;SERVICE CONNECTED MESSAGE/IOFO - BAY PINES/TEH
- I $D(PAT("SERVICE CONNECTED PERCENTAGE")) S SDAMSCN=+PAT("SERVICE CONNECTED PERCENTAGE") I SDAMSCN>49 D
+ I $D(^DPT(DFN,.3)) S SDAMSCN=+$P(^(.3),U,2) I SDAMSCN>49 D
  .W !,?7,"********** THIS PATIENT IS 50% OR GREATER SERVICE-CONNECTED **********",!
  ;I $D(SDWLLIST),SDWLLIST D ^SDWLR       ;Patch SD*5.3*327
  Q
