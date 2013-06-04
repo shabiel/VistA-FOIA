@@ -132,7 +132,7 @@ CKLISTS ; loop lists and see if any inactive problems
  ; returns ^TMP("GMPLSL",$J,"I"
  ;
  K ^TMP("GMPLSL",$J,"I")
- N LST,RETURN,RET
+ N LST,RETURN,RET,%
  S LST=0
  S %=$$GETLSTS^GMPLAPI5(.RETURN)
  F  S LST=$O(RETURN(LST)) Q:'LST  I '$$VALLIST^GMPLAPI6(.RET,RETURN(LST,"ID")) D

@@ -10,7 +10,8 @@ DE ; -- main entry point for GMPL DATA ENTRY
  D EN^VALM("GMPL DATA ENTRY")
  Q
  ;
-ADD ; -- add a new problem 
+ADD ; -- add a new problem
+ N GMPCLIN
  S VALMBCK="",GMPCLIN=""
  K GMPREBLD
  I +$P(GMPDFN,U,4),'$$CKDEAD^GMPLX1($P(GMPDFN,U,4)) G ADDQ
@@ -69,7 +70,7 @@ NTQ ; cleanup
  Q
  ;
 EDIT ; -- edit allowable fields of a problem
- N GMPIFN,GMPLNUM,GMPSAVED,DELETED,MSG
+ N GMPIFN,GMPLNUM,GMPSAVED,DELETED,MSG,%
  S VALMBCK="" G:+$G(GMPCOUNT)'>0 EDQ
  S GMPLNUM=$$SEL1^GMPLX("edit") G:GMPLNUM="^" EDQ
  S GMPIFN=$P($G(^TMP("GMPLIDX",$J,+GMPLNUM)),U,2) G:GMPIFN'>0 EDQ

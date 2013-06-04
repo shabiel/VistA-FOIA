@@ -1,7 +1,8 @@
 GMPLDIS1 ; SLC/MKB -- Displays current/default values for saving ;03/11/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 ACCEPT(GMPFLD) ; accept current values of problem to save?
- N DIR,X,Y D DISPLAY W !
+ N DIR,X,Y,DTOUT,DUOUT
+ D DISPLAY W !
  S DIR(0)="SAOM^S:SAVE;E:EDIT;Q:QUIT;",DIR("B")="SAVE"
  D BLD^DIALOG(1250000.147,,,"DIR(""A"")")
  S DIR("?")="^D HELP^GMPLDIS1"

@@ -37,7 +37,7 @@ ACTIVE(GMPDFN,GMPL) ; Returns list of Active Problems for a Patient
  ;                            SHD^SHAD
  ;                            null
  ;
- N I,IFN,GMPL0,SP,NUM,ONSET,GMPLIST,GMPARAM
+ N I,IFN,GMPL0,SP,NUM,ONSET,GMPLIST,GMPARAM,%
  Q:$G(GMPDFN)'>0
  S SP=""
  D GET^GMPLSITE(.GMPARAM)
@@ -146,7 +146,7 @@ UPDATE(PL,PLY) ; Update a Problem/Create if Not Found
  ;      PLY              Equivalent of Fileman Y, DA
  ;      PLY(0)           Equivalent of Fileman Y(0)
  ;            
- N GMPORIG,GMPFLD,FLD,ITEMS,SUB,GMPI,DIFFRENT,GMPIFN,GMPVAMC,GMPVA,GMPROV,GMPQUIT,GMPDFN
+ N GMPORIG,GMPFLD,FLD,ITEMS,SUB,GMPI,DIFFRENT,GMPIFN,GMPVAMC,GMPVA,GMPROV,GMPQUIT,GMPDFN,%
  N VALID
  S GMPVAMC=+$G(DUZ(2)),GMPVA=$S($G(DUZ("AG"))="V":1,1:0),PLY=-1,PLY(0)=""
  S GMPIFN=$G(PL("PROBLEM")) I GMPIFN="" D CREATE(.PL,.PLY) Q

@@ -35,7 +35,7 @@ ENQ ;   Quit Print/Display
  D KILL^GMPLX S VALMSG=$$MSG^GMPLX Q
  ;             
 VAF ; Build Chart Copy
- N TOTAL,VIEW,HASPRB
+ N TOTAL,VIEW,HASPRB,%
  K GMPLCURR
  S (TOTAL,GMPRT)=0
  S (TOTAL,GMPRT)=0

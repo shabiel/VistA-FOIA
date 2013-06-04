@@ -9,7 +9,7 @@ PXCAPOV ;ISL/dee & LEA/Chylton - Validates data from the PCE Device Interface in
  ;   PXCAINDX  Count of the number of Diagnoses for one provider
  ;
 DIAG(PXCA,PXCABULD,PXCAERRS) ;Validation routine for POV
- N PXCADIAG,PXCAPRV,PXCAINDX,VALID,PAT
+ N PXCADIAG,PXCAPRV,PXCAINDX,VALID,PAT,%
  S PXCAPRV=""
  F  S PXCAPRV=$O(PXCA("DIAGNOSIS",PXCAPRV)) Q:PXCAPRV']""  D
  . I PXCAPRV>0 D

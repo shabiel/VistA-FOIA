@@ -62,7 +62,7 @@ NEOR() ;Return number of entries in OR.
  ;===============================================================
 NEPROB() ;Return number of entries in PROBLEM LIST.
  ;DBIA #3837
- N CNT
+ N CNT,%
  S %=$$PRBCNT^GMPLAPI4(.CNT)
  Q CNT
  ;

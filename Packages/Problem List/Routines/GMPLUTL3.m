@@ -12,7 +12,7 @@ GMPLUTL3 ; SLC/JST/JVS -- PL Utilities (CIRN)           ; 03/29/12
  ;       that are set below.
  ;             
 CALL0(GMPLZ) ; Call 0 - Get Node 0
- N VALID,DELETED
+ N VALID,DELETED,%
  S %=$$VALID^GMPLAPI4(.VALID,GMPLZ)
  I 'VALID D CLEAR Q
  S %=$$DELETED^GMPLAPI2(.DELETED,GMPLZ)
@@ -21,7 +21,7 @@ CALL0(GMPLZ) ; Call 0 - Get Node 0
  Q
  ;
 CALL1(GMPLZ) ; Call 1 - Get Node 1
- N VALID,DELETED
+ N VALID,DELETED,%
  S %=$$VALID^GMPLAPI4(.VALID,GMPLZ)
  I 'VALID D CLEAR Q
  S %=$$DELETED^GMPLAPI2(.DELETED,GMPLZ)
@@ -30,7 +30,7 @@ CALL1(GMPLZ) ; Call 1 - Get Node 1
  Q
  ;
 CALL2(GMPLZ) ; Call 2 - Get both Node 0 and Node 1
- N VALID,DELETED
+ N VALID,DELETED,%
  S %=$$VALID^GMPLAPI4(.VALID,GMPLZ)
  I 'VALID D CLEAR Q
  S %=$$DELETED^GMPLAPI2(.DELETED,GMPLZ)
@@ -39,7 +39,7 @@ CALL2(GMPLZ) ; Call 2 - Get both Node 0 and Node 1
  Q
  ;               
 NODE0 ; Set Node 0 data variables
- N GMPL
+ N GMPL,%
  S %=$$DETAIL^GMPLAPI2(.GMPL,GMPLZ)
  ;   Diagnosis
  S GMPLICD=$P(GMPL(.01),U)
@@ -58,7 +58,7 @@ NODE0 ; Set Node 0 data variables
  Q
  ;
 NODE1 ; Set Node 1 data variables
- N GMPL
+ N GMPL,%
  S %=$$DETAIL^GMPLAPI2(.GMPL,GMPLZ)
  ;   Problem
  S GMPLLEX=$P(GMPL(1.01),U)
@@ -79,6 +79,6 @@ CLEAR ; Set Variables Equal to Null
  S (GMPLZ1,GMPLLEX,GMPLPRV,GMPLXDAT,GMPLPRIO,GMPLCOND)=""
  Q
 MOD(DFN) ; Return the Date the Patients Problem List was Last Modified
- N MODIFIED
+ N MODIFIED,%
  S %=$$MODIFIED^GMPLAPI4(.MODIFIED,DFN)
  Q MODIFIED

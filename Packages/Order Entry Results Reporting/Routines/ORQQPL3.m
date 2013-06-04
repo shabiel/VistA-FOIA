@@ -28,7 +28,7 @@ LIST(GMPL,GMPDFN,GMPSTAT)       ; -- Returns list of problems for patient GMPDFN
  ; This is virtually same as LIST^GMPLUTL2 except that it appends the
  ; condition - T)ranscribed or P)ermanent,location,loc type,provider, service.
  ;
- N GMPREV,GMPARAM
+ N GMPREV,GMPARAM,%
  Q:$G(GMPDFN)'>0
  D GET^GMPLSITE(.GMPARAM)
  S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,GMPSTAT,"","",GMPARAM("REV"),0)
@@ -39,6 +39,7 @@ LIST(GMPL,GMPDFN,GMPSTAT)       ; -- Returns list of problems for patient GMPDFN
  ;
 DELLIST(RETURN,GMPDFN) ; GET LIST OF DELETED PROBLEMS
  ; see GETPLIST^GMPLMGR1 and LIST^GMPUTL2
+ N %
  K RETURN
  S %=$$LIST^GMPLAPI4(.GMPL,GMPDFN,"R","","",0,0)
  F I=1:1:GMPL D
@@ -51,7 +52,7 @@ DELLIST(RETURN,GMPDFN) ; GET LIST OF DELETED PROBLEMS
  ; ----------------------- GET USER PROBLEM CATEGORIES --------------
  ;
 CAT(TMP,ORDUZ,CLIN) ; Get user category list
- N GSEQ,GCNT,IFN,TG,GMPLSLST,RETURN
+ N GSEQ,GCNT,IFN,TG,GMPLSLST,RETURN,%
  ; S TG=$NAME(^TMP("GMPLMENU",$J)) ; put list in global for testing
  S TG=$NAME(TMP) ; put list in local
  K @TG
@@ -68,7 +69,7 @@ CAT(TMP,ORDUZ,CLIN) ; Get user category list
  Q
  ;
 GETUSLST(ORDUZ,CLIN) ; GET AN APPROPRIATE CATEGORY LIST FOR THE USER
- N GMPLSLST,RETURN
+ N GMPLSLST,RETURN,%
  S %=$$GETULST^GMPLAPI6(.RETURN,DUZ)
  S GMPLSLST=RETURN
  I 'GMPLSLST,CLIN S %=$$GETCLST^GMPLAPI6(.RETURN,+CLIN) S GMPLSLST=RETURN
@@ -77,7 +78,7 @@ GETUSLST(ORDUZ,CLIN) ; GET AN APPROPRIATE CATEGORY LIST FOR THE USER
  ;----------------------- USER PROBLEM LIST --------------------------
  ;
 PROB(TMP,GROUP) ; Get user problem list for given group
- N PSEQ,PCNT,IFN,TG,CODE,ORICD186,RETURN
+ N PSEQ,PCNT,IFN,TG,CODE,ORICD186,RETURN,%
  ; S TG=$NAME(^TMP("GMPLMENU",$J)) ; put list in global for testing
  S TG=$NAME(TMP) ; put list in local
  K @TG

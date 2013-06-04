@@ -15,7 +15,8 @@ EN ; -- main entry point
  Q
  ;
 DISPLAY ; -- show list on screen
- N PROBLEM,DATE,USER,NUM,PROV,IDT,AIFN,NODE,DONE,GMPQUIT,% D HDR
+ N PROBLEM,DATE,USER,NUM,PROV,IDT,AIFN,NODE,DONE,GMPQUIT,%,RETURN,IFN
+ D HDR
  F NUM=0:0 S NUM=$O(GMPLIST(NUM)) Q:NUM'>0  D  Q:$D(GMPQUIT)
  . S IFN=GMPLIST(NUM) Q:'IFN
  . S PROBLEM=$$PROBTEXT^GMPLX(IFN),(DATE,PROV)="" K DONE
@@ -49,7 +50,7 @@ CONTINUE() ; -- end of page prompt
  Q +Y
  ;
 REPLACE ; -- replace problem on patient's list
- N GMPLSEL,GMPLNO,NUM,DA,%,RET,MSG
+ N GMPLSEL,GMPLNO,NUM,DA,%,RET,MSG,I
  W !!
  S GMPLSEL=$$SEL Q:GMPLSEL="^"  Q:'$$SURE
  D EN^DDIOL($$EZBLD^DIALOG(1250000.436),,"!!")
@@ -73,7 +74,8 @@ SEL() ; -- select problem(s)
  S DIR(0)="LAO^1:"_MAX
  D BLD^DIALOG(1250000.438,,,"DIR(""A"")")
  D BLD^DIALOG(1250000.439,,,"DIR(""?"")")
- D ^DIR I $D(DTOUT)!(X="") S Y="^"
+ D ^DIR
+ I $D(DTOUT)!(X="") S Y="^"
  Q Y
  ;
 SURE() ; -- are you sure you want to do this?
