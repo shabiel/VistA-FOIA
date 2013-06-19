@@ -1,4 +1,4 @@
-DGPMAPI7 ;RGI/VSL - PATIENT MOVEMENT API; 5/27/13
+DGPMAPI7 ;RGI/VSL - PATIENT MOVEMENT API; 6/19/13
  ;;5.3;Registration;**260005**;
 ISBEDOCC(BED,DFN) ; Is bed occupied?
  N BEDS,TMP,OCC,I
@@ -45,7 +45,7 @@ LSTPROV(RETURN,SEARCH,START,NUMBER,DGDT) ; Get active providers
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] provider IEN
+ ;      RETURN(#,"ID") [String] provider IEN (pointer to the New Person file #200)
  ;      RETURN(#,"NAME") [String] provider name
  ;      RETURN(#,"INITIAL") [String] provider initials
  ;      RETURN(#,"TITLE") [String] provider title
@@ -68,7 +68,7 @@ LSTADREG(RETURN,SEARCH,START,NUMBER) ; Get admitting regulations
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] admitting regulation IEN
+ ;      RETURN(#,"ID") [String] admitting regulation IEN (pointer to the VA Admitting Regulation file #43.4)
  ;      RETURN(#,"NAME") [String] admitting regulation name
  ;      RETURN(#,"CFR") [String] admitting regulation code
  ;   SEARCH [Optional,String] Partial match restriction.
@@ -88,9 +88,9 @@ LSTFTS(RETURN,SEARCH,START,NUMBER,DGDT) ; Get active facility treating specialti
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] facility treating specialty IEN
+ ;      RETURN(#,"ID") [String] facility treating specialty IEN (pointer to the Facility Treating Specialty file #45.7)
  ;      RETURN(#,"NAME") [String] facility treating specialty name
- ;      RETURN(#,"SPEC") [String] specialty
+ ;      RETURN(#,"SPEC") [String] specialty_IEN^specialty_name
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
@@ -98,7 +98,7 @@ LSTFTS(RETURN,SEARCH,START,NUMBER,DGDT) ; Get active facility treating specialti
  ;Output:
  ;  1=Success,0=Failure
  N FLDS,NAMES,ADREG,%
- K RETURN S FLDS=".01;1;"
+ K RETURN S FLDS=".01;1IE;"
  S %=$$VALDT^DGPMAPI8(.RETURN,.DGDT,"DGDT") Q:'RETURN 0
  S:'$G(DGDT) DGDT=$$NOW^XLFDT()
  S NAMES="NAME;SPEC;",SEARCH=$$UP^XLFSTR($G(SEARCH))
@@ -111,17 +111,17 @@ LSTADSRC(RETURN,SEARCH,START,NUMBER) ; Get sources of admission
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] source of admission IEN
+ ;      RETURN(#,"ID") [String] source of admission IEN (pointer to the Source of Admission file #45.1)
  ;      RETURN(#,"CODE") [String] source of admission code
  ;      RETURN(#,"NAME") [String] source of admission name
- ;      RETURN(#,"PLACE") [String] source of admission place
+ ;      RETURN(#,"PLACE") [String] source of admission place (internal format^external format)
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
  ;Output:
  ;  1=Success,0=Failure
  K RETURN N FLDS,NAMES,ADREG
- S FLDS=".01;2;11"
+ S FLDS=".01;2;11IE"
  S NAMES="CODE;NAME;PLACE;",SEARCH=$$UP^XLFSTR($G(SEARCH))
  D LSTADSRC^DGPMDAL2(.ADREG,.SEARCH,.START,.NUMBER,FLDS)
  D BLDLST(.RETURN,.ADREG,FLDS,NAMES)
@@ -132,16 +132,16 @@ LSTCOTYP(RETURN,SEARCH,START,NUMBER,DFN,DGDT,MFN) ; Get check-out types
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] check-out type IEN
+ ;      RETURN(#,"ID") [String] check-out type IEN (pointer to the Facility Movement Type file #405.1)
  ;      RETURN(#,"NAME") [String] check-out type name
- ;      RETURN(#,"TYPE") [String] transaction type
- ;      RETURN(#,"STATUS") [String] check-out type status
+ ;      RETURN(#,"TYPE") [String] transaction_type_IEN^transaction_type_name
+ ;      RETURN(#,"STATUS") [String] check-out_type_status_code^dispaly_name
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;   DGDT [Optional,DateTime] Get check-out types on specified date. Default is current date.
- ;   MFN [Optional,Numeric] Check-out IEN (pointer to file 405). Get allowed check-out types for an existing check-out.
+ ;   MFN [Optional,Numeric] Check-out IEN (pointer to the Patient Movement file #405). Get allowed check-out types for an existing check-out.
  ;Output:
  ;  1=Success,0=Failure
  N %
@@ -153,16 +153,16 @@ LSTCITYP(RETURN,SEARCH,START,NUMBER,DFN,DGDT,MFN) ; Get check-in types
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] check-in type IEN
+ ;      RETURN(#,"ID") [String] check-in type IEN (pointer to the Facility Movement Type file #405.1)
  ;      RETURN(#,"NAME") [String] check-in type name
- ;      RETURN(#,"TYPE") [String] transaction type
- ;      RETURN(#,"STATUS") [String] check-in type status
+ ;      RETURN(#,"TYPE") [String] transaction_type_IEN^transaction_type_name
+ ;      RETURN(#,"STATUS") [String] check-in_type_status_code^dispaly_name
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;   DGDT [Optional,DateTime] Get check-in types on specified date. Default is current date.
- ;   MFN [Optional,Numeric] Check-in IEN (pointer to file 405). Get allowed check-in types for an existing check-in.
+ ;   MFN [Optional,Numeric] Check-in IEN (pointer to the Patient Movement file #405). Get allowed check-in types for an existing check-in.
  ;Output:
  ;  1=Success,0=Failure
  N %
@@ -174,16 +174,16 @@ LSTADTYP(RETURN,SEARCH,START,NUMBER,DFN,DGDT,MFN) ; Get admission types
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] admission type IEN
+ ;      RETURN(#,"ID") [String] admission type IEN (pointer to the Facility Movement Type file #405.1)
  ;      RETURN(#,"NAME") [String] admission type name
- ;      RETURN(#,"TYPE") [String] transaction type
- ;      RETURN(#,"STATUS") [String] admission type status
+ ;      RETURN(#,"TYPE") [String] transaction_type_IEN^transaction_type_name
+ ;      RETURN(#,"STATUS") [String] admission_type_status_code^dispaly_name
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;   DGDT [Optional,DateTime] Get admission types on specified date. Default is current date.
- ;   MFN [Optional,Numeric] Admission IEN (pointer to file 405). Get allowed admission types for an existing admission.
+ ;   MFN [Optional,Numeric] Admission IEN (pointer to the Patient Movement file #405). Get allowed admission types for an existing admission.
  ;Output:
  ;  1=Success,0=Failure
  N %
@@ -195,16 +195,16 @@ LSTTRTYP(RETURN,SEARCH,START,NUMBER,DFN,DGDT,MFN) ; Get transfer types
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] transfer type IEN
+ ;      RETURN(#,"ID") [String] transfer type IEN (pointer to the Facility Movement Type file #405.1)
  ;      RETURN(#,"NAME") [String] transfer type name
- ;      RETURN(#,"TYPE") [String] transaction type
- ;      RETURN(#,"STATUS") [String] transfer type status
+ ;      RETURN(#,"TYPE") [String] transaction_type_IEN^transaction_type_name
+ ;      RETURN(#,"STATUS") [String] transfer_type_status_code^dispaly_name
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;   DGDT [Optional,DateTime] Get transfer types on specified date. Default is current date.
- ;   MFN [Optional,Numeric] Transfer IEN (pointer to file 405). Get allowed transfer types for an existing transfer.
+ ;   MFN [Optional,Numeric] Transfer IEN (pointer to the Patient Movement file #405). Get allowed transfer types for an existing transfer.
  ;Output:
  ;  1=Success,0=Failure
  N %
@@ -216,16 +216,16 @@ LSTDTYP(RETURN,SEARCH,START,NUMBER,DFN,DGDT,MFN) ; Get discharge types
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] discharge type IEN
+ ;      RETURN(#,"ID") [String] discharge type IEN (pointer to the Facility Movement Type file #405.1)
  ;      RETURN(#,"NAME") [String] discharge type name
- ;      RETURN(#,"TYPE") [String] transaction type
- ;      RETURN(#,"STATUS") [String] discharge type status
+ ;      RETURN(#,"TYPE") [String] transaction_type_IEN^transaction_type_name
+ ;      RETURN(#,"STATUS") [String] discharge_type_status_code^dispaly_name
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;   DGDT [Optional,DateTime] Get discharge types on specified date. Default is current date.
- ;   MFN [Optional,Numeric] Discharge IEN (pointer to file 405). Get allowed discharge types for an existing discharge.
+ ;   MFN [Optional,Numeric] Discharge IEN (pointer to the Patient Movement file #405). Get allowed discharge types for an existing discharge.
  ;Output:
  ;  1=Success,0=Failure
  N %
@@ -241,7 +241,7 @@ BLDTYP(RETURN,SEARCH,START,NUMBER,DFN,DGDT,TYP,MFN) ; Build movement types
  . D GETMVT^DGPMDAL1(.OLD,+$G(MFN))
  . I OLD=0 S RETURN=0 D ERRX^DGPMAPIE(.RETURN,"MVTNFND")
  N FLDS,NAMES,TYPES,PAR
- K RETURN S FLDS=".01;.02;.04",WHEN=$S('$G(DGDT):$$NOW^XLFDT(),1:+DGDT)
+ K RETURN S FLDS=".01;.02IE;.04IE",WHEN=$S('$G(DGDT):$$NOW^XLFDT(),1:+DGDT)
  S NAMES="NAME;TYPE;STATUS",SEARCH=$$UP^XLFSTR($G(SEARCH))
  D LSTMVTT^DGPMDAL2(.TYPES,.SEARCH,.START,.NUMBER,FLDS,TYP,+DFN,.WHEN)
  D BLDLST(.RETURN,.TYPES,FLDS,NAMES)
@@ -252,7 +252,7 @@ LSTFCTY(RETURN,SEARCH,START,NUMBER) ; Get transfer facilities
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] transfer facility IEN
+ ;      RETURN(#,"ID") [String] transfer facility IEN (pointer to the Institution file #4)
  ;      RETURN(#,"NAME") [String] transfer facility name
  ;      RETURN(#,"TYPE") [String] transfer facility type
  ;      RETURN(#,"STATE") [String] discharge type state
@@ -273,7 +273,7 @@ LSTLRSN(RETURN,SEARCH,START,NUMBER) ; Get reasons for lodging
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] reason for lodging IEN
+ ;      RETURN(#,"ID") [String] reason for lodging IEN (pointer to the Lodging Reason file #406.41)
  ;      RETURN(#,"NAME") [String] reason for lodging name
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
@@ -292,7 +292,7 @@ LSTWARD(RETURN,SEARCH,START,NUMBER) ; Get wards
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [String] ward IEN
+ ;      RETURN(#,"ID") [String] ward IEN (pointer to the Ward Location file #42)
  ;      RETURN(#,"NAME") [String] ward name
  ;      RETURN(#,"SPEC") [String] specialty_IEN^specialty_name
  ;      RETURN(#,"SERV") [String] service_code^service_name
@@ -313,15 +313,15 @@ LSTWBED(RETURN,SEARCH,START,NUMBER,WARD,DFN) ; Get available beds
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [Numeric] bed IEN
+ ;      RETURN(#,"ID") [Numeric] bed IEN (pointer to the Room-bed file #405.4)
  ;      RETURN(#,"NAME") [String] bed name
  ;      RETURN(#,"DESC") [String] bed description
  ;      RETURN(#,"OOS") [Boolean] out of service flag (0 - active, 1 - inactive)
  ;   SEARCH [Optional,String] Partial match restriction.
  ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
  ;   NUMBER [Optional,Numeric] Number of entries to return.
- ;   WARD [Required,Numeric] Ward IEN (pointer to file 42). Get available beds on which.
- ;   DFN [Optional,Numeric] Patient IEN (pointer to file 2)
+ ;   WARD [Required,Numeric] Ward IEN (pointer to the Ward Location file #42). Get available beds on which.
+ ;   DFN [Optional,Numeric] Patient IEN (pointer to the Patient file #2)
  ;Output:
  ;  1=Success,0=Failure
  N FLDS,NAMES,BED,OCB,TMP,TBED,CNT,J,I,OCUP,TMP,TXT,%
@@ -351,7 +351,7 @@ LSTTPATS(RETURN,SEARCH,START,NUMBER) ; Get transferable patients by name
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
- ;      RETURN(#,"ID") [Numeric] patient IEN
+ ;      RETURN(#,"ID") [Numeric] patient IEN (pointer to the Patient file #2)
  ;      RETURN(#,"NAME") [String] patient name
  ;      RETURN(#,"BIRTH") [String] patient birth date
  ;      RETURN(#,"SSN") [String] patient SSN
@@ -390,11 +390,11 @@ LSTPADMS(RETURN,DFN) ; Get patient admissions.
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      see BLDLST^DGPMAPI7 for the general movement format.
- ;      RETURN(#,"WARD") [String] ward_IEN^ward_name (pointer to file 42)
- ;      RETURN(#,"ROOMBED") [String] bed_IEN^bed_name ((pointer to file 405.4)
- ;      RETURN(#,"FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to file 4)
- ;      RETURN(#,"DISCH") [Numeric] discharge IEN (pointer to file 405)
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;      RETURN(#,"WARD") [String] ward_IEN^ward_name (pointer to the Ward Location file #42)
+ ;      RETURN(#,"ROOMBED") [String] bed_IEN^bed_name ((pointer to the Room-bed file #405.4)
+ ;      RETURN(#,"FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to the Institution file #4)
+ ;      RETURN(#,"DISCH") [Numeric] discharge IEN (pointer to the Patient Movement file #405)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;Output:
  ;  1=Success,0=Failure
  K RETURN N FLDS,NAMES,ADM,%
@@ -410,12 +410,12 @@ LSTPTRAN(RETURN,DFN,AFN) ; Get patient transfers related to an admission.
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      see BLDLST^DGPMAPI7 for the general movement format.
- ;      RETURN(#,"WARD") [String] ward_IEN^ward_name (pointer to file 42)
- ;      RETURN(#,"ROOMBED") [String] bed_IEN^bed_name ((pointer to file 405.4)
- ;      RETURN(#,"FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to file 4)
+ ;      RETURN(#,"WARD") [String] ward_IEN^ward_name (pointer to the Ward Location file #42)
+ ;      RETURN(#,"ROOMBED") [String] bed_IEN^bed_name ((pointer to the Room-bed file #405.4)
+ ;      RETURN(#,"FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to the Institution file #4)
  ;      RETURN(#,"RABSDT") [String] absence_return_date^absence_return_date
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
- ;   AFN [Required,Numeric] Admission IEN (pointer to file 405)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
+ ;   AFN [Required,Numeric] Admission IEN (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  K RETURN N %,FLDS,NAMES,ADM,LMVT,OLD
@@ -434,13 +434,13 @@ LSTPFTS(RETURN,DFN,AFN) ; Get patient treating specialty transfers related to an
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      see BLDLST^DGPMAPI7 for the general movement format.
- ;      RETURN(#,"ATNDPHY") [String] attending_physician_IEN^attender_physician_name (pointer to file 200)
- ;      RETURN(#,"PRYMPHY") [String] primary_physician_IEN^primary_physician_name (pointer to file 200)
- ;      RETURN(#,"FTSPEC") [String] facility_treating_specialty_IEN^facility_treating_specialty_name (pointer to file 45.7)
+ ;      RETURN(#,"ATNDPHY") [String] attending_physician_IEN^attender_physician_name (pointer to the New Person file #200)
+ ;      RETURN(#,"PRYMPHY") [String] primary_physician_IEN^primary_physician_name (pointer to the New Person file #200)
+ ;      RETURN(#,"FTSPEC") [String] facility_treating_specialty_IEN^facility_treating_specialty_name (pointer to the Facility Treating Specialty file #45.7)
  ;      RETURN(#,"DIAG",#) [Array] Array of detailed diagnosis description.
  ;         RETURN(#,"DIAG",n) [String] diagnosis description
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
- ;   AFN [Required,Numeric] Admission IEN (pointer to file 405)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
+ ;   AFN [Required,Numeric] Admission IEN (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  K RETURN N %,FLDS,NAMES,ADM,LMVT,OLD,I
@@ -462,12 +462,12 @@ LSTPLDGI(RETURN,DFN) ; Get patient lodger check-in.
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      see BLDLST^DGPMAPI7 for the general movement format.
- ;      RETURN(#,"WARD") [String] ward_IEN^ward_name (pointer to file 42)
- ;      RETURN(#,"ROOMBED") [String] bed_IEN^bed_name ((pointer to file 405.4)
- ;      RETURN(#,"FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to file 4)
- ;      RETURN(#,"LDGRSN") [String] reason_for_check-in_IEN^reason_for_check-in_name (pointer to file 406.41)
+ ;      RETURN(#,"WARD") [String] ward_IEN^ward_name (pointer to the Ward Location file #42)
+ ;      RETURN(#,"ROOMBED") [String] bed_IEN^bed_name ((pointer to the Room-bed file #405.4)
+ ;      RETURN(#,"FCTY") [String] transfer_facility_IEN^transfer_facility_name (pointer to the Institution file #4)
+ ;      RETURN(#,"LDGRSN") [String] reason_for_check-in_IEN^reason_for_check-in_name (pointer to the Lodging Reason file #406.41)
  ;      RETURN(#,"LDGCOMM") [String] additional comment
- ;   DFN [Required,Numeric] Patient IEN (pointer to file 2)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;Output:
  ;  1=Success,0=Failure
  K RETURN N FLDS,NAMES,ADM,%
@@ -478,17 +478,17 @@ LSTPLDGI(RETURN,DFN) ; Get patient lodger check-in.
  D BLDLST(.RETURN,.ADM,FLDS,NAMES,1)
  Q 1
  ;
-BLDLST(RETURN,LST,FLDS,NAMES,DESC) ; Build list
+BLDLST(RETURN,LST,FLDS,NAMES,DESC) ; Build list 
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [Numeric] number of movements found
- ;      RETURN(#,"ID") [Numeric] movement IEN (pointer to file 405)
+ ;      RETURN(#,"ID") [Numeric] movement IEN (pointer to the Patient Movement file #405)
  ;      RETURN(#,"DATE") [String] internal_movement_date^external_movement_date
- ;      RETURN(#,"TTYPE") [Numeric] transaction type IEN (pointer to file 405.3)
- ;      RETURN(#,"PATIENT") [String] patient_IEN^patient_name (pointer to file 2)
- ;      RETURN(#,"TYPE") [String] movement_type_IEN^movement_type_name (pointer to file 405.1)
- ;      RETURN(#,"MASTYPE") [String] MAS_movement_type_IEN^MAS_movement_type_name (pointer to file 405.2)
+ ;      RETURN(#,"TTYPE") [Numeric] transaction type IEN (pointer to the MAS Movement Transaction Type file #405.3)
+ ;      RETURN(#,"PATIENT") [String] patient_IEN^patient_name (pointer to the Patient file #2)
+ ;      RETURN(#,"TYPE") [String] movement_type_IEN^movement_type_name (pointer to the Facility Movement Type file #405.1)
+ ;      RETURN(#,"MASTYPE") [String] MAS_movement_type_IEN^MAS_movement_type_name (pointer to the MAS Movement Type file #405.2)
  ;Output:
  ;  1=Success,0=Failure
  N IND,FLD,NAME,D1,D2,ID,REV,CNT

@@ -1,4 +1,4 @@
-DGPMAPI3 ;RGI/VSL - DISCHARGE PATIENT API; 5/24/13
+DGPMAPI3 ;RGI/VSL - DISCHARGE PATIENT API; 6/19/13
  ;;5.3;Registration;**260005**;
 CHKDT(RETURN,PARAM,TYPE,MAS,ADM) ; Check discharge date
  N %,TXT,TT,DIS,LMVT
@@ -7,9 +7,9 @@ CHKDT(RETURN,PARAM,TYPE,MAS,ADM) ; Check discharge date
  D GETMVTT^DGPMDAL2(.TT,+$G(PARAM("TYPE")))
  S TYPE=$G(TT(.03,"I"))
  D GETMASMT^DGPMDAL2(.MAS,TYPE)
- I '$G(PARAM("ADMIFN")) S TXT(1)="PARAM('ADMIFN')" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
+ I '$G(PARAM("ADMIFN")) S TXT(1)="PARAM(""ADMIFN"")" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
  D GETMVT^DGPMDAL1(.ADM,+$G(PARAM("ADMIFN")))
- I ADM=0 S TXT(1)="PARAM('ADMIFN')" D ERRX^DGPMAPIE(.RETURN,"ADMNFND",.TXT) Q 0
+ I ADM=0 S TXT(1)="PARAM(""ADMIFN"")" D ERRX^DGPMAPIE(.RETURN,"ADMNFND",.TXT) Q 0
  I ADM(.17,"I")>0 D  Q 0
  . D GETMVT^DGPMDAL1(.DIS,+ADM(.17,"I"))
  . S TXT(1)=DIS(.01,"E")
@@ -27,14 +27,14 @@ CHKADD(RETURN,PARAM,TYPE,MAS,ADM) ; Check discharge patient
  N %,TXT,TT,ADM
  K RETURN S RETURN=0 ; patient
  S %=$$CHKDT(.RETURN,.PARAM,.TYPE,.MAS,.ADM) Q:'RETURN 0
- I $G(PARAM("FCTY"))'="",'$G(PARAM("FCTY")) S RETURN=0,TXT(1)="PARAM('FCTY')" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
+ I $G(PARAM("FCTY"))'="",'$G(PARAM("FCTY")) S RETURN=0,TXT(1)="PARAM(""FCTY"")" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
  ; type of movement
  S PARAM("PATIENT")=+ADM(.03,"I")
  S %=$$CHKDTYP(.RETURN,$G(PARAM("TYPE")),+ADM(.03,"I"),+PARAM("DATE")) Q:'RETURN 0
  D GETMVT^DGPMDAL1(.ADM,+$G(PARAM("ADMIFN")),".02;.03;")
  D GETMVTT^DGPMDAL2(.TT,+$G(PARAM("TYPE")))
  S TYPE=$G(TT(.03,"I"))
- I +TYPE=46,'$G(PARAM("FCTY")) S RETURN=0,TXT(1)="PARAM('FCTY')" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
+ I +TYPE=46,'$G(PARAM("FCTY")) S RETURN=0,TXT(1)="PARAM(""FCTY"")" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
  I +TYPE=10 S %=$$CHKFCTY^DGPMAPI6(.RETURN,$G(PARAM("FCTY"))) Q:'RETURN 0
  I +TYPE=46 I $$GETAMT^DGPMDAL3(45)="" S TXT(1)=MAS(.01,"E") D ERRX^DGPMAPIE(.RETURN,"DSCNMVTD",.TXT) Q 0
  S RETURN=1
@@ -55,12 +55,12 @@ DISCH(RETURN,PARAM) ; Discharge patient
  ;  .RETURN [Required,Numeric] Set to the new discharge IEN, 0 otherwise.
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
- ;      PARAM("ADMIFN") [Required,Numeric] Admission associated IEN (pointer to file 405)
+ ;      PARAM("ADMIFN") [Required,Numeric] Admission associated IEN (pointer to the Patient Movement file #405)
  ;      PARAM("DATE") [Required,DateTime] Discharge date
- ;      PARAM("TYPE") [Required,Numeric] Discharge type IEN (pointer to file 405.1)
+ ;      PARAM("TYPE") [Required,Numeric] Discharge type IEN (pointer to the Facility Movement Type file #405.1)
  ;      The following parameter are used only with CONTINUED ASIH (OTHER FACILITY) movement type or
  ;        if movement type have the field "ask specialty at movement" set to 1:
- ;        PARAM("FCTY")	[Required,Numeric] Transfer facility (pointer to file 4)
+ ;        PARAM("FCTY")	[Required,Numeric] Transfer facility (pointer to the Institution file #4)
  ;Output:
  ;  1=Success,0=Failure
  N %,MAS,TYPE,ADM,DFN,LMVT
@@ -181,8 +181,8 @@ UPDDSCH(RETURN,PARAM,DMFN) ; Update discharge
  ;                             Set to Error description if the call fails
  ;  .PARAM [Optional,Array] Array passed by reference that holds the new data.
  ;      PARAM("DATE") [Optional,DateTime] Discharge date
- ;      PARAM("TYPE") [Optional,Numeric] Discharge type IEN (pointer to file 405.1)
- ;   DMFN [Required,Numeric] Discharge IEN to update (pointer to file 405)
+ ;      PARAM("TYPE") [Optional,Numeric] Discharge type IEN (pointer to the Facility Movement Type file #405.1)
+ ;   DMFN [Required,Numeric] Discharge IEN to update (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,OLD,NEW,DFN
@@ -231,7 +231,7 @@ DELDSCH(RETURN,DMFN) ; Delete discharge
  ;Input:
  ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
  ;                             Set to Error description if the call fails
- ;   DMFN [Required,Numeric] Discharge IEN to delete (pointer to file 405)
+ ;   DMFN [Required,Numeric] Discharge IEN to delete (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,DCH,DFN

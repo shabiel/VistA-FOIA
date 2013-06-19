@@ -1,4 +1,4 @@
-DGPMAPI9 ;RGI/VSL - PATIENT MOVEMENT API; 5/24/13
+DGPMAPI9 ;RGI/VSL - PATIENT MOVEMENT API; 6/19/13
  ;;5.3;Registration;**260005**;
 LOCKMVT(RETURN,DFN) ; Lock movement
  N % K RETURN S RETURN=0
@@ -16,10 +16,10 @@ ABS(RETURN,PARAM,LMVT) ; Absence transfer
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
  ;    If movement type is: FROM UNAUTHORIZED ABSENCE, FROM AUTHORIZED ABSENCE or FROM AUTH. ABSENCE OF 96 HOURS OR LESS:
- ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
- ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to file 45.7)
- ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to file 200)
- ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
+ ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
+ ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to the Facility Treating Specialty file #45.7)
+ ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to the New Person file #200)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to the New Person file #200)
  ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
  ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
  ;    If movement type is: AUTHORIZED ABSENCE, UNAUTHORIZED ABSENCE or AUTH ABSENCE 96 HOURS OR LESS:
@@ -39,7 +39,7 @@ ASIHOF(RETURN,PARAM) ; ASIH (Other facility) transfer
  ;  .RETURN [Required,Numeric] Set to the new transfer IEN, 0 otherwise.
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
- ;      PARAM("FCTY") [Required,Numeric] Transfer facility (pointer to file 4)
+ ;      PARAM("FCTY") [Required,Numeric] Transfer facility (pointer to the Institution file #4)
  ;Output:
  ;  1=Success,0=Failure
  N %,TFN,LMVT
@@ -78,3 +78,29 @@ UPDPTF(RETURN,PARAM,PFN) ; Update ptf
  D UPDPTF^DGPMDAL1(,.PTF,PFN)
  Q 1
  ;
+CHKELIG(RETURN,DFN,ELIG) ; Check patient eligibility
+ N %,LST,FND,IND K RETURN
+ S RETURN=0
+ I '$G(ELIG) D ERRX^DGPMAPIE(.RETURN,"INVPARM","ELIG") Q 0
+ S %=$$LSTPELIG^DGPMAPI9(.LST,+DFN)
+ F IND=0:0 S IND=$O(LST(IND)) Q:'IND  D
+ . I +ELIG=+LST(IND) S RETURN=1
+ I 'RETURN D ERRX^DGPMAPIE(.RETURN,"PATENFND")
+ Q RETURN
+ ;
+LSTPELIG(RETURN,DFN) ; Get patient eligibility codes
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN(#) [String] eligibility_IEN^eligibility_name (pointer to the Eligibility Code file #8)
+ ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
+ ;Output:
+ ;  1=Success,0=Failure
+ N %,IND,VAEL,CNT K RETURN
+ S %=$$CHKPAT^DGPMAPI8(.RETURN,$G(DFN)) Q:'RETURN 0
+ D GETEL^DGUTL3(+DFN)
+ S:VAEL(1)'="" RETURN(1)=VAEL(1),CNT=1
+ F IND=0:0 S IND=$O(VAEL(1,IND)) Q:'IND  D
+ . S CNT=CNT+1
+ . S RETURN(CNT)=VAEL(1,IND)
+ Q 1

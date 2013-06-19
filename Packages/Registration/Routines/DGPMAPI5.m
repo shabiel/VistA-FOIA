@@ -1,9 +1,9 @@
-DGPMAPI5 ;RGI/VSL - CHECK-OUT PATIENT API; 5/24/13
+DGPMAPI5 ;RGI/VSL - CHECK-OUT PATIENT API; 6/19/13
  ;;5.3;Registration;**260005**;
 CHKDT(RETURN,PARAM,TYPE,MAS,ADM) ; Check lodger check-out date
  N %,TXT,TT,DIS,LMVT
  K RETURN S RETURN=0 ; patient
- I $G(PARAM("ADMIFN"))="" S TXT(1)="PARAM('ADMIFN')" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
+ I $G(PARAM("ADMIFN"))="" S TXT(1)="PARAM(""ADMIFN"")" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
  D GETMVT^DGPMDAL1(.ADM,+$G(PARAM("ADMIFN")),".01;.02;.03;.17")
  I ADM=0 S TXT(1)=$$EZBLD^DIALOG(4070000.014),RETURN=0 D ERRX^DGPMAPIE(.RETURN,"MVTNFND",.TXT) Q 0
  S %=$$CHKDT^DGPMAPI8(.RETURN,$G(PARAM("DATE"))) Q:'RETURN 0
@@ -26,7 +26,7 @@ CHKADD(RETURN,PARAM,TYPE,MAS,ADM) ; Check discharge patient
  ; type of movement
  S PARAM("PATIENT")=+ADM(.03,"I")
  S:$G(PARAM("TYPE")) %=$$CHKCOTYP(.RETURN,$G(PARAM("TYPE")),+ADM(.03,"I"),+PARAM("DATE")) Q:'RETURN 0
- S RETURN=0,TXT(1)="PARAM('LDGDISP')"
+ S RETURN=0,TXT(1)="PARAM(""LDGDISP"")"
  I $G(PARAM("LDGDISP"))="" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
  S DISP=$$LOW^XLFSTR($P(PARAM("LDGDISP"),U))
  S %=$$LSTLDIS^DGPMAPI7(.DIS),FOUND=0
@@ -50,9 +50,9 @@ LDGOUT(RETURN,PARAM) ; Lodger check-out
  ;  .RETURN [Required,Numeric] Set to the new check-out IEN, 0 otherwise.
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
- ;      PARAM("ADMIFN") [Required,Numeric] Check-in associated IEN (pointer to file 405)
+ ;      PARAM("ADMIFN") [Required,Numeric] Check-in associated IEN (pointer to the Patient Movement file #405)
  ;      PARAM("DATE") [Required,DateTime] Check-out date
- ;      PARAM("TYPE") [Required,Numeric] Check-out type IEN (pointer to file 405.1)
+ ;      PARAM("TYPE") [Required,Numeric] Check-out type IEN (pointer to the Facility Movement Type file #405.1)
  ;      PARAM("LDGDISP") [Required,String] One of the following options: "a", "d".
  ;                                         -"a" means that the patient was admitted, "d" dismissed.
  ;Output:
@@ -134,7 +134,7 @@ CHKUPD(RETURN,PARAM,COFN,OLD,NEW) ; Check lodger update
  ; disposition
  S DISP=$$LOW^XLFSTR($P($G(PARAM("LDGDISP")),U))
  I $G(DISP)'="",$G(OLD(30.03,"I"))'=DISP  D  Q:'FOUND 0
- . S RETURN=0,TXT(1)="PARAM('LDGDISP')"
+ . S RETURN=0,TXT(1)="PARAM(""LDGDISP"")"
  . S %=$$LSTLDIS^DGPMAPI7(.DIS),FOUND=0
  . F I=0:0 S I=$O(DIS(I)) Q:'I!FOUND  I $P(DIS(I),U)=DISP S FOUND=1
  . I 'FOUND D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q
@@ -148,10 +148,10 @@ UPDLDGOU(RETURN,PARAM,COFN) ; Update lodger check-out
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
  ;      PARAM("DATE") [Optional,DateTime] Check-out date
- ;      PARAM("TYPE") [Optional,Numeric] Check-out type IEN (pointer to file 405.1)
+ ;      PARAM("TYPE") [Optional,Numeric] Check-out type IEN (pointer to the Facility Movement Type file #405.1)
  ;      PARAM("LDGDISP") [Optional,String] One of the following options: "a", "d".
  ;                                         -"a" means that the patient was admitted, "d" dismissed.
- ;   COFN [Required,Numeric] Check-out IEN to update (pointer to file 405)
+ ;   COFN [Required,Numeric] Check-out IEN to update (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,OLD,NEW,DFN
@@ -195,7 +195,7 @@ DELLDGOU(RETURN,COFN) ; Delete lodger check-out
  ;Input:
  ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
  ;                             Set to Error description if the call fails
- ;   COFN [Required,Numeric] Check-out IEN to delete (pointer to file 405)
+ ;   COFN [Required,Numeric] Check-out IEN to delete (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,ADM,DFN

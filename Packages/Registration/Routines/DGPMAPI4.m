@@ -1,20 +1,20 @@
-DGPMAPI4 ;RGI/VSL - CHECK IN PATIENT API; 5/24/13
+DGPMAPI4 ;RGI/VSL - CHECK IN PATIENT API; 6/19/13
  ;;5.3;Registration;**260005**;
 LDGIN(RETURN,PARAM) ; Check-in patient
  ;Input:
  ;  .RETURN [Required,Numeric] Set to the new check-in IEN, 0 otherwise.
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
- ;      PARAM("PATIENT") [Required,Numeric] Patient IEN (pointer to file 2)
+ ;      PARAM("PATIENT") [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;      PARAM("DATE") [Required,DateTime] Check-in date
- ;      PARAM("TYPE") [Required,Numeric] Check-in type IEN (pointer to file 405.1)
- ;      PARAM("LDGRSN") [Required,Numeric] Reason for check-in IEN (pointer to file 406.41)
+ ;      PARAM("TYPE") [Required,Numeric] Check-in type IEN (pointer to the Facility Movement Type file #405.1)
+ ;      PARAM("LDGRSN") [Required,Numeric] Reason for check-in IEN (pointer to the Lodging Reason file #406.41)
  ;      PARAM("LDGCOMM") [Optional,String] Additional check-in comment (3-30 chars)
  ;      The following parameters are used only with CHECK-IN LODGER movement type:
- ;        PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to file 42)
- ;        PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
+ ;        PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to the Ward Location file #42)
+ ;        PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
  ;      The following parameter are used only with CHECK-IN LODGER (OTHER FACILITY) movement type:
- ;        PARAM("FCTY")	[Required,Numeric] Transfer facility (pointer to file 4)
+ ;        PARAM("FCTY")	[Required,Numeric] Transfer facility (pointer to the Institution file #4)
  ;Output:
  ;  1=Success,0=Failure
  N %,DFN,TYPE
@@ -67,7 +67,7 @@ DELLDGIN(RETURN,AFN) ; Delete lodger check-in
  ;Input:
  ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
  ;                             Set to Error description if the call fails
- ;   AFN [Required,Numeric] Check-in IEN to delete (pointer to file 405)
+ ;   AFN [Required,Numeric] Check-in IEN to delete (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,ADM,DFN
@@ -185,15 +185,15 @@ UPDLDGIN(RETURN,PARAM,AFN) ; Update check-in lodger
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
  ;      PARAM("DATE") [Optional,DateTime] Check-in date
- ;      PARAM("TYPE") [Optional,Numeric] Check-in type IEN (pointer to file 405.1)
- ;      PARAM("LDGRSN") [Optional,Numeric] Reason for check-in IEN (pointer to file 406.41)
+ ;      PARAM("TYPE") [Optional,Numeric] Check-in type IEN (pointer to the Facility Movement Type file #405.1)
+ ;      PARAM("LDGRSN") [Optional,Numeric] Reason for check-in IEN (pointer to the Lodging Reason file #406.41)
  ;      PARAM("LDGCOMM") [Optional,String] Additional check-in comment (3-30 chars)
  ;      The following parameters are used only with CHECK-IN LODGER movement type:
- ;        PARAM("WARD") [Optional,Numeric] Ward location IEN (pointer to file 42)
- ;        PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
+ ;        PARAM("WARD") [Optional,Numeric] Ward location IEN (pointer to the Ward Location file #42)
+ ;        PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
  ;      The following parameter are used only with CHECK-IN LODGER (OTHER FACILITY) movement type:
- ;        PARAM("FCTY")	[Optional,Numeric] Transfer facility (pointer to file 4)
- ;   AFN [Required,Numeric] Check-in IEN to update (pointer to file 405)
+ ;        PARAM("FCTY")	[Optional,Numeric] Transfer facility (pointer to the Institution file #4)
+ ;   AFN [Required,Numeric] Check-in IEN to update (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,OLD,NEW,DFN
@@ -237,7 +237,7 @@ CHKCITYP(RETURN,TYPE,DFN,DATE) ; Check check-in type
  ;
 CHKCIRSN(RETURN,RSN) ; Check reason for check-in
  N TMP,TXT K RETURN S RETURN=0
- I $G(RSN)="" S TXT(1)="PARAM('LDGRSN')" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
+ I $G(RSN)="" S TXT(1)="PARAM(""LDGRSN"")" D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT) Q 0
  D GETRSN^DGPMDAL2(.TMP,+RSN)
  I TMP=0 D ERRX^DGPMAPIE(.RETURN,"RSNNFND") Q 0
  S RETURN=1
