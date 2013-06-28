@@ -1,26 +1,26 @@
-DGPMAPI1 ;RGI/VSL - ADMIT PATIENT API; 5/24/13
+DGPMAPI1 ;RGI/VSL - ADMIT PATIENT API; 6/19/13
  ;;5.3;Registration;**260005**;
 ADMIT(RETURN,PARAM) ; Admit patient
  ;Input:
  ;  .RETURN [Required,Numeric] Set to the new admission IEN, 0 otherwise.
  ;                             Set to Error description if the call fails
  ;  .PARAM [Required,Array] Array passed by reference that holds the new data.
- ;      PARAM("PATIENT") [Required,Numeric] Patient IEN (pointer to file 2)
+ ;      PARAM("PATIENT") [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;      PARAM("DATE") [Required,DateTime] Admission date
- ;      PARAM("TYPE") [Required,Numeric] Admission type IEN (pointer to file 405.1)
- ;      PARAM("ADMREG") [Required,Numeric] Admitting regulation IEN (pointer to file 43.4)
- ;      PARAM("ATNDPHY") [Required,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("TYPE") [Required,Numeric] Admission type IEN (pointer to the Facility Movement Type file #405.1)
+ ;      PARAM("ADMREG") [Required,Numeric] Admitting regulation IEN (pointer to the VA Admitting Regulation file #43.4)
+ ;      PARAM("ATNDPHY") [Required,Numeric] Attending physician IEN (pointer to the New Person file #200)
  ;      PARAM("FDEXC") [Required,Boolean] Patient wants to be excluded or not from Facility Directory.
  ;                                        If it is set to 1 the patient will be excluded from Facility Directory.
- ;      PARAM("FTSPEC") [Required,Numeric] Facility treating specialty IEN (pointer to file 45.7)
+ ;      PARAM("FTSPEC") [Required,Numeric] Facility treating specialty IEN (pointer to the Facility Treating Specialty file #45.7)
  ;      PARAM("SHDIAG")	[Required,String] A brief description of the diagnosis (3-30 chars) 
- ;      PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to file 42)
+ ;      PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to the Ward Location file #42)
  ;      PARAM("ADMSCC")	[Optional,Boolean] Set to 1 if patient is admitted for service connected condition. Default: 0
- ;      PARAM("ADMSRC")	[Optional,Numeric] Source of admission IEN (pointer to file 45.1)
- ;      PARAM("ELIGIB")	[Optional,Numeric] Admitting eligibility IEN (pointer to file 8)
- ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
- ;      PARAM("FCTY") [Optional,Numeric] Transfer facility IEN (pointer to file 4)
- ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
+ ;      PARAM("ADMSRC")	[Optional,Numeric] Source of admission IEN (pointer to the Source of Admission file #45.1)
+ ;      PARAM("ELIGIB")	[Optional,Numeric] Admitting eligibility IEN (pointer to the Eligibility Code file #8)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to the New Person file #200)
+ ;      PARAM("FCTY") [Optional,Numeric] Transfer facility IEN (pointer to the Institution file #4)
+ ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
  ;      PARAM("SCADM") [Optional,Boolean] Set to 1 if this admission is a result of a previously scheduled admission, 0 otherwise. Default: 0.
  ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
  ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
@@ -111,7 +111,7 @@ DELADM(RETURN,AFN) ; Delete admission
  ;Input:
  ;  .RETURN [Required,Numeric] Set to 1 if the operation succeeds
  ;                             Set to Error description if the call fails
- ;   AFN [Required,Numeric] Admission IEN to delete (pointer to file 405)
+ ;   AFN [Required,Numeric] Admission IEN to delete (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,ADM,DFN
@@ -162,7 +162,7 @@ CHKADD(RETURN,PARAM,ASH,MTYPE) ; Check admit parameters
  S %=$$CHKDT(.RETURN,.PARAM,.ASH) Q:'RETURN 0
  ; facility directory exclusion
  I $G(PARAM("FDEXC"))=""!(+$G(PARAM("FDEXC"))'=0&(+$G(PARAM("FDEXC"))'=1)) D  Q 0
- . S TXT(1)="PARAM('FDEXC')",RETURN=0 D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT)
+ . S TXT(1)="PARAM(""FDEXC"")",RETURN=0 D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT)
  ; admitting regulation
  S %=$$CHKAREG^DGPMAPI8(.RETURN,$G(PARAM("ADMREG"))) Q:'RETURN 0
  ; type of movement
@@ -182,6 +182,9 @@ CHKADD(RETURN,PARAM,ASH,MTYPE) ; Check admit parameters
  ; source of admission
  I $G(PARAM("ADMSRC"))'=""&($G(PARAM("ADMSRC"))'="^") D  Q:'RETURN 0
  . S %=$$CHKASRC^DGPMAPI1(.RETURN,$G(PARAM("ADMSRC")))
+ ; eligibility
+ I $G(PARAM("ELIGIB"))'=""&($G(PARAM("ELIGIB"))'="^") D  Q:'RETURN 0
+ . S %=$$CHKELIG^DGPMAPI9(.RETURN,+$G(PARAM("PATIENT")),$G(PARAM("ELIGIB")))
  Q 1
  ;
 CHKUDT(RETURN,AFN,DGDT,OLD,NEW) ; Check update date
@@ -207,7 +210,7 @@ CHKUPD(RETURN,PARAM,AFN,OLD,NEW,MTYPE) ; Check update
  S DATE=$S($D(NEW("DATE")):+NEW("DATE"),1:+OLD("DATE"))
  I $G(PARAM("FDEXC"))'="",+$G(PARAM("FDEXC"))'=+OLD("FDEXC") D  Q:'RETURN 0
  . I +$G(PARAM("FDEXC"))'=0&(+$G(PARAM("FDEXC"))'=1) D  Q
- . . S TXT(1)="PARAM('FDEXC')",RETURN=0 D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT)
+ . . S TXT(1)="PARAM(""FDEXC"")",RETURN=0 D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT)
  . S NEW("FDEXC")=+PARAM("FDEXC")
  ; admitting regulation
  I $G(PARAM("ADMREG"))'="",+$G(OLD("ADMREG"))'=+$G(PARAM("ADMREG")) D  Q:'RETURN 0
@@ -237,9 +240,13 @@ CHKUPD(RETURN,PARAM,AFN,OLD,NEW,MTYPE) ; Check update
  I $G(PARAM("ROOMBED"))'="",$G(PARAM("ROOMBED"))'="^",+$G(OLD("ROOMBED"))'=+$G(PARAM("ROOMBED")) D  Q:'RETURN 0
  . S %=$$CHKBED^DGPMAPI8(.RETURN,PARAM("ROOMBED"),WARD,+OLD("PATIENT"),DATE) Q:'%
  . S NEW("ROOMBED")=+PARAM("ROOMBED")
+ ; eligibility
+ I $G(PARAM("ELIGIB"))'="",($G(PARAM("ELIGIB"))'="^"),+$G(OLD("ELIGIB"))'=+$G(PARAM("ELIGIB")) D  Q:'RETURN 0
+ . S %=$$CHKELIG^DGPMAPI9(.RETURN,+$G(OLD("PATIENT")),$G(PARAM("ELIGIB")))
+ . S NEW("ELIGIB")=+PARAM("ELIGIB")
  ;
  I $G(PARAM("ADMSCC"))]"",$G(PARAM("ADMSCC"))'="^",+$G(OLD("ADMSCC"))'=+$G(PARAM("ADMSCC")) D  Q:'RETURN 0
- . S TXT="PARAM('ADMSCC')"
+ . S TXT="PARAM(""ADMSCC"")"
  . I $S(+PARAM("ADMSCC")=1:0,$P(PARAM("ADMSCC"),U)=0:0,1:1) S RETURN=0 D ERRX^SDAPIE(.RETURN,"INVPARAM",.TXT) Q
  . S NEW("ADMSCC")=+PARAM("ADMSCC")
  ; related physical movement
@@ -257,23 +264,23 @@ UPDADM(RETURN,PARAM,AFN) ; Update admission
  ;                             Set to Error description if the call fails
  ;  .PARAM [Optional,Array] Array passed by reference that holds the new data.
  ;      PARAM("DATE") [Optional,DateTime] Admission date
- ;      PARAM("TYPE") [Optional,Numeric] Admission type IEN (pointer to file 405.1)
- ;      PARAM("ADMREG") [Optional,Numeric] Admitting regulation IEN (pointer to file 43.4)
- ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to file 200)
+ ;      PARAM("TYPE") [Optional,Numeric] Admission type IEN (pointer to the Facility Movement Type file #405.1)
+ ;      PARAM("ADMREG") [Optional,Numeric] Admitting regulation IEN (pointer to the VA Admitting Regulation file #43.4)
+ ;      PARAM("ATNDPHY") [Optional,Numeric] Attending physician IEN (pointer to the New Person file #200)
  ;      PARAM("FDEXC") [Optional,Boolean] Patient wants to be excluded or not from Facility Directory.
  ;                                        If it is set to 1 the patient will be excluded from Facility Directory.
- ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to file 45.7)
+ ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to the Facility Treating Specialty file #45.7)
  ;      PARAM("SHDIAG")	[Optional,String] A brief description of the diagnosis (3-30 chars) 
- ;      PARAM("WARD") [Optional,Numeric] Ward location IEN (pointer to file 42)
+ ;      PARAM("WARD") [Optional,Numeric] Ward location IEN (pointer to the Ward Location file #42)
  ;      PARAM("ADMSCC")	[Optional,Boolean] Set to 1 if patient is admitted for service connected condition. Default: 0
- ;      PARAM("ADMSRC")	[Optional,Numeric] Source of admission IEN (pointer to file 45.1)
- ;      PARAM("ELIGIB")	[Optional,Numeric] Admitting eligibility IEN (pointer to file 8)
- ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to file 200)
- ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to file 405.4)
+ ;      PARAM("ADMSRC")	[Optional,Numeric] Source of admission IEN (pointer to the Source of Admission file #45.1)
+ ;      PARAM("ELIGIB")	[Optional,Numeric] Admitting eligibility IEN (pointer to the Eligibility Code file #8)
+ ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to the New Person file #200)
+ ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
  ;      PARAM("SCADM") [Optional,Boolean] Set to 1 if this admission is a result of a previously scheduled admission, 0 otherwise. Default: 0.
  ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
  ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
- ;   AFN [Required,Numeric] Admission IEN to update (pointer to file 405)
+ ;   AFN [Required,Numeric] Admission IEN to update (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
  N %,OLD,NEW,DFN,MTYPE

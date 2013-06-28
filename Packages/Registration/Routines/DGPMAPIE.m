@@ -1,13 +1,12 @@
-DGPMAPIE ;RGI/VSL - Registration Error provider; 5/27/13
+DGPMAPIE ;RGI/VSL - Registration Error provider; 6/19/13
  ;;5.3;Registration;**260005**;
-ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
+ERRX(RETURN,ERRNO,TEXT) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
  Q:'$D(RETURN)
  Q:'$D(ERRNO)
- S:$G(LVL)="" LVL=1
  N I S I=0
  I $D(RETURN(I)) F I=0:1 Q:$O(RETURN(I))=""
- S RETURN(I)=ERRNO_U_$$EZBLD^DIALOG($P($T(@ERRNO),";;",2),.TEXT)_U_LVL
+ S RETURN(I)=ERRNO_U_$$EZBLD^DIALOG($P($T(@ERRNO),";;",2),.TEXT)
  Q
  ;
 ERRTABLE ; Error table
@@ -71,3 +70,4 @@ RPMNFND ;;4070000.034;;Related physical movement not found
 CANDRPM ;;4070000.035;;You are not allowed to delete a specialty transfer that is assoicated with the initial admission movement.
 LDGPALD ;;4070000.175;;Patient is already a lodger
 TRACEAT ;;4070000.176;;Cannot edit ASIH transfers
+PATENFND ;;4070000.177;;Patient eligibility not found
