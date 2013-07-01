@@ -1,4 +1,4 @@
-SDMDAL2 ;RGI/VSL - APPOINTMENT API; 5/31/13
+SDMDAL2 ;RGI/VSL - APPOINTMENT API; 7/1/13
  ;;5.3;scheduling;**260003**;08/13/93;
 FRSTAVBL(RETURN,SC,SD) ; Get first available date
  S RETURN=$O(^SC(+SC,"ST",SD))
@@ -7,19 +7,6 @@ FRSTAVBL(RETURN,SC,SD) ; Get first available date
 SLOTS(RETURN,SC) ; Get available slots
  M RETURN=^SC(+SC,"ST")
  S RETURN(0)=$P($G(^SC(+SC,"SL")),U,3)
- Q
- ;
-SCEXST(RETURN,CSC) ; Returns Outpatient Classification Stop Code Exception status
- N FILE,STOPN,IENACT,FLDS,FS S RETURN=0
- S STOPN=$$GET1^DIQ(40.7,+CSC_",",1) Q:STOPN=""
- S IENACT=""
- S IENACT=$O(^SD(409.45,"B",STOPN,IENACT))
- S FILE="409.45"
- S FLDS("*")=""
- S FS("75")="",FS("75","F")="409.4575",FS("75","N")="EFFECTIVE DATE"
- S RETURN=0
- I $G(IENACT) D
- . D GETREC^SDMDAL(.RETURN,IENACT,FILE,.FLDS,.FS,1,1,1) S RETURN=1
  Q
  ;
 LSTAPPT(RETURN,SEARCH,START,NUMBER) ; Lists appointment types
