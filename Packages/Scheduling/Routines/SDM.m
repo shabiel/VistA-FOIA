@@ -1,4 +1,4 @@
-SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 5/31/13
+SDM ;SF/GFT,ALB/BOK - MAKE AN APPOINTMENT ; 7/3/13
  ;;5.3;Scheduling;**15,32,38,41,44,79,94,167,168,218,223,250,254,296,380,478,441,260003**;AUG 13, 1993;Build 14
  ;                                           If defined...
  ; appt mgt vars:  SDFN := DFN of patient....will not be asked
@@ -35,7 +35,8 @@ EN1 ;
  I $D(PAT("DODTH")),PAT("DODTH")]"" W !?10,*7,$$EZBLD^DIALOG(480000.1) S:$D(SDFN) SDAMERR="" G END:$D(SDFN),SDM
  D ^SDM4 I $S('$D(COLLAT):1,COLLAT=7:1,1:0) G:$D(SDCLN) END G SDM
  ;-- get sub-category for appointment type
- S SDXSCAT=$$SUB^DGSAUTL(SDAPTYP,2,"")
+ N SCAT S %=$$LSTASTYP^SDMAPI5(.SCAT,SDAPTYP,1)
+ S SDXSCAT=$$SUB^DGSAUTL(SDAPTYP,2,"",.SCAT)
  K SDXXX D EN G END:$D(SDCLN),SDM
 EN K SDMLT1 W:$P(VAEL(9),U,2)]"" !!,?15,"MEANS TEST STATUS: ",$P(VAEL(9),U,2),!
  ; *** sck, mt blocking removed

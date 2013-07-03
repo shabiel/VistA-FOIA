@@ -1,4 +1,4 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider; 5/31/13
+SDAPIE ;RGI/CBR - Scheduling Error provider;07/03/13  12:04
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -82,3 +82,4 @@ TEAMNFND ;;480000.119;;Team not found.
 TMPONFND ;;480000.12;;Team position not found.
 PATNAEAC ;;480000.105;;Patient is not actively enrolled in any clinics.
 WLNFND ;;480000.121;;Wait List entry not found
+TYPINAC ;;480000.123;;Appointment type ... is inactive.
