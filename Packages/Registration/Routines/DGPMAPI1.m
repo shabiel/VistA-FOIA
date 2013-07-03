@@ -1,4 +1,4 @@
-DGPMAPI1 ;RGI/VSL - ADMIT PATIENT API; 6/19/13
+DGPMAPI1 ;RGI/VSL - ADMIT PATIENT API; 7/3/13
  ;;5.3;Registration;**260005**;
 ADMIT(RETURN,PARAM) ; Admit patient
  ;Input:
@@ -21,6 +21,7 @@ ADMIT(RETURN,PARAM) ; Admit patient
  ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to the New Person file #200)
  ;      PARAM("FCTY") [Optional,Numeric] Transfer facility IEN (pointer to the Institution file #4)
  ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
+ ;      PARAM("ADMCAT") [Optional,Numeric] Admitting category IEN (pointer to the Sharing Agreement Sub-Category file #35.2)
  ;      PARAM("SCADM") [Optional,Boolean] Set to 1 if this admission is a result of a previously scheduled admission, 0 otherwise. Default: 0.
  ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
  ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
@@ -164,7 +165,10 @@ CHKADD(RETURN,PARAM,ASH,MTYPE) ; Check admit parameters
  I $G(PARAM("FDEXC"))=""!(+$G(PARAM("FDEXC"))'=0&(+$G(PARAM("FDEXC"))'=1)) D  Q 0
  . S TXT(1)="PARAM(""FDEXC"")",RETURN=0 D ERRX^DGPMAPIE(.RETURN,"INVPARM",.TXT)
  ; admitting regulation
- S %=$$CHKAREG^DGPMAPI8(.RETURN,$G(PARAM("ADMREG"))) Q:'RETURN 0
+ S %=$$CHKAREG^DGPMAPI8(.RETURN,$G(PARAM("ADMREG")),"PARAM(""ADMREG"")") Q:'RETURN 0
+ ; admitting category
+ I $G(PARAM("ADMCAT"))'="" D  Q:'RETURN 0
+ . S %=$$CHKACAT^DGSAAPI(.RETURN,+PARAM("ADMREG"),$G(PARAM("ADMCAT")),"PARAM(""ADMCAT"")")
  ; type of movement
  S:'$G(ASH) %=$$CHKATYP^DGPMAPI1(.RETURN,$G(PARAM("TYPE")),+PARAM("PATIENT"),+PARAM("DATE")) Q:'RETURN 0
  ; transfer facility if type=9
@@ -202,7 +206,7 @@ CHKUDT(RETURN,AFN,DGDT,OLD,NEW) ; Check update date
  Q 1
  ;
 CHKUPD(RETURN,PARAM,AFN,OLD,NEW,MTYPE) ; Check update
- N %,TXT,DATE,WARD,RPHY,TT,TYPE
+ N %,TXT,DATE,WARD,RPHY,TT,TYPE,AREG
  K RETURN,OLD,NEW S RETURN=1
  S %=$$GETADM^DGPMAPI8(.OLD,+$G(AFN))
  I OLD=0 S RETURN=0 D ERRX^DGPMAPIE(.RETURN,"ADMNFND") Q 0
@@ -214,8 +218,13 @@ CHKUPD(RETURN,PARAM,AFN,OLD,NEW,MTYPE) ; Check update
  . S NEW("FDEXC")=+PARAM("FDEXC")
  ; admitting regulation
  I $G(PARAM("ADMREG"))'="",+$G(OLD("ADMREG"))'=+$G(PARAM("ADMREG")) D  Q:'RETURN 0
- . S %=$$CHKAREG^DGPMAPI8(.RETURN,$G(PARAM("ADMREG"))) Q:'RETURN
+ . S %=$$CHKAREG^DGPMAPI8(.RETURN,$G(PARAM("ADMREG")),"PARAM(""ADMREG"")") Q:'RETURN
  . S NEW("ADMREG")=+PARAM("ADMREG")
+ S AREG=$S($D(NEW("ADMREG")):+NEW("ADMREG"),1:+OLD("ADMREG"))
+ ; admitting category
+ I $G(PARAM("ADMCAT"))'="",+$G(OLD("ADMCAT"))'=+$G(PARAM("ADMCAT")) D  Q:'RETURN 0
+ . S %=$$CHKACAT^DGSAAPI(.RETURN,AREG,$G(PARAM("ADMCAT")),"PARAM(""ADMCAT"")") Q:'RETURN
+ . S NEW("ADMCAT")=+PARAM("ADMCAT")
  ; type of movement
  I $G(PARAM("TYPE"))'="",+$G(OLD("TYPE"))'=+$G(PARAM("TYPE")) D  Q:'RETURN 0
  . S %=$$CHKATYP^DGPMAPI1(.RETURN,$G(PARAM("TYPE")),+OLD("PATIENT"),+DATE) Q:'%
@@ -277,6 +286,7 @@ UPDADM(RETURN,PARAM,AFN) ; Update admission
  ;      PARAM("ELIGIB")	[Optional,Numeric] Admitting eligibility IEN (pointer to the Eligibility Code file #8)
  ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to the New Person file #200)
  ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
+ ;      PARAM("ADMCAT") [Optional,Numeric] Admitting category IEN (pointer to the Sharing Agreement Sub-Category file #35.2)
  ;      PARAM("SCADM") [Optional,Boolean] Set to 1 if this admission is a result of a previously scheduled admission, 0 otherwise. Default: 0.
  ;      PARAM("DIAG") [Optional,Array] Array of detailed diagnosis description.
  ;         PARAM("DIAG",n) [Optional,String] Detailed diagnosis description.
@@ -303,6 +313,7 @@ UPD(RETURN,PARAM,AFN,OLD,NEW,QUIET,MTYPE) ; Update admission
  S:$D(NEW("DATE")) MVT(.01)=+NEW("DATE")
  S:$D(NEW("FDEXC")) MVT(41)=+NEW("FDEXC")
  S:$D(NEW("ADMREG")) MVT(.12)=+NEW("ADMREG")
+ S:$D(NEW("ADMCAT")) MVT(54)=+NEW("ADMCAT")
  S:$D(NEW("ADMSCC")) MVT(.11)=+NEW("ADMSCC")
  S:$D(NEW("TYPE")) MVT(.04)=+NEW("TYPE")
  S:$D(NEW("FCTY")) MVT(.05)=+NEW("FCTY")

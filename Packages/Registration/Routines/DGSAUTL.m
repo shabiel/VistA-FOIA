@@ -113,7 +113,7 @@ SUB(ATAR,SOURCE,DEFAULT,SCAT) ;-- This function will check and prompt for sharin
  S DGDEF=""
  ;
  S RESULT=""
- I '$D(SCAT) G SUBQ
+ I '$G(SCAT(0)) G SUBQ
  S X=0,X=$O(SCAT(X))
  I '$O(SCAT(X)) S RESULT=SCAT(X,"SUBCAT") G SUBQ
  ;-- if no default set default to first entry
