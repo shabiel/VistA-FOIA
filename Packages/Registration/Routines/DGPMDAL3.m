@@ -1,4 +1,4 @@
-DGPMDAL3 ;RGI/VSL - PATIENT MOVEMENT DAL; 5/16/13
+DGPMDAL3 ;RGI/VSL - PATIENT MOVEMENT DAL; 7/1/13
  ;;5.3;Registration;**260005**;
 GETPMVT(DATA,DFN,AFN,DGDT,MFN,FLDS) ; Get admission prior movement
  N X,PFN,DGX,AMVT
@@ -27,7 +27,5 @@ GETAMT(MASTYP) ;find active movement type
  F I=0:0 S I=$O(^DG(405.1,"AM",MASTYP,I)) Q:'I  I $D(^DG(405.1,+I,0)),$P(^DG(405.1,+I,0),"^",4) S DGFAC=I Q
  Q DGFAC
  ;
-HASMVT(DFN,DGPMT) ; Has movement?
- Q $D(^DGPM("APTT"_DGPMT,DFN))
 GETAPTT3(DFN,DGDT) ; Get continued ASIH discharge IFN
  Q $O(^DGPM("APTT3",DFN,DGDT+.0000001,0))

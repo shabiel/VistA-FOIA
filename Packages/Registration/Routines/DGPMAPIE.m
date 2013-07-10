@@ -1,4 +1,4 @@
-DGPMAPIE ;RGI/VSL - Registration Error provider; 6/19/13
+DGPMAPIE ;RGI/VSL - Registration Error provider;07/10/13  12:01
  ;;5.3;Registration;**260005**;
 ERRX(RETURN,ERRNO,TEXT) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -71,3 +71,9 @@ CANDRPM ;;4070000.035;;You are not allowed to delete a specialty transfer that i
 LDGPALD ;;4070000.175;;Patient is already a lodger
 TRACEAT ;;4070000.176;;Cannot edit ASIH transfers
 PATENFND ;;4070000.177;;Patient eligibility not found
+SASCINV ;;4070000.178;;Invalid Sharing Agreement Sub-Category name, must be 3-30 characters long.
+SASCNFND ;;4070000.179;;Sharing Agreement Sub-Category not found
+SASCAEX ;;4070000.18;;Sharing Agreement Sub-Category ... already exists.
+SACNFND ;;4070000.181;;Sharing Agreement Category not found
+ACATINAC ;;4070000.182;;Admitting category ... is inactive.
+SACEXST ;;4070000.183;;Sharing Agreement Category ... already exists.

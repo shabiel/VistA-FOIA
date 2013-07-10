@@ -1,4 +1,4 @@
-SDAMWI ;ALB/MJK - Unscheduled Appointments ; 1/14/2013
+SDAMWI ;ALB/MJK - Unscheduled Appointments ; 7/3/13
  ;;5.3;Scheduling;**63,94,241,250,296,380,327,260003**;Aug 13, 1993
  ;
 EN(DFN,SC) ; -- main entry point
@@ -13,7 +13,8 @@ EN(DFN,SC) ; -- main entry point
  ; ** SD*5.3*250 MT Blocking check removed
  ;S X="EASMTCHK" X ^%ZOSF("TEST") I $T N EASACT S EASACT="W" I $$MT^EASMTCHK(DFN,+$G(SDAPTYP),EASACT) D PAUSE^VALM1 S SDY=0 G ENQ
  ;-- get sub-category for appointment type
- S SDXSCAT=$$SUB^DGSAUTL(SDAPTYP,2,"")
+ N SCAT S %=$$LSTASTYP^SDMAPI5(.SCAT,SDAPTYP,1)
+ S SDXSCAT=$$SUB^DGSAUTL(SDAPTYP,2,"",.SCAT)
  S SDY=$$MAKE^SDAMWI1(DFN,SC,SDT,SDAPTYP,SDXSCAT)
  K SDXSCAT
 ENQ D KVAR^VADPT

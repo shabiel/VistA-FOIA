@@ -1,4 +1,4 @@
-DGSAUTL ;ALB/MTC - SHARING AGREEMENTS UTILITY FUNCTIONS ; DGPTXA
+DGSAUTL ;ALB/MTC - SHARING AGREEMENTS UTILITY FUNCTIONS ;07/03/13  12:03
  ;;5.3;Registration;**114,194,216,260005*****;Aug 13, 1993
  ;
  Q
@@ -92,22 +92,12 @@ HLPQ ;
 ADCAT(ADCAT,DEFAULT) ;-- This function will prompt the user for the category
  ; associated with the admitting regulation selected.
  ;
- N RESULT,DGSA
- S RESULT=$$SUB(ADCAT,1,$G(DEFAULT))
+ N RESULT,SCAT
+ S %=$$LSTACAT^DGSAAPI(.SCAT,ADCAT,1)
+ S RESULT=$$SUB(ADCAT,1,$G(DEFAULT),.SCAT)
  Q RESULT
  ;
-GETSA(ATAR,SOURCE,ACTIVE) ;-- This function will build the DGSA array containing all the
- ;   sub-categories associated with an admitting reg.
- ;
- ;
- Q:'$G(ATAR)
- N DGX,DGY
- S DGY=1,DGX=0 F  S DGX=$O(^DG(35.1,$S(SOURCE=1:"AR",1:"AT"),ATAR,DGX)) Q:'DGX  D
- . N DGSCREEN S DGSCREEN=1 I $G(ACTIVE) S DGSCREEN=+$O(^(DGX,0)),DGSCREEN=$P($G(^DG(35.1,DGSCREEN,0)),U,3)
- . I DGSCREEN S DGSA(1,DGX)=DGX_U_$P($G(^DG(35.2,DGX,0)),U)
- Q
- ;
-SUB(ATAR,SOURCE,DEFAULT) ;-- This function will check and prompt for sharing
+SUB(ATAR,SOURCE,DEFAULT,SCAT) ;-- This function will check and prompt for sharing
  ; agreement sub-categories associated with either an Admitting Reg
  ; or a Appointment Type.
  ;
@@ -120,29 +110,27 @@ SUB(ATAR,SOURCE,DEFAULT) ;-- This function will check and prompt for sharing
  N RESULT,ALLEL,EMP,X,DGDEF,Y
  ;
  ;-- get eligility codes
- D GETSA(ATAR,SOURCE,1)
- S DGDEF=$P($G(^DG(35.2,+$G(DEFAULT),0)),U)
- I DGDEF'="" S DGDEF=DEFAULT_U_DGDEF
+ S DGDEF=""
  ;
  S RESULT=""
- I '$D(DGSA) G SUBQ
- S X=0,X=$O(DGSA(1,X))
- I '$O(DGSA(1,X)) S RESULT=DGSA(1,X) G SUBQ
+ I '$G(SCAT(0)) G SUBQ
+ S X=0,X=$O(SCAT(X))
+ I '$O(SCAT(X)) S RESULT=SCAT(X,"SUBCAT") G SUBQ
  ;-- if no default set default to first entry
- I DGDEF="" S DGDEF=DGSA(1,X)
+ I DGDEF="" S DGDEF=SCAT(X,"SUBCAT")
  ;
 DISP ;-- display choices
  ;
  S ALLEL=""
  ;-- get the name of the Admitting Reg or Appointment Type
- I SOURCE=1 S DGNAME=$P($G(^DIC(43.4,ATAR,0)),U)
- E  S DGNAME=$P($G(^SD(409.1,ATAR,0)),U)
+ S DGNAME=$P(ATAR,U,2)
  ;
  W !,"THE ["_DGNAME_$S(SOURCE=1:"] ADMITTING REGULATION",1:"] APPOINTMENT TYPE")
  W !,"HAS THE FOLLOWING SUB-CATEGORIES DEFINED."
- S X="" F  S X=$O(DGSA(1,X)) Q:'X  D
- . W !?5,$P(DGSA(1,X),U,2)
- . S ALLEL=ALLEL_U_$P(DGSA(1,X),U,2)
+ S X=0 F  S X=$O(SCAT(X)) Q:'X  D
+ . W !?5,$P(SCAT(X,"SUBCAT"),U,2)
+ . I +$G(DEFAULT)=+SCAT(X,"SUBCAT") S DGDEF=SCAT(X,"SUBCAT")
+ . S ALLEL=ALLEL_U_$P(SCAT(X,"SUBCAT"),U,2)
  ;
  ;-- prompt for sub-categories
  ;
@@ -159,13 +147,13 @@ DISP ;-- display choices
  G DISP:X["?",1:ALLEL'[(U_X)
  N CNT,RES S CNT=0
  S EMP=X ;_$P($P(ALLEL,U_X,2),U) ;W $P($P(ALLEL,U_X,2),U)
- S X="" F  S X=$O(DGSA(1,X)) Q:X'>0  D
- . I $E($P(DGSA(1,X),U,2),1,$L(EMP))=EMP S CNT=CNT+1,(RES(CNT),RESULT)=X_U_$P(DGSA(1,X),U,2)
+ S X=0 F  S X=$O(SCAT(X)) Q:X'>0  D
+ . I $E($P(SCAT(X,"SUBCAT"),U,2),1,$L(EMP))=EMP S CNT=CNT+1,(RES(CNT),RESULT)=X_U_$P(SCAT(X,"SUBCAT"),U,2)
  W:CNT=1 $P($P(ALLEL,U_EMP,2),U) I CNT>1 D  G 1:(('RESULT)&(X'[U))
  .N I F I=1:1:CNT W !?5,I_"  "_$P(RES(I),U,2)
  .W !,"CHOOSE 1 - "_CNT_": "
  .S RESULT="" R X:DTIME I $D(RES(+X)) S RESULT=RES(+X) W " "_$P(RES(+X),U,2)
 SUBQ ;
- K DGSA
+ K SCAT
  Q +RESULT
  ;
