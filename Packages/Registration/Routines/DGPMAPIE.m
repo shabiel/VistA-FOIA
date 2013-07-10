@@ -1,4 +1,4 @@
-DGPMAPIE ;RGI/VSL - Registration Error provider;07/03/13  12:01
+DGPMAPIE ;RGI/VSL - Registration Error provider;07/10/13  12:01
  ;;5.3;Registration;**260005**;
 ERRX(RETURN,ERRNO,TEXT) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -76,3 +76,4 @@ SASCNFND ;;4070000.179;;Sharing Agreement Sub-Category not found
 SASCAEX ;;4070000.18;;Sharing Agreement Sub-Category ... already exists.
 SACNFND ;;4070000.181;;Sharing Agreement Category not found
 ACATINAC ;;4070000.182;;Admitting category ... is inactive.
+SACEXST ;;4070000.183;;Sharing Agreement Category ... already exists.

@@ -1,4 +1,4 @@
-DGSADAL ;RGI/CBR - SHARING AGREEMENTS UTILITY FUNCTIONS ;07/03/13  12:02
+DGSADAL ;RGI/CBR - SHARING AGREEMENTS UTILITY FUNCTIONS ;07/10/13  12:02
  ;;5.3;Registration;**114,194,216,260003*****;Aug 13, 1993
 LSTSAC(RETURN,TYPE,ACTIVE) ; Lists Sharing agreement Category
  N FILE,FIELDS,RET,SCR
@@ -46,5 +46,5 @@ SASCEXST(IFN) ; Sharing Agreement Sub-Category exists
  Q $D(^DG(35.2,$G(IFN)))
  ;
 SCNEXST(NAME) ; Sharing Agreement Sub-Category name already exists
- Q $D(^DG(35.2,"B",$G(NAME)))
+ Q $O(^DG(35.2,"B",$G(NAME),0))
  ;
