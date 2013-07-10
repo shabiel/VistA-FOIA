@@ -1,4 +1,4 @@
-DGPMAPI9 ;RGI/VSL - PATIENT MOVEMENT API; 7/4/13
+DGPMAPI9 ;RGI/VSL - PATIENT MOVEMENT API; 7/10/13
  ;;5.3;Registration;**260005**;
 LOCKMVT(RETURN,DFN) ; Lock movement
  N % K RETURN S RETURN=0
@@ -93,14 +93,15 @@ LSTPELIG(RETURN,DFN) ; Get patient eligibility codes
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data
  ;                           Set to Error description if the call fails
  ;      RETURN(0) [Numeric] # of entries found
+ ;      RETURN("PELIG") [String] primary_eligibility_IEN^primary_eligibility_name (pointer to the Eligibility Code file #8)
  ;      RETURN(#) [String] eligibility_IEN^eligibility_name (pointer to the Eligibility Code file #8)
  ;   DFN [Required,Numeric] Patient IEN (pointer to the Patient file #2)
  ;Output:
  ;  1=Success,0=Failure
  N %,IND,VAEL,CNT K RETURN S CNT=0
- S %=$$CHKPAT^DGPMAPI8(.RETURN,$G(DFN)) Q:'RETURN 0
+ S %=$$CHKPAT^DGPMAPI8(.RETURN,$G(DFN),"DFN") Q:'RETURN 0
  D GETEL^DGUTL3(+DFN)
- S:VAEL(1)'="" RETURN(1)=VAEL(1),CNT=1
+ S:VAEL(1)'="" RETURN("PELIG")=VAEL(1)
  F IND=0:0 S IND=$O(VAEL(1,IND)) Q:'IND  D
  . S CNT=CNT+1
  . S RETURN(CNT)=VAEL(1,IND)
