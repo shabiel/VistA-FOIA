@@ -1,7 +1,7 @@
-DGPMRB ;ALB/MRL,MIR - ROOM-BED DETERMINATION (SINGLE WARD); 3/4/2013
- ;;5.3;Registration;**54,260005**;Aug 13, 1993
+DGPMRB ;ALB/MRL,MIR - ROOM-BED DETERMINATION (SINGLE WARD); 9 JAN 89
+ ;;5.3;Registration;**54**;Aug 13, 1993
  N I,I1,J,L,M,W,Y
- D Q S DGHOW=$S(('$D(X)#2):1,X["??":0,1:1),DGPMDD=$S('$D(DGSWITCH):+PAR("DATE"),1:DT),W=+PAR("WARD"),(DGL,DGA,DGFL)=0 G Q:'$D(^DIC(42,+W,0))
+ D Q S DGHOW=$S(('$D(X)#2):1,X["??":0,1:1),DGPMDD=$S('$D(DGSWITCH):+^DGPM(DA,0),1:DT),W=+$P(^DGPM(DA,0),"^",6),(DGL,DGA,DGFL)=0 G Q:'$D(^DIC(42,+W,0))
  W !!,"CHOOSE FROM",!
  F I=0:0 S I=$O(^DG(405.4,"W",W,I)) Q:I'>0!(DGFL)  I $D(^DG(405.4,+I,0)) S J=^(0),J=$P($P(J,"^",1,3)_"^^^","^",1,3),DGR=$P(J,"^",1) D ACT I 'DGU D DIS
  I DGA W !!,"Select from the above listing the bed you wish to assign this patient." I DGHOW W !,"Enter two question marks for a more detailed list of available beds." G Q
@@ -54,8 +54,8 @@ OCC ;is bed occupied
  ;OUTPUT:  DGPMOC...1 if occupied, 0 if not
  ;
  N DFN S DGPMOC=0
- S DFN=PAR("PATIENT") I 'DFN G OCCQ
+ S DFN=$P(^DGPM(DA,0),"^",3) I 'DFN G OCCQ
  S DGPMX=$O(^DGPM("ARM",+Y,0)) I '$D(^DGPM(+DGPMX,0)) G OCCQ
- S DGPMX=^(0) I DFN=$P(DGPMX,"^",3),($D(^DG(405.4,+Y,"W","B",+PAR("WARD")))) S DGPMOC=0 G OCCQ
+ S DGPMX=^(0) I DFN=$P(DGPMX,"^",3),($D(^DG(405.4,+Y,"W","B",+$P(^DGPM(DA,0),"^",6)))) S DGPMOC=0 G OCCQ
  S DGPMOC=1
 OCCQ K DGPMX Q

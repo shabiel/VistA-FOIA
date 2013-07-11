@@ -1,4 +1,4 @@
-DGPMV10 ;ALB/MRL/MIR - PATIENT MOVEMENT, CONT.; 4/8/13
+DGPMV10 ;ALB/MRL/MIR - PATIENT MOVEMENT, CONT.; 7/11/13
  ;;5.3;Registration;**84,498,509,683,719,260005**;Aug 13, 1993
 CS ;Current Status
  ;first print primary care team/practitioner/attending
@@ -57,7 +57,9 @@ INP ;set-up inpt vbls needed (mimic VAIP array)
  ;
  ;Called from scheduling, too
  ;
- D NOW^%DTC S (VAX("DAT"),NOW)=%,NOWI=9999999.999999-% I '$D(VAIP("E")) D LAST^VADPT3
+ I '$D(NOW) D NOW^%DTC S (VAX("DAT"),NOW)=%,NOWI=9999999.999999-%
+ S VAX("DAT")=NOW,NOWI=9999999.999999-NOW
+ I '$D(VAIP("E")) D LAST^VADPT3
  F I=1:1:8,13,17 S DGPMVI(I)=""
  F I=13,19 S DGPMVI(I,1)=""
  S DGPMVI(1)=$S($D(VAIP("E")):VAIP("E"),1:E) ;use ifn of last mvt from VADPT call or one passed from DGPMV

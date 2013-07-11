@@ -1,5 +1,4 @@
-DGPMX32 ; ;3/4/2013
- ;;5.3;Registration;**260005**;
+DGPMX32 ; ;03/03/97
  D DE G BEGIN
 DE S DIE="^DGPM(",DIC=DIE,DP=405,DL=1,DIEL=0,DU="" K DG,DE,DB Q:$O(^DGPM(DA,""))=""
  I $D(^("USR")) S %Z=^("USR") S %=$P(%Z,U,4) S:%]"" DE(1)=%
@@ -52,4 +51,4 @@ BEGIN S DNM="DGPMX32",DQ=1
 X1 S %DT="STX" D ^%DT S X=Y K:Y<1 X
  Q
  ;
-2 ;G 0^DIE17
+2 G 0^DIE17
