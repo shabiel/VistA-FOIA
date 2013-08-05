@@ -1,4 +1,4 @@
-SDMDALE ;RGI/CBR - EXTERNAL DAL; 1/5/2013
+SDMDALE ;RGI/CBR - EXTERNAL DAL; 7/18/2013
  ;;5.3;scheduling;**260003**;
 LSTSADM(RETURN,DFN,SD,CAN) ; Get scheduled admissions
  N FILE,FIELDS,RET,SCR,SEP,ST
@@ -10,3 +10,34 @@ LSTSADM(RETURN,DFN,SD,CAN) ; Get scheduled admissions
  S:$L(SEP)>0 SCR=ST_SCR
  D LIST^DIC(FILE,"",FIELDS,"",,,,"B",.SCR,"","RETURN")
  Q
+ ;
+LSTMGRP(RETURN,SEARCH,START,NUMBER,FLDS) ; Returns mail groups.
+ N SCR,TMP,E
+ S:'$D(FLDS) FLDS=".01;"
+ D LIST^DIC(3.8,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
+ I $D(E) M RETURN=E
+ Q
+ ;
+LSTEFRM(RETURN,SEARCH,START,NUMBER,FLDS) ; Returns encounter forms.
+ N SCR,TMP,E
+ S:'$D(FLDS) FLDS=".01;"
+ S SCR="I '$P($G(^(0)),U,7),$P($G(^(0)),U,4)'>1"
+ D LIST^DIC(357,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
+ I $D(E) M RETURN=E
+ Q
+ ;
+LSTPKGI(RETURN,SEARCH,START,NUMBER,FLDS) ; Returns package interfaces.
+ N SCR,TMP,E
+ S:'$D(FLDS) FLDS=".01;"
+ S SCR="I $P(^(0),U,6)=4,$P(^(0),U,9)=1"
+ D LIST^DIC(357.6,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
+ I $D(E) M RETURN=E
+ Q
+ ;
+LSTPCON(RETURN,SEARCH,START,NUMBER,FLDS) ; Returns print conditions.
+ N SCR,TMP,E
+ S:'$D(FLDS) FLDS=".01;"
+ D LIST^DIC(357.92,"",FLDS,"",.NUMBER,.START,.SEARCH,"B",.SCR,"","RETURN","E")
+ I $D(E) M RETURN=E
+ Q
+ ;

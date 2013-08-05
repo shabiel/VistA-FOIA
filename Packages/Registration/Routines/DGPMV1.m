@@ -1,14 +1,12 @@
-DGPMV1 ;ALB/MRL/MIR/JAN - PATIENT MOVEMENT, CONT.; 4/8/13
- ;;5.3;Registration;**59,358,260005**;Aug 13, 1993
- K VAIP S VAIP("D")="L",VAIP("L")=""
+DGPMV1 ;ALB/MRL/MIR/JAN - PATIENT MOVEMENT, CONT.; 11 APR 89 ; 6/14/01 11:51am
+ ;;5.3;Registration;**59,358**;Aug 13, 1993
+ K VAIP S VAIP("D")="L",VAIP("L")="" D INP^DGPMV10,Q^VADPT3
  G:'$D(DFN)#2 Q
- S X=PAT("MEANST") W:'X !!,"Means Test not required based on available information" I X D
+ S X=$P($G(^DPT(DFN,0)),"^",14) W:'X !!,"Means Test not required based on available information" I X D
  .D DOM^DGMTR D:'$G(DGDOM) DIS^DGMTU(DFN) K DGDOM
  D CS^DGPMV10
  ;
-NEXT S Z="^CONTINUE^EDIT^MORE^QUIT^" D EN^DDIOL(" ")
- S DIR("A")=$$EZBLD^DIALOG(4070000.072)
- S DIR(0)="FOA" D ^DIR I X']"" S X="C" W X
+NEXT S Z="^CONTINUE^EDIT^MORE^QUIT^" W !!,"<C>ontinue, <M>ore, or <Q>uit?  CONTINUE// " R X:DTIME S:'$T X="^" I X']"" S X="C" W X
  I X["^" S X="Q" W " ",X
  D IN^DGHELP
  I X]"","^C^M^Q^"[("^"_X_"^") D:X'="Q" @X G Q
@@ -16,16 +14,14 @@ NEXT S Z="^CONTINUE^EDIT^MORE^QUIT^" D EN^DDIOL(" ")
  W ! G NEXT
  ;
 C S DGPM2X=0 ;were DGPMVI variables set 2 times?
- I DGPMT=1,+$G(LMVT("TYPE"))=4,'$D(^DGPM("APTT1",DFN)) W !!,*7,"THIS PATIENT IS A LODGER AND HAS NO ADMISSIONS ON FILE.",!,"YOU MUST CHECK HIM OUT PRIOR TO CONTINUING" Q
- I DGPMT=4,"^1^2^6^7^"[("^"_+$G(LMVT("TYPE"))_"^"),'$D(^DGPM("APTT4",DFN)) W !!,*7,"THIS PATIENT IS AN INPATIENT AND HAS NO LODGER MOVEMENTS ON FILE.",!,"YOU MUST DISCHARGE HIM PRIOR TO CONTINUING" Q
- I "^1^2^6"[("^"_+$G(LMVT("TYPE"))_"^")&("^4^5^"[("^"_DGPMT_"^"))!(+$G(LMVT("TYPE"))=3&(DGPMT=5)) D LODGER^DGPMV10 S DGPM2X=1
- I +$G(LMVT("TYPE"))=4&("^1^2^3^6^"[("^"_DGPMT_"^"))!(+$G(LMVT("TYPE"))=5&(DGPMT=3)) K VAIP S VAIP("D")="L" D INP^DGPMV10 S DGPM2X=1
+ I DGPMT=1,+DGPMVI(2)=4,'$D(^DGPM("APTT1",DFN)) W !!,*7,"THIS PATIENT IS A LODGER AND HAS NO ADMISSIONS ON FILE.",!,"YOU MUST CHECK HIM OUT PRIOR TO CONTINUING" Q
+ I DGPMT=4,"^1^2^6^7^"[("^"_+DGPMVI(2)_"^"),'$D(^DGPM("APTT4",DFN)) W !!,*7,"THIS PATIENT IS AN INPATIENT AND HAS NO LODGER MOVEMENTS ON FILE.",!,"YOU MUST DISCHARGE HIM PRIOR TO CONTINUING" Q
+ I "^1^2^6"[("^"_+DGPMVI(2)_"^")&("^4^5^"[("^"_DGPMT_"^"))!(+DGPMVI(2)=3&(DGPMT=5)) D LODGER^DGPMV10 S DGPM2X=1
+ I +DGPMVI(2)=4&("^1^2^3^6^"[("^"_DGPMT_"^"))!(+DGPMVI(2)=5&(DGPMT=3)) K VAIP S VAIP("D")="L" D INP^DGPMV10 S DGPM2X=1
  ;lock added to block 2 ppl from moving same patient at same time; abr
-LOCK ;
- S %=$$LOCKMVT^DGPMAPI9(.RE,DFN) I 'RE D  Q
- . N TXT D BLD^DIALOG(4070000.027,,,"TXT")
- . S TXT(1,"F")="!!" D EN^DDIOL(.TXT),EN^DDIOL(" ")
- D ^DGPMV2 D ULOCKMVT^DGPMAPI9(DFN) Q  ;continue with movement entry
+LOCK L +^DGPM("C",DFN):0 I '$T D  Q
+ .W !!,"    ** This patient's inpatient or lodger activity is being **",!,"    ** edited by another employee.  Please try again later. **",!
+ D ^DGPMV2 L -^DGPM("C",DFN) Q  ;continue with movement entry
 Q D KVAR^VADPT K DGPM2X,DGPMIFN,DGPMDCD,DGPMVI,DGPMY,DIE,DR,I,J,X,X1,Z Q
 M D 10^VADPT S X=$O(^UTILITY("VAEN",$J,0)) D EN S X=$O(^UTILITY("VASD",$J,0)) D AP K I,X W ! D C Q  ;display enrollments,appointments --> continue
  ;

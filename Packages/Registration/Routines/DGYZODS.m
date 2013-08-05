@@ -46,6 +46,6 @@ PT1 N DA,DIC,DIK,SSN,X,Y
  ;
  ;
 DFN ;Called from admit templates to N DFN
- N DFN S DFN=PAR("PATIENT")
+ N DFN S DFN=$P(^DGPM(DA,0),"^",3)
  D ODS
  Q

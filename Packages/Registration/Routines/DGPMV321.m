@@ -1,14 +1,22 @@
-DGPMV321 ;ALB/MIR - ASIH TRANSFER ; 3/28/13
+DGPMV321 ;ALB/MIR - ASIH TRANSFER ; 8/6/08 11:45am
  ;;5.3;Registration;**40,208,713,784**;Aug 13, 1993;Build 16
 ECA ;Edit corresponding admission for ASIH transfers
- S DGPMNA=1,DIE("NO^")=""
- D EN^DDIOL($$EZBLD^DIALOG(4070000.028),,"!!")
- D EN^DDIOL($$EZBLD^DIALOG(4070000.029)),EN^DDIOL(" ")
- D ^DGPTXA
- D EN^DDIOL($$EZBLD^DIALOG(4070000.03),,"!")
- D EN^DDIOL($$EZBLD^DIALOG(4070000.031)),EN^DDIOL(" ")
- D ^DGPMXA
- S Y="^1" D SPEC^DGPMV36
+ S DGPMTN=DGPMA,DGPMNI=DGPMCA D FINDLAST^DGPMV32
+ S DGPMNA=0,DGPMAA=$P(DGPMA,"^",15) I '$D(^DGPM(+DGPMAA,0)) D  S DGPMNA=1,DIE("NO^")=""
+ .;get admit eligibility for PTF record 784
+ .N DGPMELG
+ .S DGPMELG=$$GET1^DIQ(45,$$IENS^DILF($$GET1^DIQ(405,DGPMCA,.16)),20.1)
+ .D NEW
+ W !,"Editing Corresponding Hospital Admission",!
+ I 'DGPMNA,$D(^DGPM(+DGPMAA,0)) S DA=$P(^(0),"^",16) I $D(^DGPT(+DA,0)) S DIE="^DGPT(",DR="2////"_+DGPMA_";20;" K DQ,DG D ^DIE W ! ;update admission d/t in PTF
+ ;update pseudo discharge
+ S X1=+DGPMAB,X2=30 D C^%DTC
+ I 'DGPMNA,(+DGPMA'=+DGPMP) S DA=$P(DGPMAN,"^",17) I $D(^DGPM(+DA,0)) S ^UTILITY("DGPM",$J,3,DA,"P")=$S($D(^UTILITY("DGPM",$J,3,DA,"P")):^("P"),1:^DGPM(DA,0)),DIE="^DGPM(",DR=".01///"_X K DQ,DG D ^DIE S ^UTILITY("DGPM",$J,3,DA,"A")=^DGPM(DA,0)
+ S DA=DGPMAA,DR="[DGPM ASIH ADMIT]",DIE="^DGPM(" I $D(^DGPM(+DA,0)) S ^UTILITY("DGPM",$J,1,DA,"P")=$S($D(^UTILITY("DGPM",$J,1,DA,"P")):^("P"),1:^DGPM(DA,0)) S:DGPMN DIE("NO^")="" K DQ,DG D ^DIE S ^UTILITY("DGPM",$J,1,DA,"A")=^DGPM(DA,0)
+ I '$P(^DGPM(DGPMDA,0),"^",6) D UNDO^DGPMV322 Q
+ S:$D(Y) DGPMOUT=1 S Y=DGPMAA_"^1" D:'DGPMOUT SPEC^DGPMV36
+ I '$D(^DGPM("APHY",DGPMAA)) D UNDO^DGPMV322 Q
+ ; DG*713 - send admission bulletin
  D ^DGPMVBUR
  K DGPMAA,DGPMAB,DGPMNA,DGPMPTF Q
 UHD ;Update hospital discharge and PTF record
