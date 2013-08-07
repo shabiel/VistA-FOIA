@@ -1,4 +1,4 @@
-SDMDAL1 ;RGI/CBR - APPOINTMENT API; 5/31/13
+SDMDAL1 ;RGI/CBR - APPOINTMENT API;08/07/13  15:06
  ;;5.3;scheduling;**260003**;08/13/93;
 GETCLN(RETURN,CLN,INT,EXT,REZ) ; Get clinic detail
  N FILE,SFILES,FLDS
@@ -43,6 +43,7 @@ GETPATT(RETURN,SC,SD) ; Get date pattern
  S RETURN=0
  S:$D(^SC(SC,"ST",$P(SD,"."),1)) RETURN(0)=^SC(SC,"ST",$P(SD,"."),1)
  S:$D(^SC(SC,"ST",$P(SD,"."),"CAN")) RETURN(1)=^SC(SC,"ST",$P(SD,"."),"CAN")
+ I $D(^SC(SC,"ST",$P(SD,"."),9)) S RETURN(2)=$G(^SC(SC,"OST",$P(SD,"."),1))
  S RETURN=1
  Q
  ;

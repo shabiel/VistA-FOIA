@@ -1,4 +1,4 @@
-SDAPIE ;RGI/CBR - Scheduling Error provider;07/03/13  12:04
+SDAPIE ;RGI/CBR - Scheduling Error provider;8/7/13
  ;;5.3;scheduling;**260003**;08/13/93;
 ERRX(RETURN,ERRNO,TEXT,LVL) ; adds error to RETURN
  N ERRTXT,IND,ST,STR,TXT,I
@@ -83,3 +83,14 @@ TMPONFND ;;480000.12;;Team position not found.
 PATNAEAC ;;480000.105;;Patient is not actively enrolled in any clinics.
 WLNFND ;;480000.121;;Wait List entry not found
 TYPINAC ;;480000.123;;Appointment type ... is inactive.
+MGRPNFND ;;480000.124;;Mail group not found.
+FRMNFND ;;480000.125;;Encounter form not found.
+REPNFND ;;480000.126;;Report not found.
+CONNFND ;;480000.127;;Print Condition not found.
+RESTCNC ;;480000.128;;Clinic has not been cancelled for that date, so it cannot be restored
+RESTIAP ;;480000.129;;No upcoming or indefinite appointment pattern exists for day of week
+RESTCBR ;;480000.13;;This clinic date cannot be restored
+RESTCIN ;;480000.132;;Clinic is inactive ...
+HOLAEXST  ;;480000.136;;Holiday already exists.
+HOLNFND ;;480000.137;;Holiday not found.
+REMEDABD ;;480000.138;;Ending date must not be before beginning date
