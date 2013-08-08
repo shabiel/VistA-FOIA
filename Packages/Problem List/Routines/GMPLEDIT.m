@@ -1,4 +1,4 @@
-GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ;03/13/13
+GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ;08/07/13
  ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -14,7 +14,7 @@ GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ;03/13/13
 EN ; Init Variables, list array
  ;   Expects GMPIFN   IEN of file 900011 (required)
  ;           GMPLNUM  Sequence # of Problem Edit (optional)
- N I,MSG
+ N I,MSG,%
  D BLD^DIALOG(1250000.195,,,"MSG")
  D EN^DDIOL(.MSG)
  D EN^DDIOL($S($G(GMPLNUM):"#"_GMPLNUM_" ",1:"")_"...",,"?0")
@@ -93,7 +93,7 @@ HI(LINE,COL) ; Hi-lite #
  Q
  ;          
 HDR ; Header code
- N LASTMOD,PAT S PAT=$P(GMPDFN,U,2)_"  ("_$P(GMPDFN,U,3)_")"
+ N LASTMOD,PAT,% S PAT=$P(GMPDFN,U,2)_"  ("_$P(GMPDFN,U,3)_")"
  S %=$$LASTMOD^GMPLAPI4(.LASTMOD,GMPIFN)
  S LASTMOD=$$EZBLD^DIALOG(1250000.190,$$FMTE^XLFDT(LASTMOD))
  S VALMHDR(1)=PAT_$$REPEAT^XLFSTR(" ",(79-$L(PAT)-$L(LASTMOD)))_LASTMOD
