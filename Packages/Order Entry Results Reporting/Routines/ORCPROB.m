@@ -1,4 +1,4 @@
-ORCPROB ; SLC/MKB/REV - Problem List interface ; 03/27/12
+ORCPROB ; SLC/MKB/REV - Problem List interface ; 08/09/13
  ;;3.0;ORDER ENTRY/RESULTS REPORTING;**27,48,181,260002**;Dec 17, 1997
 ADD ; -- add new problem
  N GMPLIST,ORPROV
@@ -108,5 +108,5 @@ PVQ Q Y
  ;
 EX ; -- exit action
  D:$G(OREBUILD) TAB^ORCHART(ORTAB,1)
- S:$D(^TMP("OR",$J,"CURRENT","MENU")) XQORM("HIJACK")=^("MENU")
+ S:$D(^TMP("OR",$J,"CURRENT","MENU")) XQORM("HIJACK")=^TMP("OR",$J,"CURRENT","MENU")
  Q

@@ -1,4 +1,4 @@
-ACKQUTL6 ;HCIOFO/BH-A&SP Utilities routine ; 08/07/13
+ACKQUTL6 ;HCIOFO/BH-A&SP Utilities routine ; 08/09/13
  ;;3.0;QUASAR;**1,7,17,260002**;Feb 11, 2000;Build 28
  ;Per VHA Directive 10-93-142, this routine SHOULD NOT be modified.
  ;
@@ -13,7 +13,7 @@ SUPER(DUZ) ;  Function passes back true if DUZ belongs to a supervisor
  N ACKDUZ
  S ACKDUZ=$$PROVCHK^ACKQASU4(DUZ)
  I 'ACKDUZ Q 0
- I $D(^ACK(509850.3,ACKDUZ,0)),$P(^(0),"^",6)=1 Q 1
+ I $D(^ACK(509850.3,ACKDUZ,0)),$P(^ACK(509850.3,ACKDUZ,0),"^",6)=1 Q 1
  Q 0
  ;
  ;
@@ -99,8 +99,8 @@ DUPCHK ;  Called from xecutable help of Appointment Time field when ACKITME is
  ;
 CDR() ;  COMPUTE SUGGESTED CDR BASED ON TREATING SPECIALTY
  S VAIP("D")=ACKVD D IN5^VADPT S ACKTS=+$$GET1^DIQ(45.7,+VAIP(8),1,"I"),ACKCDN=$$GET1^DIQ(42.4,ACKTS,6)_".00"
- S ACKCDP=$S($O(^ACK(509850,"B",ACKCDN,0)):$O(^(0)),1:0) I 'ACKCDP S ACKCDP=$O(^ACK(509850,"B","2611.00",0))
- S ACKCDN=$P(^ACK(509850,ACKCDP,0),U),ACKCD=$P(^(0),U,2)
+ S ACKCDP=$S($O(^ACK(509850,"B",ACKCDN,0)):$O(^ACK(509850,"B",ACKCDN,0)),1:0) I 'ACKCDP S ACKCDP=$O(^ACK(509850,"B","2611.00",0))
+ S ACKCDN=$P(^ACK(509850,ACKCDP,0),U),ACKCD=$P(^ACK(509850,ACKCDP,0),U,2)
  K %,%H,%I,ACKTS,ACKCDP,VAIP,VAERR
  W !!,"Suggested CDR Account :",ACKCDN,"  ",ACKCD,!
  Q ACKCDN

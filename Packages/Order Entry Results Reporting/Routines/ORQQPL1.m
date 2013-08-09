@@ -1,4 +1,4 @@
-ORQQPL1 ; ALB/PDR/REV - PROBLEM LIST FOR CPRS GUI ; 03/27/13
+ORQQPL1 ; ALB/PDR/REV - PROBLEM LIST FOR CPRS GUI ; 08/09/13
  ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,85,148,173,203,206,249,243,280,260002**;Dec 17, 1997;Build 85
  ;
  ;------------------------- GET PROBLEM FROM LEXICON -------------------
@@ -221,7 +221,7 @@ CLINSRCH(Y,X) ; Get LIST OF CLINICS
  N I,NAME,IEN
  S I=1,IEN=0,NAME=""
  ;access to SC global granted under DBIA #518:
- F  S NAME=$O(^SC("B",NAME)) Q:NAME=""  S IEN=$O(^(NAME,0)) D
+ F  S NAME=$O(^SC("B",NAME)) Q:NAME=""  S IEN=$O(^SC("B",NAME,0)) D
  . I $P(^SC(IEN,0),"^",3)="C" S Y(I)=IEN_"^"_NAME,I=I+1
  Q
  ;
