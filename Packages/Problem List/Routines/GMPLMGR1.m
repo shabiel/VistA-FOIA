@@ -1,4 +1,4 @@
-GMPLMGR1 ; SLC/MKB -- Problem List VALM Utilities cont ;09/14/12
+GMPLMGR1 ; SLC/MKB -- Problem List VALM Utilities cont ;8/9/13
  ;;2.0;Problem List;**10,260002**;Aug 25, 1994
 NEWPAT ; select new patient
  N NEWPT S VALMBCK="R"
@@ -83,7 +83,7 @@ LISTSERV ; List clinical services
  . . D ^DIR
  . . S:$D(DTOUT) Y="^"
  . D EN^DDIOL("   "_$P(^DIC(49,I,0),U))
- . D:$P(^(0),U,4) EN^DDIOL("  ("_$P(^DIC(49,$P(^(0),U,4),0),U)_")",,"?0")
+ . D:$P(^DIC(49,I,0),U,4) EN^DDIOL("  ("_$P(^DIC(49,$P(^DIC(49,I,0),U,4),0),U)_")",,"?0")
  D EN^DDIOL("",,"!") Q
  ;
 LISTCLIN ; List clinics
