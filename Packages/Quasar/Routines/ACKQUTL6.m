@@ -1,4 +1,4 @@
-ACKQUTL6 ;HCIOFO/BH-A&SP Utilities routine ; 03/27/12
+ACKQUTL6 ;HCIOFO/BH-A&SP Utilities routine ; 08/07/13
  ;;3.0;QUASAR;**1,7,17,260002**;Feb 11, 2000;Build 28
  ;Per VHA Directive 10-93-142, this routine SHOULD NOT be modified.
  ;
@@ -271,7 +271,7 @@ PLIST(ACKPAT,ACKDC) ; Determines if an entry exists in the Problem file
  ; returns Status as first piece, Problem List IEN as second piece
  ; (Status^IEN)
  ; Status values -  1=Inactive, 2=Active
- N ACKIFN,ACKPLQT,PLIST,PRB,I
+ N ACKIFN,ACKPLQT,PLIST,PRB,I,%
  Q:'$D(ACKPAT) 0
  Q:'$D(ACKDC) 0
  S (ACKIFN,ACKPLQT)=0

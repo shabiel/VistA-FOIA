@@ -123,7 +123,7 @@ VTYPE(X) ;
  Q $S(X="BP":"Blood Pressure",X="HT":"Height",X="WT":"Weight",X="TMP":"Temperature",X="PU":"Pulse",1:"Other Vital")
  ;
 PROBNAR(IEN) ; -- display problem narrative
- N NARR
+ N NARR,%
  S %=$$PROBNARR^GMPLAPI4(.NARR,IEN)
  Q $P(NARR,"^",2)
  ;

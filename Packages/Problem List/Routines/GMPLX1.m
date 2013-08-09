@@ -59,7 +59,7 @@ SCS(PROB,SC) ; Get Exposure/Conditions Strings
  ;   NOTE:  Military Sexual Trauma (MST) is suppressed
  ;          if the current device is a printer.
  ;                     
- N DA,FL,AO,IR,EC,HNC,MST,PTR,%,PRB
+ N DA,FL,AO,IR,EC,HNC,MST,PTR,%,PRB,CV,SHD
  S DA=+($G(PROB)) Q:+DA=0
  S %=$$DETAIL^GMPLAPI2(.PRB,DA)
  S AO=+($P(PRB(1.11),U)),IR=+($P(PRB(1.12),U))
@@ -151,7 +151,7 @@ VOCAB() ; Select search vocabulary
  Q X
  ;
 PARAMS ; Edit pkg parameters in file #125.99
- N OLDVERFY,VERFY,BLANK,MN,NAME,OLD
+ N OLDVERFY,VERFY,BLANK,MN,NAME,OLD,NEW
  S BLANK="       "
  S %=$$GETPAR^GMPLSITE(.OLD),OLDVERFY=OLD("VER")
  S DIE="^GMPL(125.99,",DA=1,DR="1:6" D ^DIE

@@ -1,4 +1,4 @@
-IBDFN11 ;ALB/CMR - ENCOUNTER FORM - (entry points for reprint of dynamic data) ; 03/27/12
+IBDFN11 ;ALB/CMR - ENCOUNTER FORM - (entry points for reprint of dynamic data) ; 08/07/13
  ;;3.0;AUTOMATED INFO COLLECTION SYS;**260002**;APR 24, 1997
  ;
 REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
@@ -13,7 +13,7 @@ REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
  ;         or @ARY(1) = classification question
  ;
  Q:'IBPFID!('LIST)
- N FID,ITEM,IBDIEN,NODE,COUNT,ICD
+ N FID,ITEM,IBDIEN,NODE,COUNT,ICD,%
  ; -- initialize counter
  S COUNT=0
  ; -- clean out storage area

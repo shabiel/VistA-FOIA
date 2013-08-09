@@ -25,7 +25,7 @@ O1 ;   Get Date of Onset
  Q
 STATUS ; Edit Status - field .12
  ;   Then Edit Date Resolved - Field 1.07, if inactive
- N DIR,X,Y
+ N DIR,X,Y,DTOUT
  S DIR(0)="9000011,.12"
  S:$L($G(GMPFLD(.12))) DIR("B")=$P(GMPFLD(.12),U,2)
 ST1 ;   Get Status
@@ -49,7 +49,7 @@ RC1 ;   Get Date
  S GMPFLD(1.09)=Y S:Y'="" GMPFLD(1.09)=GMPFLD(1.09)_U_$$EXTDT^GMPLX(Y)
  Q
 SC ; Edit Service Connected - field 1.1
- N DFN,DIR,X,Y,MSG
+ N DFN,DIR,X,Y,MSG,DTOUT
  ;
  ;   The following allows changing a problem's SC/NSC to
  ;   NSC if there is no SC on file for patient and Problem 
@@ -120,7 +120,7 @@ PROV ; Edit Responsible Provider - field 1.05
  S GMPFLD(1.05)=$S(+Y>0:Y,1:"")
  Q
 ICD ; Edit ICD-9-CM Code - field .01
- N DIC,DIR,X,Y,MSG
+ N DIC,DIR,X,Y,MSG,DTOUT
 ICD0 ;   Prompt for ICD Code
  K DIR S DIR(0)="FAO^2:6",DIR("A")=$$EZBLD^DIALOG(1250000.230)
  S:$P($G(GMPFLD(.01)),U,2)="799.9" DIR("A")=IORVON_$$EZBLD^DIALOG(1250000.230)

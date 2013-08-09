@@ -133,7 +133,7 @@ CKSAVE() ; Save [changes] ??
  Q +Y
  ;
 SAVE ; Save changes to group/list
- N GMPLQT,LABEL,DA,MSG
+ N GMPLQT,LABEL,DA,MSG,%
  S GMPLQT=0
  I $D(GMPLGRP) D  I GMPLQT Q
  . N ITM,CODE,MSG
@@ -177,7 +177,8 @@ SAVE ; Save changes to group/list
  Q
  ;
 DELETE ; Delete problem group
- N DIR,X,Y,DA,DIK,IFN,CNT,RETURN,MSG S VALMBCK=$S(VALMCC:"",1:"R")
+ N DIR,X,Y,DA,DIK,IFN,CNT,RETURN,MSG,%
+ S VALMBCK=$S(VALMCC:"",1:"R")
  S %=$$CATUSED^GMPLAPI1(.RETURN,+GMPLGRP)
  I RETURN D  H 2 Q
  . D BLD^DIALOG(1250000.096,,,"MSG")

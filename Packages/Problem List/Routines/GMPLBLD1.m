@@ -4,7 +4,8 @@ GMPLBLD1 ; SLC/MKB -- Bld PL Selection Lists cont ;5/15/13
  ; This routine invokes IA #3991,#10082
  ;
 SEL() ; Select item(s) from list
- N DIR,X,Y,MAX,GRP S GRP=$D(GMPLGRP) ; =1 if editing groups, 0 if lists
+ N DIR,X,Y,MAX,GRP,DTOUT
+ S GRP=$D(GMPLGRP) ; =1 if editing groups, 0 if lists
  S MAX=$P($G(^TMP("GMPLST",$J,0)),U,1) I MAX'>0 Q "^"
  S DIR(0)="LAO^1:"_MAX,DIR("A")=$$EZBLD^DIALOG(1250000.050,$S('GRP:$$EZBLD^DIALOG(1250000.051),1:$$EZBLD^DIALOG(1250000.052)))
  S:MAX>1 DIR("A")=DIR("A")_" (1-"_MAX_"): "
@@ -14,7 +15,8 @@ SEL() ; Select item(s) from list
  Q Y
  ;
 SEL1() ; Select item from list
- N DIR,X,Y,MAX,GRP S GRP=$D(GMPLGRP) ; =1 if editing groups, 0 if lists
+ N DIR,X,Y,MAX,GRP,DTOUT
+ S GRP=$D(GMPLGRP) ; =1 if editing groups, 0 if lists
  S MAX=$P($G(^TMP("GMPLST",$J,0)),U,1) I MAX'>0 Q "^"
  S DIR(0)="NAO^1:"_MAX_":0"
  D BLD^DIALOG(1250000.058,$S('GRP:$$EZBLD^DIALOG(1250000.051),1:$$EZBLD^DIALOG(1250000.052)),,"DIR(""A"")")
@@ -25,7 +27,8 @@ SEL1() ; Select item from list
  Q Y
  ;
 SEQ(NUM) ; Enter/edit seq #, returns new #
- N DIR,X,Y,GRP,MSG S GRP=$D(GMPLGRP) ; =1 if editing groups, 0 if lists
+ N DIR,X,Y,GRP,MSG,DTOUT
+ S GRP=$D(GMPLGRP) ; =1 if editing groups, 0 if lists
  S DIR(0)="NA^.01:999.99:2"
  S:NUM DIR("B")=NUM
  D BLD^DIALOG(1250000.061,,,"DIR(""A"")")
@@ -40,7 +43,8 @@ SQ D ^DIR I $D(DTOUT)!(X="^") Q "^"
  Q Y
  ;
 HDR(TEXT) ; Enter/edit group subheader text in list
- N DIR,X,Y S:$L(TEXT) DIR("B")=TEXT
+ N DIR,X,Y,DTOUT
+ S:$L(TEXT) DIR("B")=TEXT
  S DIR(0)="FAO^2:30"
  D BLD^DIALOG(1250000.063,,,"DIR(""A"")")
  D BLD^DIALOG(1250000.064,,,"DIR(""?"")")
@@ -51,7 +55,8 @@ H1 D ^DIR I $D(DTOUT)!(X="^") Q "^"
  Q Y
  ;
 TEXT(TEXT) ; Edit problem text
- N DIR,X,Y S:$L(TEXT) DIR("B")=TEXT
+ N DIR,X,Y,DTOUT
+ S:$L(TEXT) DIR("B")=TEXT
  S DIR(0)="FAO^2:80"
  D BLD^DIALOG(1250000.066,,,"DIR(""A"")")
  D BLD^DIALOG(1250000.067,,,"DIR(""?"")")
@@ -61,7 +66,7 @@ T1 D ^DIR I $D(DTOUT)!("^"[X) S Y="^" G TQ
 TQ Q Y
  ;
 CODE(CODE) ; Enter/edit problem code
- N DIR,X,Y
+ N DIR,X,Y,DTOUT
  S DIR(0)="PAO^ICD9(:QEMZ"
  S:$L(CODE) DIR("B")=CODE
  D BLD^DIALOG(1250000.068,,,"DIR(""A"")")
@@ -74,7 +79,8 @@ C1 D ^DIR I $D(DTOUT)!(X="^") S Y="^" G CQ
 CQ Q Y
  ;
 FLAG(DFLT) ; Edit category flag
- N DIR,X,Y S DIR(0)="YAO",DIR("B")=$S(+DFLT:"YES",1:"NO")
+ N DIR,X,Y,DTOUT
+ S DIR(0)="YAO",DIR("B")=$S(+DFLT:"YES",1:"NO")
  D BLD^DIALOG(1250000.070,,,"DIR(""A"")")
  D BLD^DIALOG(1250000.071,,,"DIR(""?"")")
 F1 D ^DIR I $D(DTOUT)!(X="^") Q "^"

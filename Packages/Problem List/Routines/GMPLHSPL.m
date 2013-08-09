@@ -16,6 +16,7 @@ MAIN ;Driver
  Q
  ;
 KILL ;D KILL^GMPLHS
+ K STATUS
  Q
  ;
 NOPROBS ;Indicates problems not on file for patient

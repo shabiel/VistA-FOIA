@@ -30,7 +30,7 @@ SUREDEL(NUM) ; -- sure you want to delete problems?
  Q +Y
  ;
 DELETE ; Remove current problem from patient's list
- N DELETED,MSG
+ N DELETED,MSG,%
  S VALMBCK=$S(VALMCC:"",1:"R")
  Q:'$$SUREDEL(1)
  S %=$$DELETE^GMPLAPI2(.DELETED,GMPIFN,+$G(GMPROV))
