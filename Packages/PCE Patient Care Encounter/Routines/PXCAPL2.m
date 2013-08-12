@@ -1,4 +1,4 @@
-PXCAPL2 ;ISL/dee & LEA/Chylton - Translates data from the PCE Device Interface for "DIAGNOSIS/PROBLEM" into a call to update Problem List ;09/21/12
+PXCAPL2 ;ISL/dee & LEA/Chylton - Translates data from the PCE Device Interface for "DIAGNOSIS/PROBLEM" into a call to update Problem List ;08/09/13
  ;;1.0;PCE PATIENT CARE ENCOUNTER;**33,115,130,168,260002**;Aug 12, 1996;Build 14
  Q
  ;   PXCADXPL  Copy of a Problem node of the PXCA array
@@ -48,6 +48,6 @@ PROBLIST ;Problem List
  .. I $G(PXCARES)'>0 D
  ... I PXCARES(0)'="Duplicate problem" S PXKERROR("PL",PXCANUMB,0,0)="Problem Not Stored = "_$G(PXCARES(0))_"  For Provider = "_PXCAPRV_"  and index = "_PXCAINDX
  ... S PXCA("WARNING","DIAGNOSIS/PROBLEM",PXCAPRV,PXCAINDX,0)="PROBLEM Not Stored^"_$G(PXCARES(0))
- .. E  I $D(^TMP("PXK",$J,"POV",PXCADNUM(PXCAPRV,PXCAINDX),0,"AFTER"))#2 S $P(^("AFTER"),"^",16)=PXCARES
+ .. E  I $D(^TMP("PXK",$J,"POV",PXCADNUM(PXCAPRV,PXCAINDX),0,"AFTER"))#2 S $P(^TMP("PXK",$J,"POV",PXCADNUM(PXCAPRV,PXCAINDX),0,"AFTER"),"^",16)=PXCARES
  Q
  ;
