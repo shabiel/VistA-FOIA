@@ -402,3 +402,27 @@ UPDPAT(RETURN,PARAM,DFN,MFN,QUIET) ; Update patient
  D RESET^DGPMDDCN
  Q 1
  ;
+LSTCOPAT(RETURN,SEARCH,START,NUMBER) ; Get checked-in patients by name
+ ;Input:
+ ;  .RETURN [Required,Array] Array passed by reference that will receive the data
+ ;                           Set to Error description if the call fails
+ ;      RETURN(0) [String] number_of_entries_found^maximum_requested^any_more?
+ ;      RETURN(#,"ID") [Numeric] patient IEN (pointer to the Patient file #2)
+ ;      RETURN(#,"NAME") [String] patient name
+ ;      RETURN(#,"BIRTH") [String] patient birth date
+ ;      RETURN(#,"SSN") [String] patient SSN
+ ;      RETURN(#,"TYPE") [String] patient type
+ ;      RETURN(#,"VETERAN") [Boolean] patient veteran status
+ ;   SEARCH [Optional,String] Partial match restriction.
+ ;  .START [Optional,String] Index from which to begin the list. Similar to .FROM parameter to LIST^DIC.
+ ;   NUMBER [Optional,Numeric] Number of entries to return.
+ ;Output:
+ ;  1=Success,0=Failure
+ N LST
+ S:'$D(START) START="" S:'$D(SEARCH) SEARCH="" S:'$G(NUMBER) NUMBER=""
+ K RETURN S RETURN=0
+ D LSTPATS^DGPMDAL2(.LST,$$UP^XLFSTR(SEARCH),.START,NUMBER,4)
+ D BLDPAT^DGPMAPI9(.RETURN,.LST)
+ S RETURN=1
+ Q 1
+ ;
