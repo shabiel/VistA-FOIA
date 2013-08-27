@@ -1,4 +1,4 @@
-DGPMV ;ALB/MRL/MIR - PATIENT MOVEMENT DRIVER; 5/27/13
+DGPMV ;ALB/MRL/MIR - PATIENT MOVEMENT DRIVER; 8/26/13
  ;;5.3;Registration;**60,200,268,260005**;Aug 13, 1993
  ;
  ;OPTION         VALUE OF DGPMT
@@ -46,7 +46,7 @@ REG ;new patient
  Q:%>0  I % S DGPME=1 Q
  W !?4,"Answer YES if you want to load 10/10 data at this time otherwise answer NO.",*7 G REG
  ;
-DIED S TXT(1)=$P(PAT("DTHDT"),U,2),%=$$ASK^DGPMUI(4070000.117,4070000.118,2,.TXT) Q:%=1  I % S DGPME=1 Q
+DIED N TXT S TXT(1)=$P(PAT("DTHDT"),U,2),%=$$ASK^DGPMUI(4070000.117,4070000.118,2,.TXT) Q:%=1  I % S DGPME=1 Q
  ;
 Q K %,DFN,DGER,DGPM5X,DGODS,DGODSON,DGPMUC,DGPME,DGPMN,DGPMT,DGPMPC,DIC,X,Y,^UTILITY("VAIP",$J),LMVT D KVAR^VADPT
  I '$G(DGUSEOR) K XQORQUIT
@@ -67,7 +67,7 @@ CA ; -- bypass interactive process and allows editing of past admission
  ;   output: Y - the mvt entry added/edited
  ;
  D UC
- K VAIP S VAIP("E")=DGPMCA N DGPMCA S %=$$GETLASTM^DGPMAPI8(.LMVT,DFN) ;D INP^DGPMV10
+ K VAIP S VAIP("E")=DGPMCA N DGPMCA ;D INP^DGPMV10
  S DGPMBYP="" D C^DGPMV1
  S Y=DGPMBYP K DGPMUC,DGPMBYP
  Q
@@ -81,7 +81,9 @@ DISPO ;called from admission disposition types
  I $$LODGER(DFN) W !,*7,"Patient is a lodger...you can not add an admission!" D DISPOQ K DGPMDER Q
  ;next line should be involked in future release to error if wrong service
  ;I DGPMVI(1)&('DGPMDCD!(DGPMDCD>%)) S DGPMDER=$S(DGPMSVC="H"&("^NH^D^"'[("^"_DGPMSV_"^")):0,DGPMSVC=DGPMSV:0,1:1) W:DGPMDER=1 "Current inpatient, but not to proper service" Q
- D NEW^DGPMVODS I $S('DGODSON:0,'$D(^DPT(DFN,.32)):1,'$D(^DIC(21,+$P(^(.32),"^",3),0)):1,1:0) S DGPME=1
+ N %,PAT
+ S %=$$GETPAT^DGPMAPI8(.PAT,DFN)
+ D NEW^DGPMVODS I $S('DGODSON:0,'PAT("POFSRV"):1,'$$GETPSRV^DGPMAPI8(+PAT("POFSRV")):1,1:0) S DGPME=1
  S DEF="NOW",DGPM1X=0 D SEL^DGPMV2 I '$D(DGPMDER) S DGPMDER=1
 DISPOQ D Q^DGPMV1 K DGODS,DGODSON,DGPMT,DGPMSV,DGPMSVC,DGPMUC,DGPMN,^UTILITY("VAIP",$J) Q
  ;

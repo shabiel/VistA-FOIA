@@ -1,14 +1,17 @@
-DGPMEX ;ALB/MIR - EXTENDED BED CONTROL ; 02 APR 90 @8:00
- ;;5.3;Registration;**40,59**;Aug 13, 1993
+DGPMEX ;ALB/MIR - EXTENDED BED CONTROL ; 26/8/13
+ ;;5.3;Registration;**40,59,260005**;Aug 13, 1993
  ;
  S DGPMEX=1
 EN D Q1 K ^UTILITY("DGPMVN",$J),^UTILITY("DGPMVD",$J)
  W ! D LO^DGUTL S DIC="^DPT(",DIC(0)="AZEQM" D ^DIC G Q:Y'>0 S DFN=+Y
- I '$D(^DGPM("APTT1",DFN)) W !,"No admissions on file",! G EN
-EN1 S C=0 F I=0:0 S I=$O(^DGPM("ATID1",DFN,I)) Q:'I  S N=$O(^(I,0)) I $D(^DGPM(+N,0)) S D=^(0),C=C+1,^UTILITY("DGPMVN",$J,C)=N_"^"_D,^UTILITY("DGPMVD",$J,+D)=N,^UTILITY("DGPMVDA",$J,N)=C
- S (DGER,DGOK)=0 W !,"CHOOSE FROM:" F I=0:0 S I=$O(^UTILITY("DGPMVN",$J,I)) Q:'I  S DGI=I,DGX=$P(^(I),"^",2,20) D W1 I '(I#5) D BREAK Q:DGER!DGOK
+ N %,MVTS
+ S %=$$LSTPADMS^DGPMAPI7(.MVTS,DFN)
+ I '$O(MVTS(0)) W !,"No admissions on file",! G EN
+EN1 S C=0 F I=0:0 S I=$O(MVTS(I)) Q:'I  D SETU^DGPMV2(.MVTS)
+ S (DGER,DGOK)=0 W !,"CHOOSE FROM:" F I=0:0 S I=$O(^UTILITY("DGPMVN",$J,I)) Q:'I  S DGI=I K MVT M MVT=^UTILITY("DGPMVN",$J,I) D W1 I '(I#5) D BREAK Q:DGER!DGOK
  G EN:DGER I DGI#5 D BREAK G EN:DGER
- S DGPMCA=+^UTILITY("DGPMVN",$J,DGOK),DGPMAN=$S($D(^DGPM(+DGPMCA,0)):^(0),1:""),^DISV(DUZ,"DGPMEX",DFN)=DGPMCA
+ S DGPMCA=+^UTILITY("DGPMVN",$J,DGOK,"ID"),^DISV(DUZ,"DGPMEX",DFN)=DGPMCA
+ S DGPMAN=+^UTILITY("DGPMVN",$J,DGOK,"DATE")
  I $D(DGPMEX) D PTF^DGPMV21 I $G(DGPME)]"" K DGPME G EN
  K DGPME D ENEX^DGPMV20 I '$D(DGPMEX) G EN
  I DGFL=2 G Q
@@ -18,11 +21,13 @@ ASK K ^UTILITY("DGPMVN",$J),^UTILITY("DGPMVD",$J)
  I %=-1 W !?5,"Enter:",!?10,"1 or A to edit admission",!?10,"2 or T to enter/edit a transfer",!?10,"3 or D to enter/edit the discharge" G ASK
  S DGPMT=$S(X="A":1,X="T":2,X="D":3,1:X) I DGPMT'=1 D CA^DGPMV
  I DGPMT=1 D
- .L +^DGPM("C",DFN):0 I '$T D  Q
- ..W !!,"    ** This patient's inpatient or lodger activity is being **",!,"    ** edited by another employee.  Please try again later. **",!
+ . N %,RE
+ . S %=$$LOCKMVT^DGPMAPI9(.RE,DFN) I 'RE D  Q
+ . . N TXT D BLD^DIALOG(4070000.027,,,"TXT")
+ . . S TXT(1,"F")="!!" D EN^DDIOL(.TXT),EN^DDIOL(" ")
  .D PTF^DGPMV22(DFN,DGPMCA,.DGPME,DGPMCA) I $G(DGPME)]"" W !,DGPME,! Q
  .S (DGPMY,DGPMHY)=+DGPMAN,(DGPMN,DGPM1X,DGPMOUT)=0,DGPMDA=DGPMCA D UC^DGPMV,DT^DGPMV3
- .L -^DGPM("C",DFN)
+ .D ULOCKMVT^DGPMAPI9(DFN)
  G EN
 Q K DGPMEX
 Q1 K DIC,DFN,DGER,DGFL,DGI,DGPMAN,DGPMCA,DGPMN,DGPMDA,DGPMOUT,DGPMT,DGPMUC,DGX D Q^DGPMV3,Q^DGPMV2,Q^DGPMV1
@@ -32,5 +37,9 @@ BREAK W !,"CHOOSE 1-",DGI W:$D(^UTILITY("DGPMVN",$J,DGI+1)) !,"<RETURN> TO CONTI
  I X=" ",$D(^DISV(DUZ,"DGPMEX",DFN)) S DGX=^(DFN) I $D(^UTILITY("DGPMVDA",$J,+DGX)) S DGOK=^(+DGX) Q
  I X'=+X!'$D(^UTILITY("DGPMVN",$J,+X)) W !!,*7,"INVALID RESPONSE",! G BREAK
  S DGOK=X Q
-W1 W !,$J(I,4),">  " S Y=+DGX X ^DD("DD") W Y,?30,$S('$D(^DG(405.1,+$P(DGX,"^",4),0)):"",$P(^(0),"^",7)]"":$P(^(0),"^",7),1:$E($P(^(0),"^",1),1,20))
- W ?55,"TO:  ",$S($D(^DIC(42,+$P(DGX,"^",6),0)):$E($P(^(0),"^",1),1,18),1:"") I $P(DGX,"^",18)=9 W !?23,"FROM:  ",$S($D(^DIC(4,+$P(DGX,"^",5),0)):$P(^(0),"^",1),1:"")
+W1 W !,$J(I,4),">  "
+ N MT
+ S %=$$GETMVTT^DGPMAPI8(.MT,MVT("TYPE")),Y=+MVT("DATE") X ^DD("DD")
+ W Y,?30,$S($P(MT("PNAME"),"^",2)]"":$P(MT("PNAME"),"^",2),1:$E($P(MT("NAME"),"^",1),1,20))
+ W ?55,"TO:  ",$E($P(MVT("WARD"),"^",2),1,18)
+ I +MVT("MASTYPE")=9 W !?23,"FROM:  ",$P(MVT("FCTY"),"^",2)
