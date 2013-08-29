@@ -1,4 +1,4 @@
-GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ;3/12/13
+GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ;8/29/13
  ;;2.0;Problem List;**3,26,35,260002**;Aug 25, 1994
  ;
  ; External References
@@ -151,7 +151,7 @@ VOCAB() ; Select search vocabulary
  Q X
  ;
 PARAMS ; Edit pkg parameters in file #125.99
- N OLDVERFY,VERFY,BLANK,MN,NAME,OLD,NEW
+ N DIE,DA,DR,OLDVERFY,VERFY,BLANK,MN,NAME,OLD,NEW
  S BLANK="       "
  S %=$$GETPAR^GMPLSITE(.OLD),OLDVERFY=OLD("VER")
  S DIE="^GMPL(125.99,",DA=1,DR="1:6" D ^DIE
