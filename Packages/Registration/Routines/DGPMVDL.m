@@ -1,4 +1,4 @@
-DGPMVDL ;ALB/MIR - DELETE PATIENT MOVEMENTS ; 2/13/04 1:01pm
+DGPMVDL ;ALB/MIR - DELETE PATIENT MOVEMENTS ; 8/30/13
  ;;5.3;Registration;**161,517**;Aug 13, 1993
  ;
  ;D_DGPMT - these lines are used as DEL nodes.  If DGPMER=1, movement can
