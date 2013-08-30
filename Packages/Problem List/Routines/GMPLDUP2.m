@@ -1,4 +1,4 @@
-GMPLDUP2 ;SLC/JVS -- Duplicate Problem #3;09/13/12
+GMPLDUP2 ;SLC/JVS -- Duplicate Problem #3;08/28/13
  ;;2.0;Problem List;**12,260002**;Aug 25, 1994
  ;
  ;VARIABLES:
@@ -8,7 +8,7 @@ GMPLDUP2 ;SLC/JVS -- Duplicate Problem #3;09/13/12
  ;PROBLEM  = Pointer to EXPRESSIONS #757.01
  ;FLAG     = Used to exit program
  ;^TMP("GMPLDUP",$J) = Storage of located duplicates
- ;^TMP("GMPLD")      = Temporary storage for duplicates
+ ;^TMP("GMPLD",$J)      = Temporary storage for duplicates
  ;DUPLICAT= Local array of Current Duplicate being examined
  ;
  Q
@@ -89,5 +89,5 @@ HIDE2 ;---Hide Duplicates and count them.
  K ^TMP("GMPLREM",$J)
  Q
 EXIT ;-KILLS GLOBALS AND EXITS
- K ^TMP("GMPLD"),^TMP("GMPLDUP"),^TMP("GMPLREM")
+ K ^TMP("GMPLD",$J),^TMP("GMPLDUP",$J),^TMP("GMPLREM",$J)
  K CNT ;,TOTAL

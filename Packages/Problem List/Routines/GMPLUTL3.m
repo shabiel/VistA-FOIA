@@ -1,4 +1,4 @@
-GMPLUTL3 ; SLC/JST/JVS -- PL Utilities (CIRN)           ; 03/29/12
+GMPLUTL3 ; SLC/JST/JVS -- PL Utilities (CIRN)           ; 08/29/13
  ;;2.0;Problem List;**14,15,19,25,26,260002**;Aug 25, 1994
  ;
  ; External References
@@ -75,8 +75,8 @@ NODE1 ; Set Node 1 data variables
  Q
  ;          
 CLEAR ; Set Variables Equal to Null
- S (GMPLZ0,GMPLICD,GMPLPNAM,GMPLDLM,GMPLTXT,GMPLSTAT,GMPLODAT)=""
- S (GMPLZ1,GMPLLEX,GMPLPRV,GMPLXDAT,GMPLPRIO,GMPLCOND)=""
+ S (GMPLICD,GMPLPNAM,GMPLDLM,GMPLTXT,GMPLSTAT,GMPLODAT)=""
+ S (GMPLLEX,GMPLPRV,GMPLXDAT,GMPLPRIO,GMPLCOND)=""
  Q
 MOD(DFN) ; Return the Date the Patients Problem List was Last Modified
  N MODIFIED,%
