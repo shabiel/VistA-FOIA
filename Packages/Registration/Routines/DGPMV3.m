@@ -40,9 +40,7 @@ Q S:$D(DGPMBYP) DGPMBYP=DGPMDA
 OKD K %DT W ! S DGPMER=0,(^UTILITY("DGPM",$J,DGPMT,DGPMDA,"P"),DGPMP)=^DGPM(DGPMDA,0),Y=DGPMDA D:DGPMT=6 PRIOR^DGPMV36 D @("D"_DGPMT_"^DGPMVDL"_$S(DGPMT>2:1,1:"")) G Q:DGPMER
  W !,"Are you sure you want to delete this movement" S %=2 D YN^DICN G Q:%<0,DT:%=2 I '% W !?5,"Answer yes to delete this ",DGPMUC," or no to continue" G OKD
  D @(DGPMT_"^DGPMVDL"_$S(DGPMT>2:1,1:""))
- I DGPMT'=3,(DGPMT'=5) S DIK="^DGPM(",DA=DGPMDA D ^DIK:DGPMDA
- S (^UTILITY("DGPM",$J,DGPMT,DGPMDA,"A"),DGPMA)=$S($P(DGPMP,"^",18)'=47:"",1:^DGPM(+DGPMDA,0)) I DGPMT=6 S Y=DGPMDA D AFTER^DGPMV36
- I DGPMDA,$O(^DGPM("APHY",DGPMDA,0)) S DIK="^DGPM(",DA=+$O(^(0)) I $D(^DGPM(+DA,0)) S ^UTILITY("DGPM",$J,6,DA,"P")=^(0),^("A")="",Y=DA D PRIOR^DGPMV36,^DIK S Y=DA D AFTER^DGPMV36
+ S:'$D(DGPMA) DGPMA=""
  G EVENTS
 VAR ;Set up variables
  ;Modified in patch dg*5.3*692 to include privacy indicator node "DIR"

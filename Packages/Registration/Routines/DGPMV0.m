@@ -1,7 +1,7 @@
 DGPMV0 ;ALB/MRL/MIR - SPECIAL LOOK-UP FOR LODGERS; 8/26/13
  ;;5.3;Registration;**260005**;Aug 13, 1993
 SPCLU ;Special (quick) look-up for check-out lodgers
- N DGER,DIC
+ N DIC
  S DGER=0,DIC="^DPT(",DIC(0)="EQMZ" R !,"Check-out PATIENT:  ",X:DTIME I '$T!(X["^")!(X="") S DGER=1 Q
  N %,CI
  S %=$$LSTCOPAT^DGPMAPI9(.CI,$S(X["?":"",1:X))

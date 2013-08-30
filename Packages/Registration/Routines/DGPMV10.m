@@ -2,6 +2,7 @@ DGPMV10 ;ALB/MRL/MIR - PATIENT MOVEMENT, CONT.; 7/11/13
  ;;5.3;Registration;**84,498,509,683,719,260005**;Aug 13, 1993
 CS ;Current Status
  ;first print primary care team/practitioner/attending
+ N %,LMVT
  D PCMM^SCRPU4(DFN,DT)
  S X=$S('DGPMT:1,DGPMT<4:2,DGPMT>5:2,1:3) ;DGPMT=0 if from pt inq (DGRPD)
  S %=$$GETLASTM^DGPMAPI8(.LMVT,DFN)
@@ -32,14 +33,12 @@ CS1 I +LMVT("TYPE")=3,+LMVT("DISIFN") W ?39,"Discharge Type : ",$S($L(LMVT("DIST
  ;
 CS2 ;-- additional fields for admission screen
  Q:DGPMT'=1
- S DGHOLD=$S($D(^DPT(DFN,0)):^(0),1:"")
- W !!,"Religion    : ",$S($D(^DIC(13,+$P(DGHOLD,U,8),0)):$E($P(^(0),U),1,24),1:"")
- W ?39,"Marital Status : ",$S($D(^DIC(11,+$P(DGHOLD,U,5),0)):$P(^(0),U),1:"")
- S DGHOLD=$S($D(^DPT(DFN,.36)):$P(^(.36),U),1:"")
- W !,"Eligibility : ",$S($D(^DIC(8,+$P(DGHOLD,U),0)):$P(^(0),U),1:"")
- S DGHOLD=$S($D(^DPT(DFN,.361)):^(.361),1:"")
- W:$P(DGHOLD,U)]"" " (",$P($P($P(^DD(2,.3611,0),U,3),$P(DGHOLD,U)_":",2),";"),")"
- W:$P(DGHOLD,U)']"" " (NOT VERIFIED)"
+ N %,PAT S %=$$GETPAT^DGPMAPI8(.PAT,DFN)
+ W !!,"Religion    : ",$E($P(PAT("RELPREF"),U,2),1,24)
+ W ?39,"Marital Status : ",$P(PAT("MSTAT"),U,2)
+ W !,"Eligibility : ",$P(PAT("ELIG"),U,2)
+ W:PAT("ESTAT")]"" " (",$P(PAT("ESTAT"),U,2),")"
+ W:PAT("ESTAT")']"" " (NOT VERIFIED)"
  K DGHOLD
  Q
  ;
@@ -57,8 +56,9 @@ INP ;set-up inpt vbls needed (mimic VAIP array)
  ;
  ;Called from scheduling, too
  ;
+ N %
  I '$D(NOW) D NOW^%DTC S (VAX("DAT"),NOW)=%,NOWI=9999999.999999-%
- S VAX("DAT")=NOW,NOWI=9999999.999999-NOW
+ E  S NOWI=NOW,(VAX("DAT"),NOW)=9999999.999999-NOWI
  I '$D(VAIP("E")) D LAST^VADPT3
  F I=1:1:8,13,17 S DGPMVI(I)=""
  F I=13,19 S DGPMVI(I,1)=""
