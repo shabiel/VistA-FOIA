@@ -156,10 +156,10 @@ GETCAT(RETURN,GMPLGRP) ; Return category details
  S RETURN(0)=CNT,RETURN=1
  Q 1
  ;
-SAVLST(RETURN,GMPLLST,SOURCE,DATE) ; Save changes to existing list
+SAVLST(RETURN,GMPLLST,SOURCE) ; Save changes to existing list
  S RETURN=0
- N DIK,DIE,DR,ITEM,TMPLST,DA,DT,I
- S DIE="^GMPL(125,",DA=+GMPLLST,DR=".02////"_DATE D ^DIE ; set modified date
+ N DIK,DIE,DR,ITEM,TMPLST,DA,I,FDA,MSG
+ S DIE="^GMPL(125,",DA=+GMPLLST,DR=".02////"_$P($$HTFM^XLFDT($H),".") D ^DIE ; set modified date
  S DA=0
  F  S DA=$O(SOURCE(DA)) Q:+DA'>0  D
  .S DIK="^GMPL(125.1,"
@@ -169,17 +169,15 @@ SAVLST(RETURN,GMPLLST,SOURCE,DATE) ; Save changes to existing list
  .I "@"[$G(SOURCE(DA)) D ^DIK Q
  .S ITEM=$P($G(^GMPL(125.1,DA,0)),U,2,5)
  .I ITEM'=SOURCE(DA) D
- .. S DR="",DIE=DIK
- .. F I=1,2,3,4 D
- ... S:$P(SOURCE(DA),U,I)'=$P(ITEM,U,I) DR=DR_";"_I_"////"_$S($P(SOURCE(DA),U,I)="":"@",1:$P(SOURCE(DA),U,I))
- .. S:$E(DR)=";" DR=$E(DR,2,999) D ^DIE
+ ..F I=1,2,3,4 D
+ ... S:$P(SOURCE(DA),U,I)'=$P(ITEM,U,I) FDA(125.1,DA_",",I)=$S($P(SOURCE(DA),U,I)="":"@",1:$P(SOURCE(DA),U,I))
+ .. D FILE^DIE("","FDA","MSG")
  S RETURN=1
  Q 1
  ;
 SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
  S RETURN=0
- N DIK,DIE,DR,ITEM,TMPITEM,DA,I
- ;to do check SOURCE
+ N DIK,DIE,DR,ITEM,TMPITEM,DA,I,FDA,MSG
  S DIE="^GMPL(125.11,",DA=+GMPLGRP,DR="1////"_DT D ^DIE ; set modified date
  S DA=0
  F  S DA=$O(SOURCE(DA)) Q:+DA'>0  D
@@ -190,10 +188,9 @@ SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
  .I "@"[$G(SOURCE(DA)) D ^DIK Q
  .S ITEM=$P($G(^GMPL(125.12,DA,0)),U,2,5)
  .I ITEM'=SOURCE(DA) D
- .. S DR="",DIE=DIK
  .. F I=1:1:4 D
- ... S:$P(SOURCE(DA),U,I)'=$P(ITEM,U,I) DR=DR_";"_I_"////"_$S($P(SOURCE(DA),U,I)="":"@",1:$P(SOURCE(DA),U,I))
- .. S:$E(DR)=";" DR=$E(DR,2,999) D ^DIE
+ ... S:$P(SOURCE(DA),U,I)'=$P(ITEM,U,I) FDA(125.12,DA_",",I)=$S($P(SOURCE(DA),U,I)="":"@",1:$P(SOURCE(DA),U,I))
+ .. D FILE^DIE("","FDA","MSG")
  S RETURN=1
  Q 1
  ;

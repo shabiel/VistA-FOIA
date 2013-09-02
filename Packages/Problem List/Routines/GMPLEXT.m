@@ -1,4 +1,4 @@
-GMPLEXT ; RGI/CBR -- External functions mockup (to be deleted when the interfaces are fixed); 03/14/13
+GMPLEXT ; RGI/CBR -- External functions mockup (to be deleted when the interfaces are fixed); 8/29/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 PROVNAME(GMPROV) ; Returns provider name
  Q $P($G(^VA(200,+GMPROV,0)),U)
@@ -89,6 +89,7 @@ ENACT(KEY) ;PROTOCOL entry action
 UPDITEM(KEY,ITEM,MN,NAME) ;Update protocol item details
  N DA,DR,DIE,X
  S DA=$O(^ORD(101,KEY,10,"B",ITEM,0)) Q:'DA
+ Q:($G(MN)'="@")&($G(MN)'="$")
  S DR="2////"_MN_";6///^S X=NAME"
  S DA(1)=KEY
  S DIE="^ORD(101,"_KEY_",10,"

@@ -1,4 +1,4 @@
-GMPLAPI1 ;RGI/VSL -- Build Problem Selection Lists ; 5/15/13
+GMPLAPI1 ;RGI/VSL -- Build Problem Selection Lists ; 8/29/13
  ;;2.0;Problem List;**260002**;Aug 25, 1994
 NEWLST(RETURN,GMPLLST,GMPLLOC) ; Add new Problem Selection List
  ;Input:
@@ -129,7 +129,8 @@ LOCKCAT(RETURN,GMPLGRP) ; Lock specified category
  ;
 UNLKCAT(GMPLGRP) ; Unlock specified category
  ;Input:
- ;   GMPLGRP [Required,Numeric] Problem category IEN (pointer to file 125.11) I '+$G(GMPLGRP) Q
+ ;   GMPLGRP [Required,Numeric] Problem category IEN (pointer to file 125.11)
+ I '+$G(GMPLGRP) Q
  D UNLCKCAT^GMPLDAL1(GMPLGRP)
  Q
  ;
@@ -225,8 +226,7 @@ SAVLST(RETURN,GMPLLST,SOURCE) ; Save changes to existing list
  . I $L($P(SOURCE(DA),"^",3))'>0 S INV=0 Q
  . S INV=$$FINDCAT^GMPLDAL1(TMPLST)
  I INV=0 D ERRX^GMPLAPIE(.RETURN,"INVPARAM","SOURCE") Q 0
- S DT=$P($$HTFM^XLFDT($H),".")
- S %=$$SAVLST^GMPLDAL1(.RETURN,GMPLLST,.SOURCE,DT)
+ S %=$$SAVLST^GMPLDAL1(.RETURN,GMPLLST,.SOURCE)
  S RETURN=1
  Q 1
  ;
