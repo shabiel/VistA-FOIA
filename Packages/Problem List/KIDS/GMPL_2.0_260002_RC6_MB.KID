@@ -1,11 +1,11 @@
-KIDS Distribution saved on Sep 02, 2013@14:25:48
+KIDS Distribution saved on Sep 03, 2013@16:30:49
 PROBLEM LIST REFACTORING
 **KIDS**:GMPL*2.0*260002*RC6^ACKQ*3.0*260002^IBD*3.0*260002^OR*3.0*260002^PX*1.0*260002^PXRM*2.0*260002^ROR*1.5*260002^XU*8.0*260002^
 
 **INSTALL NAME**
 GMPL*2.0*260002*RC6
 "BLD",9037,0)
-GMPL*2.0*260002*RC6^PROBLEM LIST^0^3130902^y
+GMPL*2.0*260002*RC6^PROBLEM LIST^0^3130903^y
 "BLD",9037,1,0)
 ^^10^10^3130729^^^^
 "BLD",9037,1,1,0)
@@ -31,7 +31,7 @@ put out of order during the installation.
 "BLD",9037,4,0)
 ^9.64PA^^
 "BLD",9037,6.3)
-26
+28
 "BLD",9037,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9037,"KRN",.4,0)
@@ -2223,7 +2223,7 @@ GMPLCHK^^0^B34267670
 "BLD",9037,"KRN",9.8,"NM",20,0)
 GMPLCODE^^0^B6088580
 "BLD",9037,"KRN",9.8,"NM",21,0)
-GMPLDAL^^0^B70495216
+GMPLDAL^^0^B70483664
 "BLD",9037,"KRN",9.8,"NM",22,0)
 GMPLDAL1^^0^B65987851
 "BLD",9037,"KRN",9.8,"NM",23,0)
@@ -7511,9 +7511,9 @@ PROBLEM LIST^GMPL^Automated Patient Problem List
 "PKG",135,22,1,0)
 2.0^3051119^2960924
 "PKG",135,22,1,"PAH",1,0)
-260002^3130902
+260002^3130903
 "PKG",135,22,1,"PAH",1,1,0)
-^^10^10^3130902
+^^10^10^3130903
 "PKG",135,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "PKG",135,22,1,"PAH",1,1,2,0)
@@ -7611,7 +7611,7 @@ D XPZ2^XPDIQ
 "RTN","GMPL",1,0)
 GMPL ; SLC/MKB/AJB -- Problem List Driver ;3/13/13
 "RTN","GMPL",2,0)
- ;;2.0;Problem List;**3,11,28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,11,28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPL",3,0)
 EN ; -- main entry point for GMPL PROBLEM LIST
 "RTN","GMPL",4,0)
@@ -7901,7 +7901,7 @@ EXPQ D KILL^GMPLX S VALMSG=$$MSG^GMPLX S:'VALMCC VALMBCK="R"
 "RTN","GMPL1",1,0)
 GMPL1 ; SLC/MKB/AJB -- Problem List actions ; 5/17/13
 "RTN","GMPL1",2,0)
- ;;2.0;Problem List;**3,20,28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,20,28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPL1",3,0)
  ; 10 MAR 2000 - MA - Added to the routine another user prompt
 "RTN","GMPL1",4,0)
@@ -8159,7 +8159,7 @@ ELIG(RETURN) ; Returns array of eligibility status
 "RTN","GMPL31P",1,0)
 GMPL31P ;SLC/JEH -- Post Install Routine ;5/15/13
 "RTN","GMPL31P",2,0)
- ;;2.0;Problem List;**31,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**31,260002**;Aug 25, 1994;Build 28
 "RTN","GMPL31P",3,0)
  ;
 "RTN","GMPL31P",4,0)
@@ -8383,7 +8383,7 @@ FDAUDIT ;
 "RTN","GMPLAPI1",1,0)
 GMPLAPI1 ;RGI/VSL -- Build Problem Selection Lists ; 8/29/13
 "RTN","GMPLAPI1",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLAPI1",3,0)
 NEWLST(RETURN,GMPLLST,GMPLLOC) ; Add new Problem Selection List
 "RTN","GMPLAPI1",4,0)
@@ -8919,7 +8919,7 @@ SAVGRP(RETURN,GMPLGRP,SOURCE) ; Save changes to existing group
 "RTN","GMPLAPI2",1,0)
 GMPLAPI2 ; RGI/CBR Problem List API - NEW,DELETE,VERIFY,VIEW DETAILED INFO,ADD NOTE ;8/29/13
 "RTN","GMPLAPI2",2,0)
- ;;2.0;Problem List;**260002**;Aug 25,1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25,1994;Build 28
 "RTN","GMPLAPI2",3,0)
 NEW(RETURN,GMPDFN,GMPROV,GMPFLD,GMPLUSER) ; Save Collected Values in new Problem Entry
 "RTN","GMPLAPI2",4,0)
@@ -9643,7 +9643,7 @@ VLDFLD(RETURN,GMPFLD) ;Internal entry to validate and set defaults to GMPFLD
 "RTN","GMPLAPI3",1,0)
 GMPLAPI3 ; RGI/CBR -- Problem List API - NEW,UPDATE NOTES ; 5/15/13
 "RTN","GMPLAPI3",2,0)
- ;;2.0;Problem List;**260002**;Aug 24, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 24, 1994;Build 28
 "RTN","GMPLAPI3",3,0)
 NEWNOTE(RETURN,GMPIFN,GMPROV,NOTES) ; Creates New Note Entries for Problem
 "RTN","GMPLAPI3",4,0)
@@ -9821,7 +9821,7 @@ FULLNTE(RETURN,GMPIFN) ;Get active comments for a note
 "RTN","GMPLAPI4",1,0)
 GMPLAPI4 ; RGI/CBR -- Problem List API - LIST ;3/27/13
 "RTN","GMPLAPI4",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLAPI4",3,0)
 LIST(RETURN,GMPDFN,GMPSTAT,GMPROV,GMPVIEW,GMPREV,GMPIDX) ;returns a filtered list of patient problems
 "RTN","GMPLAPI4",4,0)
@@ -10445,7 +10445,7 @@ MODIFIED(RETURN,GMPDFN) ; Return the Date the Patients Problem List was Last Mod
 "RTN","GMPLAPI5",1,0)
 GMPLAPI5 ; Build Problem Selection Lists ; 5/15/13
 "RTN","GMPLAPI5",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLAPI5",3,0)
 ADDLOC(RETURN,GMPLLST,GMPLLOC) ; Add location to list
 "RTN","GMPLAPI5",4,0)
@@ -10801,7 +10801,7 @@ GETCLIN(RETURN,SEARCH,START,NUMBER) ; Array of clinical locations
 "RTN","GMPLAPI6",1,0)
 GMPLAPI6 ; Problem Selection Lists ; 5/15/13
 "RTN","GMPLAPI6",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLAPI6",3,0)
 GETULST(RETURN,USER) ; Get user assigned problem selection list
 "RTN","GMPLAPI6",4,0)
@@ -11069,7 +11069,7 @@ USERLST(RETURN,GMPLLST,GMPLUSER,ACTION) ; Add/Remove Problem Selection List from
 "RTN","GMPLAPI7",1,0)
 GMPLAPI7 ; RGI/VSL -- Problem List - REPORTS ;5/15/13
 "RTN","GMPLAPI7",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLAPI7",3,0)
  Q
 "RTN","GMPLAPI7",4,0)
@@ -11129,7 +11129,7 @@ PPRBSPEC(TARGET,GMPTERM,GMPTEXT,STATUS) ; List patients with specified active or
 "RTN","GMPLAPIE",1,0)
 GMPLAPIE ; RGI -- Problem List Error provider; 03/26/13
 "RTN","GMPLAPIE",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLAPIE",3,0)
 ERR(ERT,ERRNO,TEXT) ; Adds error to array
 "RTN","GMPLAPIE",4,0)
@@ -11237,7 +11237,7 @@ SVCNFND ;;1250000.636;;Service not found
 "RTN","GMPLBLCK",1,0)
 GMPLBLCK ;SLC/JFR - check selection list ICD9 codes; 04/12/12
 "RTN","GMPLBLCK",2,0)
- ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLBLCK",3,0)
  ;
 "RTN","GMPLBLCK",4,0)
@@ -11571,7 +11571,7 @@ PAGE(NUM) ;print header and raise page number
 "RTN","GMPLBLD",1,0)
 GMPLBLD ; SLC/MKB -- Build Problem Selection Lists ;03/27/13
 "RTN","GMPLBLD",2,0)
- ;;2.0;Problem List;**3,28,33,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,28,33,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLBLD",3,0)
  ;
 "RTN","GMPLBLD",4,0)
@@ -11855,7 +11855,7 @@ LENGTH ;SHORTEN THE ICD9'S DESCRIPTION TO FIT SCREEN
 "RTN","GMPLBLD1",1,0)
 GMPLBLD1 ; SLC/MKB -- Bld PL Selection Lists cont ;5/15/13
 "RTN","GMPLBLD1",2,0)
- ;;2.0;Problem List;**3,28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLBLD1",3,0)
  ;
 "RTN","GMPLBLD1",4,0)
@@ -12129,7 +12129,7 @@ EDQ S:'VALMCC VALMBCK="R" S VALMSG=$$MSG^GMPLX
 "RTN","GMPLBLD2",1,0)
 GMPLBLD2 ; SLC/MKB,JFR -- Bld PL Selection Lists cont ;03/11/13
 "RTN","GMPLBLD2",2,0)
- ;;2.0;Problem List;**3,28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLBLD2",3,0)
  ;
 "RTN","GMPLBLD2",4,0)
@@ -12553,7 +12553,7 @@ ASSIGN ; allow lookup of PROB SEL LIST and assign to users
 "RTN","GMPLBLD3",1,0)
 GMPLBLD3 ; SLC/MKB -- Bld PL Selection Lists cont ;03/27/13
 "RTN","GMPLBLD3",2,0)
- ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLBLD3",3,0)
  ;
 "RTN","GMPLBLD3",4,0)
@@ -12807,7 +12807,7 @@ MENU ; -- init variables and list array for GMPL LIST MENU list template
 "RTN","GMPLBLDC",1,0)
 GMPLBLDC ; SLC/MKB -- Build Problem Selection Categories ;3/27/13
 "RTN","GMPLBLDC",2,0)
- ;;2.0;Problem List;**3,7,28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,7,28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLBLDC",3,0)
  ;
 "RTN","GMPLBLDC",4,0)
@@ -13071,7 +13071,7 @@ EDQ S:'VALMCC VALMBCK="R" S VALMSG=$$MSG^GMPLX
 "RTN","GMPLBLDF",1,0)
 GMPLBLDF ; SLC/MKB -- Build Problem Selection List from IB Enc Form ;03/11/13
 "RTN","GMPLBLDF",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLBLDF",3,0)
 EN ; Start here.
 "RTN","GMPLBLDF",4,0)
@@ -13239,7 +13239,7 @@ NGQ S GRP=$P(RETURN,U,1,2)
 "RTN","GMPLCHK",1,0)
 GMPLCHK ; RGI/CBR -- Problem List Validators ;3/27/13
 "RTN","GMPLCHK",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLCHK",3,0)
 PRBIEN(RETURN,PARM,OPT) ;Validate problem ien
 "RTN","GMPLCHK",4,0)
@@ -13531,7 +13531,7 @@ SVCIEN(RETURN,PARM,PNAME,OPT) ;Service IEN
 "RTN","GMPLCODE",1,0)
 GMPLCODE ; SLC/MKB/AJB -- Problem List ICD Code Utilities ; 09/14/12
 "RTN","GMPLCODE",2,0)
- ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLCODE",3,0)
 EN ; -- main entry point for GMPL CODE LIST
 "RTN","GMPLCODE",4,0)
@@ -13651,11 +13651,11 @@ ICD(NUM,IFN) ; -- search ICD Diagnosis file #80
 "RTN","GMPLCODE",61,0)
  Q
 "RTN","GMPLDAL")
-0^21^B70495216
+0^21^B70483664
 "RTN","GMPLDAL",1,0)
 GMPLDAL ; RGI/CBR DATA ACCESS LAYER - DIRECT GLOBALS ACCESS ; 8/29/2013
 "RTN","GMPLDAL",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDAL",3,0)
 CREATE(GMPDFN,GMPVAMC,GMPFLD,ERT) ; Create new problem
 "RTN","GMPLDAL",4,0)
@@ -13753,7 +13753,7 @@ UPDATE(GMPIFN,GMPORIG,GMPFLD,GMPLUSER,GMPROV,ERT) ; Updates a problem
 "RTN","GMPLDAL",50,0)
  . D:'AUDITED AUDIT(GMPIFN,FLD,$P(GMPORIG(FLD),U),$P(GMPFLD(FLD),U),"",+$G(GMPROV))
 "RTN","GMPLDAL",51,0)
- D FILE^DIE("","FDA","MSG") 
+ D FILE^DIE("","FDA","MSG")
 "RTN","GMPLDAL",52,0)
  I $D(MSG) Q 0
 "RTN","GMPLDAL",53,0)
@@ -14159,7 +14159,7 @@ INACTV(GMPIFN,RESOLVED,GMPROV) ;Inactivate problem
 "RTN","GMPLDAL",253,0)
  S FDA(AUPN,GMPIFN_",",1.07)=$P($G(RESOLVED),U)
 "RTN","GMPLDAL",254,0)
- D FILE^DIE("","FDA","MSG") 
+ D FILE^DIE("","FDA","MSG")
 "RTN","GMPLDAL",255,0)
  D AUDIT(GMPIFN,".12","A","I","Inactivated",+$G(GMPROV))
 "RTN","GMPLDAL",256,0)
@@ -14181,7 +14181,7 @@ AUPNEXST() ;
 "RTN","GMPLDAL1",1,0)
 GMPLDAL1 ; RGI/VSL -- DATA ACCESS LAYER - DIRECT GLOBALS ACCESS ; 03/27/13
 "RTN","GMPLDAL1",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDAL1",3,0)
 GETCATS(RETURN,SEARCH,START,NUMBER) ;
 "RTN","GMPLDAL1",4,0)
@@ -14719,7 +14719,7 @@ CATITM(IEN) ;RETURN 1 if ien exists in file 125.12
 "RTN","GMPLDAL2",1,0)
 GMPLDAL2 ; RGI/VSL -- DATA ACCESS LAYER - DIRECT GLOBALS ACCESS ; 03/19/13
 "RTN","GMPLDAL2",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDAL2",3,0)
 GETADATA(RETURN,AIFN) ; Get the audit entry details
 "RTN","GMPLDAL2",4,0)
@@ -14869,7 +14869,7 @@ GETHIST(RETURN,GMPIFN) ; Returns all audit entries of the problem
 "RTN","GMPLDAL3",1,0)
 GMPLDAL3 ; RGI/CBR DATA ACCESS LAYER - DIRECT GLOBALS ACCESS ; 09/13/12
 "RTN","GMPLDAL3",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDAL3",3,0)
 NOTES(RETURN,GMPIFN,GMPFMT,GMPACT,GMPVAMC,GMPROV) ;Returns Problem notes
 "RTN","GMPLDAL3",4,0)
@@ -15061,7 +15061,7 @@ SETPARM(PARAMS) ;Sets site parameters
 "RTN","GMPLDAL4",1,0)
 GMPLDAL4 ; RGI/CBR DATA ACCESS LAYER - REPORTS ; 09/17/12
 "RTN","GMPLDAL4",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDAL4",3,0)
 GETPROB(IFN,PROBLEM) ;
 "RTN","GMPLDAL4",4,0)
@@ -15175,7 +15175,7 @@ PPRBSPEC(TARGET,GMPTERM,GMPTEXT,STATUS) ;
 "RTN","GMPLDALF",1,0)
 GMPLDALF ; RGI -- DATA ACCESS LAYER - FILEMAN CALLS ; 03/25/13
 "RTN","GMPLDALF",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDALF",3,0)
 DETAIL(GMPIFN,GMPFLD,ERT) ; Return problem details
 "RTN","GMPLDALF",4,0)
@@ -15273,7 +15273,7 @@ UNLOCK(GMPIFN,SUB) ;
 "RTN","GMPLDIS1",1,0)
 GMPLDIS1 ; SLC/MKB -- Displays current/default values for saving ;03/11/13
 "RTN","GMPLDIS1",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDIS1",3,0)
 ACCEPT(GMPFLD) ; accept current values of problem to save?
 "RTN","GMPLDIS1",4,0)
@@ -15373,7 +15373,7 @@ DIS1 D EN^DDIOL("","","!!")
 "RTN","GMPLDISP",1,0)
 GMPLDISP ; SLC/MKB -- Problem List detailed display ;03/25/13
 "RTN","GMPLDISP",2,0)
- ;;2.0;Problem List;**21,26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**21,26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDISP",3,0)
  ;
 "RTN","GMPLDISP",4,0)
@@ -15713,7 +15713,7 @@ EXIT ; Exit Code
 "RTN","GMPLDUP2",1,0)
 GMPLDUP2 ;SLC/JVS -- Duplicate Problem #3;08/28/13
 "RTN","GMPLDUP2",2,0)
- ;;2.0;Problem List;**12,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**12,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLDUP2",3,0)
  ;
 "RTN","GMPLDUP2",4,0)
@@ -15901,7 +15901,7 @@ EXIT ;-KILLS GLOBALS AND EXITS
 "RTN","GMPLE9",1,0)
 GMPLE9 ; ISL - Problem List Env Chk for GMPL*2*9  ;09/21/12
 "RTN","GMPLE9",2,0)
- ;;2.0;Problem List;**9,260002**;Aug 25,1994;Build 26
+ ;;2.0;Problem List;**9,260002**;Aug 25,1994;Build 28
 "RTN","GMPLE9",3,0)
  ;
 "RTN","GMPLE9",4,0)
@@ -15921,7 +15921,7 @@ E9 N Y S Y=$$VERSION^XPDUTL("LEX") W !!,"Patch GMPL*2*9 corrects Problem List ro
 "RTN","GMPLEDIT",1,0)
 GMPLEDIT ; SLC/MKB/KER -- VALM Utilities for Edit sub-list ;08/07/13
 "RTN","GMPLEDIT",2,0)
- ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEDIT",3,0)
  ;
 "RTN","GMPLEDIT",4,0)
@@ -16195,7 +16195,7 @@ KILL ;   Clean-up
 "RTN","GMPLEDT1",1,0)
 GMPLEDT1 ; SLC/MKB/KER/AJB -- Edit Problem List fields ; 5/15/13
 "RTN","GMPLEDT1",2,0)
- ;;2.0;Problem List;**17,20,26,28,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**17,20,26,28,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEDT1",3,0)
  ;
 "RTN","GMPLEDT1",4,0)
@@ -16525,7 +16525,7 @@ Q ; No Editing
 "RTN","GMPLEDT2",1,0)
 GMPLEDT2 ; SLC/MKB/KER -- Problem List edit actions ; 03/28/12
 "RTN","GMPLEDT2",2,0)
- ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEDT2",3,0)
  ;
 "RTN","GMPLEDT2",4,0)
@@ -16809,7 +16809,7 @@ SP1 D ^DIR I $D(DTOUT)!(Y="^") S GMPQUIT=1 Q
 "RTN","GMPLEDT3",1,0)
 GMPLEDT3 ; SLC/MKB/KER -- Problem List edit utilities ; 09/14/12
 "RTN","GMPLEDT3",2,0)
- ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEDT3",3,0)
  ;
 "RTN","GMPLEDT3",4,0)
@@ -16999,7 +16999,7 @@ CK ; Check whether to Stop Processing
 "RTN","GMPLEDT4",1,0)
 GMPLEDT4 ; SLC/MKB -- Problem List Edit actions cont ;09/14/12
 "RTN","GMPLEDT4",2,0)
- ;;2.0;Problem List;**5,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**5,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEDT4",3,0)
 TERM ; edit field 1.01
 "RTN","GMPLEDT4",4,0)
@@ -17193,7 +17193,7 @@ PR1 D ^DIR I $D(DTOUT)!(Y="^") S GMPQUIT=1 Q
 "RTN","GMPLEDT5",1,0)
 GMPLEDT5 ; RGI -- Edit Site parameters ; 8/29/13
 "RTN","GMPLEDT5",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEDT5",3,0)
  Q  ;
 "RTN","GMPLEDT5",4,0)
@@ -17377,7 +17377,7 @@ PARHLP(FIELD,PARAMS) ;
 "RTN","GMPLENFM",1,0)
 GMPLENFM ; SLC/MKB/KER -- Problem List Enc Form utilities ; 08/29/13
 "RTN","GMPLENFM",2,0)
- ;;2.0;Problem List;**3,4,7,26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,4,7,26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLENFM",3,0)
  ;
 "RTN","GMPLENFM",4,0)
@@ -17591,7 +17591,7 @@ GMPL1(SCCOND) ;Determine Treatment Factor, if any
 "RTN","GMPLEXT",1,0)
 GMPLEXT ; RGI/CBR -- External functions mockup (to be deleted when the interfaces are fixed); 8/29/13
 "RTN","GMPLEXT",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEXT",3,0)
 PROVNAME(GMPROV) ; Returns provider name
 "RTN","GMPLEXT",4,0)
@@ -17959,7 +17959,7 @@ CLINDET(RETURN,IEN) ;Clinic details
 "RTN","GMPLEXT1",1,0)
 GMPLEXT1 ; RGI -- DATA ACCESS LAYER - DIRECT GLOBALS ACCESS ; 3/27/13
 "RTN","GMPLEXT1",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLEXT1",3,0)
 GETUSRS(RETURN,SEARCH,START,NUMBER) ;
 "RTN","GMPLEXT1",4,0)
@@ -18107,7 +18107,7 @@ LEXICON(LEX) ;
 "RTN","GMPLHIST",1,0)
 GMPLHIST ; SLC/MKB/KER -- Problem List Historical data ; 5/15/13
 "RTN","GMPLHIST",2,0)
- ;;2.0;Problem List;**7,26,,31,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**7,26,,31,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLHIST",3,0)
  ;
 "RTN","GMPLHIST",4,0)
@@ -18427,7 +18427,7 @@ NUM(X) ; Numeric Field Designations
 "RTN","GMPLHS",1,0)
 GMPLHS ; SLC/MKB/KER - Extract Prob List Health Summary ; 09/17/12
 "RTN","GMPLHS",2,0)
- ;;2.0;Problem List;**22,26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**22,26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLHS",3,0)
  ;
 "RTN","GMPLHS",4,0)
@@ -18621,7 +18621,7 @@ SERV(X,SERV) ; Returns Service Name Abbreviation
 "RTN","GMPLHSPL",1,0)
 GMPLHSPL ; SLC/MKB -- Problem List HS Component Driver (for export) ;09/20/12
 "RTN","GMPLHSPL",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLHSPL",3,0)
 GMTSPLST ; SLC/DJP -- Problem List HS Component Driver ;5/27/93  15:35
 "RTN","GMPLHSPL",4,0)
@@ -18739,7 +18739,7 @@ LINE ;Prints individual line
 "RTN","GMPLMENU",1,0)
 GMPLMENU ; SLC/MKB -- VALM Utilities for Add Menu sub-list ;09/14/12
 "RTN","GMPLMENU",2,0)
- ;;2.0;Problem List;**11,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**11,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLMENU",3,0)
 HDR ; -- header code
 "RTN","GMPLMENU",4,0)
@@ -18931,7 +18931,7 @@ CLU ; -- add problem not on menu, from CLU
 "RTN","GMPLMGR",1,0)
 GMPLMGR ; SLC/MKB/AJB -- Problem List VALM Utilities ; 03/11/13
 "RTN","GMPLMGR",2,0)
- ;;2.0;Problem List;**21,28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**21,28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLMGR",3,0)
  ; 28 Feb 00 - MA added view comments accross Divisions
 "RTN","GMPLMGR",4,0)
@@ -19133,7 +19133,7 @@ HELP ; -- help code
 "RTN","GMPLMGR1",1,0)
 GMPLMGR1 ; SLC/MKB -- Problem List VALM Utilities cont ;8/9/13
 "RTN","GMPLMGR1",2,0)
- ;;2.0;Problem List;**10,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**10,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLMGR1",3,0)
 NEWPAT ; select new patient
 "RTN","GMPLMGR1",4,0)
@@ -19397,7 +19397,7 @@ GETPLIST(PLIST,TOTAL,VIEW) ; Build PLIST(#)=IFN for view
 "RTN","GMPLMGR2",1,0)
 GMPLMGR2 ; SLC/MKB/KER/AJB -- Problem List VALM Utilities cont ;03/25/13
 "RTN","GMPLMGR2",2,0)
- ;;2.0;Problem List;**26,28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**26,28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLMGR2",3,0)
  ;
 "RTN","GMPLMGR2",4,0)
@@ -19615,7 +19615,7 @@ FMTSP(STR) ; Formats SP for display
 "RTN","GMPLP37I",1,0)
 GMPLP37I ; SLC/MKB/KER -- Save Problem List data ;09/21/12
 "RTN","GMPLP37I",2,0)
- ;;2.0;Problem List;**37,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**37,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLP37I",3,0)
  ;
 "RTN","GMPLP37I",4,0)
@@ -19741,7 +19741,7 @@ UPD(ARRAY) ;
 "RTN","GMPLPREF",1,0)
 GMPLPREF ; SLC/MKB -- Problem List User Preferences ;09/13/12
 "RTN","GMPLPREF",2,0)
- ;;2.0;Problem List;**3,5,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,5,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLPREF",3,0)
 EN ; -- main entry point for GMPL USER PREFS
 "RTN","GMPLPREF",4,0)
@@ -19949,7 +19949,7 @@ MSG() ; -- msg line for more help
 "RTN","GMPLPRF0",1,0)
 GMPLPRF0 ; SLC/MKB -- Problem List User Prefs cont ;09/13/12
 "RTN","GMPLPRF0",2,0)
- ;;2.0;Problem List;**3,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLPRF0",3,0)
 CURRENT(USER) ; Show user's current preference
 "RTN","GMPLPRF0",4,0)
@@ -20019,7 +20019,7 @@ ALL(MODE,DEFLT) ; Include all problems, or select from clinics/services?
 "RTN","GMPLPRF1",1,0)
 GMPLPRF1 ; SLC/MKB -- Problem List User Prefs cont ;09/20/12
 "RTN","GMPLPRF1",2,0)
- ;;2.0;Problem List;**3,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLPRF1",3,0)
 ADD ; -- add item(s) to view
 "RTN","GMPLPRF1",4,0)
@@ -20237,7 +20237,7 @@ DELETE ; -- delete preferred view (no view)
 "RTN","GMPLPRNT",1,0)
 GMPLPRNT ; SLC/MKB,KER -- Problem List prints/displays; 03/25/13
 "RTN","GMPLPRNT",2,0)
- ;;2.0;Problem List;**1,13,26,41,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**1,13,26,41,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLPRNT",3,0)
  ;
 "RTN","GMPLPRNT",4,0)
@@ -20561,7 +20561,7 @@ NOTES(GMPL,NOTES) ; Place Comments in NOTES array
 "RTN","GMPLPXRM",1,0)
 GMPLPXRM ; SLC/PKR - Build Clinical Reminder indexes for AUPNPROB. ;09/14/12
 "RTN","GMPLPXRM",2,0)
- ;;2.0;Problem List;**27,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**27,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLPXRM",3,0)
  ;DBIA 4113 supports PXRMSXRM entry points. 
 "RTN","GMPLPXRM",4,0)
@@ -20757,7 +20757,7 @@ SPROB(X,DA) ;Set index for Problem List.
 "RTN","GMPLRPTR",1,0)
 GMPLRPTR ; SLC/MKB/AJB -- Problem List Report of Removed Problems ;03/11/13
 "RTN","GMPLRPTR",2,0)
- ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**28,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLRPTR",3,0)
 EN ; -- main entry point
 "RTN","GMPLRPTR",4,0)
@@ -20935,7 +20935,7 @@ SURE() ; -- are you sure you want to do this?
 "RTN","GMPLRPTS",1,0)
 GMPLRPTS ; SLC/MKB -- Problem List Mgt Reports ;03/11/13
 "RTN","GMPLRPTS",2,0)
- ;;2.0;Problem List;**2,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**2,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLRPTS",3,0)
 FMTPAT(LINE) ; Does formatting for PAT tag
 "RTN","GMPLRPTS",4,0)
@@ -21133,7 +21133,7 @@ STATUS() ; Prompts for problem status to search for
 "RTN","GMPLSAVE",1,0)
 GMPLSAVE ; SLC/MKB/KER -- Save Problem List data ; 03/12/13
 "RTN","GMPLSAVE",2,0)
- ;;2.0;Problem List;**26,31,35,37,38,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**26,31,35,37,38,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLSAVE",3,0)
  ;
 "RTN","GMPLSAVE",4,0)
@@ -21175,7 +21175,7 @@ NEW ; Save Collected Values in new Problem Entry
 "RTN","GMPLSITE",1,0)
 GMPLSITE ;RGI -- GMPL Site parameters ;5/15/13
 "RTN","GMPLSITE",2,0)
- ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**260002**;Aug 25, 1994;Build 28
 "RTN","GMPLSITE",3,0)
  Q  ;
 "RTN","GMPLSITE",4,0)
@@ -21281,7 +21281,7 @@ SET(RETURN,PARAMS) ; Set site parameters
 "RTN","GMPLUTL",1,0)
 GMPLUTL ; SLC/MKB/KER -- PL Utilities                      ; 09/13/12
 "RTN","GMPLUTL",2,0)
- ;;2.0;Problem List;**3,6,8,10,16,26,35,39,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,6,8,10,16,26,35,39,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLUTL",3,0)
  ;
 "RTN","GMPLUTL",4,0)
@@ -21631,7 +21631,7 @@ UPDATE(PL,PLY) ; Update a Problem/Create if Not Found
 "RTN","GMPLUTL1",1,0)
 GMPLUTL1 ; SLC/MKB/KER -- PL Utilities (cont)               ; 09/14/12
 "RTN","GMPLUTL1",2,0)
- ;;2.0;Problem List;**3,8,7,9,26,35,39,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,8,7,9,26,35,39,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLUTL1",3,0)
  ;
 "RTN","GMPLUTL1",4,0)
@@ -21901,7 +21901,7 @@ SHD ; SHD exposure flag (Requires GMPSHD)
 "RTN","GMPLUTL2",1,0)
 GMPLUTL2 ; SLC/MKB/KER -- PL Utilities (OE/TIU)             ; 08/29/13
 "RTN","GMPLUTL2",2,0)
- ;;2.0;Problem List;**10,18,21,26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**10,18,21,26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLUTL2",3,0)
  ; External References
 "RTN","GMPLUTL2",4,0)
@@ -22245,7 +22245,7 @@ VAF(DFN,SILENT) ; -- print PL VA Form chart copy
 "RTN","GMPLUTL3",1,0)
 GMPLUTL3 ; SLC/JST/JVS -- PL Utilities (CIRN)           ; 08/29/13
 "RTN","GMPLUTL3",2,0)
- ;;2.0;Problem List;**14,15,19,25,26,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**14,15,19,25,26,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLUTL3",3,0)
  ;
 "RTN","GMPLUTL3",4,0)
@@ -22415,7 +22415,7 @@ MOD(DFN) ; Return the Date the Patients Problem List was Last Modified
 "RTN","GMPLX",1,0)
 GMPLX ; SLC/MKB/AJB -- Problem List Problem Utilities ;3/13/13
 "RTN","GMPLX",2,0)
- ;;2.0;Problem List;**7,23,26,28,27,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**7,23,26,28,27,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLX",3,0)
  ;
 "RTN","GMPLX",4,0)
@@ -22707,7 +22707,7 @@ CODESTS(PROB,ADATE) ;check status of code associated with a problem
 "RTN","GMPLX1",1,0)
 GMPLX1 ; SLC/MKB/KER -- Problem List Person Utilities ;8/29/13
 "RTN","GMPLX1",2,0)
- ;;2.0;Problem List;**3,26,35,260002**;Aug 25, 1994;Build 26
+ ;;2.0;Problem List;**3,26,35,260002**;Aug 25, 1994;Build 28
 "RTN","GMPLX1",3,0)
  ;
 "RTN","GMPLX1",4,0)
@@ -23067,7 +23067,7 @@ FMTNAME(NAME) ; Formats name into "Lastname,F"
 **INSTALL NAME**
 ACKQ*3.0*260002
 "BLD",9044,0)
-ACKQ*3.0*260002^QUASAR^0^3130902^y
+ACKQ*3.0*260002^QUASAR^0^3130903^y
 "BLD",9044,1,0)
 ^^1^1^3130328^
 "BLD",9044,1,1,0)
@@ -23075,7 +23075,7 @@ PROBLEM LIST REFACTORING
 "BLD",9044,4,0)
 ^9.64PA^^
 "BLD",9044,6.3)
-16
+17
 "BLD",9044,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9044,"KRN",.4,0)
@@ -23181,9 +23181,9 @@ QUASAR^ACKQ^Quality: Audiology and Speech Pathology Audit and Review
 "PKG",150,22,1,0)
 3.0^3051119^3000626^1
 "PKG",150,22,1,"PAH",1,0)
-260002^3130902
+260002^3130903
 "PKG",150,22,1,"PAH",1,1,0)
-^^1^1^3130902
+^^1^1^3130903
 "PKG",150,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "QUES","XPF1",0)
@@ -23263,7 +23263,7 @@ D XPZ2^XPDIQ
 "RTN","ACKQUTL6",1,0)
 ACKQUTL6 ;HCIOFO/BH-A&SP Utilities routine ; 08/09/13
 "RTN","ACKQUTL6",2,0)
- ;;3.0;QUASAR;**1,7,17,260002**;Feb 11, 2000;Build 16
+ ;;3.0;QUASAR;**1,7,17,260002**;Feb 11, 2000;Build 17
 "RTN","ACKQUTL6",3,0)
  ;Per VHA Directive 10-93-142, this routine SHOULD NOT be modified.
 "RTN","ACKQUTL6",4,0)
@@ -23835,7 +23835,7 @@ PLIST(ACKPAT,ACKDC) ; Determines if an entry exists in the Problem file
 **INSTALL NAME**
 IBD*3.0*260002
 "BLD",9046,0)
-IBD*3.0*260002^AUTOMATED INFO COLLECTION SYS^0^3130902^y
+IBD*3.0*260002^AUTOMATED INFO COLLECTION SYS^0^3130903^y
 "BLD",9046,1,0)
 ^^1^1^3130328^
 "BLD",9046,1,1,0)
@@ -23843,7 +23843,7 @@ PROBLEM LIST REFACTORING
 "BLD",9046,4,0)
 ^9.64PA^^
 "BLD",9046,6.3)
-16
+17
 "BLD",9046,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9046,"KRN",.4,0)
@@ -23947,9 +23947,9 @@ AUTOMATED INFO COLLECTION SYS^IBD^The utilities for generating a paper encounter
 "PKG",76,22,1,0)
 3.0^3051119^2970501^1
 "PKG",76,22,1,"PAH",1,0)
-260002^3130902
+260002^3130903
 "PKG",76,22,1,"PAH",1,1,0)
-^^1^1^3130902
+^^1^1^3130903
 "PKG",76,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "QUES","XPF1",0)
@@ -24029,7 +24029,7 @@ D XPZ2^XPDIQ
 "RTN","IBDFBK3",1,0)
 IBDFBK3 ;ALB/AAS - AICS broker Utilities ; 03/27/12
 "RTN","IBDFBK3",2,0)
- ;;3.0;AUTOMATED INFO COLLECTION SYS;**12,38,36,260002**;APR 24, 1997;Build 16
+ ;;3.0;AUTOMATED INFO COLLECTION SYS;**12,38,36,260002**;APR 24, 1997;Build 17
 "RTN","IBDFBK3",3,0)
  ;
 "RTN","IBDFBK3",4,0)
@@ -24297,7 +24297,7 @@ PROBDIA(IEN) ; -- return problem diagnosis code pointer
 "RTN","IBDFN11",1,0)
 IBDFN11 ;ALB/CMR - ENCOUNTER FORM - (entry points for reprint of dynamic data) ; 08/07/13
 "RTN","IBDFN11",2,0)
- ;;3.0;AUTOMATED INFO COLLECTION SYS;**260002**;APR 24, 1997;Build 16
+ ;;3.0;AUTOMATED INFO COLLECTION SYS;**260002**;APR 24, 1997;Build 17
 "RTN","IBDFN11",3,0)
  ;
 "RTN","IBDFN11",4,0)
@@ -24367,7 +24367,7 @@ REPRINT(IBPFID,LIST,ARY) ; -- returns dynamic lists previously printed on a form
 **INSTALL NAME**
 OR*3.0*260002
 "BLD",9047,0)
-OR*3.0*260002^ORDER ENTRY/RESULTS REPORTING^0^3130902^y
+OR*3.0*260002^ORDER ENTRY/RESULTS REPORTING^0^3130903^y
 "BLD",9047,1,0)
 ^^1^1^3130328^
 "BLD",9047,1,1,0)
@@ -24375,7 +24375,7 @@ PROBLEM LIST REFACTORING
 "BLD",9047,4,0)
 ^9.64PA^^
 "BLD",9047,6.3)
-16
+17
 "BLD",9047,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9047,"KRN",.4,0)
@@ -24487,9 +24487,9 @@ ORDER ENTRY/RESULTS REPORTING^OR^Order Entry/Results Reporting
 "PKG",35,22,1,0)
 3.0^3051119^2990416^1
 "PKG",35,22,1,"PAH",1,0)
-260002^3130902
+260002^3130903
 "PKG",35,22,1,"PAH",1,1,0)
-^^1^1^3130902
+^^1^1^3130903
 "PKG",35,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "QUES","XPF1",0)
@@ -24569,7 +24569,7 @@ D XPZ2^XPDIQ
 "RTN","ORCPROB",1,0)
 ORCPROB ; SLC/MKB/REV - Problem List interface ; 08/09/13
 "RTN","ORCPROB",2,0)
- ;;3.0;ORDER ENTRY/RESULTS REPORTING;**27,48,181,260002**;Dec 17, 1997;Build 16
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**27,48,181,260002**;Dec 17, 1997;Build 17
 "RTN","ORCPROB",3,0)
 ADD ; -- add new problem
 "RTN","ORCPROB",4,0)
@@ -24795,7 +24795,7 @@ EX ; -- exit action
 "RTN","ORQQPL1",1,0)
 ORQQPL1 ; ALB/PDR/REV - PROBLEM LIST FOR CPRS GUI ; 08/09/13
 "RTN","ORQQPL1",2,0)
- ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,85,148,173,203,206,249,243,280,260002**;Dec 17, 1997;Build 16
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,85,148,173,203,206,249,243,280,260002**;Dec 17, 1997;Build 17
 "RTN","ORQQPL1",3,0)
  ;
 "RTN","ORQQPL1",4,0)
@@ -25279,7 +25279,7 @@ DUP(Y,DFN,TERM,TEXT) ;Check for duplicate problem
 "RTN","ORQQPL2",1,0)
 ORQQPL2 ; ALB/PDR/REV - RPCs FOR CPRS GUI IMPLEMENTATION ; 03/18/13
 "RTN","ORQQPL2",2,0)
- ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,260002**;Dec 17, 1997;Build 16
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,260002**;Dec 17, 1997;Build 17
 "RTN","ORQQPL2",3,0)
  ;
 "RTN","ORQQPL2",4,0)
@@ -25471,7 +25471,7 @@ SAVEVIEW(Y,GMPLVIEW) ; -- save new view in File #200/Field #125
 "RTN","ORQQPL3",1,0)
 ORQQPL3 ; ALB/PDR/REV - Problem List RPCs ; 8/9/13
 "RTN","ORQQPL3",2,0)
- ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,148,173,243,280,260002**;Dec 17, 1997;Build 16
+ ;;3.0;ORDER ENTRY/RESULTS REPORTING;**10,148,173,243,280,260002**;Dec 17, 1997;Build 17
 "RTN","ORQQPL3",3,0)
  ;
 "RTN","ORQQPL3",4,0)
@@ -25765,7 +25765,7 @@ GETSRVC(RETURN,INP) ; GET FILTERED LIST OF INPATIENT SERVICES
 **INSTALL NAME**
 PX*1.0*260002
 "BLD",9048,0)
-PX*1.0*260002^PCE PATIENT CARE ENCOUNTER^0^3130902^y
+PX*1.0*260002^PCE PATIENT CARE ENCOUNTER^0^3130903^y
 "BLD",9048,1,0)
 ^^1^1^3130328^
 "BLD",9048,1,1,0)
@@ -25773,7 +25773,7 @@ PROBLEM LIST REFACTORING
 "BLD",9048,4,0)
 ^9.64PA^^
 "BLD",9048,6.3)
-16
+17
 "BLD",9048,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9048,"KRN",.4,0)
@@ -25885,9 +25885,9 @@ PCE PATIENT CARE ENCOUNTER^PX^Patient Care Encounter
 "PKG",111,22,1,0)
 1.0^3051119^2960822^1
 "PKG",111,22,1,"PAH",1,0)
-260002^3130902
+260002^3130903
 "PKG",111,22,1,"PAH",1,1,0)
-^^1^1^3130902
+^^1^1^3130903
 "PKG",111,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "QUES","XPF1",0)
@@ -25967,7 +25967,7 @@ D XPZ2^XPDIQ
 "RTN","PXCAPL",1,0)
 PXCAPL ;ISL/dee & LEA/Chylton,SCK - Validates data from the PCE Device Interface into a call to update Problem List ;09/21/12
 "RTN","PXCAPL",2,0)
- ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,115,130,168,194,260002**;Aug 12, 1996;Build 16
+ ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,115,130,168,194,260002**;Aug 12, 1996;Build 17
 "RTN","PXCAPL",3,0)
  Q
 "RTN","PXCAPL",4,0)
@@ -26143,7 +26143,7 @@ PROBLEM(PXCA,PXCABULD,PXCAERRS) ;
 "RTN","PXCAPL1",1,0)
 PXCAPL1 ;ISL/dee & LEA/Chylton - Translates data from the PCE Device Interface into a call to update Problem List ;09/21/12
 "RTN","PXCAPL1",2,0)
- ;;1.0;PCE PATIENT CARE ENCOUNTER;**33,115,130,168,260002**;Aug 12, 1996;Build 16
+ ;;1.0;PCE PATIENT CARE ENCOUNTER;**33,115,130,168,260002**;Aug 12, 1996;Build 17
 "RTN","PXCAPL1",3,0)
  Q
 "RTN","PXCAPL1",4,0)
@@ -26241,7 +26241,7 @@ PROBLIST ;Problem List
 "RTN","PXCAPL2",1,0)
 PXCAPL2 ;ISL/dee & LEA/Chylton - Translates data from the PCE Device Interface for "DIAGNOSIS/PROBLEM" into a call to update Problem List ;08/09/13
 "RTN","PXCAPL2",2,0)
- ;;1.0;PCE PATIENT CARE ENCOUNTER;**33,115,130,168,260002**;Aug 12, 1996;Build 16
+ ;;1.0;PCE PATIENT CARE ENCOUNTER;**33,115,130,168,260002**;Aug 12, 1996;Build 17
 "RTN","PXCAPL2",3,0)
  Q
 "RTN","PXCAPL2",4,0)
@@ -26349,7 +26349,7 @@ PROBLIST ;Problem List
 "RTN","PXCAPOV",1,0)
 PXCAPOV ;ISL/dee & LEA/Chylton - Validates data from the PCE Device Interface into PCE's PXK format for POV ;03/27/12
 "RTN","PXCAPOV",2,0)
- ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,33,121,130,124,168,260002**;Aug 12, 1996;Build 16
+ ;;1.0;PCE PATIENT CARE ENCOUNTER;**24,27,33,121,130,124,168,260002**;Aug 12, 1996;Build 17
 "RTN","PXCAPOV",3,0)
  Q
 "RTN","PXCAPOV",4,0)
@@ -26581,7 +26581,7 @@ ANOTHPOV(PXCAAPOV) ;
 **INSTALL NAME**
 PXRM*2.0*260002
 "BLD",9049,0)
-PXRM*2.0*260002^CLINICAL REMINDERS^0^3130902^y
+PXRM*2.0*260002^CLINICAL REMINDERS^0^3130903^y
 "BLD",9049,1,0)
 ^^1^1^3130328^
 "BLD",9049,1,1,0)
@@ -26589,7 +26589,7 @@ PROBLEM LIST REFACTORING
 "BLD",9049,4,0)
 ^9.64PA^^
 "BLD",9049,6.3)
-15
+16
 "BLD",9049,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9049,"KRN",.4,0)
@@ -26693,9 +26693,9 @@ CLINICAL REMINDERS^PXRM^Clinical Reminders^^^3000614
 "PKG",180,22,1,0)
 2.0^3051119^3050311^1
 "PKG",180,22,1,"PAH",1,0)
-260002^3130902
+260002^3130903
 "PKG",180,22,1,"PAH",1,1,0)
-^^1^1^3130902
+^^1^1^3130903
 "PKG",180,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "QUES","XPF1",0)
@@ -26775,7 +26775,7 @@ D XPZ2^XPDIQ
 "RTN","PXRMISE",1,0)
 PXRMISE ; SLC/PKR - Index size estimating routines. ;03/27/12
 "RTN","PXRMISE",2,0)
- ;;2.0;CLINICAL REMINDERS;**6,12,17,260002**;Feb 04, 2005;Build 15
+ ;;2.0;CLINICAL REMINDERS;**6,12,17,260002**;Feb 04, 2005;Build 16
 "RTN","PXRMISE",3,0)
  ;
 "RTN","PXRMISE",4,0)
@@ -27355,7 +27355,7 @@ SETDATA(GBL,GLIST,NUMGBL,RTN,SF) ;
 "RTN","PXRMPROB",1,0)
 PXRMPROB ; SLC/PKR - Code for Problem List. ;03/27/12
 "RTN","PXRMPROB",2,0)
- ;;2.0;CLINICAL REMINDERS;**4,260002**;Feb 04, 2005;Build 15
+ ;;2.0;CLINICAL REMINDERS;**4,260002**;Feb 04, 2005;Build 16
 "RTN","PXRMPROB",3,0)
  ;
 "RTN","PXRMPROB",4,0)
@@ -27729,7 +27729,7 @@ OUTPUT(INDENT,OCCLIST,IFIEVAL,NLINES,TEXT) ;Produce the clinical
 **INSTALL NAME**
 ROR*1.5*260002
 "BLD",9050,0)
-ROR*1.5*260002^CLINICAL CASE REGISTRIES^0^3130902^y
+ROR*1.5*260002^CLINICAL CASE REGISTRIES^0^3130903^y
 "BLD",9050,1,0)
 ^^1^1^3130328^
 "BLD",9050,1,1,0)
@@ -27737,7 +27737,7 @@ PROBLEM LIST REFACTORING
 "BLD",9050,4,0)
 ^9.64PA^^
 "BLD",9050,6.3)
-15
+16
 "BLD",9050,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9050,"KRN",.4,0)
@@ -27839,9 +27839,9 @@ CLINICAL CASE REGISTRIES^ROR^CLINICAL REGISTRIES
 "PKG",186,22,1,0)
 1.5^3060208^3060308^1
 "PKG",186,22,1,"PAH",1,0)
-260002^3130902
+260002^3130903
 "PKG",186,22,1,"PAH",1,1,0)
-^^1^1^3130902
+^^1^1^3130903
 "PKG",186,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "QUES","XPF1",0)
@@ -27921,7 +27921,7 @@ D XPZ2^XPDIQ
 "RTN","RORHL17",1,0)
 RORHL17 ;HOIFO/BH,SG - HL7 PROBLEM LIST: OBR,OBX ;09/20/12
 "RTN","RORHL17",2,0)
- ;;1.5;CLINICAL CASE REGISTRIES;**10,260002**;Feb 17, 2006;Build 15
+ ;;1.5;CLINICAL CASE REGISTRIES;**10,260002**;Feb 17, 2006;Build 16
 "RTN","RORHL17",3,0)
  ;
 "RTN","RORHL17",4,0)
@@ -28347,7 +28347,7 @@ SETOBX(OBX3,OBX4,OBX5) ;
 **INSTALL NAME**
 XU*8.0*260002
 "BLD",9051,0)
-XU*8.0*260002^KERNEL^0^3130902^y
+XU*8.0*260002^KERNEL^0^3130903^y
 "BLD",9051,1,0)
 ^^1^1^3130129^
 "BLD",9051,1,1,0)
@@ -28361,7 +28361,7 @@ y^y^f^^^^n
 "BLD",9051,4,"B",101,101)
 
 "BLD",9051,6.3)
-15
+16
 "BLD",9051,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9051,"KRN",.4,0)
@@ -28517,9 +28517,9 @@ KERNEL^XU^SIGN-ON, SECURITY, MENU DRIVER, DEVICES, TASKMAN^
 "PKG",3,22,1,0)
 8.0^3051119^2960606^1
 "PKG",3,22,1,"PAH",1,0)
-260002^3130902^1
+260002^3130903^1
 "PKG",3,22,1,"PAH",1,1,0)
-^^1^1^3130902
+^^1^1^3130903
 "PKG",3,22,1,"PAH",1,1,1,0)
 PROBLEM LIST REFACTORING
 "QUES","XPF1",0)
@@ -28599,7 +28599,7 @@ D XPZ2^XPDIQ
 "RTN","XQOR3",1,0)
 XQOR3 ; SLC/KCM - Process Menus, Protocol Menus ;2/27/12;
 "RTN","XQOR3",2,0)
- ;;8.0;KERNEL;**260002**;Jul 10, 1995;Build 15
+ ;;8.0;KERNEL;**260002**;Jul 10, 1995;Build 16
 "RTN","XQOR3",3,0)
 MENU ;From: XQOR1
 "RTN","XQOR3",4,0)
@@ -28651,7 +28651,7 @@ MENU1 ;Get Protocol file specific XQORM fields
 "RTN","XQORM1",1,0)
 XQORM1 ; SLC/KCM - Display selections & prompt ;2/27/12
 "RTN","XQORM1",2,0)
- ;;8.0;KERNEL;**260002**;Jul 10, 1995;Build 15
+ ;;8.0;KERNEL;**260002**;Jul 10, 1995;Build 16
 "RTN","XQORM1",3,0)
 DISP ;From: XQORM
 "RTN","XQORM1",4,0)
