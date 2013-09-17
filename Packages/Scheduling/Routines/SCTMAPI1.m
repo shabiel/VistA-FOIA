@@ -1,4 +1,4 @@
-SCTMAPI1 ;RGI/CBR - TEAM API; 5/31/13
+SCTMAPI1 ;RGI/VSL - TEAM API; 9/17/13
  ;;5.3;scheduling;**260003**;08/13/93
 LSTATMS(RETURN,SEARCH,START,NUMBER) ; Get active teams
  ;Input:
@@ -6,8 +6,8 @@ LSTATMS(RETURN,SEARCH,START,NUMBER) ; Get active teams
  ;                           Set to Error description if the call fails
  ;                           All fields except 'IEN' are returned in internal^external format.
  ;    RETURN [Numeric] # of entries found
- ;    RETURN(#,”ID”) – [Numeric] Team IEN
- ;    RETURN(#,”NAME”) – [String] Team name
+ ;    RETURN(#,"ID") [Numeric] Team IEN
+ ;    RETURN(#,"NAME") [String] Team name
  ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
  ;    SEARCH(0) [Optional,Boolean] If 1 returns only primary care positions.
  ;   START [Optional,Numeric] The team position name from which to begin the list. Default: ""
@@ -37,11 +37,11 @@ LSTAPOS(RETURN,SEARCH,START,NUMBER) ; Get active practitioners
  ;                           Set to Error description if the call fails
  ;                           All fields except 'IEN' are returned in internal^external format.
  ;    RETURN [Numeric] # of entries found
- ;    RETURN(#,”ID”) [Numeric] Team position IEN
- ;    RETURN(#,”CLINIC”) [Numeric] Associated clinic IEN
- ;    RETURN(#,”NAME”) [String] Team position name
- ;    RETURN(#,”TEAM”) [String] Team name
- ;    RETURN(#,”USER”) [String] Practitioner IEN
+ ;    RETURN(#,"ID") [Numeric] Team position IEN
+ ;    RETURN(#,"CLINIC") [Numeric] Associated clinic IEN
+ ;    RETURN(#,"NAME") [String] Team position name
+ ;    RETURN(#,"TEAM") [String] Team name
+ ;    RETURN(#,"USER") [String] Practitioner IEN
  ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
  ;    SEARCH(0) [Optional,Numeric] Team IEN
  ;    SEARCH(1) [Optional,Boolean] If 1 returns only primary care positions.
@@ -121,22 +121,22 @@ GETEAMPO(RETURN,SCTMPO) ; Get team position
  ;    RETURN("CURRENT EFFECTIVE DATE") [DateTime] Effective date as of today
  ;    RETURN("CURRENT INACTIVATION DATE") [DateTime] Inactivation date as of today
  ;    RETURN("CURRENT STATUS") [String] Status (Active, Inactive)
- ;    RETURN("DEATH MESSAGE") [String] For which patients team receives messages related to patient’s death
+ ;    RETURN("DEATH MESSAGE") [String] For which patients team receives messages related to patient's death
  ;    RETURN("FUTURE # OF PATIENTS")- [Numeric] # of current and future assignments
- ;    RETURN("FUTURE # OF PC PATIENTS") – [Numeric] # of current and future patient care assignments
- ;    RETURN("INPATIENT MESSAGE") – [String] For which patients team receives messages related to inpatient activity
- ;    RETURN("MAX NUMBER OF PATIENTS") – [Numeric] Maximum nuber of patients that can be assigned to this position
+ ;    RETURN("FUTURE # OF PC PATIENTS") [Numeric] # of current and future patient care assignments
+ ;    RETURN("INPATIENT MESSAGE") [String] For which patients team receives messages related to inpatient activity
+ ;    RETURN("MAX NUMBER OF PATIENTS") [Numeric] Maximum nuber of patients that can be assigned to this position
  ;    RETURN("POSITION")="OIF OEF CLINICAL CASE MANAGER^OIF OEF CLINICAL CASE MANAGER"
- ;    RETURN("POSITION DESCRIPTION") – [String] Description
- ;    RETURN("POSSIBLE PRIMARY PRACTITIONER?") – [Boolean] If 1 this position may be used as preceptor for the team
- ;    RETURN("PRECEPTOR CONSULT MESSAGE") – [Boolean] 1 sends a message to preceptor on consult activity
- ;    RETURN("PRECEPTOR DEATH MESSAGE") – [Boolean] 1 sends a message to preceptor on a death entry
- ;    RETURN("PRECEPTOR INPATIENT MESSAGE") – [Boolean] 1 sends a message to preceptor on inpatient activity
- ;    RETURN("PRECEPTOR TEAM MESSAGE") – [Boolean] 1 sends a message to preceptor on team activity
- ;    RETURN("STANDARD ROLE NAME") – [Numeric] Standard role IEN (pointer to ROLE POSITION file)
- ;    RETURN("TEAM") – [Numeric] Team IEN (pointer to TEAM file)
- ;    RETURN("TEAM MESSAGE") – [String] For which patients team receives messages related to team activity
- ;    RETURN("USER CLASS") – [Numeric] Pointer to USR CLASS file
+ ;    RETURN("POSITION DESCRIPTION") [String] Description
+ ;    RETURN("POSSIBLE PRIMARY PRACTITIONER?") [Boolean] If 1 this position may be used as preceptor for the team
+ ;    RETURN("PRECEPTOR CONSULT MESSAGE") [Boolean] 1 sends a message to preceptor on consult activity
+ ;    RETURN("PRECEPTOR DEATH MESSAGE") [Boolean] 1 sends a message to preceptor on a death entry
+ ;    RETURN("PRECEPTOR INPATIENT MESSAGE") [Boolean] 1 sends a message to preceptor on inpatient activity
+ ;    RETURN("PRECEPTOR TEAM MESSAGE") [Boolean] 1 sends a message to preceptor on team activity
+ ;    RETURN("STANDARD ROLE NAME") [Numeric] Standard role IEN (pointer to ROLE POSITION file)
+ ;    RETURN("TEAM") [Numeric] Team IEN (pointer to TEAM file)
+ ;    RETURN("TEAM MESSAGE") [String] For which patients team receives messages related to team activity
+ ;    RETURN("USER CLASS") [Numeric] Pointer to USR CLASS file
  ;   SCTMPO [Required,Numeric] Team position IEN
  ;Output:
  ;  1=Success,0=Failure

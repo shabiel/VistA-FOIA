@@ -1,4 +1,4 @@
-SDMAPI1 ;RGI/VSL - APPOINTMENT API; 8/26/13
+SDMAPI1 ;RGI/VSL - APPOINTMENT API; 9/17/13
  ;;5.3;scheduling;**260003**;08/13/93
 CLNCK(RETURN,CLN) ;Check clinic for valid stop code restriction.
  ;  INPUT:   CLN   = IEN of Clinic
@@ -113,42 +113,42 @@ GETAPT(RETURN,DFN,SD) ; Get appointment
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
  ;                           Set to Error description if the call fails
- ;		RETURN [Boolean] Set to 1 if the the call succeeded, 0 otherwise
- ;		RETURN("CLINIC") [String] Clinic (pointer to file 44) (I^E)
- ;		RETURN("STATUS") [String] Appointment status (I^E)
- ;		RETURN("LABDT")	[String] The date/time the patient should report for LAB tests (I^E)
- ;		RETURN("XRAYDT") [String] The date/time the patient should report for XRAY tests (I^E)
- ;		RETURN("EKGDT") [String] The date/time the patient should report for EKG tests (I^E)
- ;		RETURN("PURPOSE") [String] One of: 1^C&P, 2^10-10, 3^SCHEDULED VISIT, 4^UNSCHED. VISIT
- ;		RETURN("ARBK") [String] Auto-rebooked appt. date/time (I^E)
- ;		RETURN("CVISIT") [String] Collateral visit flag. Empty or 1^YES 
- ;		RETURN("NOSHOWBY") [String] The date/time the no-show was cancelled (I^E)
- ;		RETURN("NOSHOWDT") [String] The user who cancelled the no-show (pointer to file 200) (I^E)
- ;		RETURN("CREASON") [String] Cancellation reason (pointer to file 409.2) (I^E)
- ;		RETURN("TYPE") [String] Type of appointment (pointer file 409.1) (I^E)
- ;		RETURN("CREMARKS") [String] Cancellation remarks
- ;		RETURN("ENTRY") [String] User who made appointment (pointer to file 200) (I^E)
- ;		RETURN("MADEDT") [String] The date the appointment was entered into the scheduling system (I^E)
- ;		RETURN("OE") [String] Outpatient encounter created from this appointment (pointer to file 409.68) (I^E)
- ;		RETURN("RTYPE") [String] One of: N^'NEXT AVAILABLE' APPT., C^OTHER THAN 'NEXT AVA.' (CLINICIAN REQ.),
+ ;   RETURN [Boolean] Set to 1 if the the call succeeded, 0 otherwise
+ ;   RETURN("CLINIC") [String] Clinic (pointer to file 44) (I^E)
+ ;   RETURN("STATUS") [String] Appointment status (I^E)
+ ;   RETURN("LABDT") [String] The date/time the patient should report for LAB tests (I^E)
+ ;   RETURN("XRAYDT") [String] The date/time the patient should report for XRAY tests (I^E)
+ ;   RETURN("EKGDT") [String] The date/time the patient should report for EKG tests (I^E)
+ ;   RETURN("PURPOSE") [String] One of: 1^C&P, 2^10-10, 3^SCHEDULED VISIT, 4^UNSCHED. VISIT
+ ;   RETURN("ARBK") [String] Auto-rebooked appt. date/time (I^E)
+ ;   RETURN("CVISIT") [String] Collateral visit flag. Empty or 1^YES 
+ ;   RETURN("NOSHOWBY") [String] The date/time the no-show was cancelled (I^E)
+ ;   RETURN("NOSHOWDT") [String] The user who cancelled the no-show (pointer to file 200) (I^E)
+ ;   RETURN("CREASON") [String] Cancellation reason (pointer to file 409.2) (I^E)
+ ;   RETURN("TYPE") [String] Type of appointment (pointer file 409.1) (I^E)
+ ;   RETURN("CREMARKS") [String] Cancellation remarks
+ ;   RETURN("ENTRY") [String] User who made appointment (pointer to file 200) (I^E)
+ ;   RETURN("MADEDT") [String] The date the appointment was entered into the scheduling system (I^E)
+ ;   RETURN("OE") [String] Outpatient encounter created from this appointment (pointer to file 409.68) (I^E)
+ ;   RETURN("RTYPE") [String] One of: N^'NEXT AVAILABLE' APPT., C^OTHER THAN 'NEXT AVA.' (CLINICIAN REQ.),
  ;                               P^OTHER THAN 'NEXT AVA.' (PATIENT REQ.), W^WALKIN APPT., M^MULTIPLE APPT. BOOKING,
  ;                               A^AUTO REBOOK, O^OTHER THAN 'NEXT AVA.' APPT.
- ;		RETURN("NEXTA") [String] One of: 0^NOT INDICATED TO BE A 'NEXT AVA.' APPT., 1^'NEXT AVA.' APPT. INDICATED BY USER,
- ;                               2^'NEXT AVA.' APPT. INDICATED BY CALCULATION, 3^'NEXT AVA.' APPT. INDICATED BY USER & CALCULATION
- ;		RETURN("DDATE") [String] Desired date of appointment (I^E)
- ;		RETURN("FVISIT") [String] One of: 0^NO, 1^YES
- ;		RETURN("PATIENT") [String] Patient (pointer to file 2) (I^E)
- ;		RETURN("LENGTH") [Numeric]Appointment length (minutes)
- ;		RETURN("OTHER") [String] Other observations
- ;		RETURN("OVERBOOK") [String] O^OVERBOOK if this appointment was an overbook, empty otherwise
- ;		RETURN("RQXRAY") [String] Y^YES if prior x-ray results are required to be sent to clinic, empty otherwise
- ;		RETURN("EVISIT") [String] Eligibility of visit (pointer to file 8) (I^E)
- ;		RETURN("CIDT") [String] Check in date (I^E)
- ;		RETURN("CIUSER") [String] Check in user (pointer to file 200) (I^E)
- ;		RETURN("CODT") [String] Check out date (I^E)
- ;		RETURN("COUSER") [String] Check out user (pointer to file 200) (I^E)
- ;		RETURN("COENTER") [String] Date and time that the check out was entered (I^E)
- ;		RETURN("CONSULT") [Numeric] Consult associated with this appointment (pointer to REQUEST/CONSULTATION FILE <#123>)
+ ;   RETURN("NEXTA") [String] One of: 0^NOT INDICATED TO BE A 'NEXT AVA.' APPT., 1^'NEXT AVA.' APPT. INDICATED BY USER,
+ ;                              2^'NEXT AVA.' APPT. INDICATED BY CALCULATION, 3^'NEXT AVA.' APPT. INDICATED BY USER & CALCULATION
+ ;   RETURN("DDATE") [String] Desired date of appointment (I^E)
+ ;   RETURN("FVISIT") [String] One of: 0^NO, 1^YES
+ ;   RETURN("PATIENT") [String] Patient (pointer to file 2) (I^E)
+ ;   RETURN("LENGTH") [Numeric]Appointment length (minutes)
+ ;   RETURN("OTHER") [String] Other observations
+ ;   RETURN("OVERBOOK") [String] O^OVERBOOK if this appointment was an overbook, empty otherwise
+ ;   RETURN("RQXRAY") [String] Y^YES if prior x-ray results are required to be sent to clinic, empty otherwise
+ ;   RETURN("EVISIT") [String] Eligibility of visit (pointer to file 8) (I^E)
+ ;   RETURN("CIDT") [String] Check in date (I^E)
+ ;   RETURN("CIUSER") [String] Check in user (pointer to file 200) (I^E)
+ ;   RETURN("CODT") [String] Check out date (I^E)
+ ;   RETURN("COUSER") [String] Check out user (pointer to file 200) (I^E)
+ ;   RETURN("COENTER") [String] Date and time that the check out was entered (I^E)
+ ;   RETURN("CONSULT") [Numeric] Consult associated with this appointment (pointer to REQUEST/CONSULTATION FILE <#123>)
  ;   DFN [Required,Numeric] Patient IEN
  ;   SD [Required,DateTime] Appointment date/time
  ;Output:
@@ -184,9 +184,9 @@ LSTAPPT(RETURN,SEARCH,START,NUMBER) ; Lists appointment types
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
  ;                           Set to Error description if the call fails
- ;    RETURN(0) – [String] # of entries found^maximum requested^any more?^flags
- ;    RETURN(#,"ID") – [Numeric] Appointment type IEN
- ;    RETURN(#,"NAME") – [String] Appointment type name
+ ;    RETURN(0) [String] # of entries found^maximum requested^any more?^flags
+ ;    RETURN(#,"ID") [Numeric] Appointment type IEN
+ ;    RETURN(#,"NAME") [String] Appointment type name
  ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
  ;   START [Optional,String] The appointment type name from which to begin the list. Default: ""
  ;   NUMBER [Optional,Numeric] Number of entries to return. Default: All entries
@@ -209,16 +209,16 @@ GETAPPT(RETURN,TYPE) ; Returns Appointment Type detail
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
  ;                           Set to Error description if the call fails
- ;    RETURN("NAME") – [String] Appointment type name
- ;    RETURN("NUMBER") – [Numeric] Appointment type IEN
- ;    RETURN("SYNONIM") – [String] Appointment type synonim
+ ;    RETURN("NAME") [String] Appointment type name
+ ;    RETURN("NUMBER") [Numeric] Appointment type IEN
+ ;    RETURN("SYNONIM") [String] Appointment type synonim
  ;   TYPE [Required,Numeric] Appointment type IEN (File 409.1)
  ;Output:
  ;  1=Success,0=Failure
  K RETURN S RETURN=0
  I +$G(TYPE)=0 D ERRX^SDAPIE(.RETURN,"INVPARAM","TYPE") Q 0
  I '$$TYPEXST^SDMDAL3(+TYPE) D ERRX^SDAPIE(.RETURN,"TYPNFND") Q 0
- D GETAPPT^SDMDAL2(.RETURN,+TYPE,1,1,1)
+ D GETAPPT^SDMDAL2(.RETURN,TYPE,1,1,1)
  S RETURN=1
  Q 1
  ;
@@ -304,9 +304,9 @@ LSTCRSNS(RETURN,SEARCH,START,NUMBER) ; Return cancelation reasons.
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
  ;                           Set to Error description if the call fails
- ;    RETURN(0) – [String] # of entries found^maximum requested^any more?^flags
- ;    RETURN(#,"ID") – [Numeric] Cancellation reason IEN
- ;    RETURN(#,"NAME") – [String] Cancellation reason name
+ ;    RETURN(0) [String] # of entries found^maximum requested^any more?^flags
+ ;    RETURN(#,"ID") [Numeric] Cancellation reason IEN
+ ;    RETURN(#,"NAME") [String] Cancellation reason name
  ;   SEARCH [Optional,String] Partial match restriction. Default: All entries
  ;   START [Optional,String] The appointment type name from which to begin the list. Default: ""
  ;   NUMBER [Optional,Numeric] Number of entries to return. Default: All entries
@@ -533,8 +533,8 @@ LSTSRT(RETURN) ;List scheduling request types
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
  ;                           Set to Error description if the call fails
- ;    RETURN(0) – [Numeric] # of entries found
- ;    RETURN(#) – [String] code^display_name
+ ;    RETURN(0) [Numeric] # of entries found
+ ;    RETURN(#) [String] code^display_name
  ;Output:
  ;  1=Success,0=Failure
  K RETURN
@@ -546,8 +546,8 @@ LSTAPPST(RETURN) ;List appointment statuses
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
  ;                           Set to Error description if the call fails
- ;    RETURN(0) – [Numeric] # of entries found
- ;    RETURN(#) – [String] code^display_name
+ ;    RETURN(0) [Numeric] # of entries found
+ ;    RETURN(#) [String] code^display_name
  ;Output:
  ;  1=Success,0=Failure
  K RETURN
@@ -559,8 +559,8 @@ LSTHLTP(RETURN) ;List hospital location types
  ;Input:
  ;  .RETURN [Required,Array] Array passed by reference that will receive the data.
  ;                           Set to Error description if the call fails
- ;    RETURN(0) – [Numeric] # of entries found
- ;    RETURN(#) – [String] code^display_name
+ ;    RETURN(0) [Numeric] # of entries found
+ ;    RETURN(#) [String] code^display_name
  ;Output:
  ;  1=Success,0=Failure
  K RETURN
