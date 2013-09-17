@@ -60,7 +60,7 @@ DISCH(RETURN,PARAM) ; Discharge patient
  ;      PARAM("TYPE") [Required,Numeric] Discharge type IEN (pointer to the Facility Movement Type file #405.1)
  ;      The following parameter are used only with CONTINUED ASIH (OTHER FACILITY) movement type or
  ;        if movement type have the field "ask specialty at movement" set to 1:
- ;        PARAM("FCTY")	[Required,Numeric] Transfer facility (pointer to the Institution file #4)
+ ;        PARAM("FCTY") [Required,Numeric] Transfer facility (pointer to the Institution file #4)
  ;Output:
  ;  1=Success,0=Failure
  N %,MAS,TYPE,ADM,DFN,LMVT

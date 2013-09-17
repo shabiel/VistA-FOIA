@@ -13,11 +13,11 @@ ADMIT(RETURN,PARAM) ; Admit patient
  ;      PARAM("FDEXC") [Required,Boolean] Patient wants to be excluded or not from Facility Directory.
  ;                                        If it is set to 1 the patient will be excluded from Facility Directory.
  ;      PARAM("FTSPEC") [Required,Numeric] Facility treating specialty IEN (pointer to the Facility Treating Specialty file #45.7)
- ;      PARAM("SHDIAG")	[Required,String] A brief description of the diagnosis (3-30 chars) 
+ ;      PARAM("SHDIAG") [Required,String] A brief description of the diagnosis (3-30 chars) 
  ;      PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to the Ward Location file #42)
- ;      PARAM("ADMSCC")	[Optional,Boolean] Set to 1 if patient is admitted for service connected condition. Default: 0
- ;      PARAM("ADMSRC")	[Optional,Numeric] Source of admission IEN (pointer to the Source of Admission file #45.1)
- ;      PARAM("ELIGIB")	[Optional,Numeric] Admitting eligibility IEN (pointer to the Eligibility Code file #8)
+ ;      PARAM("ADMSCC") [Optional,Boolean] Set to 1 if patient is admitted for service connected condition. Default: 0
+ ;      PARAM("ADMSRC") [Optional,Numeric] Source of admission IEN (pointer to the Source of Admission file #45.1)
+ ;      PARAM("ELIGIB") [Optional,Numeric] Admitting eligibility IEN (pointer to the Eligibility Code file #8)
  ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to the New Person file #200)
  ;      PARAM("FCTY") [Optional,Numeric] Transfer facility IEN (pointer to the Institution file #4)
  ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
@@ -279,11 +279,11 @@ UPDADM(RETURN,PARAM,AFN) ; Update admission
  ;      PARAM("FDEXC") [Optional,Boolean] Patient wants to be excluded or not from Facility Directory.
  ;                                        If it is set to 1 the patient will be excluded from Facility Directory.
  ;      PARAM("FTSPEC") [Optional,Numeric] Facility treating specialty IEN (pointer to the Facility Treating Specialty file #45.7)
- ;      PARAM("SHDIAG")	[Optional,String] A brief description of the diagnosis (3-30 chars) 
+ ;      PARAM("SHDIAG") [Optional,String] A brief description of the diagnosis (3-30 chars) 
  ;      PARAM("WARD") [Optional,Numeric] Ward location IEN (pointer to the Ward Location file #42)
- ;      PARAM("ADMSCC")	[Optional,Boolean] Set to 1 if patient is admitted for service connected condition. Default: 0
- ;      PARAM("ADMSRC")	[Optional,Numeric] Source of admission IEN (pointer to the Source of Admission file #45.1)
- ;      PARAM("ELIGIB")	[Optional,Numeric] Admitting eligibility IEN (pointer to the Eligibility Code file #8)
+ ;      PARAM("ADMSCC") [Optional,Boolean] Set to 1 if patient is admitted for service connected condition. Default: 0
+ ;      PARAM("ADMSRC") [Optional,Numeric] Source of admission IEN (pointer to the Source of Admission file #45.1)
+ ;      PARAM("ELIGIB") [Optional,Numeric] Admitting eligibility IEN (pointer to the Eligibility Code file #8)
  ;      PARAM("PRYMPHY") [Optional,Numeric] Primary physician IEN (pointer to the New Person file #200)
  ;      PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
  ;      PARAM("ADMCAT") [Optional,Numeric] Admitting category IEN (pointer to the Sharing Agreement Sub-Category file #35.2)

@@ -14,7 +14,7 @@ LDGIN(RETURN,PARAM) ; Check-in patient
  ;        PARAM("WARD") [Required,Numeric] Ward location IEN (pointer to the Ward Location file #42)
  ;        PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
  ;      The following parameter are used only with CHECK-IN LODGER (OTHER FACILITY) movement type:
- ;        PARAM("FCTY")	[Required,Numeric] Transfer facility (pointer to the Institution file #4)
+ ;        PARAM("FCTY") [Required,Numeric] Transfer facility (pointer to the Institution file #4)
  ;Output:
  ;  1=Success,0=Failure
  N %,DFN,TYPE
@@ -192,7 +192,7 @@ UPDLDGIN(RETURN,PARAM,AFN) ; Update check-in lodger
  ;        PARAM("WARD") [Optional,Numeric] Ward location IEN (pointer to the Ward Location file #42)
  ;        PARAM("ROOMBED") [Optional,Numeric] Room-bed IEN (pointer to the Room-bed file #405.4)
  ;      The following parameter are used only with CHECK-IN LODGER (OTHER FACILITY) movement type:
- ;        PARAM("FCTY")	[Optional,Numeric] Transfer facility (pointer to the Institution file #4)
+ ;        PARAM("FCTY") [Optional,Numeric] Transfer facility (pointer to the Institution file #4)
  ;   AFN [Required,Numeric] Check-in IEN to update (pointer to the Patient Movement file #405)
  ;Output:
  ;  1=Success,0=Failure
