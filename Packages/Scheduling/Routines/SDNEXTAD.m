@@ -1,6 +1,6 @@
-SDNEXTAD ; THM/THM-Main driver for next available appointment display [01-074-2015 13:28]
+SDNEXTAD ; THM/THM-Main driver for next available appointment display [01-074zzz-2015 13:28]
  ;;5.3;Scheduling;;Aug 13, 1993;Build 13 ;
- ;(Prototype version 14.0)
+ ;(Prototype version 12.0)
  ;
  Q  ; Enter properly
  ;
@@ -8,7 +8,7 @@ SDNEXTAD ; THM/THM-Main driver for next available appointment display [01-074-20
  ;
 EN W @IOF,"Display Next Available Appointments",!!!
  S X="T+90",%DT="" D ^%DT S SDEDATE=Y ; default ending date
- K %DT S DIC("A")="Select a CLINIC: ",DIC="^SC(",DIC(0)="AEQM" D ^DIC G:Y<0 EXIT S SC=+Y
+ K SDPAGED K %DT S DIC("A")="Select a CLINIC: ",DIC="^SC(",DIC(0)="AEQM" D ^DIC G:Y<0 EXIT S SC=+Y
  S SDINACT=$P($G(^SC(SC,"I")),U)
  I SDINACT]"" W !!,$C(7),"This clinic is inactive.",!! H 2 G EN
  ;
@@ -19,7 +19,7 @@ BDATE W !! S %DT("A")="Beginning date for the appointment search: ",%DT("B")="NO
  I Y<DT W $C(7),"The beginning date cannot be in the past." H 2 G BDATE
  S SDBDATE=Y-.0000001 X ^DD("DD") S SDBDATE1=Y
  I $G(SDONEDAT)=1 DO  G:$D(SDQUIT) EXIT G EN
- .K DIR,SDQUIT D ONE^SDNEXTAV(SC,SDBDATE,SDEDATE,1)
+ .K DIR,SDQUIT D ONE^SDNEXTAV(SC,SDBDATE,SDEDATE,$G(SDDELARR,1))
  .D EXIT
  ;
 EDATE S %DT("A")=" Ending date for the appointment search: ",%DT="AEQ",%DT("B")="T+90" D ^%DT G:Y<0 EN
@@ -29,24 +29,24 @@ EDATE S %DT("A")=" Ending date for the appointment search: ",%DT="AEQ",%DT("B")=
  I SDEDATE>X W !!,$C(7),"You may not select more than a year in advance." H 2 G BDATE
  S Y=SDEDATE X ^DD("DD") S SDEDATE1=Y
  ;
-ALL D ALL^SDNEXTAV(SC,SDBDATE,SDEDATE,1)
+ALL D ALL^SDNEXTAV(SC,SDBDATE,SDEDATE,$G(SDDELARR,1))
  I '$D(SDPAGED) S DIR(0)="E" D ^DIR
  D EXIT
  G EN
  ;
-EXIT K %DT,%H,%T,%Y,DIC,DIR,DIRUT,DILN,SC,SDBDATE,SDEDATE,SDINACT,SDONEDAT,SDPAGED,SDQUIT,X,X1,X2,Y
+EXIT K %DT,%H,%T,%Y,DIC,DIR,DIRUT,DILN,SC,SDBDATE,SDEDATE,SDINACT,SDONEDAT,SDQUIT,X,X1,X2,Y
  Q
 
 SDNEXTAV^INT^1^^0
 SDNEXTAV ; THM/THM-NEXT AVAILABLE APPOINTMENTS UTILITY [01-07-2015 13:28]
  ;;5.3;Scheduling;;Aug 13, 1993;Build 13 ;
- ;(Prototype version 14.0)
+ ;(Prototype version 12.0)
  ;
  Q  ; Enter properly
  ;
 QUIET(SC,SDBDATE,SDEDATE,SDDELARR) ; Quiet return of SDRETURN
  S SDQUIET=1,SDFIND=0
- D SETUPA,SETUPCK G:$D(SDQUIT) EXIT
+ K SDPAGED D SETUPA,SETUPCK G:$D(SDQUIT) EXIT
  F SDBDATE=(SDBDATE-.001):0 S SDBDATE=$O(^SC(SC,"ST",SDBDATE)) Q:SDBDATE>SDEDATE!(+SDBDATE=0)  D SETPAT G:$D(SDQUIT) EXIT D CALC
  F SDX=0:0 S SDX=$O(SDHR(SDX)) Q:SDX=""  I SDHR(SDX)>0 DO
  .D NOW^%DTC Q:%>SDX
@@ -54,8 +54,8 @@ QUIET(SC,SDBDATE,SDEDATE,SDDELARR) ; Quiet return of SDRETURN
  I SDFIND=0 S SDRETURN="NO_NEXT_AVAILABLE_APPOINTMENT_FOUND"
  G EXIT
  ;
-ONE(SC,SDBDATE,SDEDATE,SDDELARR) ; show single next available appointment (give auto 90-day range)
- D SETUPA,SETUPCK G:$D(SDQUIT) EXIT
+ONE(SC,SDBDATE,SDEDATE,SDDELARR) ; show single next available appointment
+ K SDPAGED D SETUPA,SETUPCK G:$D(SDQUIT) EXIT
  F SDBDATE=(SDBDATE-.001):0 S SDBDATE=$O(^SC(SC,"ST",SDBDATE)) Q:SDBDATE>SDEDATE!(+SDBDATE=0)  D SETPAT G:$D(SDQUIT) EXIT D CALC
  D HDR S SDFIND=0
  F SDX=0:0 S SDX=$O(SDHR(SDX)) Q:SDX=""  I SDHR(SDX)>0 DO
@@ -67,7 +67,7 @@ ONE(SC,SDBDATE,SDEDATE,SDDELARR) ; show single next available appointment (give 
  G EXIT
  ;
 ALL(SC,SDBDATE,SDEDATE,SDDELARR) ; All available appointments for date range
- D SETUPA,SETUPCK G:$D(SDQUIT) EXIT
+ K SDPAGED D SETUPA,SETUPCK G:$D(SDQUIT) EXIT
  F SDBDATE=(SDBDATE-.001):0 S SDBDATE=$O(^SC(SC,"ST",SDBDATE)) Q:SDBDATE>SDEDATE!(SDBDATE="")  D SETPAT G:$D(SDQUIT) EXIT D CALC
  S SDCNTR=0,SDCOL=1,SDMONTH="",SDOLDMON="ZZ"
  D HDR S SDFIND=0
@@ -83,17 +83,19 @@ ALL(SC,SDBDATE,SDEDATE,SDDELARR) ; All available appointments for date range
  .S SDCNTR=SDCNTR+1,SDMONTH=$E(SDX,4,5) I SDOLDMON'=SDMONTH,SDOLDMON'="ZZ" W !
  .;Check to see if appt (if available) is past current date/time
  .S SDSAMEDT=0 I $P(SDX,".")=DT S SDSAMEDT=1
- .W ?SDCOL,$S(SDCNTR<10:"   "_SDCNTR,SDCNTR>9&(SDCNTR<100):"  "_SDCNTR,SDCNTR>9&(SDCNTR<1000):" "_SDCNTR,1:SDCNTR),". ",$S(SDSAMEDT=1:"Today",1:SDDOW)," ",$P(Y,"@")," ",$P(Y,"@",2)," (",SDHR(SDX),")" W:SDCOL=40 !!
+ .W ?SDCOL,$S(SDCNTR<10:" "_SDCNTR,SDCNTR>9&(SDCNTR<100):" "_SDCNTR,SDCNTR>9&(SDCNTR<1000):" "_SDCNTR,1:SDCNTR),". ",$S(SDSAMEDT=1:"Today",1:SDDOW)," ",$P(Y,"@")," ",$P(Y,"@",2)," (",SDHR(SDX),")" W:SDCOL=40 !!
  .S SDOLDMON=$E(SDX,4,5)
  .I $Y>(IOSL-5) DO  Q:$D(SDQUIT)
- ..K SDQUIT,SDPAGED K DIR S DIR(0)="E" D ^DIR S SDPAGED=1 I X[U S SDQUIT=1 Q
+ ..K SDQUIT,DIR S DIR(0)="E" D ^DIR S SDPAGED=1 I X[U S SDQUIT=1 Q
  ..D HDR
  I SDFIND=0 W $C(7),SDNOAPP,! H 1
  ;
 EXIT W !!
  I $G(SDDELARR)=1 K SDHR
- K SDBDATE,SDCNTR,SDCOL,SDCSLOTS,SDEDATE,SDFIND,SDINCR,SDMINUTE,SDNOAPP,SDPAT,SDQUIET,SDSL,SDSTRT,SDDOW,SDSAMEDT
- K SDSTRTX,SDSLOTS,SDX,SDY,X,Y,SDHOLIDY,SDMONTH,SDONEDAT,SDOLDMON,SDANS,SDBDATE1,SDEDATE1,SDXY,X1,X2
+ K DIR,DIRUT,SDBDATE,SDCNTR,SDCOL,SDCSLOTS,SDEDATE,SDFIND,SDINCR,SDMINUTE,SDNOAPP,SDPAT,SDQUIET,SDSL,SDSTRT,SDDOW,SDSAMEDT
+ K SDSTRTX,SDSLOTS,SDX,SDY,X,Y,SDHOLIDY,SDMONTH,SDONEDAT,SDOLDMON,SDANS,SDBDATE1,SDEDATE1,SDXY,X1,X2,SDQUIT
+ ;Kill leftover Fileman variables
+ K %,%H,%I,%T,%Y
  Q
  ;
 SETPAT ; Transform the pattern into something useful
@@ -153,19 +155,20 @@ HDR ; Header for interactive APIs
  Q
  ;
 DOC ; Variable documentation and explanation
- ;SDSLOTS=Total slots for one day - total clinic hours
  ;SDCSLOTS=Total slots per increment, i.e. hourly, half hour, 20 min, 15 min, 10 min
- ;SDMINUTE=Clinic appointment time
- ;SDQUIET=No output to screen (future development)
  ;SDHR()=Array that has the date/time^slots available for the clinic and date supplied
  ;SDCNTR=Utility counter, usedand reused as needed
  ;SDRETURN=An array for the 'QUIET' entry point and has FM date/time^# slots available
  ;SDCOL=Column to print ALL output in two columns
  ;SDFIND=Indicates whether data is available when returning interactive data
  ;SDINCR=Number of increments per hour
+ ;SDMINUTE=Clinic appointment time
+ ;SDPAGED=Indicates if at least one page of data has been presented and if to show prompt to continue or ^ to end
  ;SDPAT=Pattern from clinic date
  ;SDSL=Basic clinic information from ^SC(SC,"SL") node
+ ;SDSLOTS=Total slots for one day - total clinic hours
  ;SDSTRT=Clinic starting time, with 8AM being the default if not supplied in clinic setup
+ ;SDQUIET=No output to screen (future development)
  ;SDX, SDY, SDXY, X, Y=Utility variables, used and reused as needed
  ;SDBDATE=Beginning date to return data for
  ;SDBDATE1=Human readable beginning date
